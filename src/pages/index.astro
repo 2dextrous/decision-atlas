@@ -1,0 +1,211 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import LineCard from '../components/LineCard.astro';
+import Icon from '../components/Icon.astro';
+import { zones, linesInZone, lines, stations, lineById, prepPaths } from '../data/atlas';
+
+const entries = await getCollection('stations');
+const built = new Set(entries.map((e) => e.id));
+const stopCount = stations.size;
+const lineCount = lines.length;
+const continueIndex = JSON.stringify(
+  Object.fromEntries(
+    entries.map((e) => {
+      const line = lineById.get(e.data.line)!;
+      return [e.id, { t: e.data.title, u: `/${e.data.line}/${e.id}/`, c: line.code, tone: line.tone }];
+    }),
+  ),
+).replace(/</g, '\\u003c');
+---
+<BaseLayout
+  title="Decision Atlas"
+  description="Supply chain decisions explained for placements: demand, inventory, networks, logistics, risk and SAP, from a two-minute gist to interview depth."
+  current="map"
+>
+  <section class="hero wrap">
+    <div class="hero-text">
+      <p class="eyebrow">Supply chain, mapped for placements</p>
+      <h1>Learn supply chain one decision at a time.</h1>
+      <p class="hero-lede">
+        Demand, inventory, networks, logistics, risk and SAP, laid out like a transit map.
+        Read any stop as a two-minute gist, open how it works, or ride all the way to the deep dive.
+      </p>
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="/foundations/">Start with the foundations <Icon name="arrow-right" /></a>
+        <a class="btn" href="#map"><Icon name="map" /> Browse the map</a>
+      </div>
+      <a class="continue" href="#" data-continue hidden>
+        <span class="continue-label">Continue where you left off</span>
+        <span class="continue-stop"><span class="badge badge-sm" data-continue-badge></span><span data-continue-title></span></span>
+        <Icon name="arrow-right" />
+      </a>
+    </div>
+
+    <aside class="depth-card card" aria-labelledby="depth-title">
+      <p class="eyebrow" id="depth-title">Choose your depth on every stop</p>
+      <ol class="depth-list">
+        <li>
+          <span class="lv" aria-hidden="true">1</span>
+          <span class="lv-text"><strong>Gist</strong><span>The idea in plain words, with an everyday example. About 2 minutes.</span></span>
+        </li>
+        <li>
+          <span class="lv" aria-hidden="true">2</span>
+          <span class="lv-text"><strong>How it works</strong><span>Formulas, a worked example and a live lab you can play with.</span></span>
+        </li>
+        <li>
+          <span class="lv" aria-hidden="true">3</span>
+          <span class="lv-text"><strong>Deep dive</strong><span>Edge cases, traps and how companies actually do it.</span></span>
+        </li>
+      </ol>
+      <p class="depth-foot"><Icon name="layers" /> Every stop ends with an interview kit.</p>
+    </aside>
+  </section>
+
+  <section id="map" class="map wrap" aria-labelledby="map-title">
+    <header class="map-head">
+      <div>
+        <h2 id="map-title">The map</h2>
+        <p class="muted">{lineCount} lines and {stopCount} stops, grouped by how far ahead each decision looks.</p>
+      </div>
+      <ul class="legend" aria-label="Legend">
+        <li><span class="dot" style="--c: var(--ink-2)" aria-hidden="true"></span>Ready to read</li>
+        <li><span class="dot is-planned" aria-hidden="true"></span>Being written</li>
+        <li><span class="dot is-interchange" aria-hidden="true"></span>Interchange: on two lines</li>
+        <li><span class="meter" data-levels="3" style="--c: var(--ink-2)" aria-hidden="true"><i></i><i></i><i></i></span>Levels available</li>
+      </ul>
+    </header>
+
+    {zones.map((z) => {
+      const zl = linesInZone(z.id);
+      return (
+        <section class="zone" aria-labelledby={`zone-${z.id}`}>
+          <header class="zone-head">
+            <h3 id={`zone-${z.id}`}>{z.title}</h3>
+            {z.horizon && <span class="zone-chip">{z.horizon}</span>}
+            <p class="muted">{z.blurb}</p>
+          </header>
+          <div class="zone-grid" data-count={zl.length}>
+            {zl.map((line) => <LineCard line={line} built={built} />)}
+          </div>
+        </section>
+      );
+    })}
+  </section>
+
+  <section id="paths" class="paths wrap" aria-labelledby="paths-title">
+    <header class="paths-head">
+      <h2 id="paths-title">Prep paths</h2>
+      <p class="muted">Eight stops for each kind of role, in the order the ideas build on each other.</p>
+    </header>
+    <div class="paths-grid">
+      {prepPaths.map((p) => (
+        <article class="path card">
+          <h3>{p.title}</h3>
+          <p class="muted path-who">{p.who}</p>
+          <ol class="path-stops">
+            {p.stops.map((slug) => {
+              const st = stations.get(slug)!;
+              const line = lineById.get(st.line)!;
+              const isBuilt = built.has(slug);
+              return (
+                <li data-slug={slug}>
+                  <span class="badge badge-sm" data-tone={line.tone}>{line.code}</span>
+                  <a href={isBuilt ? `/${st.line}/${slug}/` : `/${st.line}/#${slug}`} class:list={{ 'is-planned': !isBuilt }}>{st.name}</a>
+                </li>
+              );
+            })}
+          </ol>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <script is:inline type="application/json" id="continue-index" set:html={continueIndex}></script>
+</BaseLayout>
+
+<script>
+  import { paintProgress, getLast } from '../scripts/progress';
+
+  paintProgress();
+  document.addEventListener('atlas:progress', () => paintProgress());
+
+  const last = getLast();
+  const index = JSON.parse(document.getElementById('continue-index')?.textContent || '{}') as Record<string, { t: string; u: string; c: string; tone: string }>;
+  const link = document.querySelector<HTMLAnchorElement>('[data-continue]');
+  if (last && index[last] && link) {
+    const item = index[last];
+    link.href = item.u;
+    const badge = link.querySelector<HTMLElement>('[data-continue-badge]');
+    if (badge) { badge.textContent = item.c; badge.dataset.tone = item.tone; }
+    const title = link.querySelector<HTMLElement>('[data-continue-title]');
+    if (title) title.textContent = item.t;
+    link.hidden = false;
+  }
+</script>
+
+<style>
+  .hero { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(300px, 1fr); gap: 2.5rem; align-items: center; padding-block: clamp(2.5rem, 7vw, 5rem) clamp(2rem, 5vw, 3.5rem); }
+  .hero h1 { margin-top: 0.85rem; font-size: clamp(2.3rem, 5.2vw, 3.7rem); font-weight: 800; letter-spacing: -0.035em; line-height: 1.02; max-width: 15ch; }
+  .hero-lede { margin-top: 1.15rem; font-size: clamp(1.05rem, 1.6vw, 1.2rem); line-height: 1.6; color: var(--ink-2); max-width: 54ch; }
+  .hero-cta { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.75rem; }
+  .hero-cta :global(svg) { width: 1.1rem; height: 1.1rem; }
+  .continue {
+    display: flex; flex-wrap: wrap; align-items: center; gap: 0.35rem 0.75rem; margin-top: 1.25rem; padding: 0.7rem 0.9rem;
+    border: 1px solid var(--rule); border-radius: 12px; background: var(--surface); text-decoration: none; max-width: 34rem;
+    transition: border-color var(--dur) var(--ease);
+  }
+  .continue:hover { border-color: var(--rule-2); }
+  .continue[hidden] { display: none; }
+  .continue-label { font-size: 0.78rem; color: var(--muted); width: 100%; }
+  .continue-stop { display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 700; flex: 1; min-width: 0; }
+  .continue :global(svg) { width: 1.1rem; height: 1.1rem; }
+
+  .depth-card { padding: 1.35rem 1.4rem 1.2rem; }
+  .depth-list { list-style: none; margin: 1rem 0 0; padding: 0; display: grid; gap: 1rem; position: relative; }
+  .depth-list::before { content: ''; position: absolute; left: calc(1rem - 2px); top: 1.1rem; bottom: 1.1rem; width: 4px; border-radius: 2px; background: linear-gradient(var(--t-demand), var(--t-inventory), var(--t-supply)); }
+  .depth-list li { display: grid; grid-template-columns: 2rem 1fr; gap: 0.85rem; align-items: start; }
+  .lv { position: relative; display: grid; place-items: center; width: 2rem; height: 2rem; border-radius: 50%; background: var(--surface); border: 3px solid var(--ink); font-weight: 800; font-size: 0.85rem; }
+  .lv-text { display: grid; gap: 0.15rem; }
+  .lv-text strong { font-size: 1rem; }
+  .lv-text span { font-size: 0.9rem; color: var(--ink-2); line-height: 1.45; }
+  .depth-foot { display: flex; align-items: center; gap: 0.5rem; margin-top: 1.2rem; padding-top: 0.9rem; border-top: 1px solid var(--rule); font-size: 0.875rem; color: var(--ink-2); }
+  .depth-foot :global(svg) { width: 1.05rem; height: 1.05rem; color: var(--muted); }
+
+  .map { padding-top: 1rem; }
+  .map-head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 1rem 2rem; padding-bottom: 1.25rem; border-bottom: 1px solid var(--rule); }
+  .map-head h2, .paths-head h2 { font-size: clamp(1.6rem, 3vw, 2.1rem); font-weight: 800; letter-spacing: -0.025em; }
+  .map-head p, .paths-head p { margin-top: 0.35rem; }
+  .legend { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.5rem 1.1rem; font-size: 0.82rem; color: var(--ink-2); }
+  .legend li { display: inline-flex; align-items: center; gap: 0.45rem; }
+
+  .zone { padding-top: 2.25rem; }
+  .zone-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.35rem 0.75rem; margin-bottom: 1rem; }
+  .zone-head h3 { font-size: 1.3rem; font-weight: 800; letter-spacing: -0.02em; }
+  .zone-head p { flex-basis: 100%; font-size: 0.95rem; }
+  .zone-chip { font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-2); border: 1px solid var(--rule-2); border-radius: 999px; padding: 0.15rem 0.55rem; }
+  .zone-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; align-items: start; }
+  .zone-grid[data-count='2'] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .zone-grid[data-count='1'] { grid-template-columns: minmax(0, 1fr); max-width: calc((100% - 2rem) * 2 / 3 + 1rem); }
+
+  .paths { padding-top: 4rem; }
+  .paths-head { padding-bottom: 1.25rem; border-bottom: 1px solid var(--rule); margin-bottom: 1.25rem; }
+  .paths-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+  .path { padding: 1.2rem 1.25rem; }
+  .path h3 { font-size: 1.1rem; font-weight: 800; }
+  .path-who { font-size: 0.875rem; margin-top: 0.2rem; }
+  .path-stops { list-style: none; margin: 0.9rem 0 0; padding: 0; display: grid; gap: 0.4rem; counter-reset: p; }
+  .path-stops li { display: grid; grid-template-columns: auto 1fr; align-items: center; gap: 0.6rem; font-size: 0.92rem; }
+  .path-stops a { text-decoration: none; font-weight: 600; }
+  .path-stops a:hover { text-decoration: underline; }
+  .path-stops a.is-planned { color: var(--muted); font-weight: 500; }
+
+  @media (max-width: 980px) {
+    .hero { grid-template-columns: 1fr; }
+    .zone-grid, .zone-grid[data-count='2'] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .zone-grid[data-count='1'] { max-width: none; }
+  }
+  @media (max-width: 640px) {
+    .zone-grid, .zone-grid[data-count='2'], .paths-grid { grid-template-columns: 1fr; }
+  }
+</style>

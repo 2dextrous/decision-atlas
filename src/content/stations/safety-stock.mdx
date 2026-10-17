@@ -1,0 +1,264 @@
+---
+title: Safety stock & reorder points
+line: inventory
+summary: How big a buffer each item needs, when to reorder, and how to say it in days of supply.
+minutes: { gist: 2, how: 7, deep: 12 }
+status: draft
+keywords:
+  - safety stock
+  - reorder point
+  - ROP
+  - days of supply
+  - DOS
+  - inventory norms
+  - buffer stock
+  - service level
+  - z-score
+  - lead time variability
+  - inventory position
+  - cycle service level
+  - fill rate
+connected:
+  - eoq
+  - service-levels
+  - inventory-segmentation
+  - risk-pooling
+  - meio
+  - forecast-accuracy
+  - probabilistic-forecasting
+  - inventory-mrp-in-sap
+sources:
+  - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. The chapter on managing uncertainty with safety inventory."
+  - text: "Silver, E. A., Pyke, D. F. & Thomas, D. J. (2017). Inventory and Production Management in Supply Chains (4th ed.). CRC Press."
+  - text: "Hyndman, R. J. & Athanasopoulos, G. Forecasting: Principles and Practice (3rd ed.). OTexts. Free online."
+    url: "https://otexts.com/fpp3/"
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Example from '../../components/content/Example.astro';
+import Trap from '../../components/content/Trap.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+import SafetyStockLab from '../../components/labs/SafetyStockLab.astro';
+
+<Level n={1} title="The gist" minutes={2} teaser="The idea in plain words, with a café example." next="How it works" nextMinutes={7}>
+
+An inventory norm is a standing rule for one item at one location: *reorder coffee beans when 26 kg are left*, or *keep about 10 days of shampoo at the Pune warehouse*. Every norm answers two everyday questions:
+
+1. **When do I reorder?** Early enough that new stock lands before the shelf runs dry.
+2. **How much extra do I keep for surprises?** Busy days happen, and trucks run late.
+
+Picture a café that uses about 4 kg of coffee beans a day. Its supplier takes 5 days to deliver, so the café burns through roughly 20 kg while an order is on its way. It has to reorder before stock falls to 20 kg, and it needs a cushion on top for the days when customers drink more or the truck turns up late. That cushion is **safety stock**.
+
+Norms matter because they decide how much cash sits on shelves and how often customers hear "sorry, we're out". Set them too high and money gets stuck in stock that may go stale. Set them too low and you lose sales.
+
+<KeyIdea>
+
+Reorder point = expected demand while you wait for the delivery + a buffer sized to the uncertainty you decide to cover.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Reorder point (ROP)', def: 'The stock level that triggers a new order.' },
+  { term: 'Safety stock (SS)', def: 'Extra stock held only to absorb surprises in demand or delivery time.' },
+  { term: 'Days of supply (DOS)', def: 'Stock expressed in days of average demand: inventory ÷ average daily demand.' },
+]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={7} teaser="The formulas, the café worked through with numbers, and a live lab." next="Deep dive" nextMinutes={12}>
+
+### Step 1: demand during the wait
+
+If you sell $d$ units a day and the supplier takes $L$ days, you expect to use $d \times L$ while you wait. In a perfectly predictable world, that would be the whole reorder point:
+
+$$
+ROP = d \times L
+$$
+
+For the café, $4 \times 5 = 20$ kg.
+
+### Step 2: a buffer for demand that wobbles
+
+Daily demand is never exactly 4 kg. If a typical day strays from the average by $\sigma_d$, then demand over $L$ independent days strays by $\sigma_d\sqrt{L}$, not $\sigma_d \times L$, because good and bad days partly cancel. To cover that wobble at a chosen service level, multiply by $z$, the number of standard deviations of protection:
+
+$$
+SS = z\,\sigma_d\sqrt{L} \qquad\qquad ROP = d\,L + SS
+$$
+
+<Example title="the café">
+
+- Average demand $d = 4$ kg a day, daily variation $\sigma_d = 1.5$ kg, lead time $L = 5$ days.
+- Variation over the lead time: $1.5 \times \sqrt{5} = 3.35$ kg.
+- For a 95% cycle service level, $z = 1.645$, so $SS = 1.645 \times 3.35 \approx 5.5$ kg.
+- Reorder point: $20 + 5.5 = 25.5$ kg. In practice the café reorders at about 26 kg.
+
+</Example>
+
+### Step 3: a buffer for a supplier who runs late
+
+When the delivery time itself varies by $\sigma_L$ days, the two kinds of uncertainty combine:
+
+$$
+SS = z\sqrt{L\,\sigma_d^{2} + d^{2}\,\sigma_L^{2}}
+$$
+
+Say the café's truck usually takes 5 days but sometimes 4, 6 or 7, so $\sigma_L = 1$ day. Then $5 \times 1.5^2 + 4^2 \times 1^2 = 11.25 + 16 = 27.25$. Its square root is 5.22 kg, and safety stock rises to $1.645 \times 5.22 \approx 8.6$ kg. One day of delivery uncertainty moves the reorder point from 25.5 kg to about 28.6 kg.
+
+### Step 4: say it in days of supply
+
+Managers usually talk in days rather than kilograms, so divide by average daily demand:
+
+- Safety stock: $8.6 \div 4 \approx 2.2$ days of supply.
+- Average stock on hand is about half an order plus the buffer. With the café's usual order of 77.5 kg, that is $77.5 \div 2 + 8.6 \approx 47$ kg, roughly 12 days of supply.
+
+A norm like "keep 12 days" is easy to communicate, but it should come out of this calculation. A blanket number copied across every item ignores how differently each one behaves.
+
+<SafetyStockLab />
+
+<KeyIdea>
+
+Lead time decides how much stock covers the wait. Variability in demand and delivery decides the size of the buffer. The service level decides how much of that variability you insure against.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={12} teaser="Why √L, fast versus reliable suppliers, the service-level trap, and the mistakes that cost real money.">
+
+### Why the square root of lead time
+
+Expected demand adds up day by day: five days of 4 kg is 20 kg. Uncertainty does not add that way. Variances add, and the standard deviation is the square root of the variance:
+
+$$
+\operatorname{Var}(D_L) = L\,\sigma_d^{2} \quad\Rightarrow\quad \sigma_{D_L} = \sigma_d\sqrt{L}
+$$
+
+So doubling the lead time multiplies the buffer by about 1.41, not 2. This assumes days are independent. If demand runs in streaks, where one busy day tends to follow another, the real variability is larger and the square-root rule understates the buffer.
+
+### A faster supplier is not always the better one
+
+Compare two suppliers for the café, both at 95% service ($z = 1.645$, $\sigma_d = 1.5$ kg, $d = 4$ kg a day, orders of 77.5 kg):
+
+<div class="table-wrap">
+
+| | Supplier A | Supplier B |
+|---|---|---|
+| Lead time | 5 days, never late | 3 days on average, give or take 2 |
+| Variation over the lead time | 3.35 kg | 8.41 kg |
+| Safety stock | 5.5 kg | 13.8 kg |
+| Reorder point | 25.5 kg | 25.8 kg |
+| Average stock on hand | 44.3 kg | 52.6 kg |
+
+</div>
+
+Supplier B is two days faster, yet the café ends up holding about 19% more stock on average. The reason is the $d^{2}\sigma_L^{2}$ term: delivery uncertainty is multiplied by demand. At a factory using 1,000 units a day, a single day of delivery variation is worth 1,000 units of uncertainty on its own. Reliability, not just speed, is what lets you hold less.
+
+### The service-level trap
+
+Service is not free, and it gets expensive quickly:
+
+<div class="table-wrap">
+
+| Cycle service level | z | Safety stock compared with 95% |
+|---|---|---|
+| 90% | 1.28 | 22% less |
+| 95% | 1.645 | baseline |
+| 98% | 2.05 | 25% more |
+| 99% | 2.33 | 41% more |
+| 99.9% | 3.09 | 88% more |
+
+</div>
+
+Each extra point of service near 100% needs more buffer than the one before. That is why companies set different targets for different items: perhaps 98–99% for a critical spare part, 95% for a regular component and 90% for a cheap, slow-moving item. Inventory segmentation (ABC-XYZ) is how those targets get assigned.
+
+<Trap>
+
+"95% service" has two common meanings. **Cycle service level** is the chance of not running out during a replenishment cycle. **Fill rate** is the share of demand served straight from stock. The z-values above set cycle service level, and the fill rate they produce is usually higher. Always ask which one a target means before you size a buffer.
+
+</Trap>
+
+### Use forecast error, not raw demand variability
+
+The formulas use $\sigma_d$, the variability of demand. But most companies forecast, so what really hurts is how wrong the forecast is. In practice $\sigma$ should be the standard deviation of forecast error over the lead time (the RMSE, if the forecast is unbiased). A better forecast shrinks the buffer, and a biased forecast quietly breaks it. This is where forecast accuracy and inventory meet.
+
+### Reorder on inventory position, not on what is on the shelf
+
+Suppose the café orders 77.5 kg at 26 kg, and two days later the shelf shows 18 kg. A system that only looks at stock on hand sees 18 < 26 and orders again, even though 77.5 kg is already on the way. The fix is to compare the reorder point with **inventory position**:
+
+$$
+\text{Inventory position} = \text{on hand} + \text{on order} - \text{backorders}
+$$
+
+Here that is $18 + 77.5 = 95.5$ kg, well above 26, so nothing new is ordered. Duplicate orders right after a large purchase are a classic sign that a system is checking the shelf instead of the position.
+
+<Trap>
+
+The normal-distribution formulas break down for slow movers and spare parts, where most days have zero demand. For those, size the buffer from a probabilistic forecast or from the actual distribution of demand over the lead time.
+
+</Trap>
+
+### How companies actually set norms
+
+Most companies move through three stages:
+
+1. **Rules of thumb.** "Two weeks of stock for everything", kept in spreadsheets. Easy to explain and wrong for most items.
+2. **Statistical safety stock per item and location.** The formulas on this page, recalculated every planning cycle, usually inside the ERP or a planning tool. In SAP, for example, the results typically end up as the safety stock and reorder point in the material master's planning data.
+3. **Multi-echelon optimization.** Buffers sized across plant, warehouse and store together, so the network holds less in total than each site would on its own. Planning platforms such as SAP IBP, o9, Kinaxis and Blue Yonder sell this as inventory optimization.
+
+<KeyIdea>
+
+The goal is not the smallest buffer. It is the cheapest buffer that meets a service target the business has chosen on purpose, item by item.
+
+</KeyIdea>
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+Inventory norms decide when we reorder and how much buffer we hold. I start with expected demand over the lead time, then add safety stock sized by the variability of forecast error and of supplier lead time, at a service level that fits the item's economics. I'd communicate the result in days of supply, but calculate it per item and location, and set different targets by segment instead of one blanket rule.
+
+</SayIt>
+
+<Q q="Why does safety stock grow with the square root of lead time, not with lead time itself?">
+
+Because uncertainty adds through variance, not through standard deviation. Over $L$ independent days the variance is $L\sigma_d^2$, so the standard deviation is $\sigma_d\sqrt{L}$. Good and bad days partly cancel, so doubling the lead time raises the buffer by about 41%, not 100%.
+
+</Q>
+
+<Q q="Supplier A delivers in 5 days and is never late. Supplier B averages 3 days, give or take 2. Which needs more safety stock?">
+
+Supplier B. With the café's numbers at 95% service, A needs about 5.5 kg and B about 13.8 kg, because lead-time variation enters the formula as $d^2\sigma_L^2$. Faster is not cheaper if it is unreliable. I would push B on reliability, or price the extra inventory into the comparison.
+
+</Q>
+
+<Q q="Why not target 99.9% service for every item?">
+
+Safety stock climbs steeply as service approaches 100%: going from 95% to 99.9% almost doubles it. Stockouts cost different amounts for different items, so I would set targets by segment: high for critical or high-margin items, lower for cheap, slow-moving ones.
+
+</Q>
+
+<Q q="What is the difference between cycle service level and fill rate?">
+
+Cycle service level is the probability of not running out during a replenishment cycle. Fill rate is the share of demand met from stock. For the same buffer, fill rate is usually higher, so it matters which one a target refers to.
+
+</Q>
+
+<Q q="The ERP keeps placing a second order right after every big purchase order. What would you check?">
+
+Whether it compares the reorder point with stock on hand instead of inventory position. Inventory position includes stock already on order, which stops duplicate orders while a delivery is in transit.
+
+</Q>
+
+<Q q="A manager says: keep 15 days of stock for every SKU. How do you respond?">
+
+It is simple to run, but it overstocks stable items and understocks volatile ones. I would keep days of supply as the language everyone uses, derive each item's number from its demand variability, lead time and service target, then group items into segments so the rules stay manageable.
+
+</Q>
+
+</InterviewKit>

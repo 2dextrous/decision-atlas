@@ -1,0 +1,15 @@
+---
+interface Props { items: { term: string; def: string }[]; label?: string }
+const { items, label = 'Words to use' } = Astro.props;
+---
+<div class="terms">
+  <p class="callout-label">{label}</p>
+  <dl>
+    {items.map((i) => (
+      <div class="term">
+        <dt>{i.term}</dt>
+        <dd>{i.def}</dd>
+      </div>
+    ))}
+  </dl>
+</div>

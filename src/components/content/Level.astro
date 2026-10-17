@@ -1,0 +1,40 @@
+---
+import Icon from '../Icon.astro';
+
+interface Props {
+  n: 1 | 2 | 3;
+  title: string;
+  minutes: number;
+  /** One line shown while the level is collapsed. */
+  teaser: string;
+  /** Title of the next level, for the "go deeper" button. */
+  next?: string;
+  nextMinutes?: number;
+}
+const { n, title, minutes, teaser, next, nextMinutes } = Astro.props;
+---
+<section class="level" data-n={n} id={`level-${n}`} aria-labelledby={`level-${n}-title`}>
+  <h2 class="level-h">
+    <button type="button" class="level-head" aria-expanded="true" aria-controls={`level-${n}-body`} data-level-toggle>
+      <span class="level-num" aria-hidden="true">{n}</span>
+      <span class="level-titles">
+        <span class="level-kicker">Level {n}</span>
+        <span class="level-title" id={`level-${n}-title`}>{title}</span>
+      </span>
+      <span class="level-time"><Icon name="clock" />{minutes} min</span>
+      <Icon name="chevron-down" class="level-chev" />
+    </button>
+  </h2>
+  <p class="level-teaser">{teaser}</p>
+  <div class="level-body prose" id={`level-${n}-body`}>
+    <slot />
+    {next && (
+      <button type="button" class="level-next" data-open-level={n + 1} hidden>
+        <span class="level-next-kicker">Go one level deeper</span>
+        <span class="level-next-title">Level {n + 1}: {next}</span>
+        {nextMinutes && <span class="level-next-time">{nextMinutes} min</span>}
+        <Icon name="arrow-right" />
+      </button>
+    )}
+  </div>
+</section>

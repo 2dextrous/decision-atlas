@@ -1,0 +1,75 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+---
+<BaseLayout title="About" description="Why Decision Atlas exists, how it is organized and how the content was made." current="about">
+  <article class="wrap about">
+    <p class="eyebrow">About</p>
+    <h1>A map of supply chain decisions, built for placement prep</h1>
+
+    <div class="prose about-body">
+      <p>
+        I'm Dhiraj Badshe. While preparing for supply chain interviews, I kept finding the same gap: textbooks explain
+        concepts chapter by chapter, but interviews ask about decisions, such as how much stock to hold, where a
+        warehouse should go, or why a forecast keeps missing. Decision Atlas is the study guide I wanted: every topic
+        framed as a decision, explained at the depth you choose, and finished with the questions interviewers ask.
+      </p>
+
+      <h2>How it is organized</h2>
+      <p>
+        Topics sit on <strong>lines</strong>, like a transit map. Lines are grouped by how far ahead a decision looks:
+        <strong>Plan</strong> (months), <strong>Design</strong> (years), <strong>Run</strong> (days to weeks) and
+        <strong>Protect</strong> (always on). Two starter lines cover foundations and analytical tools, and a final line,
+        <strong>SAP in practice</strong>, shows how the ideas run inside an ERP.
+      </p>
+      <p>Every stop can be read at three depths:</p>
+      <ol>
+        <li><strong>Gist.</strong> The idea in plain words with an everyday example, in about two minutes.</li>
+        <li><strong>How it works.</strong> Formulas, a worked example and, where it helps, a live lab.</li>
+        <li><strong>Deep dive.</strong> Edge cases, traps and how companies actually do it.</li>
+      </ol>
+      <p>Each stop ends with an interview kit: a 30-second answer and practice questions with model answers.</p>
+
+      <h2 id="how-this-was-made">How this was made</h2>
+      <p>
+        The content comes from my own study notes and coursework, including hands-on work in SAP S/4HANA. Topic
+        coverage was cross-checked against several public supply chain frameworks so that nothing important is missing.
+        I used AI tools to help structure and draft explanations, then check the maths and wording myself.
+      </p>
+      <p>
+        Every stop shows its status. <strong>Draft</strong> means it is written but still being checked line by line.
+        <strong>Checked</strong> means I have verified every number and claim against the sources listed at the bottom
+        of the page. If you spot a mistake, please tell me and I will fix it.
+      </p>
+
+      <h2>Try it hands-on</h2>
+      <p>
+        If you want to see these decisions interact, <a href="https://2dextrous.github.io/tributary/" rel="noopener">Tributary</a>
+        is a supply chain digital twin I built: it forecasts demand, picks a warehouse network, sizes inventory and
+        simulates a year of operations in the browser.
+      </p>
+
+      <h2>Use and credit</h2>
+      <p>
+        You are welcome to share and adapt the text for non-commercial use with credit (CC BY-NC 4.0). The code is MIT
+        licensed. Decision Atlas is an independent project and is not affiliated with any company or software vendor
+        mentioned on the site.
+      </p>
+    </div>
+
+    <div class="about-links">
+      <a class="btn btn-primary" href="/#map"><Icon name="map" />Open the map</a>
+      <a class="btn" href="https://www.linkedin.com/in/dhiraj-badshe-748326202/" rel="noopener">Connect on LinkedIn<Icon name="external" /></a>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .about { max-width: 760px; padding-top: clamp(2rem, 6vw, 4rem); }
+  .about h1 { margin-top: 0.75rem; font-size: clamp(2rem, 4.6vw, 2.9rem); font-weight: 800; letter-spacing: -0.03em; line-height: 1.06; }
+  .about-body { margin-top: 1.75rem; }
+  .about-body h2 { font-family: var(--font-ui); font-size: 1.3rem; font-weight: 800; letter-spacing: -0.015em; margin-top: 2.25rem; }
+  .about-body ol { padding-left: 1.3em; }
+  .about-links { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 2.5rem; }
+  .about-links :global(svg) { width: 1.05rem; height: 1.05rem; }
+</style>

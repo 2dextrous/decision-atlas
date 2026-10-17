@@ -1,0 +1,164 @@
+---
+import 'katex/dist/katex.min.css';
+import '../../styles/station.css';
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Icon from '../../components/Icon.astro';
+import { lineById, stations } from '../../data/atlas';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('stations');
+  return entries.map((entry) => {
+    const st = stations.get(entry.id);
+    if (!st) throw new Error(`Content file "${entry.id}" has no station on the map. Add it to src/data/atlas.ts.`);
+    if (st.line !== entry.data.line) throw new Error(`"${entry.id}" says line "${entry.data.line}" but the map puts it on "${st.line}".`);
+    for (const c of entry.data.connected) if (!stations.has(c)) throw new Error(`"${entry.id}" links to unknown station "${c}".`);
+    return { params: { line: entry.data.line, station: entry.id }, props: { entry } };
+  });
+}
+
+interface Props { entry: CollectionEntry<'stations'> }
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+const built = new Set((await getCollection('stations')).map((e) => e.id));
+
+const slug = entry.id;
+const data = entry.data;
+const line = lineById.get(data.line)!;
+const index = line.stops.findIndex((s) => s.slug === slug);
+const prev = line.stops[index - 1];
+const next = line.stops[index + 1];
+const total = data.minutes.gist + data.minutes.how + data.minutes.deep;
+const hrefFor = (s: string) => {
+  const st = stations.get(s)!;
+  return built.has(s) ? `/${st.line}/${s}/` : `/${st.line}/#${s}`;
+};
+const connected = data.connected.map((c) => {
+  const st = stations.get(c)!;
+  return { slug: c, name: st.name, line: lineById.get(st.line)!, built: built.has(c) };
+});
+const reviewed = data.reviewed?.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+---
+<BaseLayout title={data.title} description={data.summary} tone={line.tone} current={line.id === 'sap' ? 'sap' : 'map'}>
+  <div class="station wrap" data-tone={line.tone}>
+    <aside class="rail" aria-label={`${line.name} line`}>
+      <a class="rail-head" href={`/${line.id}/`}><span class="badge">{line.code}</span><span class="rail-name">{line.name}</span></a>
+      <ol class="rail-stops">
+        {line.stops.map((s) => {
+          const st = stations.get(s.slug)!;
+          const isBuilt = built.has(s.slug);
+          const here = s.slug === slug;
+          return (
+            <li class:list={['rail-stop', { 'is-planned': !isBuilt }]} data-slug={s.slug}>
+              <a href={hrefFor(s.slug)} aria-current={here ? 'page' : undefined} title={s.summary}>
+                <span class:list={['dot', { 'is-planned': !isBuilt && st.lines.length < 2, 'is-interchange': st.lines.length > 1 && !here }]} aria-hidden="true"></span>
+                <span>{s.label}</span>
+              </a>
+            </li>
+          );
+        })}
+      </ol>
+      <div class="rail-foot">
+        <a href={`/${line.id}/`}><Icon name="map" />The whole {line.name} line</a>
+        <a href="/#map"><Icon name="arrow-left" />Back to the map</a>
+      </div>
+    </aside>
+
+    <article class="station-main">
+      <nav class="crumbs" aria-label="Breadcrumb">
+        <a href="/#map">Map</a><span aria-hidden="true">/</span>
+        <a href={`/${line.id}/`}>{line.name}</a><span aria-hidden="true">/</span>
+        <span aria-current="page">Stop {index + 1} of {line.stops.length}</span>
+      </nav>
+
+      <details class="line-picker">
+        <summary><span class="badge badge-sm">{line.code}</span>{line.name}<span class="muted">Stop {index + 1} of {line.stops.length}</span></summary>
+        <ol class="rail-stops">
+          {line.stops.map((s) => {
+            const isBuilt = built.has(s.slug);
+            return (
+              <li class:list={['rail-stop', { 'is-planned': !isBuilt }]} data-slug={s.slug}>
+                <a href={hrefFor(s.slug)} aria-current={s.slug === slug ? 'page' : undefined}>
+                  <span class:list={['dot', { 'is-planned': !isBuilt }]} aria-hidden="true"></span>
+                  <span>{s.label}</span>
+                </a>
+              </li>
+            );
+          })}
+        </ol>
+      </details>
+
+      <header class="station-head">
+        <h1>{data.title}</h1>
+        <p class="station-lede">{data.summary}</p>
+        <div class="station-meta">
+          <span class="pill"><Icon name="clock" />{data.minutes.gist} min gist<span class="sep"><span class="sr-only">, </span></span>{total} min in full</span>
+          {data.status === 'reviewed' && reviewed ? (
+            <span class="pill pill-reviewed">Checked by Dhiraj on {reviewed}</span>
+          ) : (
+            <span class="pill pill-draft" title="Written from study notes; still being checked line by line">Draft<span class="sep"><span class="sr-only">, </span></span>review pending</span>
+          )}
+        </div>
+      </header>
+
+      <div class="depth" role="group" aria-labelledby="depth-label">
+        <p class="depth-label" id="depth-label">Read at<span>Change any time</span></p>
+        <div class="seg">
+          <label><input type="radio" name="page-depth" value="1" />Gist<small>{data.minutes.gist} min</small></label>
+          <label><input type="radio" name="page-depth" value="2" />How it works<small>+{data.minutes.how} min</small></label>
+          <label><input type="radio" name="page-depth" value="3" />Deep dive<small>+{data.minutes.deep} min</small></label>
+        </div>
+      </div>
+
+      <div class="station-body">
+        <Content />
+      </div>
+
+      {connected.length > 0 && (
+        <section class="station-section" aria-labelledby="connected-title">
+          <h2 id="connected-title">Connected stops</h2>
+          <p class="muted">Where this idea feeds in, or gets its inputs from.</p>
+          <div class="chips">
+            {connected.map((c) => (
+              <a class:list={['chip-link', { 'is-planned': !c.built }]} href={hrefFor(c.slug)} data-tone={c.line.tone}>
+                <span class="badge badge-sm">{c.line.code}</span>{c.name}
+              </a>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {data.sources.length > 0 && (
+        <section class="station-section" aria-labelledby="sources-title">
+          <h2 id="sources-title">Sources and further reading</h2>
+          <ol class="sources">
+            {data.sources.map((src) => (
+              <li>{src.url ? <a href={src.url} rel="noopener">{src.text}</a> : src.text}</li>
+            ))}
+          </ol>
+        </section>
+      )}
+
+      <footer class="station-foot">
+        <div>
+          <button type="button" class="btn done-btn" data-mark-done aria-pressed="false"><Icon name="check" /><span>Mark as read</span></button>
+        </div>
+        <nav class="stop-nav" aria-label="Next and previous stops">
+          {prev ? (
+            <a href={hrefFor(prev.slug)} class:list={{ 'is-planned': !built.has(prev.slug) }}><span class="muted">← Previous stop</span><strong>{prev.label}</strong></a>
+          ) : <span></span>}
+          {next && (
+            <a href={hrefFor(next.slug)} class:list={['next', { 'is-planned': !built.has(next.slug) }]}><span class="muted">Next stop →</span><strong>{next.label}</strong></a>
+          )}
+        </nav>
+      </footer>
+    </article>
+  </div>
+  <script is:inline type="application/json" id="station-slug" set:html={JSON.stringify(slug)}></script>
+</BaseLayout>
+
+<script>
+  import { mountStation } from '../../scripts/station';
+  const slug = JSON.parse(document.getElementById('station-slug')?.textContent || '""') as string;
+  if (slug) mountStation(slug);
+</script>

@@ -1,0 +1,8 @@
+---
+import Icon from '../Icon.astro';
+---
+<figure class="callout say">
+  <figcaption class="callout-label">Say it in 30 seconds</figcaption>
+  <blockquote class="say-quote"><slot /></blockquote>
+  <button type="button" class="say-copy btn btn-sm btn-ghost" data-copy-quote><Icon name="copy" /><span>Copy</span></button>
+</figure>

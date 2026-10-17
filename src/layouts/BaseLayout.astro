@@ -1,0 +1,72 @@
+---
+import '@fontsource-variable/overpass/wght.css';
+import '@fontsource-variable/overpass/wght-italic.css';
+import '@fontsource/overpass-mono/500.css';
+import '@fontsource-variable/literata/opsz.css';
+import '@fontsource-variable/literata/opsz-italic.css';
+import '@fontsource-variable/atkinson-hyperlegible-next/wght.css';
+import '@fontsource-variable/atkinson-hyperlegible-next/wght-italic.css';
+import '../styles/global.css';
+import overpassLatin from '@fontsource-variable/overpass/files/overpass-latin-wght-normal.woff2?url';
+import TopBar from '../components/TopBar.astro';
+import Footer from '../components/Footer.astro';
+import SettingsPanel from '../components/SettingsPanel.astro';
+import SearchPalette from '../components/SearchPalette.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  current?: 'map' | 'sap' | 'paths' | 'about';
+  tone?: string;
+}
+const { title, description, current, tone } = Astro.props;
+const fullTitle = title === 'Decision Atlas' ? 'Decision Atlas · Supply chain decisions, explained' : `${title} · Decision Atlas`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <script is:inline>
+      (function () {
+        var d = document.documentElement, p = {};
+        try { p = JSON.parse(localStorage.getItem('atlas:prefs') || '{}') || {}; } catch (e) { p = {}; }
+        function pick(v, list, fallback) { v = typeof v === 'number' ? String(v) : v; return list.indexOf(v) > -1 ? v : fallback; }
+        var theme = pick(p.theme, ['light', 'sepia', 'dark'], '');
+        if (theme) d.setAttribute('data-theme', theme);
+        d.setAttribute('data-size', pick(p.size, ['1', '2', '3', '4', '5'], '3'));
+        d.setAttribute('data-font', pick(p.font, ['sans', 'serif', 'easy'], 'sans'));
+        d.setAttribute('data-spacing', pick(p.spacing, ['compact', 'comfortable', 'relaxed'], 'comfortable'));
+        d.setAttribute('data-width', pick(p.width, ['narrow', 'medium', 'wide'], 'medium'));
+        d.setAttribute('data-depth', pick(p.depth, ['1', '2', '3'], '2'));
+        if (p.focus === true) d.setAttribute('data-focus', 'on');
+        if (p.motion === 'reduce') d.setAttribute('data-motion', 'reduce');
+      })();
+    </script>
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="preload" href={overpassLatin} as="font" type="font/woff2" crossorigin />
+    <meta name="theme-color" content="#f3f4f6" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0e1116" media="(prefers-color-scheme: dark)" />
+    <meta name="author" content="Dhiraj Badshe" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Decision Atlas" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary" />
+  </head>
+  <body data-tone={tone}>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <TopBar current={current} />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+    <SettingsPanel />
+    <SearchPalette />
+  </body>
+</html>

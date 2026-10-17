@@ -1,0 +1,11 @@
+---
+// Three lines meeting at an interchange: the Decision Atlas mark.
+interface Props { size?: number }
+const { size = 28 } = Astro.props;
+---
+<svg class="logo" width={size} height={size} viewBox="0 0 32 32" aria-hidden="true">
+  <path d="M3.5 8.5C10.5 8.5 11.5 16 16 16" stroke="var(--t-demand)" stroke-width="4" fill="none" stroke-linecap="round" />
+  <path d="M3.5 23.5C10.5 23.5 11.5 16 16 16" stroke="var(--t-risk)" stroke-width="4" fill="none" stroke-linecap="round" />
+  <path d="M16 16H28.5" stroke="var(--t-inventory)" stroke-width="4" fill="none" stroke-linecap="round" />
+  <circle cx="16" cy="16" r="5.25" fill="var(--surface)" stroke="var(--ink)" stroke-width="3" />
+</svg>

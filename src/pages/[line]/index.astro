@@ -1,0 +1,128 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Icon from '../../components/Icon.astro';
+import { lines, lineById, stations, zones, type Line } from '../../data/atlas';
+
+export function getStaticPaths() {
+  return lines.map((line) => ({ params: { line: line.id }, props: { line } }));
+}
+
+interface Props { line: Line }
+const { line } = Astro.props;
+const entries = await getCollection('stations');
+const built = new Map(entries.map((e) => [e.id, e]));
+const zone = zones.find((z) => z.id === line.zone)!;
+const ready = line.stops.filter((s) => built.has(s.slug)).length;
+const idx = lines.findIndex((l) => l.id === line.id);
+const prevLine = lines[idx - 1];
+const nextLine = lines[idx + 1];
+---
+<BaseLayout title={`${line.name} line`} description={line.tagline} tone={line.tone} current={line.id === 'sap' ? 'sap' : 'map'}>
+  <div class="wrap line-page" data-tone={line.tone}>
+    <nav class="crumbs" aria-label="Breadcrumb">
+      <a href="/#map">Map</a><span aria-hidden="true">/</span><span>{zone.title}</span>
+    </nav>
+
+    <header class="line-hero">
+      <span class="badge badge-lg">{line.code}</span>
+      <h1>{line.name}</h1>
+      <p class="lede">{line.tagline}</p>
+      <p class="line-meta muted">
+        {line.stops.length} stops<span class="sep"><span class="sr-only">, </span></span>{ready} ready to read<span data-line-progress="read" data-slugs={line.stops.map((s) => s.slug).join(',')}></span>
+      </p>
+    </header>
+
+    <ol class="line-stops">
+      {line.stops.map((stop, i) => {
+        const st = stations.get(stop.slug)!;
+        const entry = built.get(stop.slug);
+        const others = st.lines.filter((l) => l !== line.id).map((l) => lineById.get(l)!);
+        const href = entry ? `/${st.line}/${stop.slug}/` : undefined;
+        const minutes = entry ? entry.data.minutes.gist + entry.data.minutes.how + entry.data.minutes.deep : 0;
+        return (
+          <li id={stop.slug} class:list={['ls', { 'is-planned': !entry }]} data-slug={stop.slug}>
+            <span class:list={['dot', { 'is-planned': !entry && !others.length, 'is-interchange': others.length > 0 }]} aria-hidden="true"></span>
+            <div class="ls-body">
+              <p class="ls-num mono">Stop {i + 1}</p>
+              <h2 class="ls-title">{href ? <a href={href}>{stop.label}</a> : stop.label}</h2>
+              <p class="ls-summary">{entry?.data.summary ?? stop.summary}</p>
+              <p class="ls-meta">
+                {entry ? (
+                  <span class="ls-ready"><span class="meter" data-levels="3" aria-hidden="true"><i></i><i></i><i></i></span>3 levels<span class="sep"><span class="sr-only">, </span></span>{minutes} min in full</span>
+                ) : (
+                  <span class="ls-soon">Being written</span>
+                )}
+                {others.map((o) => (
+                  <span class="ls-also">Also on <span class="badge badge-sm" data-tone={o.tone}>{o.code}</span> {o.name}</span>
+                ))}
+              </p>
+            </div>
+          </li>
+        );
+      })}
+    </ol>
+
+    <nav class="line-nav" aria-label="Other lines">
+      {prevLine ? (
+        <a class="line-nav-card card" href={`/${prevLine.id}/`} data-tone={prevLine.tone}>
+          <span class="muted"><Icon name="arrow-left" /> Previous line</span>
+          <span class="line-nav-name"><span class="badge badge-sm">{prevLine.code}</span>{prevLine.name}</span>
+        </a>
+      ) : <span></span>}
+      {nextLine && (
+        <a class="line-nav-card card next" href={`/${nextLine.id}/`} data-tone={nextLine.tone}>
+          <span class="muted">Next line <Icon name="arrow-right" /></span>
+          <span class="line-nav-name"><span class="badge badge-sm">{nextLine.code}</span>{nextLine.name}</span>
+        </a>
+      )}
+    </nav>
+  </div>
+</BaseLayout>
+
+<script>
+  import { paintProgress } from '../../scripts/progress';
+  paintProgress();
+  document.addEventListener('atlas:progress', () => paintProgress());
+</script>
+
+<style>
+  .line-page { max-width: 880px; padding-top: 2rem; }
+  .crumbs { display: flex; gap: 0.5rem; font-size: 0.875rem; color: var(--muted); }
+  .crumbs a { color: var(--ink-2); text-decoration: none; }
+  .crumbs a:hover { text-decoration: underline; }
+  .line-hero { padding: 1.5rem 0 2rem; border-bottom: 1px solid var(--rule); }
+  .badge-lg { min-width: 3.4rem; height: 2rem; font-size: 0.9rem; border-radius: 8px; }
+  .line-hero h1 { margin-top: 0.9rem; font-size: clamp(2.1rem, 5vw, 3rem); font-weight: 800; letter-spacing: -0.03em; }
+  .lede { margin-top: 0.75rem; font-size: 1.15rem; color: var(--ink-2); max-width: 56ch; line-height: 1.55; }
+  .line-meta { margin-top: 0.9rem; font-size: 0.9rem; }
+
+  .line-stops { position: relative; list-style: none; margin: 0; padding: 1.5rem 0 0; }
+  .line-stops::before { content: ''; position: absolute; left: calc(0.75rem - 2px); top: 3.1rem; bottom: 2.2rem; width: 4px; border-radius: 2px; background: var(--c); }
+  .ls { position: relative; display: grid; grid-template-columns: 1.5rem 1fr; gap: 1rem; padding: 0.9rem 0; scroll-margin-top: 90px; }
+  .ls > .dot { margin-top: 1.55rem; width: 16px; height: 16px; }
+  .ls > .dot.is-planned { width: 12px; height: 12px; margin-top: 1.65rem; }
+  .ls:target .ls-body { background: color-mix(in srgb, var(--c) 9%, var(--surface)); border-color: color-mix(in srgb, var(--c) 40%, var(--rule)); }
+  .ls-body { padding: 0.9rem 1.1rem 1rem; border: 1px solid var(--rule); border-radius: 14px; background: var(--surface); transition: border-color var(--dur) var(--ease); }
+  .ls:not(.is-planned) .ls-body:hover { border-color: var(--rule-2); }
+  .ls-num { font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
+  .ls-title { margin-top: 0.2rem; font-size: 1.2rem; font-weight: 750; letter-spacing: -0.015em; }
+  .ls-title a { text-decoration: none; }
+  .ls-title a:hover { text-decoration: underline; text-decoration-color: var(--c); text-decoration-thickness: 2px; }
+  .is-planned .ls-title { color: var(--ink-2); }
+  .ls-summary { margin-top: 0.35rem; color: var(--ink-2); line-height: 1.5; }
+  .ls-meta { display: flex; flex-wrap: wrap; gap: 0.4rem 1rem; margin-top: 0.7rem; font-size: 0.82rem; color: var(--muted); }
+  .ls-ready, .ls-also { display: inline-flex; align-items: center; gap: 0.45rem; }
+  .ls-soon { display: inline-flex; align-items: center; gap: 0.4rem; }
+  .ls-soon::before { content: ''; width: 0.5rem; height: 0.5rem; border-radius: 50%; border: 1.5px dashed var(--muted); }
+  .is-done .ls-title::after { content: ' ✓'; color: var(--muted); }
+
+  .line-nav { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 2.5rem; }
+  .line-nav-card { display: grid; gap: 0.4rem; padding: 0.9rem 1.1rem; text-decoration: none; transition: border-color var(--dur) var(--ease); }
+  .line-nav-card:hover { border-color: var(--rule-2); }
+  .line-nav-card.next { text-align: right; justify-items: end; }
+  .line-nav-card .muted { display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.82rem; }
+  .line-nav-card :global(svg) { width: 0.95rem; height: 0.95rem; }
+  .line-nav-name { display: inline-flex; align-items: center; gap: 0.5rem; font-weight: 750; }
+  @media (max-width: 560px) { .line-nav { grid-template-columns: 1fr; } .line-nav-card.next { text-align: left; justify-items: start; } }
+</style>

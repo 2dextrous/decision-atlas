@@ -1,0 +1,23 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Icon from '../components/Icon.astro';
+---
+<BaseLayout title="Stop not found" description="This page is not on the map.">
+  <section class="wrap lost">
+    <span class="dot is-planned" aria-hidden="true"></span>
+    <h1>This stop is not on the map</h1>
+    <p class="muted">The page may have moved, or it is still being written.</p>
+    <div class="lost-links">
+      <a class="btn btn-primary" href="/#map"><Icon name="map" />Back to the map</a>
+      <button type="button" class="btn" data-open-search><Icon name="search" />Search topics</button>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .lost { max-width: 640px; padding-block: clamp(4rem, 12vw, 8rem); text-align: center; display: grid; justify-items: center; gap: 0.75rem; }
+  .lost .dot { width: 18px; height: 18px; border-width: 3px; }
+  .lost h1 { font-size: clamp(1.8rem, 4vw, 2.4rem); font-weight: 800; letter-spacing: -0.025em; }
+  .lost-links { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; margin-top: 1rem; }
+  .lost-links :global(svg) { width: 1.05rem; height: 1.05rem; }
+</style>

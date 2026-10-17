@@ -1,0 +1,13 @@
+---
+import Icon from '../Icon.astro';
+interface Props { q: string }
+const { q } = Astro.props;
+---
+<details class="q">
+  <summary>
+    <span class="q-mark" aria-hidden="true">Q</span>
+    <span class="q-text">{q}</span>
+    <Icon name="chevron-down" class="q-chev" />
+  </summary>
+  <div class="q-answer"><slot /></div>
+</details>

@@ -1,0 +1,96 @@
+---
+import Icon from '../Icon.astro';
+
+const controls = [
+  { id: 'd', label: 'Average demand', unit: 'kg a day', min: 1, max: 12, step: 0.5, value: 4, hint: '1,200 kg a year over 300 trading days' },
+  { id: 'sd', label: 'Day-to-day variation (σd)', unit: 'kg', min: 0, max: 4, step: 0.1, value: 1.5, hint: 'How far a typical day strays from the average' },
+  { id: 'L', label: 'Supplier lead time', unit: 'days', min: 1, max: 15, step: 1, value: 5, hint: 'From placing the order to beans on the shelf' },
+  { id: 'sL', label: 'Lead-time variation (σL)', unit: 'days', min: 0, max: 3, step: 0.25, value: 0, hint: '0 means the truck is never early or late' },
+  { id: 'csl', label: 'Cycle service level', unit: '%', min: 50, max: 99.9, step: 0.1, value: 95, hint: 'Chance of not running out before a delivery lands' },
+  { id: 'Q', label: 'Order size', unit: 'kg', min: 10, max: 160, step: 0.5, value: 77.5, hint: '77.5 kg is the café’s economic order quantity' },
+];
+---
+<figure class="lab wide" data-lab="safety-stock" aria-labelledby="lab-ss-title">
+  <header class="lab-head">
+    <span class="lab-tag" aria-hidden="true">Lab</span>
+    <div>
+      <p class="lab-title" id="lab-ss-title">Size the buffer for a café’s coffee beans</p>
+      <p class="lab-sub">Move a slider and the numbers and the chart update together.</p>
+    </div>
+  </header>
+
+  <div class="lab-grid">
+    <fieldset class="lab-controls">
+      <legend class="sr-only">Inputs</legend>
+      {controls.map((c) => (
+        <div class="ctl">
+          <div class="ctl-top">
+            <label for={`ss-${c.id}`}>{c.label}</label>
+            <output for={`ss-${c.id}`} data-out={c.id}>{c.value} {c.unit}</output>
+          </div>
+          <input class="range" type="range" id={`ss-${c.id}`} name={c.id} min={c.min} max={c.max} step={c.step} value={c.value} data-unit={c.unit} />
+          <p class="ctl-hint">{c.hint}</p>
+        </div>
+      ))}
+      <div class="presets" role="group" aria-label="Try a scenario">
+        <span class="presets-label">Try</span>
+        <button type="button" class="chip" data-preset="reliable">Reliable: 5 ± 0 days</button>
+        <button type="button" class="chip" data-preset="fast">Faster, unreliable: 3 ± 2 days</button>
+        <button type="button" class="chip" data-preset="high">99% service</button>
+        <button type="button" class="chip chip-quiet" data-preset="reset">Reset</button>
+      </div>
+    </fieldset>
+
+    <div class="lab-results" aria-live="polite">
+      <div class="tile">
+        <span class="tile-label">Safety stock</span>
+        <span class="tile-value" data-r="ss">5.5 kg</span>
+        <span class="tile-sub" data-r="ssDays">1.4 days of supply</span>
+      </div>
+      <div class="tile">
+        <span class="tile-label">Reorder point</span>
+        <span class="tile-value" data-r="rop">25.5 kg</span>
+        <span class="tile-sub">Order when inventory position falls to this</span>
+      </div>
+      <div class="tile">
+        <span class="tile-label">Average stock on hand</span>
+        <span class="tile-value" data-r="avg">44.3 kg</span>
+        <span class="tile-sub" data-r="avgDays">11.1 days of supply</span>
+      </div>
+      <p class="lab-formula" data-r="formula"></p>
+    </div>
+  </div>
+
+  <div class="lab-chart-block">
+    <div class="lab-chart-head">
+      <p class="lab-chart-title">Beans on the shelf over 60 days</p>
+      <div class="seg seg-sm" role="radiogroup" aria-label="Demand pattern">
+        <label><input type="radio" name="ss-mode" value="steady" checked />Textbook</label>
+        <label><input type="radio" name="ss-mode" value="bumpy" />Real life</label>
+      </div>
+      <button type="button" class="btn btn-sm btn-ghost lab-replay" data-replay hidden><Icon name="shuffle" /><span>Replay</span></button>
+    </div>
+    <div class="lab-chart" data-chart tabindex="0" role="img" aria-label="Chart of stock on the shelf over 60 days">
+      <div class="lab-tip" data-tip hidden></div>
+    </div>
+    <ul class="lab-key" data-key aria-label="Chart key"></ul>
+    <p class="lab-note" data-r="note"></p>
+  </div>
+
+  <details class="lab-table">
+    <summary>Show the numbers day by day</summary>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th scope="col">Day</th><th scope="col">Demand</th><th scope="col">On the shelf at close</th><th scope="col">Inventory position</th><th scope="col">What happened</th></tr>
+        </thead>
+        <tbody data-table></tbody>
+      </table>
+    </div>
+  </details>
+</figure>
+
+<script>
+  import { mountSafetyStockLab } from '../../scripts/labs/safety-stock-ui';
+  document.querySelectorAll<HTMLElement>('[data-lab="safety-stock"]').forEach(mountSafetyStockLab);
+</script>
