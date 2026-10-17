@@ -1,0 +1,77 @@
+---
+title: Incoterms
+line: foundations
+summary: Who pays for what, and where the risk passes from seller to buyer, at each leg of an international shipment.
+minutes: { gist: 3 }
+status: draft
+keywords: [Incoterms 2020, EXW, FCA, FOB, CIF, CIP, DAP, DPU, DDP, risk transfer, cost allocation, international trade, ICC]
+connected: [tariffs-trade, intermodal, supplier-selection, procurement-fundamentals, transport-fundamentals]
+sources:
+  - text: "International Chamber of Commerce (2019). Incoterms® 2020: ICC Rules for the Use of Domestic and International Trade Terms. ICC Publication No. 723."
+  - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Three-letter codes that settle costs and risk between buyer and seller." soon>
+
+When an Indian company buys machine parts from Germany, someone has to pay for trucking to the port, export clearance, the ocean freight, insurance, import duty and the last delivery, and someone carries the risk if the cargo is damaged on the way. **Incoterms**, published by the International Chamber of Commerce, are standard three-letter rules that settle exactly this. The current version is **Incoterms 2020**, with 11 rules:
+
+| Rule | Seller delivers when… | Notes |
+|---|---|---|
+| **EXW** Ex Works | goods are ready at the seller's premises | Buyer does almost everything |
+| **FCA** Free Carrier | goods are handed to the buyer's carrier | Works for any mode, including containers |
+| **FAS** Free Alongside Ship | goods are alongside the vessel | Sea only, bulk cargo |
+| **FOB** Free on Board | goods are on board the vessel | Sea only; risk passes on loading |
+| **CFR** Cost and Freight | goods are on board; seller pays freight | Risk passes on loading, cost later |
+| **CIF** Cost, Insurance and Freight | as CFR, plus basic insurance | Sea only |
+| **CPT** Carriage Paid To | goods go to the first carrier; seller pays carriage | Any mode |
+| **CIP** Carriage and Insurance Paid To | as CPT, plus higher insurance | Any mode |
+| **DAP** Delivered at Place | goods arrive, ready for unloading | Buyer pays import duty |
+| **DPU** Delivered at Place Unloaded | goods are unloaded at destination | Replaced DAT in 2020 |
+| **DDP** Delivered Duty Paid | goods arrive, import duty paid | Seller does almost everything |
+
+The trap in the "C" terms: the seller pays freight to the destination, but **risk passes at origin**. Under CIF, if the ship sinks, the loss belongs to the buyer, who claims on the insurance.
+
+Incoterms don't cover everything. They don't say when ownership passes, how payment works, or what happens if the contract is broken; the sales contract covers those.
+
+<KeyIdea>
+
+Each Incoterm defines the delivery point: where risk passes and which costs each side pays. Remember that for C terms, cost and risk split at different places.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Risk transfer point', def: 'Where responsibility for loss or damage passes from seller to buyer.' },
+  { term: 'FOB vs CIF', def: 'Buyer arranges sea freight and insurance, versus seller pays them; risk passes on loading in both.' },
+  { term: 'DDP', def: 'Delivered Duty Paid: the seller carries cost and risk to the buyer’s door, including import duty.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+Incoterms 2020 are ICC rules that define where the seller delivers: who arranges and pays for each leg of transport, insurance, export and import clearance, and where risk passes. They range from EXW, where the buyer does almost everything, to DDP, where the seller delivers duty-paid to the door. A common trap is that under C terms like CIF the seller pays freight to destination but risk passes at loading. Incoterms don't cover ownership transfer or payment terms.
+
+</SayIt>
+
+<Q q="Under CIF, the ship sinks mid-ocean. Who bears the loss?">
+
+The buyer. Under CIF, risk passes when the goods are loaded on board at the origin port, even though the seller paid the freight and insurance. The buyer claims on the insurance the seller arranged.
+
+</Q>
+
+<Q q="Why might a buyer prefer FCA or FOB over CIF?">
+
+To control freight and insurance themselves: choose the carrier, negotiate rates, consolidate shipments from several suppliers and get better visibility. Under CIF the seller picks the carrier and the minimum insurance, which may not suit the buyer.
+
+</Q>
+
+</InterviewKit>

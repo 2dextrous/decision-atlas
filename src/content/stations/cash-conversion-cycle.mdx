@@ -1,0 +1,79 @@
+---
+title: Cash conversion cycle
+line: foundations
+summary: "How long cash stays tied up in operations: DIO + DSO − DPO, and the supply chain levers behind each part."
+minutes: { gist: 3 }
+status: draft
+keywords: [cash conversion cycle, CCC, cash to cash, DIO, DSO, DPO, working capital, days inventory outstanding, days sales outstanding, days payable outstanding, negative CCC]
+connected: [supply-chain-kpis, why-inventory, procurement-fundamentals, order-to-delivery, record-to-report]
+sources:
+  - text: "Farris, M. T. & Hutchison, P. D. (2002). Cash-to-cash: the new supply chain management metric. International Journal of Physical Distribution & Logistics Management, 32(4), 288–298."
+  - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Days of stock, plus days to get paid, minus days before you pay." soon>
+
+The **cash conversion cycle (CCC)** measures how many days a company's own cash is tied up in running the business, from paying for materials to collecting from customers:
+
+$$
+CCC = DIO + DSO - DPO
+$$
+
+- **DIO (days inventory outstanding):** how long stock sits before it's sold.
+- **DSO (days sales outstanding):** how long customers take to pay after a sale.
+- **DPO (days payable outstanding):** how long the company takes to pay its suppliers.
+
+Suppose DIO is 60 days, DSO 30 and DPO 45. Then CCC = 60 + 30 − 45 = **45 days**. Goods sit 60 days and customers pay 30 days after that, a 90-day operating cycle, but suppliers effectively finance the first 45 days, so the company funds 45 days itself.
+
+Each part maps to supply chain decisions:
+
+- **DIO:** forecasting, safety stock, segmentation, MEIO, clearing slow and obsolete stock.
+- **DSO:** order-to-cash speed, invoicing accuracy, dispute handling, credit terms.
+- **DPO:** procurement terms and payment timing.
+
+Some businesses run a **negative** CCC: with DIO 20, DSO 10 and DPO 45, CCC = −15 days. Customers' cash arrives before suppliers are paid, so growth funds itself, as in some retail and e-commerce models.
+
+A warning interviewers like: lower isn't always better. Cutting inventory until stockouts appear, or stretching suppliers until they fail, improves the number while damaging the business.
+
+<KeyIdea>
+
+CCC = DIO + DSO − DPO. Break it into its parts and improve each one through the supply chain lever behind it, without trading away service or supplier health.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'DIO', def: 'Inventory ÷ cost of goods sold × 365: days stock sits before it is sold.' },
+  { term: 'DSO', def: 'Receivables ÷ revenue × 365: days customers take to pay.' },
+  { term: 'DPO', def: 'Payables ÷ cost of goods sold × 365: days the company takes to pay suppliers.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+The cash conversion cycle is DIO plus DSO minus DPO: how many days the company's own cash is tied up between paying suppliers and collecting from customers. I'd improve it by working on each part: DIO through better forecasting, segmented safety stock and clearing slow stock; DSO through faster, accurate invoicing and dispute resolution; DPO through procurement terms, while protecting service and supplier health.
+
+</SayIt>
+
+<Q q="DIO is 60, DSO 30 and DPO 45. What is the CCC, and what does it mean?">
+
+45 days. The operating cycle is 90 days, inventory plus collection, but suppliers finance 45 of those days, so the company must fund 45 days of operations from its own working capital.
+
+</Q>
+
+<Q q="How would you reduce a company's CCC?">
+
+Decompose it first. For DIO: improve forecast accuracy, set safety stock by segment, use MEIO and clear obsolete stock. For DSO: invoice faster and correctly, resolve disputes and enforce terms. For DPO: negotiate longer terms or use supplier finance. Avoid simply cutting stock or delaying payments, which can hurt service and suppliers.
+
+</Q>
+
+</InterviewKit>

@@ -1,0 +1,76 @@
+---
+title: Sustainable optimization
+line: risk
+summary: Trading off cost, service and emissions in one model, and showing leadership the frontier of options instead of a single answer.
+minutes: { gist: 3 }
+status: draft
+keywords: [sustainable optimization, multi-objective optimization, Pareto frontier, trade-off curve, carbon price, emissions cap, epsilon constraint, cost service carbon, green supply chain]
+connected: [carbon-aware-design, optimization-basics, esg-risk, network-design-decisions, lane-mode]
+sources:
+  - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapter on sustainability and the supply chain."
+  - text: "Ehrgott, M. (2005). Multicriteria Optimization (2nd ed.). Springer."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Cost, service and carbon in one model, and a curve of options instead of one answer." soon>
+
+Most optimization models chase one goal: lowest cost. **Sustainable optimization** adds emissions alongside cost and service, and accepts that you can't usually minimize all three at once. Cheaper often means fuller trucks and fewer sites (good for carbon too), but faster often means air freight and more stock near customers (bad for carbon).
+
+There are three standard ways to handle several goals:
+
+- **Weighted objective:** put a price on carbon, say ₹X per tonne of CO₂, and minimize cost + carbon price × emissions.
+- **Constraint:** minimize cost subject to emissions staying below a cap, such as 20% below last year (the "epsilon-constraint" method).
+- **Frontier:** solve the model many times with different caps or prices and plot the results.
+
+The third gives the most useful output, a **Pareto frontier**: each point is a network plan where you can't cut emissions further without raising cost, or the reverse. A typical shape:
+
+| Plan | Cost | Emissions |
+|---|---|---|
+| Lowest cost | ₹100 crore | 50,000 t CO₂ |
+| −15% emissions | ₹101 crore | 42,500 t |
+| −30% emissions | ₹104 crore | 35,000 t |
+| −45% emissions | ₹112 crore | 27,500 t |
+
+The first cuts are cheap (better loads, rail on long lanes); deeper cuts get expensive. Showing leadership the whole curve turns "go green" from a slogan into a choice with a known price.
+
+<KeyIdea>
+
+Put carbon into the model as a price or a cap, solve across the range, and show the cost–service–emissions frontier, so targets are chosen with their cost in view.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Multi-objective optimization', def: 'Optimizing several goals at once, such as cost, service and emissions.' },
+  { term: 'Pareto frontier', def: 'The set of plans where no goal can improve without another getting worse.' },
+  { term: 'Epsilon-constraint method', def: 'Optimizing one goal while capping the others at chosen levels.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+Sustainable optimization treats emissions as a goal alongside cost and service. I'd model carbon either as a price in the objective or as a cap, solve across a range of prices or caps, and present the Pareto frontier of cost versus emissions. It usually shows cheap early reductions from load and mode changes and rising costs for deeper cuts, so leadership can choose a target knowing what it costs.
+
+</SayIt>
+
+<Q q="How would you add sustainability to a network optimization model?">
+
+Calculate emissions for each lane and facility, using tonne-km times mode factors plus site energy, then either add a carbon price to the cost objective or add a constraint capping total emissions. Run it across several prices or caps to build the cost-versus-emissions trade-off curve.
+
+</Q>
+
+<Q q="What does a Pareto frontier tell a decision maker?">
+
+That every plan on it is efficient: you can't reduce emissions without increasing cost, or the reverse. Plans off the frontier are simply worse. The decision maker chooses a point on the curve based on how much they're willing to pay per tonne avoided.
+
+</Q>
+
+</InterviewKit>

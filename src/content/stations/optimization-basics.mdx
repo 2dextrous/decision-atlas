@@ -1,0 +1,75 @@
+---
+title: "Optimization basics: LP and MILP"
+line: analytics
+summary: Objective, decision variables and constraints in plain words, with a worked linear program and when you need integers.
+minutes: { gist: 3 }
+status: draft
+keywords: [optimization, linear programming, LP, mixed integer linear programming, MILP, objective function, decision variables, constraints, feasible region, solver, Gurobi, shadow price]
+connected: [facility-location, plant-allocation, sourcing-allocation, ai-plus-optimization, sustainable-optimization]
+sources:
+  - text: "Hillier, F. S. & Lieberman, G. J. Introduction to Operations Research. McGraw-Hill."
+  - text: "Winston, W. L. Operations Research: Applications and Algorithms. Cengage Learning."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Decide, aim, respect the limits: the three parts of every optimization model." soon>
+
+Every optimization model has three parts:
+
+- **Decision variables:** what you're choosing, such as how much of each product to make or which warehouse to open.
+- **Objective:** what you're maximizing or minimizing, such as profit or total cost.
+- **Constraints:** the limits you must respect, such as machine hours, labour, demand and capacity.
+
+Here's a small **linear program (LP)**. A plant makes products A and B, earning ₹50 and ₹40 per unit. A needs 2 machine hours and 1 labour hour; B needs 1 machine hour and 2 labour hours. There are 100 machine hours and 80 labour hours.
+
+$$
+\max\ 50x_1 + 40x_2 \quad \text{s.t.} \quad 2x_1 + x_2 \le 100,\quad x_1 + 2x_2 \le 80,\quad x_1, x_2 \ge 0
+$$
+
+The best plan uses both resources fully: make **40 of A and 20 of B**, for a profit of **₹2,800**. Making only A would give 50 units and ₹2,500; only B, 40 units and ₹1,600. The optimum sits at a corner where both constraints meet, which is how LP solutions always behave.
+
+It's called *linear* because every term is a number times a variable, with no variables multiplied together. That makes LPs fast to solve, even with millions of variables.
+
+Many supply chain decisions are yes-or-no: open this warehouse or not, use this supplier or not, run this line or not. Those need **integer** (often 0/1) variables, which makes the model a **mixed-integer linear program (MILP)**. MILPs are much harder to solve, so they use specialist **solvers** such as Gurobi, CPLEX, or open-source ones like HiGHS and CBC. Small models even run in Excel Solver.
+
+<KeyIdea>
+
+Optimization means choosing decision variables to maximize or minimize an objective within constraints. LP handles quantities; MILP adds the yes-or-no decisions that network and sourcing problems need.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Objective function', def: 'The quantity to maximize or minimize, such as profit or cost.' },
+  { term: 'Binary variable', def: 'A 0/1 decision such as open or closed; it makes a model a MILP.' },
+  { term: 'Shadow price', def: 'How much the objective improves if one constraint is relaxed by one unit.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+An optimization model has decision variables, an objective and constraints. If everything is linear and continuous, it's an LP, fast to solve even at large scale. If some decisions are yes-or-no, like opening a facility or selecting a supplier, binary variables make it a MILP, which needs solvers like Gurobi, CPLEX or HiGHS. Beyond the answer, I'd read shadow prices to see which constraints are worth relaxing.
+
+</SayIt>
+
+<Q q="Maximize 50x₁ + 40x₂ with 2x₁ + x₂ ≤ 100 and x₁ + 2x₂ ≤ 80. What is the optimum?">
+
+Check the corners of the feasible region: (50, 0) gives 2,500, (0, 40) gives 1,600, and where both constraints meet, x₁ = 40 and x₂ = 20, it gives 2,800. So the optimum is 40 of A and 20 of B, profit 2,800.
+
+</Q>
+
+<Q q="When do you need a MILP instead of an LP?">
+
+When decisions are discrete: open or close a site, choose a supplier, run a line or not, fixed costs that only apply if something is used, or minimum batch sizes. Those need integer or binary variables. Pure quantity decisions with linear costs stay as an LP.
+
+</Q>
+
+</InterviewKit>

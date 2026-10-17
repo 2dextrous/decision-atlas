@@ -1,0 +1,74 @@
+---
+title: Order to delivery basics
+line: orders
+summary: Everything that happens between a customer's order and the delivery at their door, and the measures that show whether it worked.
+minutes: { gist: 3 }
+status: draft
+keywords: [order to cash, O2C, order fulfilment, order capture, credit check, availability check, picking, goods issue, proof of delivery, perfect order, order cycle time, OTIF]
+connected: [atp-ctp, order-to-cash, warehousing, supply-chain-kpis, order-visibility]
+sources:
+  - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson."
+  - text: "Magal, S. R. & Word, J. (2012). Integrated Business Processes with ERP Systems. Wiley."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="The sell-side mirror of procurement, from order to cash in the bank." soon>
+
+When a supermarket chain orders 500 cases of shampoo, a chain of steps starts. Together they're called **order to cash (O2C)**, the sell-side mirror of procure-to-pay:
+
+1. **Order capture:** the order arrives by EDI, a portal, a sales rep's app or email, and is checked for price, pack sizes and delivery date.
+2. **Credit check:** is the customer within its credit limit?
+3. **Availability check:** can we promise the quantity and date? (That's ATP.)
+4. **Allocation:** if stock is short, who gets it?
+5. **Delivery creation and picking:** the warehouse picks and packs the order.
+6. **Goods issue and shipping:** stock leaves the building; ownership and cost of goods sold are booked.
+7. **Proof of delivery:** the customer confirms receipt, quantities and condition.
+8. **Billing and payment:** invoice, collection, and clearing the customer's account.
+
+Things go wrong at every hand-off: a price mismatch blocks the order, a credit hold delays it, a picking error ships the wrong pack, a missed truck turns "on time" into "late". That's why companies measure the whole chain, not just the warehouse:
+
+- **Order cycle time:** order received to order delivered.
+- **OTIF:** share of orders delivered on time and in full.
+- **Perfect order rate:** on time, complete, undamaged and with correct paperwork and invoice. Because it multiplies several conditions, it's always lower than any single measure.
+
+<KeyIdea>
+
+Order to delivery runs from capture through credit, availability, picking, shipping and proof of delivery to billing. Measure the whole chain, because customers feel the weakest hand-off.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Order to cash (O2C)', def: 'The end-to-end process from receiving a customer order to collecting payment.' },
+  { term: 'Perfect order rate', def: 'Share of orders that are on time, complete, undamaged and correctly documented.' },
+  { term: 'Proof of delivery (POD)', def: 'The customer’s confirmation that goods arrived, in what quantity and condition.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+Order to delivery, the core of order to cash, runs from order capture through credit and availability checks, allocation, picking and packing, goods issue and shipping, proof of delivery, then billing and payment. Each hand-off can fail, so I'd measure end to end with order cycle time, OTIF and the perfect order rate, and use reason codes on failed orders to find the weakest step.
+
+</SayIt>
+
+<Q q="OTIF is 95% but customers still complain. What might be wrong?">
+
+OTIF may be measured against our promised date rather than the customer's requested date, or at line level rather than order level. Other failures don't show in OTIF at all: damage, wrong paperwork, invoice errors. The perfect order rate and the customer's own measurements give a truer picture.
+
+</Q>
+
+<Q q="Why is the perfect order rate always lower than OTIF?">
+
+Because it requires every condition at once: on time, in full, undamaged and with correct documentation. If each is 95%, the combined rate is roughly 0.95 × 0.95 × 0.95 × 0.95, about 81%.
+
+</Q>
+
+</InterviewKit>

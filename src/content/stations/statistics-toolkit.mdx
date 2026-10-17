@@ -1,0 +1,73 @@
+---
+title: Statistics you will actually use
+line: analytics
+summary: Averages, spread, box plots, outliers and stationarity, the handful of statistics behind most supply chain analysis.
+minutes: { gist: 3 }
+status: draft
+keywords: [mean, median, standard deviation, coefficient of variation, box plot, quartiles, IQR, outliers, z-score, stationarity, ADF test, univariate, multivariate, correlation]
+connected: [demand-patterns, forecast-accuracy, ml-in-supply-chain, lean-six-sigma-toc, forecasting-fundamentals]
+sources:
+  - text: "Tukey, J. W. (1977). Exploratory Data Analysis. Addison-Wesley."
+  - text: "Hyndman, R. J. & Athanasopoulos, G. Forecasting: Principles and Practice (3rd ed.). OTexts. Sections on time series features and stationarity."
+    url: "https://otexts.com/fpp3/stationarity.html"
+  - text: "Iglewicz, B. & Hoaglin, D. C. (1993). How to Detect and Handle Outliers. ASQC Quality Press."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Centre, spread, outliers and whether the pattern stays put." soon>
+
+Most supply chain analysis rests on a few statistical ideas.
+
+**Centre: mean or median?** Eleven days of sales for one item: 10, 11, 12, 13, 14, 14, 15, 16, 17, 18 and 45. The mean is about 16.8, pulled up by one bulk order of 45. The median, the middle value, is 14 and better describes a normal day. When data has spikes, look at both.
+
+**Spread:** the **standard deviation** measures how far values typically stray from the mean. The **coefficient of variation** (standard deviation ÷ mean) makes spread comparable across items with different volumes, which is why it's used for XYZ classification.
+
+**Box plots and outliers:** a box plot shows the middle half of the data (from the first quartile Q1 to the third quartile Q3) as a box, with the median inside. The box's height is the **interquartile range (IQR)**. A common rule flags values beyond 1.5 × IQR outside the box as outliers. For the sales above, Q1 ≈ 12 and Q3 ≈ 17, so IQR ≈ 5 and anything above about 24.5 is flagged: the 45 stands out. Other methods include z-scores (beyond ±3 standard deviations) and robust versions based on the median.
+
+An outlier isn't automatically an error. A one-off bulk order should be removed before forecasting baseline demand; a genuine new trend shouldn't.
+
+**Stationarity:** a time series is **stationary** when its average level and its variability stay roughly constant over time. Many forecasting models assume it. Trends and seasonality break it, so analysts plot rolling averages and rolling standard deviations, use formal tests such as the augmented Dickey-Fuller (ADF) test, and transform the data, by differencing or taking logs, until it's stable.
+
+**Univariate vs multivariate:** univariate analysis looks at one variable, like sales history alone; multivariate looks at several together, such as sales, price and promotions. Remember that correlation isn't causation.
+
+<KeyIdea>
+
+Know the centre (and whether spikes distort it), the spread, which points are unusual and why, and whether the pattern is stable over time. Those four checks come before any model.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Interquartile range (IQR)', def: 'Q3 − Q1: the spread of the middle half of the data.' },
+  { term: 'Outlier', def: 'A value far from the rest, flagged by a rule such as 1.5 × IQR beyond the quartiles.' },
+  { term: 'Stationarity', def: 'Constant mean and variance over time; often needed before modelling.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+Before modelling I check the centre, using both mean and median because spikes distort the mean, the spread with standard deviation and coefficient of variation, outliers with box plots and the 1.5 × IQR rule or z-scores, and stationarity with rolling statistics and an ADF test. Outliers get investigated, not just deleted: a one-off bulk order should be removed from the baseline, a genuine shift shouldn't.
+
+</SayIt>
+
+<Q q="Sales were 10, 11, 12, 13, 14, 14, 15, 16, 17, 18 and 45. Is 45 an outlier?">
+
+With Q1 ≈ 12 and Q3 ≈ 17, IQR ≈ 5, so the upper fence is about 17 + 7.5 = 24.5. 45 is well above it, so it's flagged. Then I'd check why, for example a one-off bulk order, before deciding whether to exclude it from the baseline forecast.
+
+</Q>
+
+<Q q="How do you check whether a time series is stationary, and what do you do if it isn't?">
+
+Plot it with rolling mean and standard deviation to see whether level or variance drift, and run a test such as the augmented Dickey-Fuller test. If it isn't stationary, difference it to remove trend, apply seasonal differencing, or take logs to stabilize variance, then model the transformed series.
+
+</Q>
+
+</InterviewKit>

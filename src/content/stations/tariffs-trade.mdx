@@ -1,0 +1,72 @@
+---
+title: Tariffs, trade & compliance
+line: risk
+summary: How duties and trade rules change the best sourcing and network choices, and the compliance basics every importer and exporter needs.
+minutes: { gist: 3 }
+status: draft
+keywords: [tariffs, customs duty, HS code, classification, rules of origin, free trade agreement, landed cost, trade compliance, export controls, sanctions, China plus one, duty drawback]
+connected: [supplier-network, manufacturing-footprint, incoterms, scenario-planning, regulatory-compliance]
+sources:
+  - text: "World Customs Organization. The Harmonized Commodity Description and Coding System (HS)."
+  - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapter on designing global supply chain networks."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="A change in duty can move the cheapest supplier and the best plant overnight." soon>
+
+A tariff is a tax on goods crossing a border, and it lands directly in **landed cost**. If a component costs ₹100 from Country A and ₹110 from Country B, a 15% duty on Country A's goods flips the answer: ₹115 against ₹110. Tariffs can change quickly with politics, so they're both a cost and a risk.
+
+Three ideas sit underneath:
+
+- **Classification:** every product has an **HS code**, an international numbering system for traded goods, which decides its duty rate. A wrong code means wrong duty, penalties or seized goods.
+- **Origin:** where a product "comes from" for duty purposes, set by **rules of origin**, decides whether it gets lower duty under a **free trade agreement**. Assembling in a partner country doesn't always make it count as originating there.
+- **Valuation:** duty is charged on the customs value, so freight, insurance and some royalties may be included.
+
+Supply chain teams use this in two ways:
+
+1. **Design:** model tariffs in network and sourcing decisions, test scenarios ("what if duty on this category rises 10%?") and diversify, as many companies have done with a "China plus one" strategy.
+2. **Comply:** classify correctly, keep origin documents, check export controls and sanctions lists, and use legitimate schemes such as duty drawback, where duty paid on imported inputs is refunded when the finished goods are exported.
+
+Trade rules are complex and change often, so companies rely on trade compliance specialists and customs brokers, and planners need to know when to involve them.
+
+<KeyIdea>
+
+Duties belong in landed cost and in network scenarios. Classify correctly, prove origin, and treat tariff changes as a risk to model, not a surprise to absorb.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'HS code', def: 'The international product classification that determines duty rates.' },
+  { term: 'Rules of origin', def: 'Criteria that decide which country a product legally comes from.' },
+  { term: 'Duty drawback', def: 'A refund of import duty on inputs used in goods that are later exported.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+Tariffs change landed cost and can flip the best sourcing or plant choice, so I'd include them in network and sourcing models and test tariff scenarios. Compliance rests on correct HS classification, proving origin to use trade agreements, correct customs valuation, export control and sanctions checks, and legitimate schemes like duty drawback. Because rules change, diversification and scenario planning reduce exposure.
+
+</SayIt>
+
+<Q q="A new 15% duty applies to a component you import. How would you respond?">
+
+Recalculate landed cost by source, check whether alternative suppliers or origins now win, whether a trade agreement or a different classification legitimately applies, and whether duty drawback is available if the product is exported. Model the network impact before switching, since qualification takes time.
+
+</Q>
+
+<Q q="Why does country of origin matter if you assemble the product yourself?">
+
+Because duty and trade-agreement benefits depend on origin as defined by rules of origin. Simple assembly may not change origin, so the goods might still face the duty of the components' source country.
+
+</Q>
+
+</InterviewKit>

@@ -1,0 +1,74 @@
+---
+title: What a supply chain is
+line: foundations
+summary: The stages, the three flows that connect them, and the push–pull boundary that splits planning from reacting.
+minutes: { gist: 3 }
+status: draft
+keywords: [supply chain, supply chain management, stages, product flow, information flow, funds flow, push, pull, push-pull boundary, make to stock, make to order, decision phases]
+connected: [strategic-fit, planning-hierarchy, bullwhip-effect, supply-chain-kpis, network-design-decisions]
+sources:
+  - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapter 1: understanding the supply chain."
+  - text: "Christopher, M. Logistics & Supply Chain Management. Pearson."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Stages, three flows, and the line between planning ahead and reacting to orders." soon>
+
+Think about a bottle of shampoo in a kirana store. Before it got there, a chemical supplier made the surfactants, a packaging supplier moulded the bottle, a factory filled and packed it, a warehouse stored it, a distributor delivered it, and the store put it on the shelf. All of those **stages**, plus the customer who buys it, form a supply chain.
+
+Three things flow through it:
+
+- **Product** flows mostly downstream, from suppliers to customers, and some flows back as returns.
+- **Information** flows both ways: orders and sales data upstream, delivery plans and invoices downstream.
+- **Money** flows upstream as each stage pays the one before it.
+
+Supply chain management is coordinating all three so the customer gets the product when and where they want it, at the lowest total cost. The total matters, because a choice that saves money in one stage, such as huge factory batches, can cost more elsewhere, in warehouse space and stale stock.
+
+One useful idea is the **push–pull boundary**:
+
+- **Push** steps run ahead of demand, on forecasts: the factory makes shampoo before anyone orders it.
+- **Pull** steps run in response to an actual order: a custom laptop is assembled only after you click "buy".
+
+Where the boundary sits shapes everything: inventory is held just before it. Shampoo is pushed almost all the way to the shelf; a made-to-order sofa is pulled from much earlier.
+
+<KeyIdea>
+
+A supply chain is every stage involved in meeting a customer's need, linked by flows of product, information and money. Manage it for the total, not stage by stage.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Push vs pull', def: 'Acting ahead of demand on forecasts, versus acting in response to actual orders.' },
+  { term: 'Push–pull boundary', def: 'The point where work switches from forecast-driven to order-driven; stock sits just before it.' },
+  { term: 'Make to stock vs make to order', def: 'Producing ahead of orders, versus producing only after an order arrives.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+A supply chain is all the stages involved in fulfilling a customer request: suppliers, manufacturers, distributors, retailers and the customer, connected by flows of product, information and funds. The goal is to maximize the total value created, not to optimize each stage separately. A key design choice is the push–pull boundary: steps before it run on forecasts, steps after it respond to actual orders, and inventory sits at the boundary.
+
+</SayIt>
+
+<Q q="What is the push–pull boundary, and where is it for a shampoo versus a custom laptop?">
+
+It's the point where the supply chain switches from forecast-driven to order-driven work. For shampoo it's at the store shelf: everything up to there is made and moved on forecasts. For a made-to-order laptop it's at assembly: components are pushed to the factory, but final assembly happens only after the order.
+
+</Q>
+
+<Q q="Why optimize the whole supply chain rather than each stage?">
+
+Because stages trade off against each other. A factory minimizing its own cost might run huge batches, which raises warehouse and obsolescence costs downstream. Only a total view finds the lowest overall cost at the service customers need.
+
+</Q>
+
+</InterviewKit>

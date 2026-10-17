@@ -1,0 +1,74 @@
+---
+title: Service parts planning
+line: orders
+summary: Stocking spare parts when demand is sparse and lumpy but every stockout can stop a customer's machine.
+minutes: { gist: 3 }
+status: draft
+keywords: [service parts, spare parts, aftermarket, intermittent demand, installed base, criticality, multi-echelon, field stock, downtime cost, last-time buy]
+connected: [intermittent-demand, meio, demand-patterns, slow-obsolete, service-level-policy]
+sources:
+  - text: "Cohen, M. A., Agrawal, N. & Agrawal, V. (2006). Winning in the aftermarket. Harvard Business Review, 84(5), 129–138."
+  - text: "Syntetos, A. A., Boylan, J. E. & Croston, J. D. (2005). On the categorization of demand patterns. Journal of the Operational Research Society, 56(5), 495–503."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Tens of thousands of slow parts, each one able to stop a machine." soon>
+
+A company selling tractors, lifts, aircraft engines or medical scanners also has to supply spare parts for years after the sale. Service parts look like an inventory problem from a nightmare:
+
+- **Huge variety:** tens of thousands of part numbers, many for old models.
+- **Sparse, lumpy demand:** most parts sell rarely and unpredictably, the intermittent and lumpy patterns.
+- **High stakes:** when a customer's machine is down waiting for a part, the cost of that downtime can far exceed the part's price.
+- **Long tails:** parts must be available long after the product stops being made.
+
+So planners work differently from finished-goods planning:
+
+- **Forecast from the installed base:** how many machines are in use, how old they are and how hard they work (hours or kilometres), not just past part sales.
+- **Use intermittent-demand methods** such as Croston, SBA or TSB, and plan stock from the distribution of demand rather than an average.
+- **Set service levels by criticality:** a part that stops the machine gets high availability, possibly stocked near customers; a cosmetic part can wait.
+- **Plan across echelons:** a central warehouse holds slow parts for the whole network, while fast-moving or critical parts sit in regional or field stock with service engineers.
+- **Plan the end of life:** when a supplier stops making a part, a **last-time buy** has to cover all future demand.
+
+Done well, the aftermarket is often one of a manufacturer's most profitable businesses, because service revenue continues for the life of the installed base.
+
+<KeyIdea>
+
+Plan spare parts from the installed base and part criticality, with intermittent-demand methods and stock spread across echelons. The cost of a machine waiting for a part sets the service target.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Installed base', def: 'The number, age and usage of products in the field that will need parts.' },
+  { term: 'Criticality', def: 'How badly a missing part affects the customer, such as a machine down or just cosmetic.' },
+  { term: 'Last-time buy', def: 'A final purchase of a part before its production ends, sized for all remaining demand.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+Service parts have huge variety, intermittent or lumpy demand and very high stockout costs. I'd forecast from the installed base and usage, use intermittent-demand methods like SBA or TSB, set service levels by criticality, and position stock across echelons, with slow parts central and critical fast parts close to customers. End-of-life parts need last-time-buy planning.
+
+</SayIt>
+
+<Q q="How is service parts planning different from finished-goods planning?">
+
+Demand is driven by failures in the installed base, not by consumer buying, so it's sparse and lumpy. There are many more SKUs, the cost of a stockout is often the customer's downtime rather than a lost sale, and parts must be supported for many years, including after production ends.
+
+</Q>
+
+<Q q="Where would you stock a critical but slow-moving part?">
+
+Usually centrally, to pool demand across the network, combined with fast shipping, unless the downtime cost and required response time are so high that regional or field stock is justified. Multi-echelon planning weighs those trade-offs part by part.
+
+</Q>
+
+</InterviewKit>

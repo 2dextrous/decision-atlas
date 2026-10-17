@@ -1,0 +1,69 @@
+---
+title: Order visibility & analytics
+line: orders
+summary: Tracking every order through its lifecycle, predicting which ones will be late, and finding why they fail.
+minutes: { gist: 3 }
+status: draft
+keywords: [order visibility, order tracking, order lifecycle, OTIF analysis, late order prediction, root cause analysis, reason codes, order status, analytics, dashboards]
+connected: [control-tower, eta-visibility, order-to-delivery, supply-chain-kpis, service-copilots]
+sources:
+  - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson."
+  - text: "Christopher, M. Logistics & Supply Chain Management. Pearson."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Know where every order stands, which ones are at risk, and why the late ones were late." soon>
+
+An order passes through many systems: the order lands in the ERP, the warehouse system handles picking, the transport system handles the truck, the carrier tracks delivery, and finance handles the invoice. When a customer asks "where's my order?", someone often has to check four screens and call two people.
+
+**Order visibility** joins those steps into one timeline per order: received, credit released, allocated, picked, shipped, in transit, delivered, invoiced. Each step has a planned time and an actual time, so delays are visible as they happen.
+
+**Order analytics** then does three useful things:
+
+- **Monitor:** live counts of orders by status, and which ones are stuck, such as on credit hold for over a day, allocated but not picked, or picked but missing the truck.
+- **Predict:** a model using order type, customer, warehouse workload, product availability and carrier performance can flag orders likely to miss their date while there's still time to act.
+- **Explain:** for every late or incomplete order, a **reason code** (stock not available, picking error, missed truck, carrier delay, customer not available). Adding them up shows where the biggest failures come from, which is usually a handful of causes.
+
+The aim is to fix the few causes behind most failures, and to answer customers before they have to ask.
+
+<KeyIdea>
+
+Track every order as one timeline, flag at-risk orders early, and use reason codes to find the few causes behind most late deliveries.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Order lifecycle', def: 'The sequence of statuses an order passes through from capture to payment.' },
+  { term: 'Reason code', def: 'A standard label explaining why an order was late, short or wrong.' },
+  { term: 'At-risk order', def: 'An order predicted to miss its promised date while there is still time to intervene.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+Order visibility combines data from ERP, warehouse, transport and carrier systems into one timeline per order with planned and actual times. On top of it, analytics monitors stuck orders, predicts which ones will miss their promised date, and uses reason codes to find root causes. The payoff is acting before customers notice and fixing the few causes behind most failures.
+
+</SayIt>
+
+<Q q="OTIF fell from 95% to 89% last quarter. How would you investigate?">
+
+Break the misses down by reason code, customer, warehouse, product and carrier, and compare with the previous quarter. Typically a few causes explain most of the drop, such as one carrier, one warehouse's picking backlog or a stock problem on key items. Then fix those and track recovery.
+
+</Q>
+
+<Q q="What data would you use to predict late orders?">
+
+Order attributes (size, product mix, requested date), stock availability, warehouse workload and cut-off times, the carrier's recent on-time performance on that lane, and customer receiving constraints. Train on past orders labelled late or on time, and flag high-risk ones for action.
+
+</Q>
+
+</InterviewKit>

@@ -1,0 +1,67 @@
+---
+title: Regulatory compliance
+line: risk
+summary: The industry rules a supply chain must follow, from food safety and drug storage to labelling and dangerous goods, built into the process rather than checked at the end.
+minutes: { gist: 3 }
+status: draft
+keywords: [regulatory compliance, food safety, FSSAI, good distribution practice, GDP, cold chain, legal metrology, labelling, dangerous goods, traceability, serialization, batch recall, audit trail]
+connected: [tariffs-trade, esg-risk, warehousing, lifecycle-forecasting, returns]
+sources:
+  - text: "World Health Organization. Good storage and distribution practices for medical products (WHO Technical Report Series)."
+  - text: "Food Safety and Standards Authority of India (FSSAI). Food Safety and Standards Act, 2006, and related regulations."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Rules that change how you store, move, label and trace products." soon>
+
+Some supply chain rules aren't about cost at all; they're the law. They change how products are stored, moved, labelled and traced, and breaking them can mean recalls, fines or a shut warehouse. A few common families:
+
+- **Food safety:** hygiene, temperature control, shelf-life management and traceability. In India these are set under FSSAI regulations.
+- **Pharmaceuticals:** good distribution practice (GDP) covers temperature-controlled storage and transport (the cold chain), qualified facilities, documented processes and the ability to trace and recall batches. Many export markets also require serialization, a unique code on each pack.
+- **Labelling and legal metrology:** packaged goods must declare things like net quantity, maximum retail price and manufacturing date in a set format, under India's packaged-commodities rules.
+- **Dangerous goods:** chemicals, batteries and aerosols need special packaging, labels, documents and trained handlers to store and ship.
+- **Producer responsibility:** collection and recycling obligations for plastic packaging and electronic waste.
+
+The supply chain lesson is to **build compliance into the process**, not inspect it at the end. That means first-expiry-first-out picking for short-shelf-life goods, temperature loggers on cold-chain shipments, warehouse systems that record batch numbers at every move, and label templates checked before printing. The payoff is a fast, precise **recall**: when a batch is found faulty, you can find every pack that contains it within hours instead of pulling everything off the shelves.
+
+<KeyIdea>
+
+Regulations shape how products are stored, moved, labelled and traced. Build them into systems and processes, especially batch traceability, so compliance is automatic and recalls are precise.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Batch traceability', def: 'Knowing where every unit of a production batch came from and went.' },
+  { term: 'Cold chain', def: 'A temperature-controlled supply chain for perishables and medicines.' },
+  { term: 'FEFO', def: 'First-expiry, first-out: picking the stock that expires soonest first.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+Regulatory compliance covers industry rules like food safety, pharma good distribution practice and cold chain, packaging and labelling law, dangerous goods handling and producer-responsibility obligations. I'd build them into processes and systems, such as FEFO picking, temperature monitoring and batch tracking at every movement, so compliance is routine and a recall can target exactly the affected batches.
+
+</SayIt>
+
+<Q q="Why is batch traceability so important?">
+
+Because when a defect or contamination is found, you need to know exactly which units are affected and where they went. Good traceability means a targeted recall of one batch within hours; poor traceability means pulling far more product, at much higher cost and risk to customers.
+
+</Q>
+
+<Q q="How would you make a warehouse cold-chain compliant for medicines?">
+
+Qualify the storage areas and equipment, monitor and log temperature continuously with alarms, use validated packaging and temperature-controlled transport, train staff, document procedures and deviations, and track batches through every movement, as good distribution practice requires.
+
+</Q>
+
+</InterviewKit>

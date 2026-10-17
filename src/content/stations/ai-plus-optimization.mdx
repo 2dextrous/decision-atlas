@@ -1,0 +1,74 @@
+---
+title: AI + optimization
+line: analytics
+summary: Why prediction and optimization are stronger together, and how agents connect them into a decision process.
+minutes: { gist: 3 }
+status: draft
+keywords: [decision intelligence, predict then optimize, prescriptive analytics, AI and optimization, optimization under uncertainty, stochastic optimization, agents, orchestration]
+connected: [optimization-basics, ml-in-supply-chain, ai-agents, probabilistic-forecasting, scenario-modeling]
+sources:
+  - text: "Bertsimas, D. & Kallus, N. (2020). From predictive to prescriptive analytics. Management Science, 66(3), 1025–1044."
+  - text: "Elmachtoub, A. N. & Grigas, P. (2022). Smart \"predict, then optimize\". Management Science, 68(1), 9–26."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Prediction tells you what's coming; optimization tells you what to do about it." soon>
+
+AI and optimization solve two different halves of a supply chain decision.
+
+**AI and machine learning predict and understand.** "Next week's demand will be about 120,000 units, probably between 110,000 and 135,000." "This supplier is likely to deliver late." "This contract has a price-escalation clause."
+
+**Optimization decides under constraints.** Given that demand, which plants should make how much, which warehouses should receive it, and which trucks should move it, at the lowest cost while meeting 95% service, staying within capacity and respecting minimum batches?
+
+Each one alone falls short:
+
+- A forecast with no optimization leaves people to work out the plan by hand, often badly.
+- An optimization fed a single wrong number produces an excellent plan for the wrong future.
+
+Together they make a decision pipeline: **predict → optimize → act**. Better still, the optimization uses the *range* of predictions, not just the middle number, so the plan holds up if demand comes in at 135,000 rather than 120,000. That's optimization under uncertainty, using scenarios or probabilistic forecasts.
+
+Agents add a third layer: they notice the trigger ("demand jumped 15%"), gather the data, call the forecasting and optimization tools, explain the recommendation in plain language, and route it for approval.
+
+A compact way to remember it: **AI predicts and understands, optimization decides within constraints, agents orchestrate and explain, and people approve what matters.**
+
+<KeyIdea>
+
+Prediction without optimization leaves the decision unmade; optimization without good predictions solves the wrong problem. Feed the range of predictions into optimization, and let agents connect the steps.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Predict-then-optimize', def: 'Using model predictions as inputs to an optimization that chooses the decision.' },
+  { term: 'Prescriptive analytics', def: 'Analytics that recommends what to do, not just what will happen.' },
+  { term: 'Optimization under uncertainty', def: 'Choosing plans that perform well across a range of possible inputs.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+AI and optimization are complementary. AI predicts and interprets, like demand, delays, risks and contract terms; optimization chooses the best feasible decision under constraints like capacity, cost and service. I'd connect them predict-then-optimize, ideally feeding the forecast's uncertainty into the optimization so plans stay robust, with agents orchestrating triggers, data gathering and explanation, and humans approving high-impact decisions.
+
+</SayIt>
+
+<Q q="Will AI replace optimization in supply chains?">
+
+No, they do different jobs. AI is strong at prediction, pattern recognition and understanding unstructured information; optimization is built to find the best feasible decision under hard constraints, with guarantees. The strongest systems use AI to produce inputs and orchestrate, and optimization to decide.
+
+</Q>
+
+<Q q="Why feed a forecast range rather than a single number into optimization?">
+
+Because a plan optimized for one number can fail when reality differs. Using scenarios or quantiles lets the optimization choose plans that hold up across likely outcomes, for example keeping some flexible capacity, at a small cost in the base case.
+
+</Q>
+
+</InterviewKit>

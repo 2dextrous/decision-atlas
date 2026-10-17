@@ -1,0 +1,75 @@
+---
+title: Supply chain segmentation
+line: risk
+summary: Running different supply chains for different products and customers, instead of one model that fits none of them well.
+minutes: { gist: 3 }
+status: draft
+keywords: [supply chain segmentation, Fisher, functional products, innovative products, efficient supply chain, responsive supply chain, lean, agile, leagile, strategic fit, service model]
+connected: [strategic-fit, inventory-segmentation, service-level-policy, cost-to-serve, channel-design]
+sources:
+  - text: "Fisher, M. L. (1997). What is the right supply chain for your product? Harvard Business Review, 75(2), 105–116."
+  - text: "Christopher, M. & Towill, D. (2001). An integrated model for the design of agile supply chains. International Journal of Physical Distribution & Logistics Management, 31(4), 235–246."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="One size fits none: different products need different supply chains." soon>
+
+Most companies run one supply chain for everything: the same planning rules, inventory targets and delivery promises for a staple detergent and for a limited-edition festive gift pack. It fits neither well. The detergent needs low cost; the gift pack needs speed and flexibility.
+
+Marshall Fisher's classic idea makes the split clear:
+
+- **Functional products** (staples like soap, rice, basic shampoo) have steady, predictable demand and thin margins. They need an **efficient** supply chain: low cost, high utilization, lean inventory, full trucks.
+- **Innovative products** (new launches, fashion, electronics, seasonal packs) have uncertain demand and short lives. They need a **responsive** supply chain: buffer capacity, faster transport, postponement and quick reaction to early sales.
+
+**Segmentation** builds a few distinct supply chain models and assigns each product, and often each customer group, to the one that fits. Typical dimensions:
+
+- demand volume and predictability (the ABC-XYZ view),
+- product lifecycle stage (launch, mature, end of life),
+- customer service needs (key accounts with tight delivery windows versus small stores served weekly),
+- channel (modern trade, general trade, e-commerce).
+
+A common combination is **lean for the predictable base, agile for the volatile rest**, sometimes called "leagile": steady volume is planned efficiently, while peaks and new products get flexible capacity and faster lanes.
+
+The hard part is keeping it to a handful of segments that systems and teams can actually run.
+
+<KeyIdea>
+
+Match each product and customer group to a supply chain model: efficient for predictable functional products, responsive for uncertain innovative ones. A few well-run segments beat one compromise.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Functional vs innovative product', def: 'Predictable, low-margin staples versus uncertain, short-lived, higher-margin products.' },
+  { term: 'Efficient vs responsive', def: 'Supply chains built for low cost versus built for speed and flexibility.' },
+  { term: 'Leagile', def: 'Lean for the stable base volume, agile for the volatile remainder.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+Supply chain segmentation means running a few distinct supply chain models instead of one. Following Fisher, functional products with predictable demand get an efficient chain, and innovative products with uncertain demand get a responsive one. I'd segment on demand predictability, lifecycle, customer service needs and channel, keep the number of segments manageable, and often combine lean for the base with agile for peaks and launches.
+
+</SayIt>
+
+<Q q="Why shouldn't a company run one supply chain for all products?">
+
+Because products differ in predictability, margins and service needs. One model built for cost under-serves volatile, high-margin products, causing stockouts and markdowns; one built for speed overspends on stable staples. Segmentation matches each product to the model that fits.
+
+</Q>
+
+<Q q="How would you segment a consumer goods company's products?">
+
+Start with volume and variability (ABC-XYZ) and lifecycle stage, overlay channel and customer service requirements, and group them into three to five segments, such as stable high-volume, seasonal or promoted, new launches, and long-tail. Then define planning rules, inventory targets and fulfilment model for each.
+
+</Q>
+
+</InterviewKit>

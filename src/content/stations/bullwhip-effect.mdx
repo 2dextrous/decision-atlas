@@ -1,0 +1,70 @@
+---
+title: The bullwhip effect
+line: foundations
+summary: Why small wobbles in consumer demand become big swings in orders upstream, its four causes, and the fixes.
+minutes: { gist: 3 }
+status: draft
+keywords: [bullwhip effect, demand amplification, order variability, beer game, order batching, forward buying, shortage gaming, information sharing, VMI, CPFR, EDLP]
+connected: [allocation, demand-sensing-shaping, forecasting-fundamentals, what-is-a-supply-chain, consensus-fva]
+sources:
+  - text: "Lee, H. L., Padmanabhan, V. & Whang, S. (1997). The bullwhip effect in supply chains. Sloan Management Review, 38(3), 93–102."
+  - text: "Sterman, J. D. (1989). Modeling managerial behavior: Misperceptions of feedback in a dynamic decision making experiment. Management Science, 35(3), 321–339."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="A small ripple at the shelf becomes a wave at the factory." soon>
+
+Parents buy nappies at a fairly steady rate; babies don't suddenly need twice as many. Yet when Procter & Gamble studied its Pampers business, it found orders from distributors swinging much more than retail sales, and its own orders to suppliers swinging more still. Variability grows as you move upstream, like the crack of a whip. That's the **bullwhip effect**.
+
+Hau Lee and colleagues named four causes:
+
+1. **Forecasting from orders, not real demand:** each stage sees the orders of the stage below, adds safety stock and reacts to every bump, so a 10% rise at the shelf becomes a 20% rise in the retailer's order and more at the factory.
+2. **Order batching:** stages order in big lumps, such as weekly or monthly or full trucks, so steady demand turns into spiky orders.
+3. **Price fluctuations:** promotions and discounts make customers buy ahead (forward buying), then stop.
+4. **Rationing and shortage gaming:** when supply is short and allocated in proportion to orders, customers inflate orders, then cancel them when supply recovers.
+
+The result: excess stock and shortages at the same time, idle capacity followed by overtime, and wasted transport. The MIT "beer game" shows that even smart people create bullwhip when each player sees only their own orders.
+
+The fixes match the causes: **share real end-customer data** (POS data, vendor-managed inventory, CPFR), **cut lead times**, order in smaller, more frequent batches, **stabilize prices** (everyday low pricing instead of constant promotions), and allocate shortages on past sales instead of current orders.
+
+<KeyIdea>
+
+Bullwhip comes from each stage reacting to the orders it sees rather than to real demand. Share end-customer data, shorten lead times, smooth prices and batching, and don't reward inflated orders.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Bullwhip effect', def: 'Order variability increasing as you move upstream in a supply chain.' },
+  { term: 'VMI', def: 'Vendor-managed inventory: the supplier sees the customer’s stock and sales and manages replenishment.' },
+  { term: 'CPFR', def: 'Collaborative planning, forecasting and replenishment between trading partners.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+The bullwhip effect is the amplification of order variability as you move upstream. Lee, Padmanabhan and Whang identified four causes: forecasting from orders instead of real demand, order batching, price fluctuations that cause forward buying, and rationing that triggers shortage gaming. The remedies are sharing point-of-sale data through VMI or CPFR, shorter lead times, smaller and more frequent orders, stable pricing, and allocation based on history rather than current orders.
+
+</SayIt>
+
+<Q q="Consumer demand is stable, but your factory sees wild swings in orders. What's going on?">
+
+Classic bullwhip. Check whether distributors are forecasting from their own orders, batching orders, buying ahead of promotions, or inflating orders because of past shortages. Then get access to their sell-through or POS data, smooth promotions and order cycles, and agree allocation rules that don't reward over-ordering.
+
+</Q>
+
+<Q q="How does vendor-managed inventory reduce the bullwhip effect?">
+
+The supplier sees actual sales and stock at the customer and plans replenishment itself, so it responds to real demand rather than to the customer's distorted orders. It removes one layer of forecasting and batching.
+
+</Q>
+
+</InterviewKit>

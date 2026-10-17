@@ -1,0 +1,75 @@
+---
+title: AI agents, RAG & copilots
+line: analytics
+summary: "What an AI agent is: a language model with tools, memory and a goal, and how chatbots, copilots and agents differ in supply chains."
+minutes: { gist: 3 }
+status: draft
+keywords: [AI agent, agentic AI, large language model, LLM, tools, memory, RAG, retrieval-augmented generation, copilot, chatbot, multi-agent, human in the loop, guardrails]
+connected: [ai-plus-optimization, service-copilots, ml-in-supply-chain, control-tower, procurement-fundamentals]
+sources:
+  - text: "Yao, S. et al. (2023). ReAct: Synergizing reasoning and acting in language models. International Conference on Learning Representations (ICLR)."
+  - text: "Lewis, P. et al. (2020). Retrieval-augmented generation for knowledge-intensive NLP tasks. Advances in Neural Information Processing Systems, 33."
+  - text: "Russell, S. & Norvig, P. Artificial Intelligence: A Modern Approach. Pearson."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Chatbots answer, copilots suggest, agents pursue a goal with tools." soon>
+
+Three levels of AI assistance are easy to mix up:
+
+- **Chatbot:** answers questions. "What's our stock of item X?" → "10,000 units."
+- **Copilot:** helps a person decide. "Which supplier should I use?" → "Supplier A is cheapest, but it has been late three times this quarter."
+- **Agent:** pursues a goal by taking steps. "Make sure we have enough resin for next month at the lowest cost." → it checks demand, stock, open orders and supplier capacity, finds a shortage, compares suppliers, runs an allocation, drafts a purchase order and asks a buyer to approve it.
+
+An agent is usually built from a few parts:
+
+- a **large language model (LLM)** that understands the request and plans steps,
+- **tools** it can call: ERP queries, a forecasting model, an optimization solver, email,
+- **memory** of the conversation and past cases,
+- a loop: observe, reason, act, check the result, and repeat until done or until a human is needed.
+
+**RAG (retrieval-augmented generation)** is how agents use company knowledge: instead of answering from the model's general training, they first retrieve the relevant contract, policy or order record, then answer from it. RAG on its own isn't an agent; it's one tool agents use. Several specialist agents (demand, inventory, procurement, logistics) can also be coordinated as a **multi-agent** system.
+
+The big cautions: LLMs can state wrong things confidently, so answers must be grounded in real data; agents need limited permissions; and actions that commit money or change plans need **human approval**. ERPs such as SAP stay the system of record, with the agent working as an intelligent layer on top.
+
+<KeyIdea>
+
+An agent is an LLM with tools, memory and a goal, working in a loop. It is powerful for orchestration, as long as it's grounded in real data, limited in what it can do alone, and supervised for high-impact actions.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Agentic loop', def: 'Observe, reason, act, evaluate, repeat until the goal is met or a human must decide.' },
+  { term: 'RAG', def: 'Retrieve relevant documents or records first, then generate the answer from them.' },
+  { term: 'Human in the loop', def: 'A person approves or reviews the agent’s high-impact actions.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+An AI agent is a system that pursues a goal: an LLM that understands and plans, tools to query systems like the ERP and run models such as forecasting or optimization, memory for context, and a loop of acting and checking until it's done or needs a human. RAG grounds it in company documents and data. I'd see agents as an orchestration layer over systems like SAP, the system of record, with clear permissions and human approval for high-impact actions.
+
+</SayIt>
+
+<Q q="What is the difference between a chatbot, a copilot and an agent?">
+
+A chatbot answers questions. A copilot assists a person's decision with analysis and suggestions. An agent takes multi-step actions toward a goal, calling tools, checking results and deciding next steps, within limits and with escalation to humans.
+
+</Q>
+
+<Q q="Is RAG the same as an agent?">
+
+No. RAG is a technique for grounding answers in retrieved documents or data. An agent may use RAG as one of its tools, alongside ERP queries, models and actions, but RAG on its own just answers questions; it doesn't plan or act.
+
+</Q>
+
+</InterviewKit>

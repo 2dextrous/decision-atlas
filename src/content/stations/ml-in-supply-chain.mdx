@@ -1,0 +1,76 @@
+---
+title: Machine learning in supply chain
+line: analytics
+summary: Where ML genuinely helps, from forecasting and ETAs to anomaly detection and documents, and the traps that make projects fail.
+minutes: { gist: 3 }
+status: draft
+keywords: [machine learning, supervised learning, classification, regression, anomaly detection, predictive maintenance, document extraction, data leakage, model drift, MLOps, explainability]
+connected: [ml-forecasting, eta-visibility, maintenance-planning, ai-agents, ai-plus-optimization]
+sources:
+  - text: "Bertsimas, D. & Kallus, N. (2020). From predictive to prescriptive analytics. Management Science, 66(3), 1025–1044."
+  - text: "Hyndman, R. J. & Athanasopoulos, G. Forecasting: Principles and Practice (3rd ed.). OTexts."
+    url: "https://otexts.com/fpp3/"
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Good at patterns in lots of data; only as good as that data." soon>
+
+Machine learning finds patterns in historical data and uses them to predict or classify new cases. In supply chains it earns its place where there's plenty of data and a clear prediction to make:
+
+- **Demand forecasting and sensing:** many related products with drivers such as price, promotions and events.
+- **ETA prediction:** when will this truck or container really arrive?
+- **Predictive maintenance:** which machine is likely to fail soon, from vibration and temperature data?
+- **Anomaly detection:** unusual invoices (possible duplicates or fraud), odd orders, sudden stock discrepancies.
+- **Document extraction:** reading supplier invoices, purchase orders and delivery notes to cut manual data entry.
+- **Classification:** suggesting product categories, return reasons or likely late orders.
+
+Most ML projects that fail do so for practical reasons, not because the algorithm was wrong:
+
+- **Data quality:** wrong stock records, missing promotion flags, inconsistent master data.
+- **Leakage:** accidentally training on information that wouldn't be known at prediction time, which gives great test scores and useless real predictions.
+- **Drift:** the world changes, like a new channel or a pandemic, and a model trained on old patterns quietly degrades. Models need monitoring and retraining (often called MLOps).
+- **Adoption:** planners won't trust a black box. Simple explanations and a fair comparison with today's method help.
+
+Finally, a prediction isn't a decision. A forecast of 120,000 units doesn't say which plant should make them; that's where optimization comes in.
+
+<KeyIdea>
+
+Use ML where there's enough data and a clear prediction to make. Most of the work is in data quality, honest backtesting, monitoring and adoption, and predictions still need a decision process to act on them.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Supervised learning', def: 'Learning to predict a known target, such as demand or delay, from labelled history.' },
+  { term: 'Data leakage', def: 'Using information in training that would not be available at prediction time.' },
+  { term: 'Model drift', def: 'A model’s accuracy degrading as real-world patterns change.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+ML is valuable in supply chains where there's lots of data and a clear prediction: demand forecasting with drivers, ETA prediction, predictive maintenance, anomaly detection on invoices and orders, and document extraction. Success depends on data quality, avoiding leakage, monitoring for drift, explainability and adoption by planners. And predictions need to feed decisions, often through optimization, to create value.
+
+</SayIt>
+
+<Q q="A demand model scored brilliantly in testing but performs badly live. What might have happened?">
+
+Likely data leakage: features available in the test data but not at forecast time, such as actual promotions recorded after the fact, or a random train/test split instead of a time-based one. Or drift: patterns changed after training. I'd re-check features for timing and backtest with rolling time splits.
+
+</Q>
+
+<Q q="Where would you not use machine learning?">
+
+Where data is scarce or unreliable, where a simple rule or statistical model already performs well, or where decisions must follow strict policy and explainability matters more than a small accuracy gain. ML adds cost and maintenance, so it has to clearly beat the simpler option.
+
+</Q>
+
+</InterviewKit>

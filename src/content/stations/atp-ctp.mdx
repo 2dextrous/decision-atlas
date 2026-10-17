@@ -1,0 +1,69 @@
+---
+title: "Order promising: ATP & CTP"
+line: orders
+summary: What you can promise a customer from stock and planned supply, and what you could make or buy in time.
+minutes: { gist: 3 }
+status: draft
+keywords: [available to promise, ATP, capable to promise, CTP, order promising, committed orders, scheduled receipts, confirmed date, allocation, backorder]
+connected: [mps, allocation, order-to-delivery, order-to-cash, substitution]
+sources:
+  - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson."
+  - text: "Silver, E. A., Pyke, D. F. & Thomas, D. J. (2017). Inventory and Production Management in Supply Chains (4th ed.). CRC Press."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Promise only what you can deliver: from stock first, then from capacity." soon>
+
+A customer asks: "Can you deliver 5,000 units by 10 October?" A reliable answer needs more than looking at the shelf.
+
+**ATP (available to promise)** answers from stock and supply already planned:
+
+> ATP = stock on hand + scheduled receipts − quantities already promised to other orders
+
+With 1,000 units on hand and 700 already promised, ATP today is 300. If 4,000 more will arrive from production on 6 October and none of it is promised yet, the cumulative ATP by 10 October is 4,300, so the system can confirm 4,300 by the requested date and offer the rest later, or look further.
+
+**CTP (capable to promise)** goes a step further. For the remaining 700, could we **make or buy** them in time? CTP checks production capacity, material availability and supplier lead times, and if a slot exists it can promise a later date or even schedule the production.
+
+Good promising matters more than it looks. A sales rep who promises "yes" without checking creates a broken promise later; a promise built on ATP and CTP is one the plant can keep. Promising also interacts with **allocation**: when stock is scarce, companies often reserve ATP for priority customers or channels, so not all of it is available to the first order that arrives.
+
+<KeyIdea>
+
+ATP promises from stock and planned supply that isn't yet committed; CTP checks whether capacity and materials can make up the rest in time. Promise from those numbers, not from hope.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'ATP', def: 'Uncommitted supply, on hand plus planned receipts minus existing promises, available for new orders.' },
+  { term: 'CTP', def: 'Whether production capacity and materials can supply an order by a requested date.' },
+  { term: 'Confirmed date', def: 'The delivery date promised to the customer after the availability check.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+ATP tells us what we can promise from stock and planned receipts that aren't already committed. CTP extends it by checking whether capacity, materials and supplier lead times allow us to make or buy the rest by the requested date. Together they give customers dates the supply chain can actually meet, and they work alongside allocation rules that reserve scarce supply for priority customers.
+
+</SayIt>
+
+<Q q="Stock is 1,000 and existing orders take 700. A customer wants 5,000 by the 10th. How do you respond?">
+
+ATP today is 300. Check planned receipts before the 10th: if 4,000 uncommitted units arrive on the 6th, we can confirm 4,300 by the 10th. For the last 700, run a CTP check on capacity and materials; if production can fit them in, confirm a later date or a split delivery.
+
+</Q>
+
+<Q q="What is the difference between ATP and CTP?">
+
+ATP only looks at existing and planned supply minus commitments. CTP also checks whether new supply can be created in time, using capacity, materials and lead times, and may trigger a new production or purchase plan to meet the order.
+
+</Q>
+
+</InterviewKit>

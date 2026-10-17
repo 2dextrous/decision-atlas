@@ -1,0 +1,72 @@
+---
+title: Simulation & Monte Carlo
+line: analytics
+summary: Testing a decision against thousands of possible futures, and how simulation complements optimization.
+minutes: { gist: 3 }
+status: draft
+keywords: [simulation, Monte Carlo, discrete-event simulation, random variables, scenarios, risk, distribution of outcomes, stockout probability, digital twin, what-if]
+connected: [scenario-modeling, safety-stock, scenario-planning, optimization-basics, probabilistic-forecasting]
+sources:
+  - text: "Law, A. M. Simulation Modeling and Analysis. McGraw-Hill."
+  - text: "Hopp, W. J. & Spearman, M. L. Factory Physics. Waveland Press."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Play the future thousands of times and look at the spread of results." soon>
+
+Some questions don't have a neat formula. "If demand varies, suppliers are sometimes late and a machine breaks down now and then, how often will we run out?" **Simulation** answers by playing out the system many times on a computer.
+
+**Monte Carlo simulation** draws random values for every uncertain input, runs the model once, records the result, and repeats thousands of times. For a warehouse item, each run might draw a month of daily demand and a random lead time for each delivery, then count stockout days. After 10,000 runs you don't get one answer, you get a **distribution**: "a stockout in about 6% of months, and in the worst 1% of months we lose more than 300 units."
+
+The [safety stock lab](/inventory/safety-stock/#level-2) on this site does a small version of this: switch it to real-life mode, replay a few times, and watch how often the buffer is used up.
+
+**Discrete-event simulation** models how things flow through a system over time, such as trucks arriving at a dock, orders queuing at packing stations, or containers waiting at a port. It's the tool for questions like "will two more dock doors clear the morning queue?"
+
+Simulation and optimization work best together:
+
+- **Optimization** finds the best decision under given assumptions.
+- **Simulation** tests how that decision behaves when reality is random.
+
+A network plan that looks optimal on average can fail badly in a bad week; simulation shows that before you commit.
+
+<KeyIdea>
+
+Simulation shows the range of outcomes, not just the average. Use optimization to choose a plan and simulation to stress-test it under uncertainty.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Monte Carlo simulation', def: 'Repeating a model with random inputs many times to estimate the distribution of outcomes.' },
+  { term: 'Discrete-event simulation', def: 'Modelling a system as events over time, such as arrivals, queues and processing.' },
+  { term: 'Replication', def: 'One run of a simulation; many replications give a reliable picture.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+Simulation models uncertainty by running a system many times with random inputs. Monte Carlo gives the distribution of outcomes, such as stockout probability or worst-case cost, and discrete-event simulation models queues and flows over time. I'd use optimization to choose a plan and simulation to stress-test it, because a plan that's optimal on average can perform badly when demand, lead times or failures vary.
+
+</SayIt>
+
+<Q q="What is the difference between optimization and simulation?">
+
+Optimization searches for the best decision given the model's assumptions. Simulation evaluates how a given decision performs across many random futures. Optimization says what to do; simulation says how likely it is to work.
+
+</Q>
+
+<Q q="How would you use Monte Carlo to set safety stock for a lumpy item?">
+
+Fit distributions to its demand and lead time, or resample actual history, simulate thousands of replenishment cycles for several candidate stock levels, and pick the lowest level that meets the service target with acceptable worst-case risk. It avoids assuming normal demand.
+
+</Q>
+
+</InterviewKit>

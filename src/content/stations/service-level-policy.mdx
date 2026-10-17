@@ -1,0 +1,69 @@
+---
+title: Service level policy
+line: risk
+summary: Setting service targets by segment, based on what a stockout really costs, instead of one blanket number for everything.
+minutes: { gist: 3 }
+status: draft
+keywords: [service level policy, service targets, differentiated service, stockout cost, inventory service trade-off, efficient frontier, customer tiers, ABC-XYZ, fill rate, CSL]
+connected: [service-levels, safety-stock, inventory-segmentation, segmentation-strategy, cost-to-serve]
+sources:
+  - text: "Silver, E. A., Pyke, D. F. & Thomas, D. J. (2017). Inventory and Production Management in Supply Chains (4th ed.). CRC Press."
+  - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapter on determining the optimal level of product availability."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="98% for everything is either too much or too little almost everywhere." soon>
+
+"We target 98% service on everything" sounds ambitious and simple. In practice it overstocks items where a stockout barely matters and may still under-protect items where a stockout is a disaster. A **service level policy** sets targets deliberately, by segment.
+
+The economics behind it: each extra point of service costs more inventory than the one before. Going from 95% to 99% cycle service raises safety stock by about 41%, and pushing towards 99.9% nearly doubles it. So the right target depends on the cost of the alternative:
+
+- **High targets** where stockouts are expensive: items that stop a customer's production line, key accounts with penalties, high-margin hero products, critical medicines.
+- **Moderate targets** for regular items with reasonable substitutes.
+- **Lower targets** for cheap, slow or easily substituted items, or ones customers will wait for.
+
+A practical policy combines product segments (ABC-XYZ) with customer tiers, for example 98% for A items to key accounts, 95% for B items, 90% for slow C items. Plotting total inventory against overall service for different policies gives an **efficient frontier**: the best service achievable for each level of inventory investment. Leadership then picks a point on the curve knowingly, instead of guessing.
+
+The policy should be reviewed as costs, margins and customer needs change.
+
+<KeyIdea>
+
+Set service targets by segment from the cost of a stockout versus the cost of stock. The inventory-versus-service curve lets leadership choose deliberately.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Differentiated service', def: 'Different service targets for different products or customer groups.' },
+  { term: 'Stockout cost', def: 'What a shortage really costs: lost margin, penalties, a stopped line or lost customers.' },
+  { term: 'Efficient frontier', def: 'The best service achievable for each level of inventory investment.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+I'd set service targets by segment rather than one blanket number, because safety stock rises steeply near 100% and stockout costs differ widely. High targets go where stockouts are expensive, such as critical items, key accounts and high margins; lower ones where substitutes exist or customers will wait. Comparing policies on an inventory-versus-service curve lets leadership choose the trade-off explicitly.
+
+</SayIt>
+
+<Q q="Leadership wants 99% service on every SKU. How do you respond?">
+
+Show the cost: moving from 95% to 99% raises safety stock by about 41% per item, and much of it would sit on cheap or substitutable items where stockouts barely matter. Propose differentiated targets by product and customer segment, with an inventory-versus-service curve showing the overall service and investment of each option.
+
+</Q>
+
+<Q q="What information do you need to set a service target for an item?">
+
+Its margin and the cost of a stockout (lost sale, penalty, a stopped customer line, damage to the relationship), the holding cost of the extra stock, demand variability and lead time, and whether customers accept substitutes or backorders.
+
+</Q>
+
+</InterviewKit>

@@ -1,0 +1,71 @@
+---
+title: AI in customer service
+line: orders
+summary: Copilots that answer "where is my order?" by reading the real order data, and the guardrails that keep them honest.
+minutes: { gist: 3 }
+status: draft
+keywords: [customer service, AI copilot, chatbot, WISMO, where is my order, retrieval-augmented generation, RAG, tool use, human in the loop, guardrails, escalation]
+connected: [ai-agents, order-visibility, eta-visibility, returns, control-tower]
+sources:
+  - text: "Lewis, P. et al. (2020). Retrieval-augmented generation for knowledge-intensive NLP tasks. Advances in Neural Information Processing Systems, 33."
+  - text: "Yao, S. et al. (2023). ReAct: Synergizing reasoning and acting in language models. International Conference on Learning Representations (ICLR)."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Answers grounded in live order data, with a human for anything that matters." soon>
+
+A large share of customer service contacts in retail and distribution are variations of one question: **"Where is my order?"**, often shortened to WISMO. Others ask about delivery dates, returns, refunds and invoices. These questions have exact answers, but they sit in several systems.
+
+An **AI copilot** helps by doing what a good agent does, faster:
+
+1. **Understand the question:** "My shampoo order from last week hasn't come."
+2. **Look up the facts** with tools connected to real systems: find the order in the ERP, the shipment in the transport system, the latest carrier scan and predicted ETA.
+3. **Answer from those facts:** "It left the Pune warehouse yesterday and is expected tomorrow between 10 am and 2 pm."
+4. **Act within limits:** start a return, reschedule a delivery, or raise a claim, as policy allows.
+5. **Escalate:** hand anything unusual or sensitive to a human with the case summarized.
+
+The copilot can also sit beside a human agent, pulling up the order history and drafting replies so the person resolves cases faster.
+
+The guardrails matter more than the clever part. Answers must come from real data, not the model's guess, which is why such systems retrieve facts first (**retrieval-augmented generation**) and call tools rather than inventing status updates. Refunds, exceptions and anything involving money or policy need clear limits and, often, human approval.
+
+<KeyIdea>
+
+A service copilot is useful only when it answers from live order data and acts within clear limits. Ground every answer in the systems of record and escalate what needs judgment.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'WISMO', def: '"Where is my order?": the most common customer service query in fulfilment.' },
+  { term: 'Retrieval-augmented generation (RAG)', def: 'Fetching relevant facts first and having the model answer from them.' },
+  { term: 'Human in the loop', def: 'A person reviews or approves actions the AI proposes, especially high-impact ones.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+AI copilots in customer service handle high-volume questions like "where is my order?" by retrieving live data from order, warehouse and carrier systems and answering from those facts, then taking permitted actions or escalating to a human. The design priorities are grounding, so it never invents a status, clear limits on actions involving money or policy, and human review for exceptions.
+
+</SayIt>
+
+<Q q="How would you stop a service chatbot from giving wrong delivery dates?">
+
+Never let it answer from the language model's general knowledge. Connect it to the order and shipment systems through tools, retrieve the current status and predicted ETA, and have it answer only from those results, saying clearly when data is missing and escalating instead of guessing.
+
+</Q>
+
+<Q q="Which customer service tasks should stay with humans?">
+
+Anything involving judgment, significant money or relationships: large refunds or credits outside policy, complaints from key accounts, disputes and sensitive situations. The copilot can prepare the case and suggest options, but a person decides.
+
+</Q>
+
+</InterviewKit>

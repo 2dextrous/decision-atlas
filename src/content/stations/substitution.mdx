@@ -1,0 +1,72 @@
+---
+title: Substitution
+line: orders
+summary: Offering the next-best product when an item is out of stock, without hurting margin, trust or the forecast.
+minutes: { gist: 3 }
+status: draft
+keywords: [substitution, product substitution, stockout, alternative product, downward substitution, customer-driven substitution, demand transfer, lost sales, recommendation]
+connected: [atp-ctp, allocation, demand-sensing-shaping, promotions-cannibalization, service-copilots]
+sources:
+  - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson."
+  - text: "Silver, E. A., Pyke, D. F. & Thomas, D. J. (2017). Inventory and Production Management in Supply Chains (4th ed.). CRC Press."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="A good substitute keeps the sale; a bad one loses the customer." soon>
+
+A customer orders the 500 ml premium shampoo, but it's out of stock. Instead of losing the sale, the company can offer an alternative: the 400 ml premium pack, or two 250 ml packs, or the 500 ml standard version. That's **substitution**.
+
+There are two kinds:
+
+- **Customer-driven:** the shopper picks another product on their own when the first choice is missing, as happens on a shelf.
+- **Company-driven:** the seller recommends or ships an alternative, as on an e-commerce page or for a distributor's order.
+
+A good substitute has to fit: is it compatible, will the customer accept it, how does its price and margin compare, and is the substitute itself available? Common rules include:
+
+- **Upgrade at the same price** (downward substitution): give the bigger or better pack to protect the relationship, which costs margin but keeps loyalty.
+- **Size or pack swap:** two smaller packs for one big one.
+- **Customer approval** first for anything significant, such as different specifications or a different brand.
+
+Substitution also affects planning. Sales that move from A to B during A's stockout must be recorded correctly. Otherwise the forecast thinks demand for B grew and for A fell, and the next plan buys the wrong mix.
+
+<KeyIdea>
+
+Substitution turns stockouts into saved sales when the alternative genuinely fits. Set rules for acceptable substitutes, and correct the demand history so planning isn't misled.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Substitution', def: 'Serving demand for an unavailable product with an alternative.' },
+  { term: 'Downward substitution', def: 'Supplying a higher-grade item in place of a lower-grade one that is out of stock.' },
+  { term: 'Demand transfer', def: 'Sales shifting from one product to another because of a stockout or promotion.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+When an item is out, substitution offers an acceptable alternative to save the sale. Rules should cover compatibility, customer acceptance, price and margin, and the substitute's own availability, with customer approval for significant changes. I'd also make sure forecasting sees the true demand, separating sales that transferred because of a stockout, so the next plan buys the right mix.
+
+</SayIt>
+
+<Q q="How would you design substitution rules for an online grocery?">
+
+For each product, define acceptable substitutes ranked by similarity: same brand in a different size, then a similar product from another brand, within a price band. Let customers opt in or out per item, avoid substitutes with allergens or dietary conflicts, and track acceptance and return rates to refine the rules.
+
+</Q>
+
+<Q q="Why does substitution matter for forecasting?">
+
+Because during a stockout, sales of the substitute rise and sales of the original fall to zero, which isn't true demand. If the history isn't corrected, the forecast overstates the substitute and understates the original, so the next replenishment repeats the shortage.
+
+</Q>
+
+</InterviewKit>

@@ -1,0 +1,73 @@
+---
+title: Cost-to-serve
+line: risk
+summary: What each customer, channel or order really costs once logistics and service are counted, and what to do about the unprofitable ones.
+minutes: { gist: 3 }
+status: draft
+keywords: [cost to serve, CTS, customer profitability, activity-based costing, time-driven ABC, order profile, minimum order quantity, delivery frequency, channel profitability, pricing]
+connected: [segmentation-strategy, channel-design, load-building, service-level-policy, supply-chain-kpis]
+sources:
+  - text: "Braithwaite, A. & Samakh, E. (1998). The cost-to-serve method. The International Journal of Logistics Management, 9(1), 69–84."
+  - text: "Kaplan, R. S. & Anderson, S. R. (2004). Time-driven activity-based costing. Harvard Business Review, 82(11), 131–138."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Two customers with the same revenue can have very different profits." soon>
+
+Two distributors each buy ₹10 lakh of shampoo a month at the same price. On paper they're equally valuable. But:
+
+- **Distributor A** orders once a month, a full truck of standard cases, collects on time and pays in 30 days.
+- **Distributor B** orders 40 times a month in small mixed lots, wants special labels, rush deliveries to a remote area, and pays in 90 days.
+
+B costs far more to serve: 40 order entries, 40 picks, 40 small deliveries, special packing, expediting and the cash tied up for longer. After those costs, A might earn a healthy margin while B barely breaks even, or loses money.
+
+**Cost-to-serve (CTS)** makes this visible. It traces the costs of order handling, picking, packing, transport, special services, returns and payment terms to each customer, channel or order, usually with **activity-based costing**: count the activities each customer causes and cost them, instead of spreading logistics cost evenly by sales value. Time-driven ABC makes this practical by costing each activity at its time and rate.
+
+The results often surprise people: some large customers turn out to be unprofitable, and some small, efficient ones turn out to be the best. The actions that follow are rarely "drop the customer". More often they are:
+
+- minimum order sizes, or charges for small or rush orders,
+- fixed delivery days instead of on-demand drops,
+- moving small customers to a distributor or an online channel,
+- pricing or terms that reflect the real cost.
+
+<KeyIdea>
+
+Revenue doesn't equal profit. Cost-to-serve traces logistics and service costs to each customer or channel, so pricing, terms and service models can match what each one really costs.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Cost-to-serve', def: 'All costs of serving a customer or channel, from order handling to delivery and payment terms.' },
+  { term: 'Activity-based costing', def: 'Assigning costs according to the activities each customer or product actually causes.' },
+  { term: 'Order profile', def: 'How a customer orders: size, frequency, mix and service extras.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+Cost-to-serve traces logistics and service costs, like order handling, picking, transport, special services, returns and payment terms, to each customer, channel or order using activity-based costing. It shows that customers with the same revenue can have very different profitability. The usual response isn't dropping customers but changing the service model: minimum orders, fixed delivery days, channel shifts, and pricing or terms that reflect real cost.
+
+</SayIt>
+
+<Q q="Two customers buy the same amount. Why might one be unprofitable?">
+
+Because of how they buy and what they ask for: many small orders, mixed picks, rush or special deliveries, remote locations, frequent returns and long payment terms all add cost. Allocating cost by revenue hides this; activity-based cost-to-serve reveals it.
+
+</Q>
+
+<Q q="What would you do with an unprofitable but strategic customer?">
+
+Work with them to change the cost drivers: consolidate orders, agree delivery schedules, standardize packaging, adjust terms, or price the extras. If the customer is strategic for growth or for keeping a competitor out, accept some loss deliberately, but know its size.
+
+</Q>
+
+</InterviewKit>

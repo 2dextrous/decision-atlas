@@ -1,0 +1,70 @@
+---
+title: Control tower & S&OE
+line: orders
+summary: Spotting this week's problems early and fixing them fast, the execution layer that sits below monthly S&OP.
+minutes: { gist: 3 }
+status: draft
+keywords: [control tower, S&OE, sales and operations execution, exception management, alerts, playbook, short-term planning, visibility, KPIs, root cause]
+connected: [sop-ibp, order-visibility, eta-visibility, allocation, demand-sensing-shaping]
+sources:
+  - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapter on information technology in a supply chain."
+  - text: "Christopher, M. Logistics & Supply Chain Management. Pearson."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="S&OP sets the monthly plan; S&OE keeps this week on track." soon>
+
+S&OP agrees the plan once a month. Real life doesn't wait a month: a supplier ships short on Tuesday, a truck breaks down on Wednesday, a promotion sells twice the forecast by Thursday. **Sales and operations execution (S&OE)** is the weekly, sometimes daily, rhythm that catches these problems and fixes them inside the S&OP plan, covering roughly the next few weeks.
+
+A **control tower** is the team and the tools that make S&OE work. It does four things:
+
+1. **See:** one view of orders, stock, production, shipments and supplier deliveries across the network.
+2. **Detect:** alerts on exceptions, such as stock below target, a late inbound container, an order at risk, or capacity overloaded.
+3. **Decide:** follow agreed **playbooks**. If a key customer's order is at risk, check stock in another warehouse, then expedite, then split the delivery, and escalate if needed.
+4. **Learn:** record root causes so recurring problems get fixed at the source rather than fought every week.
+
+The point isn't a big screen with a hundred charts. It's acting on a few high-value exceptions quickly and consistently. Many teams track how many exceptions were caught before the customer noticed, how fast they were resolved, and which root causes keep coming back.
+
+When a gap is too big for execution to absorb, such as a lasting capacity shortfall, it goes back up to the next S&OP cycle.
+
+<KeyIdea>
+
+S&OP plans the month; S&OE and the control tower defend the plan week by week by seeing, detecting, deciding with playbooks, and learning from root causes.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'S&OE', def: 'Sales and operations execution: short-term, weekly management of the plan.' },
+  { term: 'Exception management', def: 'Focusing attention on deviations from plan rather than on everything.' },
+  { term: 'Playbook', def: 'A pre-agreed set of responses for a common type of problem.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+S&OE is the short-term execution layer below S&OP. Weekly or daily, it monitors orders, stock, production and shipments against the plan and resolves deviations. A control tower supports it with end-to-end visibility, exception alerts, playbooks for standard responses and root-cause tracking. Small gaps are fixed in execution; structural ones are escalated to the next S&OP cycle.
+
+</SayIt>
+
+<Q q="How is S&OE different from S&OP?">
+
+S&OP is monthly and tactical: it balances demand, supply and finance at family level over months or years. S&OE is weekly or daily and operational: it manages the next few weeks at item and order level, fixing deviations within the S&OP plan.
+
+</Q>
+
+<Q q="What makes a control tower actually useful rather than just a dashboard?">
+
+Clear exception rules, agreed playbooks and decision rights, so alerts lead to action, plus tracking of root causes so the same problems stop recurring. Visibility alone only shows you the fire; the process is what puts it out.
+
+</Q>
+
+</InterviewKit>

@@ -1,0 +1,70 @@
+---
+title: Returns management
+line: orders
+summary: Handling customer returns quickly and cheaply, deciding what happens to each item, and preventing returns in the first place.
+minutes: { gist: 3 }
+status: draft
+keywords: [returns management, RMA, return authorization, return reasons, refund, disposition, grading, returns fraud, return rate, reverse logistics, e-commerce returns]
+connected: [reverse-logistics, order-to-delivery, slow-obsolete, service-copilots, cost-to-serve]
+sources:
+  - text: "Rogers, D. S. & Tibben-Lembke, R. S. (1999). Going Backwards: Reverse Logistics Trends and Practices. Reverse Logistics Executive Council."
+  - text: "Guide, V. D. R. & Van Wassenhove, L. N. (2009). The evolution of closed-loop supply chain research. Operations Research, 57(1), 10–18."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Make returns easy for customers, cheap for the business, and rarer over time." soon>
+
+Returns are part of selling, especially online, where customers can't touch or try products first. Fashion e-commerce sees far higher return rates than stores. Each return costs money twice: the reverse shipping and handling, and the value lost if the item can't be resold at full price.
+
+A returns process has four parts:
+
+1. **Authorize:** the customer starts a return, often online, with a reason. A return authorization (RMA) number links it to the original order and sets the rules, such as the time window and condition.
+2. **Collect:** pickup, drop-off points or stores.
+3. **Inspect and decide (disposition):** grade the item, then restock it, refurbish it, sell it at a discount, return it to the supplier, recycle it or scrap it.
+4. **Refund or replace,** quickly, because slow refunds drive complaints and repeat contacts.
+
+The fastest savings often come from **preventing returns**. Return reasons show patterns: if "too small" dominates for one brand of shoes, fix the size chart; if "damaged in transit" is high, fix the packaging; if "not as described", fix the product page. Some returns are also abuse, such as wearing an outfit once or returning a different item, so rules and checks help.
+
+Speed matters throughout. A returned phone case or kurta loses value every week it sits in a pile.
+
+<KeyIdea>
+
+Make returns easy and fast for customers, decide each item's fate quickly to keep its value, and use return reasons to stop the next return from happening.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'RMA', def: 'Return merchandise authorization: the approval and reference number for a return.' },
+  { term: 'Disposition', def: 'The decision on what happens to a returned item.' },
+  { term: 'Return reason code', def: 'The recorded reason for a return, used to spot and fix root causes.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+Returns management covers authorization, collection, inspection and disposition, and refunds. I'd keep it simple and fast for customers, grade items early to preserve resale value, and route each one to restock, refurbish, discount, supplier return or recycling. The biggest lever is prevention: analyse return reasons to fix sizing information, packaging and product descriptions, and add controls against abuse.
+
+</SayIt>
+
+<Q q="A fashion e-commerce company's return rate is rising. What would you do?">
+
+Break returns down by reason, category, brand and customer. Fix the main drivers: better size guidance and fit information, more accurate photos and descriptions, better packaging. Then look at policy, such as time windows, and at abuse patterns, while keeping the experience fair for genuine customers.
+
+</Q>
+
+<Q q="Why does the speed of processing returns matter?">
+
+Many returned items lose value over time: they go out of season, get superseded or need deeper discounts. Quick inspection and restocking lets them be resold at or near full price, and fast refunds reduce customer complaints and repeat contacts.
+
+</Q>
+
+</InterviewKit>

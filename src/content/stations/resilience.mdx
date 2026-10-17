@@ -1,0 +1,72 @@
+---
+title: "Resilience: time to recover & survive"
+line: risk
+summary: How long the network can keep running through a disruption, how fast it recovers, and how to fix the places where those don't match.
+minutes: { gist: 3 }
+status: draft
+keywords: [supply chain resilience, time to recover, TTR, time to survive, TTS, disruption, risk exposure, redundancy, flexibility, single point of failure, stress test]
+connected: [supplier-risk, scenario-planning, sourcing-allocation, scenario-modeling, segmentation-strategy]
+sources:
+  - text: "Simchi-Levi, D., Schmidt, W. & Wei, Y. (2014). From superstorms to factory fires: Managing unpredictable supply-chain disruptions. Harvard Business Review, 92(1/2), 96–101."
+  - text: "Sheffi, Y. (2005). The Resilient Enterprise: Overcoming Vulnerability for Competitive Advantage. MIT Press."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Compare how long you can survive with how long recovery takes." soon>
+
+You can't predict which supplier will catch fire, which port will flood or which road will close. You can measure how exposed you are to each one. Two simple numbers do it:
+
+- **Time to recover (TTR):** how long a site, such as a supplier plant, a warehouse or a route, would take to get back to normal after a disruption, or how long it would take to qualify a replacement.
+- **Time to survive (TTS):** how long your supply chain could keep meeting demand without that site, using stock, alternative sources and spare capacity elsewhere.
+
+If **TTR is longer than TTS**, you have a gap: the business would start losing sales before the site recovers. Say a specialist resin supplier would take 8 weeks to recover from a fire, but you hold 3 weeks of stock and have no qualified alternative. You have a 5-week exposure on every product using that resin.
+
+The power of this approach, popularized by David Simchi-Levi and colleagues, is that it doesn't need you to estimate the probability of rare events. It works from things you can measure: stock, capacity and recovery times. It often finds hidden risks in cheap, unglamorous parts rather than the big, obvious suppliers.
+
+The fixes then trade cost for safety:
+
+- **Redundancy:** more safety stock, spare capacity or a second qualified supplier.
+- **Flexibility:** plants and lines that can make several products, multi-skilled teams, flexible contracts.
+- **Visibility and speed:** early warnings and pre-agreed playbooks shorten recovery.
+
+<KeyIdea>
+
+Compare time to survive with time to recover for every critical node. Where recovery takes longer than survival, invest in stock, alternatives or flexibility, starting with the biggest gaps.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Time to recover (TTR)', def: 'How long a disrupted node takes to return to full function.' },
+  { term: 'Time to survive (TTS)', def: 'How long the network can meet demand without that node.' },
+  { term: 'Redundancy vs flexibility', def: 'Spare stock or capacity held in reserve, versus resources that can switch to where they are needed.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+I'd assess resilience by comparing, for each critical supplier, plant, warehouse and route, the time to recover after a disruption with the time to survive on existing stock and alternatives. Where TTR exceeds TTS, revenue is exposed. It doesn't require estimating rare-event probabilities and often reveals risks in low-spend parts. Mitigations combine redundancy, like stock, spare capacity and second sources, with flexibility and faster detection, prioritized by revenue at risk.
+
+</SayIt>
+
+<Q q="A supplier would take 8 weeks to recover from a fire. You hold 3 weeks of stock. What do you do?">
+
+That's a 5-week gap where sales are at risk. Options: increase stock of that part, qualify a second supplier or a different material, secure backup capacity, or redesign the product. I'd choose based on the revenue at risk and the cost of each option.
+
+</Q>
+
+<Q q="Why can a cheap part be a bigger resilience risk than an expensive one?">
+
+Because risk depends on what stops when it's missing, not on its price. A ₹5 sensor from a single source can halt a whole production line, while an expensive part with several suppliers and plenty of stock poses little risk. TTR and TTS analysis captures this; spend-based analysis doesn't.
+
+</Q>
+
+</InterviewKit>

@@ -1,0 +1,74 @@
+---
+title: Scenario planning
+line: risk
+summary: Planning for several possible futures instead of betting everything on one forecast, and choosing decisions that hold up across them.
+minutes: { gist: 3 }
+status: draft
+keywords: [scenario planning, enterprise scenarios, what-if analysis, robust decisions, uncertainty, sensitivity analysis, contingency plan, trigger points, stress test]
+connected: [scenario-modeling, resilience, sop-ibp, probabilistic-forecasting, simulation]
+sources:
+  - text: "Wack, P. (1985). Scenarios: Uncharted waters ahead. Harvard Business Review, 63(5), 72–89."
+  - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapter on designing networks under uncertainty."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Instead of one forecast, a few plausible futures and a plan for each." soon>
+
+A single forecast invites a single plan, and a single plan breaks when the future turns out differently. **Scenario planning** prepares for several plausible futures instead.
+
+A planning team might build three to five scenarios for next year:
+
+- **Base:** demand grows 8%, costs stable.
+- **Boom:** a competitor exits, demand grows 20%.
+- **Squeeze:** a slowdown cuts demand 5% while raw material prices rise 15%.
+- **Disruption:** a key port or supplier is out for six weeks.
+
+Each scenario runs through the plan: what would capacity, inventory, sourcing, cash and service look like? The goal isn't to predict which one happens. It's to find:
+
+- **robust decisions** that work reasonably well in every scenario, such as qualifying a second supplier or keeping a flexible co-packer contract,
+- **contingency plans** for specific scenarios, ready to use, such as a pre-agreed overtime plan or alternative routes,
+- **trigger points** that tell you which future is unfolding, like "if orders exceed plan by 10% for three weeks, start the boom playbook."
+
+The approach was made famous by Shell in the 1970s, whose scenario work helped it respond to the oil shocks faster than many competitors. In supply chain planning, IBP processes increasingly use scenarios to discuss risks and options with leadership, and digital twins make it faster to test them.
+
+<KeyIdea>
+
+Don't bet the plan on one forecast. Prepare a few plausible futures, prefer decisions that hold up across them, and agree in advance the triggers and responses for each.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Scenario', def: 'A plausible, internally consistent picture of the future used to test plans.' },
+  { term: 'Robust decision', def: 'A choice that performs acceptably across many scenarios rather than best in one.' },
+  { term: 'Trigger point', def: 'A pre-agreed signal that a scenario is unfolding and a plan should start.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+Scenario planning tests the business against several plausible futures, such as base, upside, downside and disruption, instead of relying on one forecast. Each is run through capacity, inventory, sourcing and finance to find robust decisions that work across scenarios, contingency plans for specific ones, and early-warning triggers. In supply chain it fits naturally into IBP and is faster with a digital twin.
+
+</SayIt>
+
+<Q q="How is scenario planning different from forecasting?">
+
+A forecast estimates the most likely outcome. Scenario planning deliberately explores several different possible outcomes, including unlikely but damaging ones, to prepare decisions and responses that hold up whichever future arrives.
+
+</Q>
+
+<Q q="Give an example of a robust supply chain decision.">
+
+Qualifying a second supplier for a critical material. It costs a little in the base case, but protects supply in a disruption scenario and gives negotiating leverage in a cost-squeeze scenario, so it's sensible across most futures.
+
+</Q>
+
+</InterviewKit>

@@ -1,0 +1,69 @@
+---
+title: Allocation when supply is short
+line: orders
+summary: "Deciding who gets scarce stock and by which rules: fair share, priority, margin or contract."
+minutes: { gist: 3 }
+status: draft
+keywords: [allocation, customer allocation, fair share, priority allocation, scarce supply, shortage gaming, rationing, service tiers, contractual commitments, allocation optimization]
+connected: [atp-ctp, drp-deployment, bullwhip-effect, service-level-policy, control-tower]
+sources:
+  - text: "Lee, H. L., Padmanabhan, V. & Whang, S. (1997). The bullwhip effect in supply chains. Sloan Management Review, 38(3), 93–102."
+  - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="When everyone can't have everything, the rule you choose shapes behaviour." soon>
+
+Sometimes there simply isn't enough: a raw material shortage, a plant outage or a demand spike. With 5,000 units available and orders for 9,000, someone gets less than they asked for. **Allocation** decides who, using an explicit rule rather than whoever shouts loudest:
+
+- **First come, first served:** simple, but rewards early ordering, not importance.
+- **Fair share:** everyone gets the same percentage, here 5,000 ÷ 9,000, about 56% of each order.
+- **Priority tiers:** key accounts and contractual commitments first, then others.
+- **Economic:** favour orders with the highest margin or the biggest penalty for missing them.
+- **Optimized:** a model balancing margin, penalties, service targets and strategic value.
+
+Customers A, B and C asking for 3,000, 2,000 and 4,000 might, under fair share, get about 1,700, 1,100 and 2,200. Under a priority rule where A has a contract, A might get its full 3,000 and B and C split the rest.
+
+The choice changes behaviour. If customers learn that allocation is proportional to what they order, they inflate their orders to get more, a form of **shortage gaming**. That sends false demand signals upstream and is one of the classic causes of the bullwhip effect. Allocating on past sales history or on forecasts agreed in advance avoids rewarding inflated orders.
+
+<KeyIdea>
+
+Make allocation rules explicit and agree them in advance. Prefer rules based on history or agreed forecasts over current orders, so customers have no reason to inflate demand.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Fair share allocation', def: 'Every requester gets the same percentage of what it asked for.' },
+  { term: 'Shortage gaming', def: 'Customers ordering more than they need during shortages to secure a bigger share.' },
+  { term: 'Service tier', def: 'A customer group with a defined priority and service level.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+When supply is short I'd use explicit, pre-agreed allocation rules: priority for contractual and strategic customers, then fair share or margin-based allocation for the rest, or an optimization balancing margin, penalties and service. I'd base shares on history or agreed forecasts rather than current orders, because allocating on orders encourages shortage gaming, which distorts demand and feeds the bullwhip effect.
+
+</SayIt>
+
+<Q q="5,000 units are available and three customers order 3,000, 2,000 and 4,000. How would you allocate?">
+
+First check commitments and priorities: does any customer have a contract or strategic importance? Without them, fair share gives about 56% each: roughly 1,700, 1,100 and 2,200. With priorities, serve the committed customer first and share the rest. Then tell customers clearly what they'll get and when the shortage should end.
+
+</Q>
+
+<Q q="Why can allocating in proportion to orders make shortages worse?">
+
+Customers learn to inflate orders to get a bigger share. The supplier then sees phantom demand, may over-expand or over-produce, and when the shortage ends, orders collapse as customers cancel the extras. This is shortage gaming, a known cause of the bullwhip effect.
+
+</Q>
+
+</InterviewKit>

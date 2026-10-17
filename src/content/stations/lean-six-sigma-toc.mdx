@@ -1,0 +1,74 @@
+---
+title: Lean, Six Sigma & TOC
+line: foundations
+summary: Three improvement approaches, removing waste, variation and constraints, and when each one fits.
+minutes: { gist: 3 }
+status: draft
+keywords: [lean, Toyota Production System, seven wastes, TIMWOOD, JIT, kanban, kaizen, Six Sigma, DMAIC, DPMO, theory of constraints, continuous improvement]
+connected: [bottlenecks, changeovers, oee, why-inventory, statistics-toolkit]
+sources:
+  - text: "Ohno, T. (1988). Toyota Production System: Beyond Large-Scale Production. Productivity Press."
+  - text: "Womack, J. P. & Jones, D. T. (1996). Lean Thinking. Simon & Schuster."
+  - text: "Goldratt, E. M. & Cox, J. (1984). The Goal: A Process of Ongoing Improvement. North River Press."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Waste, variation and constraints: three ways to make operations better." soon>
+
+Most operations improvement draws on three approaches. They overlap, but each starts from a different question.
+
+**Lean** (from the Toyota Production System) asks: *where is the waste?* Anything the customer wouldn't pay for is waste, often remembered as TIMWOOD:
+
+- **T**ransport (moving things unnecessarily), **I**nventory (more than needed), **M**otion (people walking and searching),
+- **W**aiting (idle people or machines), **O**verproduction (making more or earlier than needed),
+- **O**ver-processing (more work than required), **D**efects (scrap and rework).
+
+Its tools include just-in-time production, **kanban** cards that pull material only when it's used, quick changeovers (SMED), standard work and **kaizen**, small continuous improvements by the people doing the work.
+
+**Six Sigma** asks: *where does variation cause defects?* It uses data and statistics to make processes consistent, aiming at very low defect rates (the "six sigma" level is often quoted as 3.4 defects per million opportunities). Projects follow **DMAIC**: define, measure, analyse, improve, control.
+
+**Theory of constraints (TOC)** asks: *what limits the whole system?* Find the bottleneck, make it work flat out, align everything else to it, then lift it.
+
+In practice they combine well: TOC tells you where to focus, Lean removes waste there, and Six Sigma makes the improved process stable. Many companies run "Lean Six Sigma" programmes for this reason.
+
+<KeyIdea>
+
+Lean removes waste, Six Sigma reduces variation, and TOC focuses effort on the constraint. Use TOC to choose where to work, and Lean and Six Sigma to fix it.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'TIMWOOD', def: 'The seven wastes of Lean: transport, inventory, motion, waiting, overproduction, over-processing, defects.' },
+  { term: 'DMAIC', def: 'Six Sigma’s project cycle: define, measure, analyse, improve, control.' },
+  { term: 'Kanban', def: 'A signal, often a card or bin, that pulls replenishment only when material is used.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+Lean, from the Toyota Production System, removes the seven wastes using tools like JIT, kanban, SMED and kaizen. Six Sigma reduces variation and defects with a data-driven DMAIC cycle. The theory of constraints focuses improvement on the bottleneck that limits the whole system. They complement each other: TOC picks the focus, Lean removes waste, and Six Sigma makes the process consistent.
+
+</SayIt>
+
+<Q q="What are the seven wastes of Lean?">
+
+Transport, inventory, motion, waiting, overproduction, over-processing and defects, often remembered as TIMWOOD. Overproduction is often called the worst, because it creates several of the others: extra inventory, transport and handling.
+
+</Q>
+
+<Q q="A process has frequent defects. Would you use Lean or Six Sigma?">
+
+Six Sigma fits defects caused by process variation: measure the process, find the root causes statistically, fix them and put controls in place. Lean would still help by simplifying the process and removing steps where errors creep in. Often both are used together.
+
+</Q>
+
+</InterviewKit>

@@ -1,0 +1,77 @@
+---
+title: Supply chain KPIs
+line: foundations
+summary: The measures interviewers expect you to know, what each one really tells you, and how they pull against each other.
+minutes: { gist: 3 }
+status: draft
+keywords: [supply chain KPIs, OTIF, fill rate, perfect order, inventory turns, days of inventory, forecast accuracy, cash to cash, logistics cost, OEE, SCOR metrics, balanced scorecard]
+connected: [cash-conversion-cycle, service-levels, forecast-accuracy, oee, order-to-delivery, cost-to-serve]
+sources:
+  - text: "ASCM (Association for Supply Chain Management). SCOR Digital Standard: performance attributes and metrics."
+  - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapter on supply chain performance and drivers."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Service, cost and cash: one KPI from each, read together." soon>
+
+Supply chain performance is usually judged on three fronts at once: **service** to customers, **cost**, and **cash** tied up. The trouble is that they pull against each other: more stock improves service but costs cash, and fuller trucks cut cost but can slow delivery. That's why KPIs must be read together, never alone.
+
+The ones that come up most:
+
+| KPI | What it measures | Formula or meaning |
+|---|---|---|
+| OTIF | Orders delivered on time and in full | On-time-in-full orders ÷ total orders |
+| Fill rate | Share of demand met from stock | Units shipped from stock ÷ units ordered |
+| Perfect order | On time, complete, undamaged, correct documents | Product of the component rates |
+| Inventory turns | How fast stock moves | Cost of goods sold ÷ average inventory |
+| Days of inventory (DIO) | How long stock sits | 365 ÷ turns, or inventory ÷ daily COGS |
+| Forecast accuracy and bias | Quality of the demand plan | WMAPE or MASE, plus mean error |
+| Logistics cost | Cost efficiency | Logistics cost ÷ revenue, or cost per unit |
+| Cash-to-cash cycle | Working capital tied up | DIO + DSO − DPO |
+| OEE | Production effectiveness | Availability × performance × quality |
+
+A company turning inventory 8 times a year holds about 46 days of stock (365 ÷ 8). Push turns to 12 and stock drops to about 30 days, freeing cash, but only if OTIF holds.
+
+Frameworks like the **SCOR model** group measures into reliability, responsiveness, agility, cost and asset efficiency. A balanced set from each group stops a team from improving one number by damaging another, such as cutting inventory until service collapses.
+
+<KeyIdea>
+
+Read KPIs as a set: service, cost and cash. Any single KPI can be "improved" by quietly hurting another.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Inventory turns', def: 'Cost of goods sold ÷ average inventory: how many times stock is replaced a year.' },
+  { term: 'OTIF', def: 'Share of orders delivered on time and in full.' },
+  { term: 'SCOR', def: 'A supply chain reference model with standard processes and performance metrics.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+I'd track a balanced set covering service, cost and cash: OTIF, fill rate or perfect order for service; logistics cost per unit or as a share of revenue for cost; inventory turns or days of inventory and the cash conversion cycle for cash; plus forecast accuracy and bias, and OEE in manufacturing. They trade off against each other, so I'd never optimize one in isolation, and I'd make sure definitions are clear, like customer-requested versus promised dates for OTIF.
+
+</SayIt>
+
+<Q q="Inventory turns rose from 8 to 12. Is that good?">
+
+Days of inventory fell from about 46 to about 30, freeing cash. But it's only good if service held: check OTIF, fill rate and expediting costs. If service dropped or emergency freight rose, the improvement may be costing more than it saves.
+
+</Q>
+
+<Q q="Which three KPIs would you show a CEO for the supply chain?">
+
+One for each front: OTIF for service, total supply chain cost as a share of revenue for cost, and the cash conversion cycle or days of inventory for cash. Together they show whether service is improving without hurting cost or working capital.
+
+</Q>
+
+</InterviewKit>
