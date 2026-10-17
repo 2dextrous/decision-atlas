@@ -1,0 +1,78 @@
+---
+title: Supplier selection & TCO
+line: sourcing
+summary: Choosing suppliers on total cost of ownership and a balanced scorecard, not on the lowest quoted price.
+minutes: { gist: 3 }
+status: draft
+keywords: [supplier selection, total cost of ownership, TCO, landed cost, supplier scorecard, RFI, RFQ, RFP, reverse auction, qualification, OTIF, quality]
+connected: [kraljic, sourcing-allocation, contracts, supplier-risk, procurement-fundamentals]
+sources:
+  - text: "Ellram, L. M. (1995). Total cost of ownership: an analysis approach for purchasing. International Journal of Physical Distribution & Logistics Management, 25(8), 4–23."
+  - text: "Monczka, R. M., Handfield, R. B., Giunipero, L. C. & Patterson, J. L. Purchasing and Supply Chain Management. Cengage Learning."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Price is one line of the cost. The rest decides who's actually cheaper." soon>
+
+Supplier selection usually follows a funnel:
+
+1. **RFI (request for information):** who could do this? Capabilities, certifications, capacity, financial health.
+2. **Qualification:** audits, samples and trial orders to check quality and reliability.
+3. **RFQ or RFP:** an RFQ asks for prices on a fixed specification; an RFP asks suppliers to propose a solution, such as a logistics service. Reverse auctions suit simple, well-specified items.
+4. **Award and contract.**
+
+The trap is choosing on unit price. **Total cost of ownership (TCO)** adds everything the purchase really costs:
+
+| | Supplier A (overseas) | Supplier B (domestic) |
+|---|---|---|
+| Unit price | ₹100 | ₹108 |
+| Freight and duty | ₹9 | ₹2 |
+| Extra safety stock for a long, variable lead time | ₹4 | ₹1 |
+| Defects, rework and inspection | ₹3 | ₹1 |
+| **Total per unit** | **₹116** | **₹112** |
+
+The supplier that looks ₹8 cheaper on price ends up ₹4 more expensive per unit. TCO can also include payment terms, currency risk, switching costs and the risk of a disruption.
+
+After the award, a **supplier scorecard** keeps score over time, typically on quality (defect rate), delivery (on time, in full), cost, responsiveness, and increasingly risk and ESG. Scorecards drive reviews, improvement plans and future volume allocation.
+
+<KeyIdea>
+
+Compare suppliers on total cost of ownership, not unit price, and keep scoring them after the contract is signed.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Total cost of ownership (TCO)', def: 'All costs of buying and using an item: price, freight, duties, inventory, quality and risk.' },
+  { term: 'RFQ vs RFP', def: 'Price quote for a defined spec, versus a proposal for how to solve a need.' },
+  { term: 'Supplier scorecard', def: 'Regular ratings of a supplier on quality, delivery, cost, service, risk and ESG.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+I'd select suppliers through a funnel, RFI, qualification, then RFQ or RFP, and compare finalists on total cost of ownership: price plus freight, duties, the inventory needed for their lead time and reliability, quality costs, payment terms and risk. The cheapest quote often isn't the cheapest supplier. After the award, a scorecard on quality, delivery, cost, service, risk and ESG keeps performance visible.
+
+</SayIt>
+
+<Q q="An overseas supplier quotes ₹100 and a domestic one ₹108. How do you decide?">
+
+Build the total cost: freight and duties, the extra safety stock for a longer and more variable lead time, quality costs, payment terms and currency risk. In many cases the overseas option's advantage shrinks or disappears. Then weigh risk and flexibility, such as how quickly each can respond to demand changes.
+
+</Q>
+
+<Q q="What would you put on a supplier scorecard?">
+
+Quality (defect rate, returns), delivery (on-time in-full, lead-time reliability), cost (price versus market, cost-reduction ideas), responsiveness and collaboration, plus risk and ESG indicators. Weight them by category and review them regularly with the supplier.
+
+</Q>
+
+</InterviewKit>

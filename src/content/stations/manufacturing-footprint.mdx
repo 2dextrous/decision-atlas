@@ -1,0 +1,77 @@
+---
+title: Manufacturing footprint & plant roles
+line: network
+summary: Which plants make what, why location factors go beyond wage costs, and the strategic role each plant can play.
+minutes: { gist: 3 }
+status: draft
+keywords: [manufacturing footprint, plant role, Ferdows, offshore, source, server, contributor, outpost, lead factory, location factors, focused factory, capacity]
+connected: [network-design-decisions, plant-allocation, make-vs-buy, tariffs-trade, greenfield]
+sources:
+  - text: "Ferdows, K. (1997). Making the most of foreign factories. Harvard Business Review, 75(2), 73–88."
+  - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapter on network design: factors influencing decisions."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Where to make things, and what job each plant should do." soon>
+
+A company's **manufacturing footprint** is its set of plants: where they are, how big they are, and what each one makes. Footprint decisions last decades, so they rest on more than today's wage rates:
+
+- **Costs:** labour, land, power, taxes and incentives, and freight to markets.
+- **Markets:** being near customers cuts lead time and freight, and sometimes local production is needed to sell at all.
+- **Skills and suppliers:** a cluster of trained workers and component makers, like auto parts around Pune or Chennai.
+- **Infrastructure and risk:** ports, roads, reliable power, political stability, exchange rates and tariffs.
+
+Kasra Ferdows argued that plants should also have a clear **strategic role**, and that the best ones grow into bigger roles over time. He described six:
+
+| Role | What the plant is for |
+|---|---|
+| Offshore | Makes cheaply to a specification set elsewhere; little local know-how |
+| Source | Low-cost production, but with authority over its own processes and suppliers |
+| Server | Supplies a specific regional market, often to avoid tariffs or freight |
+| Contributor | Serves its region and also develops products and processes |
+| Outpost | Placed mainly to gather knowledge: access to skills, suppliers or competitors |
+| Lead | Creates new products and processes for the whole company |
+
+The two views come together in practice. A plant set up as a low-cost offshore site can, with investment in skills, become a source or even a lead plant. One that stays offshore is easy to replace when costs rise.
+
+<KeyIdea>
+
+Choose plant locations on total landed cost, market access, skills and risk, not wages alone, and give each plant a clear strategic role that can grow over time.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Manufacturing footprint', def: 'The number, locations, capacities and product assignments of a company’s plants.' },
+  { term: 'Server plant', def: 'A plant that exists to serve a particular regional market.' },
+  { term: 'Lead plant', def: 'A plant that develops new products and processes for the whole network.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+Footprint decisions weigh total landed cost, closeness to markets, skills and supplier clusters, infrastructure and risk such as tariffs and currency, not just wage rates. Ferdows adds the idea of strategic roles: offshore, source, server, contributor, outpost and lead, depending on why the plant exists and how much know-how it holds. I'd assign plants clear roles and plan how their capabilities should grow.
+
+</SayIt>
+
+<Q q="Why might a company build a plant in a high-cost country?">
+
+To be close to a key market, avoid tariffs or long lead times, access skills or suppliers, or develop products alongside customers. Ferdows calls these server, outpost or lead roles. Total landed cost and strategic value can outweigh higher wages.
+
+</Q>
+
+<Q q="What is the risk of treating every plant as a low-cost offshore site?">
+
+Those plants hold little know-how, so they're easy to replace and contribute nothing to improvement or new products. When costs shift, the company has to move again. Plants with deeper roles create advantages that are harder to copy.
+
+</Q>
+
+</InterviewKit>

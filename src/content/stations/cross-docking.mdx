@@ -1,0 +1,71 @@
+---
+title: Cross-docking vs stocking
+line: network
+summary: When goods should flow straight through a hub without being stored, and when holding stock is the better choice.
+minutes: { gist: 3 }
+status: draft
+keywords: [cross-docking, flow-through, stock flow, warehousing, consolidation, deconsolidation, dwell time, inbound, outbound, synchronization]
+connected: [load-building, distribution-designs, warehousing, transport-planning, risk-pooling]
+sources:
+  - text: "Stalk, G., Evans, P. & Shulman, L. E. (1992). Competing on capabilities: The new rules of corporate strategy. Harvard Business Review, 70(2), 57–69."
+  - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapter on transportation and distribution."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Flow straight through, or store first? It depends on volume, predictability and timing." soon>
+
+In a normal warehouse, goods arrive, get put away on racks, wait, then get picked and shipped. That is **stock flow**, and the warehouse holds inventory.
+
+In **cross-docking**, goods arrive on inbound trucks, are sorted on the dock and loaded straight onto outbound trucks, usually within hours and often within a day, without being put away. Picture full truckloads from five suppliers arriving at a hub, where their pallets are re-mixed so each outbound truck carries a bit of everything one store needs.
+
+Cross-docking saves storage space, handling and inventory, and it lets companies ship full truckloads both in and out. Walmart's early use of it is a classic business-school example of turning logistics into a competitive advantage.
+
+It works only under certain conditions:
+
+- **High, steady volume:** enough flow to fill trucks every day.
+- **Predictable demand:** you know where each pallet must go before it arrives.
+- **Tight synchronization:** inbound and outbound trucks must meet on time, which needs good data, scheduling and reliable suppliers.
+
+Stock flow wins when demand is uncertain, products are slow-moving or come in many variants, or suppliers are unreliable, because then you need inventory to buffer the uncertainty. Most networks mix the two: fast, predictable items flow through, slower ones are stocked.
+
+<KeyIdea>
+
+Cross-dock what is high-volume, predictable and well synchronized; store what is slow, variable or unreliable. Inventory exists to buffer uncertainty, so where there's little uncertainty, flow it through.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Cross-docking', def: 'Transferring goods from inbound to outbound trucks with little or no storage.' },
+  { term: 'Dwell time', def: 'How long goods stay in a facility before moving on.' },
+  { term: 'Consolidation', def: 'Combining shipments from several sources into fuller loads.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+Cross-docking moves goods from inbound to outbound trucks with minimal storage, which cuts inventory, handling and space and supports full truckloads in both directions. It needs high, predictable volumes and tight synchronization of suppliers and carriers. When demand is uncertain, items are slow-moving or suppliers are unreliable, a stocking warehouse is better because inventory is needed to buffer the uncertainty.
+
+</SayIt>
+
+<Q q="Which products suit cross-docking?">
+
+High-volume, fast-moving, predictable items that go to known destinations, such as staple groceries to supermarkets or pre-allocated retail replenishment. Slow movers, items with uncertain demand and goods from unreliable suppliers are better stocked.
+
+</Q>
+
+<Q q="What usually makes cross-docking fail?">
+
+Poor synchronization: inbound trucks arrive late or with the wrong mix, so outbound trucks wait or leave part-empty and goods pile up on the dock. It depends on accurate advance shipping notices, reliable carriers and good scheduling.
+
+</Q>
+
+</InterviewKit>

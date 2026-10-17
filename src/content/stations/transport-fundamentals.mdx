@@ -1,0 +1,74 @@
+---
+title: Transportation fundamentals
+line: logistics
+summary: Modes, FTL vs LTL vs parcel, and the handful of factors that drive what freight really costs.
+minutes: { gist: 3 }
+status: draft
+keywords: [transportation modes, road, rail, sea, air, FTL, LTL, PTL, parcel, freight cost drivers, backhaul, density, cube, transit time]
+connected: [lane-mode, load-building, transport-planning, carbon-aware-design, intermodal]
+sources:
+  - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapter on transportation in a supply chain."
+  - text: "Christopher, M. Logistics & Supply Chain Management. Pearson."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Faster costs more, fuller costs less, and empty return trips cost someone." soon>
+
+Transport moves goods between every stage of the supply chain, and it trades speed against cost. The main modes, roughly from cheapest and slowest to fastest and dearest:
+
+- **Sea:** huge volumes at the lowest cost per tonne, but slow and port-dependent.
+- **Rail:** efficient for heavy goods over long distances, such as cement, steel and containers on dedicated freight corridors, but needs road legs at both ends.
+- **Road:** flexible and door to door; it carries most freight in India.
+- **Air:** fastest and most expensive; used for urgent, light, high-value goods such as phones, medicines and spare parts.
+
+Road freight is bought in three main sizes:
+
+- **FTL (full truckload):** you hire the whole truck; cheapest per unit if you can fill it.
+- **LTL or PTL (less than or part truckload):** you share a truck with others; you pay more per unit but less in total for small shipments, and it's slower because of extra stops and handling.
+- **Parcel/courier:** single boxes through a carrier's network, used for e-commerce.
+
+A few factors drive freight cost: **distance**, **weight and volume** (light, bulky goods fill a truck's space before its weight limit), **lane balance** (if trucks return empty, someone pays for the empty return or "backhaul"), **fuel**, **tolls and waiting time**, and **service** requirements such as delivery windows or temperature control.
+
+Faster modes cost more freight but less inventory: goods spend less time in transit and smaller safety stocks are needed. The right mode balances both, not freight alone.
+
+<KeyIdea>
+
+Choose modes and shipment sizes on total cost: freight plus the inventory tied up in transit. Fill vehicles where you can, and remember who pays for the empty trip home.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'FTL vs LTL', def: 'Hiring a whole truck versus sharing space with other shippers.' },
+  { term: 'Backhaul', def: 'The return trip; filling it lowers cost for everyone.' },
+  { term: 'Cube out vs weigh out', def: 'A truck fills its volume before its weight limit (light goods), or the reverse (heavy goods).' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+Transport trades speed against cost: sea and rail are cheapest per tonne for long, heavy flows, road is flexible door to door, and air is fastest for urgent, high-value goods. Shipment size matters too: FTL is cheapest per unit when full, LTL suits smaller loads, and parcel suits single orders. I'd decide on total cost, freight plus in-transit and safety inventory, with cost drivers like distance, density, lane balance and service requirements in view.
+
+</SayIt>
+
+<Q q="Why can a slower, cheaper mode end up costing more?">
+
+Because slower transit means more stock in the pipeline and, if transit is also less reliable, more safety stock. For high-value goods, the inventory carrying cost can outweigh the freight saving.
+
+</Q>
+
+<Q q="A truck is full by volume but carrying only 40% of its weight limit. What does that tell you?">
+
+The product is light and bulky, so the load "cubes out" first. Better packaging, denser pallets or mixing heavy and light products in the same truck can improve utilization and cut freight per unit.
+
+</Q>
+
+</InterviewKit>

@@ -1,0 +1,71 @@
+---
+title: Reverse logistics networks
+line: network
+summary: Collecting, inspecting and recovering value from returned and end-of-life goods, and where those facilities should sit.
+minutes: { gist: 3 }
+status: draft
+keywords: [reverse logistics, returns, closed-loop supply chain, disposition, refurbish, remanufacture, recycle, returns centre, grading, circular economy, EPR]
+connected: [returns, network-design-decisions, carbon-aware-design, esg-risk, slow-obsolete]
+sources:
+  - text: "Rogers, D. S. & Tibben-Lembke, R. S. (1999). Going Backwards: Reverse Logistics Trends and Practices. Reverse Logistics Executive Council."
+  - text: "Guide, V. D. R. & Van Wassenhove, L. N. (2009). The evolution of closed-loop supply chain research. Operations Research, 57(1), 10–18."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Goods flowing backwards: collect, check, decide, recover." soon>
+
+Most supply chains are designed for goods moving forward. **Reverse logistics** handles everything that comes back: online returns, faulty products under warranty, unsold seasonal stock, packaging and end-of-life products collected for recycling.
+
+The backward flow has its own steps:
+
+1. **Collect:** courier pickups, store drop-offs, collection points.
+2. **Consolidate:** bring returns together so they can be handled at scale.
+3. **Inspect and grade:** is it as good as new, damaged, faulty or beyond repair?
+4. **Decide what happens to it (disposition):** restock, repair or refurbish and resell, sell through outlets or liquidators, return to the supplier, harvest parts, recycle, or dispose.
+5. **Recover value:** put it back into the right channel quickly.
+
+Speed matters because returned items lose value every week they sit, especially electronics and fashion. That shapes the network. Grading close to the customer avoids shipping worthless items across the country, while central returns centres build up the scale and specialist skills that refurbishing needs. Many companies inspect locally and refurbish centrally.
+
+A **closed-loop supply chain** deliberately designs the forward and reverse flows together: products made to be repaired, remanufactured or recycled, with the recovered material going back into production. Producer-responsibility rules for plastic packaging and electronic waste are making this part of compliance as well as cost control.
+
+<KeyIdea>
+
+Returns lose value with every day of delay. Grade them early, decide quickly where each item goes, and design the reverse network with the same care as the forward one.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Disposition', def: 'The decision about what happens to a returned item: restock, refurbish, resell, recycle or dispose.' },
+  { term: 'Closed-loop supply chain', def: 'Forward and reverse flows designed together to recover value and materials.' },
+  { term: 'Extended producer responsibility (EPR)', def: 'Rules making producers responsible for collecting and recycling their products or packaging.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+Reverse logistics covers collecting, consolidating, inspecting and dispositioning returned or end-of-life goods: restock, refurbish, resell, recycle or dispose. Because returns lose value quickly, I'd grade them early, often close to the customer, and centralize specialist work like refurbishment. Closed-loop design goes further by designing products and networks so materials flow back into production, which also helps meet producer-responsibility rules.
+
+</SayIt>
+
+<Q q="Where would you inspect online returns: locally or at a central centre?">
+
+Usually a quick inspection and grading locally, so obviously worthless items aren't shipped far and good-as-new items can be restocked nearby, with complex repair and refurbishment done centrally where volume justifies specialist skills. The split depends on product value, return volumes and transport cost.
+
+</Q>
+
+<Q q="Why does speed matter so much in returns?">
+
+Because many returned products lose value over time. Fashion goes out of season and electronics get superseded or discounted. A return processed in days can often be resold at near full price; one processed in months might only be worth its parts.
+
+</Q>
+
+</InterviewKit>

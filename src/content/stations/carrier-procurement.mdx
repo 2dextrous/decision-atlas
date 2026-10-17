@@ -1,0 +1,69 @@
+---
+title: Carrier selection & freight tenders
+line: logistics
+summary: Running freight tenders, choosing carriers lane by lane, and balancing contract rates against the spot market.
+minutes: { gist: 3 }
+status: draft
+keywords: [carrier selection, freight procurement, freight tender, RFP, rate card, contract rate, spot rate, tender acceptance, carrier scorecard, lane award, combinatorial bidding]
+connected: [lane-mode, transport-planning, supplier-selection, contracts, eta-visibility]
+sources:
+  - text: "Caplice, C. & Sheffi, Y. (2003). Optimization-based procurement for transportation services. Journal of Business Logistics, 24(2), 109–128."
+  - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Buying freight like any other category, lane by lane, with performance kept on the scorecard." soon>
+
+Freight is one of the biggest things a manufacturer or retailer buys, so it's procured like any other category, through periodic **freight tenders** (RFPs):
+
+1. **Prepare lane data:** for each lane, its expected volume, equipment type, service needs and seasonality.
+2. **Invite carriers** to bid rates per lane: per trip, per tonne or per kilometre.
+3. **Evaluate bids** on price, capacity, transit time, past performance, safety and compliance, not price alone.
+4. **Award lanes,** often with a primary and a backup carrier, so a rejected load has somewhere to go.
+5. **Manage performance** with a carrier scorecard: on-time pickup and delivery, tender acceptance rate, damage claims, billing accuracy.
+
+Two kinds of rate coexist. **Contract rates** are agreed for a year or a season, giving price stability but depending on carriers honouring them. **Spot rates** are bought load by load on the open market: sometimes cheaper, often much dearer in peak seasons. If carriers keep rejecting contracted loads when the market tightens (low **tender acceptance**), the company ends up buying on the spot market at peak prices, so a cheap contract rate that isn't honoured isn't cheap at all.
+
+Larger shippers use optimization to award lanes, letting carriers bid on bundles, such as a round trip that gives them a return load, and choosing the combination of awards with the lowest total cost within capacity and risk rules.
+
+<KeyIdea>
+
+Award freight on total value: rate, capacity, reliability and how often the carrier actually accepts your loads. A low contract rate is worthless if it's rejected when you need it.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Freight tender', def: 'A competitive bidding process for carrier rates and capacity on a set of lanes.' },
+  { term: 'Tender acceptance rate', def: 'Share of offered loads a carrier accepts at the contracted rate.' },
+  { term: 'Spot rate', def: 'A one-off market price for a single load, often volatile.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+I'd run freight procurement as a structured tender: share accurate lane volumes and requirements, collect carrier bids, evaluate on rate, capacity, transit time and past performance, and award primary and backup carriers per lane, using optimization for bundled bids on larger networks. After award, a scorecard on on-time performance, tender acceptance, damage and billing accuracy keeps carriers honest, because a contract rate that's rejected in peak season pushes you onto expensive spot rates.
+
+</SayIt>
+
+<Q q="Why is tender acceptance rate so important?">
+
+Because a contract only helps if the carrier accepts the loads. When carriers reject loads in tight markets, shippers pay spot rates that can be far higher. A slightly higher contract rate with a reliable carrier often costs less in total.
+
+</Q>
+
+<Q q="How can shippers get better freight rates without just squeezing carriers?">
+
+Give accurate volume forecasts, offer balanced lanes and round trips so carriers avoid empty returns, load and unload quickly to cut waiting time, pay on time, and commit consistent volume. Carriers price in uncertainty and inefficiency, so removing them lowers rates sustainably.
+
+</Q>
+
+</InterviewKit>

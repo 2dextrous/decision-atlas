@@ -1,0 +1,69 @@
+---
+title: Fleet sizing & mix
+line: logistics
+summary: How many vehicles of which types to own, lease or hire, so the fleet covers base demand cheaply and peaks flexibly.
+minutes: { gist: 3 }
+status: draft
+keywords: [fleet sizing, fleet mix, own vs hire, dedicated fleet, market vehicles, utilization, peak demand, total cost of ownership, vehicle type, capacity planning]
+connected: [vehicle-routing, transport-planning, carrier-procurement, workforce-planning, scenario-modeling]
+sources:
+  - text: "Toth, P. & Vigo, D. (Eds.) (2014). Vehicle Routing: Problems, Methods, and Applications (2nd ed.). SIAM."
+  - text: "Rushton, A., Croucher, P. & Baker, P. The Handbook of Logistics and Distribution Management. Kogan Page."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Own the base load, hire for the peaks, and match vehicle size to the work." soon>
+
+A company that runs its own deliveries has to decide how many vehicles to keep, of which sizes, and how many to hire when needed. Too few, and orders wait or expensive market trucks fill the gap. Too many, and vehicles sit idle while their EMIs, insurance and drivers' wages keep running.
+
+The usual answer is to **own or lease for the base load and hire for the peaks**. If a distributor needs 20 trucks on a normal day but 32 during the festive season, owning 32 means 12 trucks idle most of the year. Owning about 20 and hiring market vehicles for the peak usually costs less, provided hired capacity is reliably available when everyone else needs it too.
+
+The **mix** matters as much as the count. Small vans move easily through narrow city lanes and suit small drops; big trucks are cheaper per tonne on long hauls but waste space on light loads. Matching vehicle size to route type, such as two-wheelers for quick commerce, small vans for kirana routes and 20-foot trucks for warehouse transfers, cuts cost per drop.
+
+Fleet sizing is usually worked out by simulating routes over a typical year, day by day, with different fleet sizes and mixes, then comparing:
+
+> cost of owned vehicles (capital, insurance, maintenance, drivers) + cost of hired vehicles for overflow + cost of late or missed deliveries
+
+Two numbers tell you whether the fleet fits: **utilization** (how many hours or kilometres each vehicle actually works) and **cost per drop or per tonne-km**.
+
+<KeyIdea>
+
+Size the owned fleet for the steady base and hire for peaks, and match vehicle types to the routes they run. Test fleet options against a full year of demand, not an average day.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Dedicated fleet', def: 'Vehicles owned or leased for one company’s exclusive use.' },
+  { term: 'Market vehicle', def: 'A truck hired trip by trip from the open market.' },
+  { term: 'Fleet utilization', def: 'Share of available vehicle time or capacity actually used.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+Fleet sizing balances the fixed cost of owned or leased vehicles against the cost of hiring for overflow and the cost of missed service. I'd simulate a year of routes with different fleet sizes and mixes, size the dedicated fleet for the base load, hire for peaks, and match vehicle types to route profiles. Utilization and cost per drop show whether the fleet fits.
+
+</SayIt>
+
+<Q q="Demand needs 20 trucks normally and 32 in the festive peak. How many would you own?">
+
+Probably close to the base, around 20, and hire the rest during the peak, as long as market trucks are reliably available and not much dearer then. I'd check by comparing total annual cost and service for several fleet sizes, using real day-by-day demand rather than averages.
+
+</Q>
+
+<Q q="Why does fleet mix matter as much as fleet size?">
+
+Because the wrong vehicle wastes money: big trucks on small urban drops are hard to park and run part-empty, small vans on long hauls cost more per tonne. Matching vehicle size to route type and load profile lowers cost per drop and improves utilization.
+
+</Q>
+
+</InterviewKit>

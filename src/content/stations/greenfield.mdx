@@ -1,0 +1,70 @@
+---
+title: Greenfield studies
+line: network
+summary: Designing a network from a blank map, step by step, and how that differs from redesigning the one you already have.
+minutes: { gist: 3 }
+status: draft
+keywords: [greenfield, brownfield, network study, candidate sites, demand map, scenarios, sensitivity analysis, network optimization, location factors]
+connected: [facility-location, network-design-decisions, scenario-modeling, manufacturing-footprint, carbon-aware-design]
+sources:
+  - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapter on network design: the four-phase framework."
+  - text: "Daskin, M. S. (2013). Network and Discrete Location: Models, Algorithms, and Applications (2nd ed.). Wiley."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Six steps from a demand map to a recommended network." soon>
+
+A **greenfield** study designs the network as if nothing existed yet: no plants or warehouses you must keep. A **brownfield** study starts from today's network and asks what to keep, close, move or add. Greenfield answers are useful even for companies with networks, because they show the ideal shape and how far the current one is from it.
+
+A typical study for an FMCG company expanding across India runs like this:
+
+1. **Map the demand.** Where are customers, and how much does each region buy, say North 2.5 lakh units, West 3.5 lakh, South 2.5 lakh, East 1.5 lakh? Look at the future too: design for the demand in five years, not today's.
+2. **Build scenarios.** Low, base and high demand, because a network has to work across a range of futures.
+3. **List candidate sites.** Mumbai, Pune, Ahmedabad, Delhi, Hyderabad, Bengaluru, Kolkata, Chennai, filtered by land, labour, roads and rail, power, taxes and incentives.
+4. **Collect costs.** Fixed cost per site, handling cost, freight rates per lane, inventory carrying cost, and service targets such as delivery within 48 hours.
+5. **Optimize.** A mixed-integer model chooses which candidates to open and how product flows, at minimum total cost within service limits.
+6. **Stress-test.** Rerun with fuel prices up, a site closed or demand shifted. The best design stays good across scenarios, not just the base case.
+
+The output isn't just a map. It is a recommended network with the cost, service and risk of each alternative, which is what leadership needs to commit years of investment.
+
+<KeyIdea>
+
+Greenfield design starts from a blank map: demand, scenarios, candidate sites, costs, optimization, then stress tests. The best design holds up across scenarios, not just in the base case.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Greenfield vs brownfield', def: 'Designing from scratch versus redesigning an existing network.' },
+  { term: 'Candidate site', def: 'A feasible location the optimization model may choose to open.' },
+  { term: 'Sensitivity analysis', def: 'Testing how the recommended design changes when key inputs change.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+A greenfield study designs the network from scratch. I'd map current and future demand, build low, base and high scenarios, shortlist candidate sites using hard filters like land, labour, infrastructure and incentives, gather fixed, handling, freight and inventory costs, then run a MILP to pick sites and flows. Finally I'd stress-test the result against scenarios and disruptions, and compare it with the current network to plan the transition.
+
+</SayIt>
+
+<Q q="What is the difference between greenfield and brownfield design?">
+
+Greenfield assumes no existing facilities and finds the ideal network. Brownfield starts from current sites, contracts and investments and decides what to keep, close, relocate or add, so switching costs and timing matter. Companies often run both: greenfield to see the ideal, brownfield to plan realistic steps towards it.
+
+</Q>
+
+<Q q="Why design for scenarios rather than a single forecast?">
+
+Because the network lasts for years and demand will differ from any single forecast. A design that's optimal only in the base case can be badly undersized or wasteful in other futures. Testing across scenarios finds designs that are good enough everywhere.
+
+</Q>
+
+</InterviewKit>

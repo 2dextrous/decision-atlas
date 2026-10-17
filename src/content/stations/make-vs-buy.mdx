@@ -1,0 +1,70 @@
+---
+title: Make vs buy & contract manufacturing
+line: sourcing
+summary: When to make something yourself, when to outsource it, and how to plan volume and capacity with co-packers.
+minutes: { gist: 3 }
+status: draft
+keywords: [make or buy, outsourcing, insourcing, contract manufacturing, co-packing, co-manufacturing, core competence, capacity reservation, intellectual property, total cost]
+connected: [rccp, contracts, manufacturing-footprint, sop-ibp, supplier-selection]
+sources:
+  - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapter on sourcing decisions in a supply chain."
+  - text: "Van Weele, A. J. Purchasing and Supply Chain Management. Cengage Learning."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Keep what makes you different, outsource what others do better, and book partner capacity early." soon>
+
+Every company decides what to make itself and what to buy. The usual reasons to **make** something in-house are that it's core to your advantage (a secret formula, a key technology), that quality or intellectual property needs tight control, or that you have spare capacity. The usual reasons to **buy** are that a specialist does it cheaper or better, that you'd rather not tie up capital in plants, or that demand is too uncertain to justify your own capacity.
+
+In FMCG this often means **contract manufacturing**: a co-packer or co-manufacturer makes or packs products under your brand. A shampoo company might make its core packs in its own plants and use co-packers for:
+
+- seasonal peaks and promotions, when its own plants are full,
+- new products not yet proven enough to justify a new line,
+- regional supply close to a market,
+- special formats such as sachets or gift packs.
+
+Two decisions follow. **Allocation:** how much volume each co-packer gets, weighing their price, capacity, quality and minimum volumes against your own plants. **Capacity reservation:** good co-packers are busy before festive seasons, so companies often book capacity months ahead, paying a reservation or commitment fee in exchange for guaranteed slots.
+
+The risks of outsourcing are real: less control over quality and timing, leaked know-how, weaker bargaining power if you depend on one partner, and lost internal skills.
+
+<KeyIdea>
+
+Make what gives you an advantage or needs tight control; buy what partners do better or cheaper. When you rely on co-packers, plan their volume in S&OP and book their capacity before peak season.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Co-packer / co-manufacturer', def: 'A third party that makes or packs products under your brand.' },
+  { term: 'Core competence', def: 'A capability that gives a company its competitive advantage and is hard to copy.' },
+  { term: 'Capacity reservation', def: 'Paying in advance to guarantee a partner’s production capacity.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+Make-or-buy depends on strategic importance, cost and capability, capacity and risk. I'd keep core, differentiating or IP-sensitive production in-house and outsource where partners are cheaper, better or more flexible. With co-manufacturers, volume allocation and capacity reservation become planning decisions: allocate by cost, capacity and quality within S&OP, and book capacity ahead of peaks, while managing quality, dependency and know-how risks.
+
+</SayIt>
+
+<Q q="When would you use a co-packer instead of building a new line?">
+
+When demand is seasonal or uncertain, such as a new product or a festive peak, when you need capacity faster than you can build it, when a partner offers a special format or a location near the market, or when the capital is better spent elsewhere.
+
+</Q>
+
+<Q q="What are the risks of relying heavily on contract manufacturers?">
+
+Quality and delivery are less under your control, know-how can leak to competitors, you lose internal skills, and you become dependent. If capacity is tight industry-wide, partners may favour bigger clients. Contracts, audits, dual partners and capacity reservations reduce these risks.
+
+</Q>
+
+</InterviewKit>

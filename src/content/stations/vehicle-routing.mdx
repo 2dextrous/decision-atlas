@@ -1,0 +1,70 @@
+---
+title: Vehicle routing & last mile
+line: logistics
+summary: Planning delivery routes to many doors with limited vehicles and time windows, and why the last mile is the costliest leg.
+minutes: { gist: 3 }
+status: draft
+keywords: [vehicle routing problem, VRP, travelling salesman problem, TSP, time windows, capacitated VRP, savings algorithm, last mile, route optimization, failed delivery, dark store]
+connected: [optimization-basics, load-building, transport-planning, eta-visibility, distribution-designs]
+sources:
+  - text: "Toth, P. & Vigo, D. (Eds.) (2014). Vehicle Routing: Problems, Methods, and Applications (2nd ed.). SIAM."
+  - text: "Clarke, G. & Wright, J. W. (1964). Scheduling of vehicles from a central depot to a number of delivery points. Operations Research, 12(4), 568–581."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Which van visits which customers, in which order, within everyone's time window." soon>
+
+A distributor in Pune has 8 vans and 120 kirana stores to deliver to today. Each store orders a different amount, some can only receive goods before 11 am, and each van holds a limited load. Which van visits which stores, in what order?
+
+That is the **vehicle routing problem (VRP)**. Its simplest relative, the **travelling salesman problem (TSP)**, finds the shortest loop through every stop for one vehicle. The VRP adds what real life brings:
+
+- **vehicle capacity** (weight, volume, crates),
+- **time windows** (deliver between 8 and 11 am),
+- **driver hours,** breaks and shift limits,
+- **multiple depots, vehicle types** and pickup-and-delivery combinations.
+
+The number of possible routes explodes as stops are added, so exact solutions are only practical for small problems. Real systems use **heuristics**: classic ones like the Clarke-Wright savings algorithm, which starts with one trip per customer and keeps merging the pairs that save the most distance, plus modern search methods that improve routes step by step. They find very good routes in seconds, even if not provably perfect.
+
+The **last mile**, the final leg to a home or shop, is usually the most expensive part of delivery per unit: many small drops, parking, waiting, and **failed deliveries** when nobody is home. Companies cut it with route density (more drops per street), delivery time slots, lockers and pickup points, and dark stores close to customers.
+
+<KeyIdea>
+
+Routing assigns stops to vehicles and orders them within capacities and time windows. Good heuristics find excellent routes fast, and the last mile is where density and failed deliveries decide cost.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'VRP', def: 'Vehicle routing problem: design routes for a fleet to serve customers at minimum cost under constraints.' },
+  { term: 'Time window', def: 'The period during which a customer can receive a delivery.' },
+  { term: 'Savings algorithm', def: 'Clarke-Wright heuristic: merge routes in the order that saves the most distance.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+The vehicle routing problem assigns customers to vehicles and sequences stops to minimize distance or cost, subject to vehicle capacity, time windows and driver hours. Because the problem grows explosively, practical systems use heuristics like Clarke-Wright savings plus improvement searches. In last-mile delivery, the biggest levers are route density, time slots, avoiding failed deliveries, and pickup points or local fulfilment.
+
+</SayIt>
+
+<Q q="What is the difference between the TSP and the VRP?">
+
+The TSP finds the shortest single route visiting every stop once. The VRP plans routes for several vehicles at once, with constraints such as capacity, time windows and driver hours, so it decides both which stops go on which vehicle and in what order.
+
+</Q>
+
+<Q q="How would you reduce last-mile delivery cost for an e-commerce company?">
+
+Increase drops per route through density and batching, offer delivery slots and pickup points or lockers, cut failed deliveries with better address data and customer communication, place inventory closer to customers, and choose vehicles suited to the area, such as two-wheelers in dense cities.
+
+</Q>
+
+</InterviewKit>

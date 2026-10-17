@@ -1,0 +1,71 @@
+---
+title: Kraljic matrix & category strategy
+line: sourcing
+summary: Sorting what you buy by profit impact and supply risk, so each category gets the right buying strategy.
+minutes: { gist: 3 }
+status: draft
+keywords: [Kraljic matrix, category management, strategic items, leverage items, bottleneck items, non-critical items, supply risk, profit impact, spend analysis, portfolio purchasing]
+connected: [procurement-fundamentals, supplier-selection, sourcing-allocation, supplier-risk, inventory-segmentation]
+sources:
+  - text: "Kraljic, P. (1983). Purchasing must become supply management. Harvard Business Review, 61(5), 109–117."
+  - text: "Van Weele, A. J. Purchasing and Supply Chain Management. Cengage Learning."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Two questions, how much it matters and how risky it is to get, give four strategies." soon>
+
+Not everything a company buys deserves the same treatment. Peter Kraljic's 1983 matrix sorts purchases on two questions:
+
+- **Profit impact:** how much money flows through this category, and how much it affects product cost and quality?
+- **Supply risk:** how hard is it to get: few suppliers, scarce materials, long lead times, specialist know-how?
+
+That gives four boxes, each with its own strategy:
+
+| | Low supply risk | High supply risk |
+|---|---|---|
+| **High profit impact** | **Leverage** (standard packaging, common chemicals): many suppliers, so compete them through tenders and auctions, consolidate volume and negotiate hard | **Strategic** (a key active ingredient, an advanced chip): build long-term partnerships, plan jointly, share forecasts and manage risk together |
+| **Low profit impact** | **Non-critical** (office supplies, cleaning materials): automate buying with catalogues and purchasing cards and spend as little effort as possible | **Bottleneck** (a special spare part from one source): secure supply with safety stock, backup suppliers or redesign to remove the dependency |
+
+The common mistake is using one approach everywhere: hammering a strategic supplier on price can damage a relationship you depend on, while building partnerships for office paper wastes time. Categories also move between boxes, for example when a single-source supplier gets a competitor, or when a commodity suddenly becomes scarce.
+
+<KeyIdea>
+
+Match the buying strategy to the category: compete leverage items, partner on strategic ones, secure bottlenecks and automate the non-critical.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Category strategy', def: 'A plan for how to buy a group of similar items: suppliers, contracts, terms and risk.' },
+  { term: 'Leverage item', def: 'High spend, many suppliers: use buying power through competition.' },
+  { term: 'Bottleneck item', def: 'Low spend but hard to source: protect continuity first.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+The Kraljic matrix classifies purchases by profit impact and supply risk. Leverage items are high-impact, low-risk, so we use competition and volume. Strategic items are high-impact, high-risk, so we build partnerships and joint planning. Bottleneck items are low-impact but risky, so we secure supply with stock, backups or redesign. Non-critical items get automated, low-effort buying. Each category gets the strategy that fits, and the classification is reviewed as markets change.
+
+</SayIt>
+
+<Q q="A component costs little but has only one qualified supplier. Which quadrant, and what would you do?">
+
+Bottleneck. The priority is continuity, not price: hold safety stock, qualify a second supplier, sign longer agreements to secure capacity, or redesign the product to use a standard part.
+
+</Q>
+
+<Q q="Why not run reverse auctions for every category?">
+
+Auctions work for leverage items with many capable suppliers and clear specifications. For strategic items they can damage relationships, cut supplier investment and raise risk; for bottleneck items there may be no competition to exploit.
+
+</Q>
+
+</InterviewKit>

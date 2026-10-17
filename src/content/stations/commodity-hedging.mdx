@@ -1,0 +1,70 @@
+---
+title: Commodity price risk & hedging
+line: sourcing
+summary: Locking in input prices to limit cost swings, with contracts, forwards and futures, and why hedging is about stability, not winning.
+minutes: { gist: 3 }
+status: draft
+keywords: [commodity risk, price risk, hedging, forward contract, futures, MCX, index-linked contract, fixed-price contract, cost volatility, natural hedge]
+connected: [contracts, kraljic, scenario-planning, tariffs-trade, cost-to-serve]
+sources:
+  - text: "Hull, J. C. Options, Futures, and Other Derivatives. Pearson."
+  - text: "Sodhi, M. S. & Tang, C. S. (2012). Managing Supply Chain Risk. Springer."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Trade some upside for certainty, so a price spike can't wreck the plan." soon>
+
+Many products depend on raw materials whose prices swing: palm oil for soaps and snacks, crude-linked plastics for packaging, steel and aluminium for appliances, copper for cables. If palm oil jumps 30% in a quarter, a soap maker's margin can disappear before prices to customers can be raised.
+
+**Hedging** fixes or limits the future price, so cost becomes predictable. Common tools:
+
+- **Fixed-price supply contracts:** agree the price for the next 6 to 12 months with the supplier.
+- **Forward contracts:** a private agreement to buy a set quantity at a set price on a future date.
+- **Futures:** standardized contracts traded on exchanges, such as MCX in India or international metal exchanges, used to offset price moves in the physical purchase.
+- **Index-linked contracts:** don't remove the swing, but make it transparent and shared.
+- **Natural hedges:** for example, buying raw materials in the same currency you sell in.
+- **Pre-buying stock** when prices are low, at the cost of holding inventory.
+
+The key idea for interviews: **hedging reduces volatility; it doesn't promise a lower average price.** If prices fall after you've locked in, you pay more than the market. That's the price of certainty, not a mistake. Companies typically hedge a share of expected volume (say 50–70%) on a rolling basis, with clear limits so procurement doesn't drift into speculation.
+
+<KeyIdea>
+
+Hedging buys certainty, not profit. Lock in part of your exposure on a rolling basis so price shocks can't wreck the plan, and never let it become a bet on the market.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Forward contract', def: 'A private agreement to buy or sell a fixed quantity at a fixed price on a future date.' },
+  { term: 'Futures contract', def: 'A standardized forward traded on an exchange, settled daily.' },
+  { term: 'Natural hedge', def: 'Matching costs and revenues in the same currency or commodity so moves offset.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+Commodity hedging reduces exposure to input price swings. Tools include fixed-price or index-linked supply contracts, forwards, exchange-traded futures, natural hedges and opportunistic pre-buying. The aim is predictable cost and protected margins, not beating the market, so I'd hedge a defined share of forecast volume on a rolling basis with clear governance, and link it to how quickly selling prices can be adjusted.
+
+</SayIt>
+
+<Q q="The company hedged palm oil and prices then fell. Was hedging a mistake?">
+
+Not necessarily. Hedging trades upside for certainty: it protected the budget against a rise that could just as well have happened. Judge it on whether it reduced volatility as intended and stayed within policy, not on hindsight.
+
+</Q>
+
+<Q q="How much of the requirement would you hedge?">
+
+Usually a portion, such as 50–70% of forecast volume, layered over several months. Hedging 100% risks being over-hedged if demand falls, and leaves no benefit if prices drop. The right share depends on forecast confidence and how quickly costs can be passed on to customers.
+
+</Q>
+
+</InterviewKit>

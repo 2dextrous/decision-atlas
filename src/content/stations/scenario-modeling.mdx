@@ -1,0 +1,72 @@
+---
+title: Scenario modeling & digital twins
+line: network
+summary: Stress-testing a network on a computer model before building it, and keeping that model alive to test decisions as things change.
+minutes: { gist: 3 }
+status: draft
+keywords: [scenario modeling, what-if analysis, sensitivity analysis, digital twin, simulation, network optimization, resilience testing, Monte Carlo, scenario planning]
+connected: [greenfield, simulation, scenario-planning, resilience, facility-location]
+sources:
+  - text: "Ivanov, D. & Dolgui, A. (2021). A digital supply chain twin for managing the disruption risks and resilience in the era of Industry 4.0. Production Planning & Control, 32(9), 775–788."
+  - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapter on designing global supply chain networks under uncertainty."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Ask 'what if?' on a model instead of in the real world." soon>
+
+Network decisions are expensive to get wrong, so companies test them on a model first. **Scenario modeling** asks "what if?" in a structured way:
+
+- What if demand grows 30% in the South?
+- What if diesel costs rise 20%?
+- What if the Chennai warehouse is out for a month after a flood?
+- What if we close two warehouses and open one large hub?
+
+Each scenario is run through the same model, often an optimization that finds the best response, or a **simulation** that plays out weeks of operations with random demand and delays. Comparing the results shows which designs hold up and which collapse when conditions change. A design that's slightly more expensive in the base case but much safer under disruption is often the better choice.
+
+A **digital twin** takes this further: a living model of the real network, connected to current data on stock, orders, capacity and costs. Instead of a one-off study, planners can test decisions as conditions change, such as rerouting around a port closure or seeing the effect of a promotion on warehouse capacity, before committing in the real world.
+
+The value doesn't come from the software alone. It needs clean data, a clear question, and someone who checks that the model behaves like the real network before trusting its answers.
+
+For a hands-on example, [Tributary](https://2dextrous.github.io/tributary/) is a small supply chain digital twin that runs in the browser: change a lever and watch the forecast, network, inventory and a simulated year respond.
+
+<KeyIdea>
+
+Test decisions on a model before testing them on customers. Run scenarios, compare designs across them, and pick the one that holds up, not just the one that wins the base case.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'What-if analysis', def: 'Changing inputs to see how outcomes and the best decision change.' },
+  { term: 'Digital twin', def: 'A model of the real network kept current with live data, used to test decisions.' },
+  { term: 'Sensitivity analysis', def: 'Measuring how much results change when one input changes.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+Scenario modeling tests network decisions against what-ifs such as demand shifts, cost changes and disruptions, using optimization to find the best response and simulation to play out operations under uncertainty. A digital twin keeps that model connected to live data so decisions can be tested continuously. I'd choose designs that perform well across scenarios rather than only in the base case.
+
+</SayIt>
+
+<Q q="What is the difference between optimization and simulation in scenario analysis?">
+
+Optimization finds the best decision for a given set of inputs. Simulation shows what happens over time when a chosen decision meets random demand, delays and failures. They work well together: optimize the design, then simulate it to check how it performs under uncertainty.
+
+</Q>
+
+<Q q="What makes a digital twin different from a one-off network study?">
+
+It stays connected to current data and is used repeatedly for operational and tactical decisions, not just a single strategic study. That requires reliable data feeds and regular validation against what actually happens.
+
+</Q>
+
+</InterviewKit>

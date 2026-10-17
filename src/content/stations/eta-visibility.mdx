@@ -1,0 +1,73 @@
+---
+title: ETA prediction & shipment visibility
+line: logistics
+summary: Knowing where shipments are and when they will really arrive, and using that to act before customers notice a delay.
+minutes: { gist: 3 }
+status: draft
+keywords: [ETA prediction, shipment visibility, GPS, telematics, track and trace, milestones, machine learning, exception management, control tower, proactive alerts]
+connected: [order-visibility, control-tower, ml-in-supply-chain, transport-planning, service-copilots]
+sources:
+  - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapter on information technology in a supply chain."
+  - text: "Hyndman, R. J. & Athanasopoulos, G. Forecasting: Principles and Practice (3rd ed.). OTexts."
+    url: "https://otexts.com/fpp3/"
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="From 'it left on Monday' to 'it will arrive at 4 pm, and here's why it might not'." soon>
+
+Once a shipment leaves, two questions matter: **where is it now**, and **when will it really arrive**?
+
+**Visibility** answers the first. Data comes from GPS devices and telematics in trucks, carrier apps, milestone scans (picked up, departed hub, arrived, out for delivery), port and rail updates for containers, and sometimes toll or e-way bill records. Pulling these feeds together gives one live view of every shipment, instead of phoning drivers.
+
+**ETA prediction** answers the second. The carrier's planned arrival time is often optimistic. A predicted ETA uses machine learning on history and live conditions:
+
+- distance remaining and current speed,
+- typical traffic for that route, day and hour,
+- how long similar trucks usually wait at checkpoints, hubs and customer docks,
+- weather, festivals and road disruptions.
+
+Instead of one fixed time, a good model says "likely 4:10 pm, almost certainly before 6 pm", which is more honest and more useful.
+
+The value is in acting early. If a truck carrying a big store order is predicted to be four hours late, planners can warn the store, re-sequence the dock schedule, or send a few cases from another warehouse before anyone complains. Customers get accurate "arriving at" messages instead of chasing updates.
+
+<KeyIdea>
+
+Visibility shows where shipments are; ETA prediction shows when they'll really arrive. Both pay off only when they trigger action before a delay reaches the customer.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Telematics', def: 'Devices in vehicles that report location, speed and status in real time.' },
+  { term: 'Milestone', def: 'A recorded event in a shipment’s journey, such as picked up, departed hub or delivered.' },
+  { term: 'Predicted ETA', def: 'An arrival estimate from a model using route history and live conditions, ideally with a range.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+Shipment visibility combines GPS, carrier milestones and other feeds into one live view of where goods are. ETA prediction uses machine learning on route history, traffic, dwell times and weather to estimate when they'll really arrive, ideally with a confidence range. The value comes from exception management: flag likely delays early, then act by re-planning docks, warning customers or expediting from another site.
+
+</SayIt>
+
+<Q q="Why is a carrier's planned ETA often wrong, and how can you improve it?">
+
+Planned ETAs assume ideal conditions and ignore typical delays like traffic, checkpoint queues and waiting at docks. A model trained on actual past trips, updated with live location and conditions, predicts much more realistic arrival times and their uncertainty.
+
+</Q>
+
+<Q q="How does better ETA prediction save money?">
+
+Docks and labour can be scheduled to real arrival times, fewer emergency shipments are needed, customers can be warned or served from another location before a stockout, and less safety stock is needed when lead times become more predictable.
+
+</Q>
+
+</InterviewKit>

@@ -1,0 +1,69 @@
+---
+title: Channel design & omnichannel
+line: network
+summary: Serving kirana stores, modern trade, e-commerce and direct customers from one network without each channel building its own.
+minutes: { gist: 3 }
+status: draft
+keywords: [channel design, omnichannel, general trade, modern trade, kirana, distributor, e-commerce, D2C, quick commerce, dark store, ship from store, BOPIS, channel conflict]
+connected: [distribution-designs, cost-to-serve, segmentation-strategy, order-to-delivery, postponement]
+sources:
+  - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapter on designing distribution networks and applications to online sales."
+  - text: "Christopher, M. Logistics & Supply Chain Management. Pearson."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Each channel orders differently, so each needs a different flow." soon>
+
+A channel is the route a product takes to reach the person who buys it. An Indian FMCG brand typically sells through several at once:
+
+- **General trade:** lakhs of small kirana stores, reached through distributors and stockists who visit, take orders and deliver small, frequent drops on credit.
+- **Modern trade:** supermarket chains that order large pallet loads to their own warehouses, with strict delivery windows and penalties.
+- **E-commerce marketplaces:** orders arrive at the marketplace's fulfilment centres in bulk, then ship as single parcels.
+- **Quick commerce:** small "dark stores" in each neighbourhood that need frequent replenishment to deliver in minutes.
+- **Direct to consumer (D2C):** the brand's own website, with single-unit parcels and returns.
+
+Each channel orders in different sizes and at different speeds, so it needs a different flow. That is the real design question: which channels share warehouses, stock and trucks, and which need their own?
+
+**Omnichannel** means the customer can buy, collect or return through any channel, so the stock behind them is shared rather than split. Common patterns are ship-from-store, buy online and pick up in store (BOPIS), and one shared stock pool feeding stores and web orders. Sharing stock pools inventory and avoids one channel stocking out while another sits on excess. The catches are more complex systems, store staff picking online orders, and **channel conflict**, when channels compete on price or for scarce stock.
+
+<KeyIdea>
+
+Design the network around how each channel orders: pallet loads, small drops, single parcels or minute-level delivery. Share stock across channels where you can, because pooled stock serves everyone with less inventory.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'General vs modern trade', def: 'Traditional small stores served via distributors, versus organized retail chains.' },
+  { term: 'Omnichannel', def: 'Shared stock and processes so customers can buy, collect and return through any channel.' },
+  { term: 'Dark store', def: 'A small warehouse that only fulfils online orders, close to customers.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+Channel design decides how products flow to each type of customer: general trade through distributors, modern trade in pallet loads, e-commerce, quick commerce and D2C parcels. Each channel has different order sizes, speeds and costs to serve, so I'd decide which flows can share warehouses, stock and transport. Omnichannel goes further by sharing inventory across channels, which pools stock but needs integrated systems and rules for channel conflicts.
+
+</SayIt>
+
+<Q q="Why can't one warehouse process serve kirana stores and D2C customers equally well?">
+
+The order profiles are opposite. Kirana orders are many small mixed cases delivered by distributors on routes; D2C is single units picked individually, packed as parcels and often returned. Picking methods, packaging, transport and service promises differ, so flows are usually separated even if they share a building.
+
+</Q>
+
+<Q q="What does omnichannel mean for inventory?">
+
+Instead of separate stock for stores and online, one pool serves both, for example by shipping web orders from stores or letting customers collect online orders in store. That improves availability with less total stock, but needs accurate real-time inventory data and rules for which channel gets priority when stock is short.
+
+</Q>
+
+</InterviewKit>

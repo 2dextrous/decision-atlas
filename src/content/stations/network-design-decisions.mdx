@@ -1,0 +1,75 @@
+---
+title: What network design decides
+line: network
+summary: Facility roles, locations, capacities and who serves whom, and why the number of facilities trades cost against speed.
+minutes: { gist: 3 }
+status: draft
+keywords: [network design, facility location, capacity allocation, market allocation, facility role, number of facilities, total logistics cost, U-shaped cost curve, responsiveness, efficiency]
+connected: [distribution-designs, facility-location, greenfield, manufacturing-footprint, risk-pooling]
+sources:
+  - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapters on designing distribution networks and network design."
+  - text: "Ferdows, K. (1997). Making the most of foreign factories. Harvard Business Review, 75(2), 73–88."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Four long-term decisions, and the one dial that trades cost against service." soon>
+
+Network design sets the physical skeleton of a supply chain: plants, warehouses and the lanes between them. These are long-term, expensive decisions. A warehouse lease or a new plant locks a company in for years, and it decides most of what transport and inventory will cost afterwards.
+
+It comes down to four decisions:
+
+1. **Facility role:** what each site is for. Is a plant a low-cost producer, the hub for a region, or the lead site for new products?
+2. **Location:** where plants and warehouses should be.
+3. **Capacity:** how big each one should be.
+4. **Market allocation:** which plant supplies which warehouse, and which warehouse serves which customers.
+
+Most of the trade-offs move with one dial: **the number of facilities**. Add warehouses and:
+
+- delivery gets faster and last-mile freight falls, because you're closer to customers;
+- inventory rises, because each site needs its own safety stock (risk pooling works in reverse);
+- facility costs rise, with more rent, staff and systems;
+- inbound freight rises, because each site gets smaller, less efficient shipments.
+
+So total logistics cost forms a **U-shape**: it falls at first, bottoms out, then climbs. A company competing on price sits near the bottom of the U with a few large warehouses. One competing on speed, such as same-day e-commerce or critical spare parts, deliberately builds past the cheapest point and pays for responsiveness.
+
+<KeyIdea>
+
+Network design decides roles, locations, capacities and allocations. The number of facilities is the main dial: more sites buy speed with inventory and facility cost, and the right setting depends on what customers value.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Market allocation', def: 'Which facility serves which demand region or customer.' },
+  { term: 'Total logistics cost', def: 'Inventory + transport + facility and handling costs; U-shaped in the number of facilities.' },
+  { term: 'Responsiveness vs efficiency', def: 'The core trade-off: faster service usually costs more.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+Network design makes four long-term decisions: facility roles, locations, capacities, and which facility serves which market. Most costs move with the number of facilities: more sites cut response time and outbound freight but raise inventory, facility and inbound costs, so total logistics cost is U-shaped. A cost-focused company sits near the bottom of that U; a speed-focused one deliberately builds past it.
+
+</SayIt>
+
+<Q q="What happens to inventory, transport and facility costs as you add warehouses?">
+
+Inventory rises because safety stock is split across more sites. Facility costs rise with more buildings. Outbound transport falls because customers are closer, but inbound transport rises because shipments to each site get smaller. Total cost is U-shaped, with a minimum somewhere in the middle.
+
+</Q>
+
+<Q q="Why might a company choose more warehouses than the cost-minimizing number?">
+
+Because its customers pay for speed. Same-day delivery promises or critical spare parts justify the extra inventory and facility cost; being slower would lose more revenue than the network saves.
+
+</Q>
+
+</InterviewKit>

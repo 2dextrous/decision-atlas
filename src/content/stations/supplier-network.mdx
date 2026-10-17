@@ -1,0 +1,72 @@
+---
+title: Supplier network design
+line: sourcing
+summary: Which supplier sites should feed which plants, weighing landed cost, lead time and risk, and where local sourcing beats global.
+minutes: { gist: 3 }
+status: draft
+keywords: [supplier network design, sourcing network, local sourcing, global sourcing, nearshoring, landed cost, tier 1, tier 2, supplier park, lead time, risk]
+connected: [sourcing-allocation, supplier-risk, manufacturing-footprint, tariffs-trade, network-design-decisions]
+sources:
+  - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapters on sourcing decisions and global network design."
+  - text: "Choi, T. Y. & Hong, Y. (2002). Unveiling the structure of supply networks: case studies in Honda, Acura, and DaimlerChrysler. Journal of Operations Management, 20(5), 469–493."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="The same network logic as warehouses, applied to the supply side." soon>
+
+Supplier network design applies network thinking to the supply side: which supplier sites should feed which of your plants, and how much should be sourced locally versus globally?
+
+Take a two-wheeler maker with plants in Pune and Chennai, buying brake assemblies, wiring harnesses and plastic parts. For each part it weighs:
+
+- **Landed cost:** price plus freight, duties, packaging and inventory.
+- **Lead time and reliability:** a supplier 50 km away can deliver daily in small lots; one overseas needs weeks on the water and a big buffer of stock.
+- **Capacity and capability:** can the supplier grow with you, and does it have the technology?
+- **Risk:** geography, currency, tariffs, single-site dependence, and financial health.
+
+Bulky, fast-moving or frequently changing parts usually favour **local suppliers** near the plant, sometimes in a supplier park right next to it. High-tech, low-weight parts with big economies of scale are often bought **globally** from a few specialist plants.
+
+The network also has depth. Your direct (tier 1) suppliers depend on their own suppliers (tier 2, tier 3). Mapping those tiers often reveals that several "independent" tier 1 suppliers all rely on the same tier 2 plant, which is a hidden single point of failure.
+
+Like warehouse network design, the decision can be modelled as an optimization: choose supplier sites and flows to minimize landed cost, subject to capacity, lead-time and risk constraints, then stress-test it against disruptions and tariff changes.
+
+<KeyIdea>
+
+Design the supply side like the distribution side: compare landed cost, lead time, capacity and risk for each supplier and plant pairing, and look beyond tier 1 for hidden dependencies.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Tier 1 / tier 2', def: 'Your direct suppliers, and their suppliers.' },
+  { term: 'Nearshoring', def: 'Moving supply closer to the point of use to cut lead time and risk.' },
+  { term: 'Supplier park', def: 'A cluster of suppliers located next to a plant for frequent, small deliveries.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+Supplier network design decides which supplier sites serve which plants and how much to source locally versus globally. I'd compare landed cost, lead time and reliability, capacity and capability, and risk such as tariffs, currency and single-site dependence. Bulky or fast-changing parts often favour local suppliers, while high-tech parts with scale economies are sourced globally. I'd also map tier 2 and tier 3 to find shared dependencies, and stress-test the design.
+
+</SayIt>
+
+<Q q="Why might a manufacturer pay more to source a part locally?">
+
+Shorter lead times mean less inventory and faster reaction to design or demand changes, freight is lower for bulky parts, and the supply is less exposed to ports, currency and tariffs. The total landed and risk-adjusted cost can be lower even when the unit price is higher.
+
+</Q>
+
+<Q q="What does mapping tier 2 suppliers usually reveal?">
+
+Hidden concentration: several tier 1 suppliers depending on the same sub-supplier, region or raw material. That's a single point of failure that tier 1 diversification doesn't fix.
+
+</Q>
+
+</InterviewKit>

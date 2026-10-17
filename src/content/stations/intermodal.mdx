@@ -1,0 +1,71 @@
+---
+title: Intermodal & drayage
+line: logistics
+summary: Moving containers between ship, rail and road, and managing the short truck legs and free-time charges that decide the real cost.
+minutes: { gist: 3 }
+status: draft
+keywords: [intermodal, multimodal, container, drayage, inland container depot, ICD, rail, port, demurrage, detention, free time, dedicated freight corridor]
+connected: [lane-mode, transport-fundamentals, incoterms, carbon-aware-design, tariffs-trade]
+sources:
+  - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapter on transportation in a supply chain."
+  - text: "Rodrigue, J.-P. The Geography of Transport Systems. Routledge. Free online edition."
+    url: "https://transportgeography.org/"
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="One container, several modes, and the charges that pile up while it waits." soon>
+
+**Intermodal** transport moves goods in a standard container across more than one mode without unpacking them: a container leaves a plant in Ludhiana by truck, rides a train to a port in Gujarat, crosses the ocean by ship, and finishes by truck to a warehouse abroad. Because the box itself is moved by crane, transfers are quick and the goods are handled less.
+
+The cheap long-haul modes (rail and sea) carry the heavy kilometres; road handles the short ends. Those short truck legs, between port or rail yard and the shipper or consignee, are called **drayage**. They are short but often the most delay-prone and costly per kilometre part of the trip, because of port congestion, gate queues and appointment slots.
+
+Time is money at the terminals. Shipping lines and terminals give a few **free days** to pick up or return a container, then charge:
+
+- **Demurrage:** for leaving a container inside the port or terminal beyond the free time.
+- **Detention:** for keeping the shipping line's container outside the terminal (at your warehouse) beyond the free time.
+
+These charges can add up quickly, which is why planning pickups, unloading and empty returns carefully matters as much as the freight rate.
+
+In India, **inland container depots (ICDs)** let containers clear customs inland and move to ports by rail, and dedicated freight corridors are making rail more attractive for container flows.
+
+<KeyIdea>
+
+Intermodal gets the economy of rail and sea with the reach of road. The real cost often hides in drayage and in demurrage and detention, so plan terminal time as carefully as the freight.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Drayage', def: 'Short truck moves of containers to and from ports or rail yards.' },
+  { term: 'Demurrage vs detention', def: 'Charges for containers held too long inside the terminal, or kept outside it too long.' },
+  { term: 'ICD', def: 'Inland container depot: an inland terminal where containers are handled and cleared by customs.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+Intermodal transport moves standard containers across rail, sea and road without re-handling the goods, so long hauls go by cheaper modes and road covers the ends. The ends, drayage, are short but congestion-prone, and terminal free time matters: demurrage applies to containers held in the terminal too long, detention to containers kept outside too long. I'd plan pickups, unloading and empty returns to avoid those charges and compare intermodal with direct road on total cost and transit time.
+
+</SayIt>
+
+<Q q="What is the difference between demurrage and detention?">
+
+Demurrage is charged when a container stays inside the port or terminal beyond the free days. Detention is charged when the shipping line's container is kept outside the terminal, for example at your warehouse, beyond the free days before being returned.
+
+</Q>
+
+<Q q="When does intermodal beat direct road transport?">
+
+On long distances with steady volumes, where rail or sea cost per tonne is much lower, and when the extra transit and handling time is acceptable for the product. For short distances or urgent, irregular shipments, the extra drayage legs and terminal time usually make direct road better.
+
+</Q>
+
+</InterviewKit>

@@ -1,0 +1,75 @@
+---
+title: Warehousing & throughput
+line: logistics
+summary: How a warehouse works from dock to dock, and how slotting, picking methods and layout get more orders out of the same building.
+minutes: { gist: 3 }
+status: draft
+keywords: [warehousing, receiving, putaway, picking, packing, shipping, slotting, batch picking, zone picking, wave picking, WMS, throughput, lines per hour, order accuracy]
+connected: [warehouse-in-sap, cross-docking, workforce-planning, inventory-segmentation, order-to-delivery]
+sources:
+  - text: "Bartholdi, J. J. & Hackman, S. T. Warehouse & Distribution Science. Georgia Institute of Technology. Free online."
+  - text: "Frazelle, E. H. World-Class Warehousing and Material Handling. McGraw-Hill."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Receive, put away, pick, pack, ship, and why walking time is the enemy." soon>
+
+A warehouse does five things, in order:
+
+1. **Receiving:** unload trucks, check what arrived against the advance shipping notice, record it.
+2. **Putaway:** move goods to a storage location (a bin) chosen by rules.
+3. **Storage:** hold stock, counted regularly so records stay accurate.
+4. **Picking:** collect the items for each order. This is usually the biggest labour cost, and much of it is walking.
+5. **Packing and shipping:** pack, label, load the right truck in the right order.
+
+Most throughput gains come from cutting travel and touches:
+
+- **Slotting:** put the fastest movers in the easiest, closest locations near the dispatch area, and slow movers further back. A velocity-based ABC on order lines tells you which is which.
+- **Picking method:** single-order picking is simple but walks the most. **Batch picking** collects several orders in one walk; **zone picking** gives each picker a zone; **wave picking** releases orders in timed groups to match carrier departure times.
+- **Layout and flow:** a clear one-way flow from receiving to shipping, with no crossing paths.
+
+A **WMS (warehouse management system)** tracks every bin and quant, chooses putaway and picking locations, directs workers through handheld scanners, and records each move. Typical measures are lines picked per hour, order accuracy, dock-to-stock time and cost per order.
+
+Automation, from conveyors and sorters to shuttles and robots, makes sense when volumes are high and steady, labour is scarce or expensive, or accuracy requirements are very high.
+
+<KeyIdea>
+
+Picking is where the time goes. Slot fast movers close to dispatch, pick in batches or zones, and keep a clean flow from dock to dock.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Slotting', def: 'Assigning items to storage locations based on how often and how much they are picked.' },
+  { term: 'Wave picking', def: 'Releasing orders in timed groups, often to match truck departure times.' },
+  { term: 'WMS', def: 'Warehouse management system: software that directs and records every warehouse movement.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+A warehouse runs receiving, putaway, storage, picking, and packing and shipping, and picking usually dominates labour, mostly through walking. To raise throughput I'd slot fast movers near dispatch based on pick frequency, choose batch, zone or wave picking to fit the order profile, keep a one-way flow, and use a WMS to direct work. I'd measure lines per hour, accuracy, dock-to-stock time and cost per order, and consider automation where volume and labour economics justify it.
+
+</SayIt>
+
+<Q q="How would you increase a warehouse's picking productivity without new equipment?">
+
+Re-slot by velocity so fast movers sit near dispatch, switch from single-order to batch or zone picking, optimize pick paths, release work in waves aligned to carrier cut-offs, and fix stock-record accuracy so pickers don't hunt for missing items.
+
+</Q>
+
+<Q q="What does dock-to-stock time measure, and why does it matter?">
+
+It's the time from a truck arriving to the goods being available in a pickable location. Long dock-to-stock time means stock exists physically but can't be sold or shipped, which causes stockouts and extra safety stock.
+
+</Q>
+
+</InterviewKit>

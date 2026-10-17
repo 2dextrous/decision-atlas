@@ -1,0 +1,74 @@
+---
+title: Procurement fundamentals
+line: sourcing
+summary: From need to payment, the source-to-pay and procure-to-pay cycles, and the controls that keep buying honest.
+minutes: { gist: 3 }
+status: draft
+keywords: [procurement, source to pay, S2P, procure to pay, P2P, purchase requisition, purchase order, goods receipt, three-way match, maverick spend, tail spend, segregation of duties]
+connected: [kraljic, supplier-selection, procure-to-pay, cash-conversion-cycle, contracts]
+sources:
+  - text: "Monczka, R. M., Handfield, R. B., Giunipero, L. C. & Patterson, J. L. Purchasing and Supply Chain Management. Cengage Learning."
+  - text: "Van Weele, A. J. Purchasing and Supply Chain Management. Cengage Learning."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Strategic sourcing first, then the transaction cycle and its checks." soon>
+
+Procurement buys everything a company doesn't make: components, packaging, freight, IT, even office supplies. For many manufacturers that's well over half of total cost, which is why a few percent saved in buying can matter more than a big sales push.
+
+There are two cycles, one inside the other:
+
+**Source-to-pay (S2P)** is the strategic cycle: analyse spend, set a strategy per category, find and qualify suppliers, run sourcing events (RFI, RFQ, RFP or auction), negotiate contracts, then manage supplier performance.
+
+**Procure-to-pay (P2P)** is the transaction cycle that runs every day within those contracts:
+
+1. **Need:** MRP or an employee identifies a requirement.
+2. **Purchase requisition:** an internal request, approved by value.
+3. **Purchase order:** the legally binding order to the supplier.
+4. **Goods receipt:** the delivery is checked and booked into stock.
+5. **Invoice verification:** the **three-way match** compares PO, goods receipt and invoice: did we order it, receive it, and get billed the agreed amount for it?
+6. **Payment:** on the agreed terms, often in a batch payment run.
+
+The controls matter as much as the steps. **Segregation of duties** means the person who raises an order shouldn't approve it or pay for it. **Maverick spend** (buying outside contracts) and **tail spend** (thousands of tiny purchases) leak money and need watching. Payment terms link procurement to working capital: paying in 60 days instead of 30 frees cash, as long as suppliers stay healthy.
+
+<KeyIdea>
+
+S2P decides who to buy from and on what terms; P2P executes each purchase. The three-way match and segregation of duties keep it accurate and honest.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Three-way match', def: 'Checking the invoice against the purchase order and the goods receipt before paying.' },
+  { term: 'Maverick spend', def: 'Purchases made outside approved suppliers or contracts.' },
+  { term: 'Tail spend', def: 'Many small, unmanaged purchases that add up to a meaningful share of spend.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+Procurement has a strategic cycle, source-to-pay, covering spend analysis, category strategy, supplier selection, sourcing events, contracts and supplier management, and a transactional cycle, procure-to-pay: requisition, purchase order, goods receipt, invoice verification with a three-way match, and payment. Controls such as approval limits and segregation of duties prevent errors and fraud, and payment terms connect procurement to working capital.
+
+</SayIt>
+
+<Q q="What is a three-way match and why does it matter?">
+
+Before paying, the invoice is checked against the purchase order (what we agreed to buy, at what price) and the goods receipt (what actually arrived). If quantity or price differ beyond a tolerance, the invoice is blocked. It stops overpayment, duplicate billing and paying for goods never received.
+
+</Q>
+
+<Q q="What is the difference between S2P and P2P?">
+
+S2P is the full buy-side cycle, starting with spend analysis and supplier strategy and ending with payment. P2P is its operational part: from the requisition through the purchase order, receipt and invoice to payment, executed within contracts that S2P put in place.
+
+</Q>
+
+</InterviewKit>

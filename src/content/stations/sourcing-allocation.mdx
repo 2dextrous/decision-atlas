@@ -1,0 +1,73 @@
+---
+title: Single, dual or multi-sourcing
+line: sourcing
+summary: How many suppliers to use for an item, and how to split the volume once capacity, lead time and risk are counted.
+minutes: { gist: 3 }
+status: draft
+keywords: [single sourcing, dual sourcing, multi-sourcing, volume allocation, quota arrangement, supplier allocation, optimization, capacity constraint, lead time, supply risk]
+connected: [supplier-selection, kraljic, supplier-risk, optimization-basics, resilience]
+sources:
+  - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapter on sourcing decisions."
+  - text: "Sodhi, M. S. & Tang, C. S. (2012). Managing Supply Chain Risk. Springer."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="One supplier is simpler, two is safer. Constraints decide the split." soon>
+
+**Single sourcing** gives a supplier all your volume. You get better prices, simpler coordination and a closer relationship, but if that supplier has a fire, a strike or a quality problem, you have nothing.
+
+**Dual or multi-sourcing** spreads volume across suppliers. You get a backup that's already qualified and some competition, but smaller volumes per supplier, more management work, and sometimes slight differences in quality between sources.
+
+Once you use several suppliers, you have to decide how to split the volume, and the cheapest supplier doesn't simply get everything. Suppose you need 50,000 units within 10 days:
+
+| Supplier | Price | Capacity | Lead time |
+|---|---|---|---|
+| A | ₹100 | 30,000 | 7 days |
+| B | ₹104 | 40,000 | 5 days |
+| C | ₹98 | 20,000 | 15 days |
+
+C is cheapest but can't deliver in time, so it's out for this order. A is next cheapest but can only make 30,000. So the best split is **A 30,000 and B 20,000**, at a total cost of ₹50.8 lakh. With hundreds of items, suppliers and constraints, this becomes a linear program: minimize total cost, subject to meeting demand, capacities, lead times and minimum order quantities, and often rules such as "no supplier gets more than 70%".
+
+Companies frequently choose dual sourcing for high-spend or critical items, with an uneven split such as 70/30, so the second supplier stays qualified and ready to scale up if needed.
+
+<KeyIdea>
+
+Single sourcing buys efficiency; multi-sourcing buys resilience. When you split volume, let capacity, lead time and risk rules shape it, not just price.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Dual sourcing', def: 'Buying the same item from two qualified suppliers, often in an uneven split.' },
+  { term: 'Quota arrangement', def: 'A rule that splits volume between suppliers by percentage.' },
+  { term: 'Volume allocation', def: 'Deciding how much each supplier gets, given cost and constraints.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+Single sourcing gives better prices and simpler coordination but concentrates risk; dual or multi-sourcing adds resilience and competition at the cost of volume leverage and management effort. When allocating across suppliers I'd optimize total cost subject to demand, capacity, lead time and MOQs, plus policy rules like a maximum share per supplier. For critical items, an uneven dual-source split keeps a qualified backup ready.
+
+</SayIt>
+
+<Q q="You need 50,000 units in 10 days. A: ₹100, 30,000 capacity, 7 days. B: ₹104, 40,000, 5 days. C: ₹98, 20,000, 15 days. How do you split it?">
+
+C is cheapest but its 15-day lead time misses the date, so it's excluded. Fill the next cheapest, A, to its 30,000 capacity, and buy the remaining 20,000 from B. Total cost: ₹30 lakh + ₹20.8 lakh = ₹50.8 lakh.
+
+</Q>
+
+<Q q="When is single sourcing the right choice?">
+
+When the item is low-risk or the supplier relationship is strategic and deep, when volumes are too small to split economically, or when qualification is very costly. Even then, I'd keep a contingency plan: buffer stock, a pre-qualified alternative, or contract clauses on capacity and continuity.
+
+</Q>
+
+</InterviewKit>

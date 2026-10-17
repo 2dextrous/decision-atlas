@@ -1,0 +1,69 @@
+---
+title: Load building & consolidation
+line: logistics
+summary: Filling each truck as fully as weight, volume and loading rules allow, and combining small shipments into fewer, fuller ones.
+minutes: { gist: 3 }
+status: draft
+keywords: [load building, load planning, consolidation, vehicle utilization, weight limit, cube, pallet, multi-stop, bin packing, shipment frequency]
+connected: [transport-fundamentals, transport-planning, vehicle-routing, cross-docking, eoq]
+sources:
+  - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapter on transportation: aggregation and consolidation."
+  - text: "Rushton, A., Croucher, P. & Baker, P. The Handbook of Logistics and Distribution Management. Kogan Page."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Fuller trucks, fewer trips, without breaking delivery promises." soon>
+
+A truck costs roughly the same to run whether it's full or half empty, so empty space is wasted money. Two related ideas tackle it.
+
+**Load building** asks: how do I fill this one vehicle? A truck has a weight limit, say 10 tonnes, and a volume limit, say 60 m³. Detergent is heavy and fills the weight first; tissue paper is bulky and fills the space first. Mixing them uses both limits well. Real load building also respects pallet sizes, what can be stacked on what, fragile and food-safe rules, and **loading sequence**: the last stop's goods go in first so the first stop's goods come off without unloading everything.
+
+**Consolidation** asks: can several shipments share one vehicle? Three orders of 2, 3 and 4 pallets going the same way can travel together in one truck instead of three part loads. Consolidation can happen:
+
+- **across customers:** multi-drop routes or a shared carrier network,
+- **across suppliers:** one truck collects from several vendors (a milk run),
+- **across time:** holding small orders a day or two to ship together.
+
+The catch with consolidating over time is waiting. Holding an order for tomorrow's full truck saves freight but delays delivery and adds a little stock. The right answer comes from weighing freight saved against delay and service promises, usually through fixed shipping days per region.
+
+<KeyIdea>
+
+Build loads that use both the weight and volume limits, and consolidate across customers, suppliers or days, as long as the waiting doesn't break the service promise.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Vehicle utilization', def: 'How full a vehicle is by weight, volume or pallet positions.' },
+  { term: 'Milk run', def: 'One vehicle collecting from or delivering to several locations on a planned loop.' },
+  { term: 'Temporal consolidation', def: 'Holding shipments briefly to combine them into fuller loads.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+Load building fills each vehicle within weight, volume and loading rules, ideally mixing heavy and bulky products and loading in stop sequence. Consolidation combines shipments across customers, suppliers or days into fewer, fuller loads. The trade-off is waiting time and service, so I'd set consolidation rules, such as fixed shipping days per region, that capture most of the freight saving without missing delivery windows.
+
+</SayIt>
+
+<Q q="What is the difference between load building and consolidation?">
+
+Load building fills a single vehicle as efficiently as possible. Consolidation decides which shipments should travel together, possibly across customers, suppliers or days, to create fuller loads in the first place.
+
+</Q>
+
+<Q q="When is holding an order for a fuller truck a bad idea?">
+
+When the delay breaks the customer's delivery promise, when the product is perishable or urgently needed, or when the inventory and service cost of waiting outweighs the freight saving, for example with high-value or critical spare parts.
+
+</Q>
+
+</InterviewKit>

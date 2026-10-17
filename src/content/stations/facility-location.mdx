@@ -1,0 +1,72 @@
+---
+title: Facility location models
+line: network
+summary: Center of gravity, p-median, p-center and fixed-charge models, from a quick first guess to a full optimization.
+minutes: { gist: 3 }
+status: draft
+keywords: [facility location, center of gravity, gravity model, p-median, p-center, fixed-charge location, capacitated facility location, MILP, binary variable, network optimization]
+connected: [optimization-basics, greenfield, network-design-decisions, plant-allocation, scenario-modeling]
+sources:
+  - text: "Daskin, M. S. (2013). Network and Discrete Location: Models, Algorithms, and Applications (2nd ed.). Wiley."
+  - text: "Hakimi, S. L. (1964). Optimum locations of switching centers and the absolute centers and medians of a graph. Operations Research, 12(3), 450–459."
+  - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapter on network design models."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Four models, each answering a slightly different 'where'." soon>
+
+"Where should the warehouse go?" sounds like one question, but different models answer different versions of it.
+
+**Center of gravity** gives a quick first guess. Weight each customer's location by how much it ships (volume times freight rate) and take the weighted average of the coordinates. If Mumbai takes most of the volume, the answer is pulled towards Mumbai. It is fast and intuitive, but it ignores roads, real estate, labour and capacity, and the "optimal" point may land in a field or the sea. Use it to narrow the search, not to sign a lease.
+
+**p-median** chooses the best $p$ sites from a list of candidates to minimize the total demand-weighted distance: the average customer gets as close as possible. It suits cost-focused networks.
+
+**p-center** chooses $p$ sites to minimize the *worst* distance: the farthest customer gets as close as possible. It suits service promises such as "every customer within 4 hours", or emergency services.
+
+**Fixed-charge (capacitated) location** is what companies actually use for big studies. It decides which candidate sites to open, a yes-or-no **binary** decision with a fixed cost each, and how much flows from plants to warehouses to customers, minimizing:
+
+> fixed cost of open sites + production cost + transport cost (+ inventory, + duties)
+
+subject to meeting all demand and staying within each site's capacity. Because it mixes yes/no decisions with flow quantities, it's a **mixed-integer linear program (MILP)**, solved with tools such as Gurobi, CPLEX or open-source solvers.
+
+<KeyIdea>
+
+Center of gravity narrows the search, p-median minimizes average distance, p-center minimizes the worst distance, and the fixed-charge MILP makes the real open/close and flow decisions with costs and capacities.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Center of gravity', def: 'Volume- and rate-weighted average of customer locations: a quick starting point.' },
+  { term: 'p-median vs p-center', def: 'Minimize total weighted distance, or minimize the maximum distance to any customer.' },
+  { term: 'Fixed-charge model', def: 'MILP with binary open/close decisions and flows, minimizing fixed plus variable cost.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+I'd use center of gravity as a quick first look at where demand pulls the network, then a proper optimization. p-median picks facilities to minimize demand-weighted distance, and p-center to minimize the worst-case distance for service guarantees. For real decisions I'd use a capacitated fixed-charge MILP: binary variables to open sites, flow variables for quantities, minimizing fixed plus production plus transport cost subject to demand and capacity constraints.
+
+</SayIt>
+
+<Q q="Why can't you just use center of gravity to pick a warehouse site?">
+
+It only looks at weighted straight-line distance. It ignores roads, land and labour costs, taxes, capacity and existing facilities, and its answer might be impractical. It's a good way to find the right region; the final choice needs candidate sites and a cost model.
+
+</Q>
+
+<Q q="How would you formulate a warehouse location problem as a MILP?">
+
+Binary variable y_j = 1 if warehouse j opens; continuous x_ij = flow from warehouse j to customer i. Minimize the sum of fixed costs f_j·y_j plus transport cost c_ij·x_ij. Constraints: each customer's demand is fully met, flow out of j is at most its capacity times y_j, so closed sites ship nothing, and all flows are non-negative.
+
+</Q>
+
+</InterviewKit>

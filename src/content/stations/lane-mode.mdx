@@ -1,0 +1,71 @@
+---
+title: Lane & mode optimization
+line: logistics
+summary: Choosing the best mode and carrier mix for each origin–destination lane, counting transit time and reliability as well as freight.
+minutes: { gist: 3 }
+status: draft
+keywords: [lane, lane optimization, mode selection, carrier mix, transit time, service level, freight rate, pipeline inventory, intermodal, rail vs road]
+connected: [transport-fundamentals, carrier-procurement, intermodal, carbon-aware-design, transport-planning]
+sources:
+  - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapter on transportation in a supply chain."
+  - text: "Christopher, M. Logistics & Supply Chain Management. Pearson."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Every origin–destination pair gets its own best answer." soon>
+
+A **lane** is an origin–destination pair: Mumbai plant to Delhi warehouse, Pune plant to Bengaluru warehouse. Companies run hundreds of lanes, and each one can be served by different modes and carriers at different prices, speeds and reliability.
+
+Lane optimization picks the best option for each lane, given its volume and service need:
+
+| Option on Mumbai → Delhi | Cost per trip | Transit |
+|---|---|---|
+| Carrier A, road | ₹80,000 | 2 days |
+| Carrier B, road | ₹75,000 | 3 days |
+| Rail container + road ends | ₹62,000 | 4 days |
+
+If the Delhi warehouse must be refilled within 2 days, only A works. If 4 days is fine and volumes are steady, rail saves money and carbon. But the extra days also cost something: each extra day in transit holds a day's flow as pipeline stock, and a less reliable mode needs more safety stock at the warehouse. For a high-value product that inventory cost can wipe out the freight saving.
+
+Volume shapes the answer too. High, steady lanes justify dedicated trucks or rail contracts. Thin lanes are better served by part loads or by combining with nearby lanes. Many companies split a lane: a base volume goes by the cheap, slow mode, and urgent top-ups go by the fast one.
+
+<KeyIdea>
+
+Choose mode and carrier lane by lane on total cost: freight plus the inventory that slower or less reliable transit forces you to hold, within the service the lane needs.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Lane', def: 'One origin–destination pair, the basic unit of freight planning and pricing.' },
+  { term: 'Mode selection', def: 'Choosing road, rail, sea, air or a combination for a flow.' },
+  { term: 'Transit-time reliability', def: 'How consistent transit times are; variability drives safety stock.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+Lane optimization chooses the best mode and carrier mix for each origin–destination pair. I'd compare options on freight cost, transit time and reliability, and capacity, and include the inventory effect: slower or less reliable lanes raise pipeline and safety stock. Steady, high-volume lanes can move to cheaper modes like rail with a fast mode for top-ups, while urgent or high-value flows stay on faster options.
+
+</SayIt>
+
+<Q q="Rail is ₹18,000 cheaper per trip than road but two days slower. How do you decide?">
+
+Add the inventory cost of two more days in transit, plus any extra safety stock for less reliable transit, and check whether the receiving warehouse's service promise still holds. For low-value, steady flows, rail usually wins; for high-value or urgent items, road may be cheaper overall.
+
+</Q>
+
+<Q q="What is a split-lane strategy?">
+
+Moving the predictable base volume on a cheap, slower mode, and using a faster mode only for top-ups when demand spikes. It captures most of the freight saving while protecting service.
+
+</Q>
+
+</InterviewKit>

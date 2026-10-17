@@ -1,0 +1,75 @@
+---
+title: Carbon-aware network design
+line: network
+summary: Treating emissions as a cost or a constraint in network decisions, and the trade-offs that come with it.
+minutes: { gist: 3 }
+status: draft
+keywords: [carbon footprint, emissions, Scope 1, Scope 2, Scope 3, GHG Protocol, tonne-km, emission factor, mode shift, carbon price, sustainable network design]
+connected: [sustainable-optimization, network-design-decisions, lane-mode, esg-risk, reverse-logistics]
+sources:
+  - text: "World Resources Institute & WBCSD. The Greenhouse Gas Protocol: A Corporate Accounting and Reporting Standard (revised edition)."
+  - text: "Smart Freight Centre. Global Logistics Emissions Council (GLEC) Framework for logistics emissions accounting."
+  - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapter on sustainability and the supply chain."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Putting emissions into the network model next to cost and service." soon>
+
+A network designed only for cost often isn't the lowest-carbon one. Fewer, larger warehouses can mean longer truck journeys; air freight saves days and burns far more fuel than sea or rail. **Carbon-aware design** puts emissions into the same model as cost and service.
+
+First, measure. Emissions are usually reported under the **GHG Protocol**:
+
+- **Scope 1:** direct emissions, such as your own trucks and boilers.
+- **Scope 2:** purchased electricity for plants and warehouses.
+- **Scope 3:** everything else in the value chain, including outsourced transport, suppliers and product use. For most companies this is the largest share.
+
+Freight emissions are commonly estimated as **tonne-kilometres × an emission factor** for each mode, which is far higher for air and road than for rail and sea.
+
+Then design. There are two common ways to add carbon to the optimization:
+
+- **As a cost:** put a price on each tonne of CO₂, so the model trades money against emissions directly.
+- **As a constraint:** cap total emissions, or require a cut such as 20%, and find the cheapest network that meets it.
+
+Running the model with different caps gives a **trade-off curve**: often the first chunk of emission cuts is cheap (better truck loads, shifting long lanes from road to rail, solar on warehouses), while deeper cuts cost much more. That curve is what leadership needs to set a sensible target.
+
+<KeyIdea>
+
+Measure emissions by scope, then put carbon into the network model as a price or a cap. The trade-off curve shows which cuts are cheap and which are expensive.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Scope 1, 2, 3', def: 'Direct emissions, purchased energy, and the rest of the value chain.' },
+  { term: 'Tonne-kilometre', def: 'One tonne moved one kilometre; the activity unit for freight emissions.' },
+  { term: 'Mode shift', def: 'Moving freight to lower-emission modes, such as from road to rail or coastal shipping.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+I'd first measure emissions by scope, with freight estimated as tonne-kilometres times mode-specific emission factors, then add carbon to the network model either as a cost per tonne or as a cap. Varying the cap gives a cost-versus-emissions trade-off curve: early reductions like better loads and road-to-rail shifts are often cheap, deeper ones cost more. That lets leadership pick a target with its cost in view.
+
+</SayIt>
+
+<Q q="How can you reduce transport emissions without redesigning the whole network?">
+
+Fill trucks better, consolidate loads, shift long lanes from road to rail or coastal shipping, optimize routes, use cleaner vehicles and plan fewer rush shipments, which often go by air or part-empty trucks. Many of these also cut cost.
+
+</Q>
+
+<Q q="Why is Scope 3 hard to manage?">
+
+It sits outside the company's direct control: suppliers, outsourced logistics and product use. Data comes from partners and is often estimated, so reducing it needs supplier engagement, better data sharing and procurement choices, not just internal changes.
+
+</Q>
+
+</InterviewKit>

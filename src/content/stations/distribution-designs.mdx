@@ -1,0 +1,72 @@
+---
+title: Six distribution network designs
+line: network
+summary: From drop-shipping to store pickup, the six ways to store and deliver products, and which one fits which kind of product.
+minutes: { gist: 3 }
+status: draft
+keywords: [distribution network design, drop shipping, in-transit merge, distributor storage, package carrier, last-mile delivery, customer pickup, BOPIS, retail storage, Chopra]
+connected: [network-design-decisions, channel-design, risk-pooling, vehicle-routing, cross-docking]
+sources:
+  - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapter on designing distribution networks and applications to online sales."
+  - text: "Chopra, S. (2003). Designing the distribution network in a supply chain. Transportation Research Part E, 39(2), 123–140."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Two questions, where the stock sits and how it reaches the customer, give six designs." soon>
+
+Every distribution network answers two questions: **where is the stock held** (manufacturer, distributor or retailer) and **how does it reach the customer** (shipped, delivered to the door, or collected)? Combining the answers gives six classic designs:
+
+| Design | How it works | Fits |
+|---|---|---|
+| 1. Manufacturer storage, direct shipping (drop-ship) | Retailer takes the order; the manufacturer ships straight to the customer | High-value, low-volume, many variants: a rare camera lens |
+| 2. Drop-ship with in-transit merge | Parts from several sources are combined en route into one delivery | Multi-part orders: a PC with monitor and keyboard |
+| 3. Distributor storage, parcel delivery | Regional warehouses hold stock and ship by courier | Medium movers that need faster delivery than drop-ship |
+| 4. Distributor storage, last-mile delivery | The distributor's own vans deliver to the door | Bulky or frequent items: groceries, furniture |
+| 5. Manufacturer or distributor storage, customer pickup | Orders go to pickup points or lockers | Online orders where customers accept collecting |
+| 6. Retail storage, customer pickup | Stock sits in stores; customers buy or collect there | Fast-moving, everyday items: milk, shampoo |
+
+The pattern behind the table: the further upstream you hold stock (designs 1 and 2), the more you pool inventory, but the slower and costlier each delivery is. The closer to the customer (design 6), the faster and simpler the hand-over, but the more inventory sits in many places.
+
+So match the design to the product. A ₹2 lakh camera that sells a few units a month belongs upstream, with one shared stock. Milk belongs in the corner store. Most companies run several designs at once, one per product segment.
+
+<KeyIdea>
+
+Decide where stock sits and how it reaches the customer. Hold slow, expensive items upstream where stock is pooled, and fast, cheap, urgent items close to the customer.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Drop shipping', def: 'The manufacturer ships directly to the end customer; the retailer holds no stock.' },
+  { term: 'In-transit merge', def: 'Combining items from different sources into one delivery on the way to the customer.' },
+  { term: 'Last-mile delivery', def: 'The final leg to the customer’s door; usually the costliest per unit.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+Distribution designs come from two choices: where inventory is held, at the manufacturer, distributor or retailer, and how it reaches the customer, by shipping, home delivery or pickup. That gives six designs from drop-shipping to retail storage with pickup. Upstream storage pools inventory and suits high-value, slow-moving items; downstream storage costs more inventory but gives fast, cheap hand-over for high-volume everyday products. Most firms combine designs by product segment.
+
+</SayIt>
+
+<Q q="Which design would you use for an expensive camera that sells a few units a month, and which for milk?">
+
+The camera: manufacturer or central storage with direct shipping, because pooling one stock across all customers saves a lot of expensive inventory and customers will wait a day or two. Milk: retail storage with customer pickup, because it's cheap, fast-moving, perishable and needed immediately.
+
+</Q>
+
+<Q q="What is the main cost of drop-shipping?">
+
+Transport and response time. Each order ships individually from far upstream, so outbound freight per unit is high and delivery is slower. Order visibility and returns are also harder, because the manufacturer and the retailer need tightly connected systems.
+
+</Q>
+
+</InterviewKit>

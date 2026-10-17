@@ -1,0 +1,75 @@
+---
+title: Transport planning & TMS
+line: logistics
+summary: Turning orders into shipments, loads and routes, and what a transportation management system does at each step.
+minutes: { gist: 3 }
+status: draft
+keywords: [transport planning, TMS, transportation management system, shipment planning, tendering, dispatch, freight audit, carrier management, load planning, route planning, tracking]
+connected: [load-building, lane-mode, carrier-procurement, vehicle-routing, eta-visibility, drp-deployment]
+sources:
+  - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapter on transportation in a supply chain."
+  - text: "Rushton, A., Croucher, P. & Baker, P. The Handbook of Logistics and Distribution Management. Kogan Page."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="From a pile of orders to trucks on the road, step by step." soon>
+
+Every day a distribution centre faces a pile of orders, each with a destination, a size and a due date. **Transport planning** turns that pile into trucks on the road at the lowest cost that still meets every delivery promise. It answers, in order:
+
+1. **What ships together?** Group orders into shipments by destination and due date.
+2. **How?** Choose the mode and vehicle size: full truck, part load, parcel.
+3. **With whom?** Pick the carrier for each load from contracted rates, capacity and performance.
+4. **How is it packed and routed?** Build loads that fit weight and volume limits; sequence stops on multi-drop routes.
+5. **When?** Book pickup slots at the dock and delivery windows at customers.
+
+Then execution: **tendering** the load to the carrier (who accepts or rejects), tracking it on the road, confirming delivery, and finally **freight audit and payment**, checking each invoice against the agreed rate.
+
+A **TMS (transportation management system)** supports all of this: it holds carrier contracts and rates, optimizes loads and routes, sends tenders, collects tracking updates and audits invoices. The biggest savings usually come from planning across many orders at once, combining shipments and choosing modes, rather than from squeezing carrier rates.
+
+The objective is roughly:
+
+> minimize freight + accessorial charges (waiting, extra stops) + penalties for late delivery
+
+subject to vehicle capacities, delivery windows, driver hours and carrier capacity.
+
+<KeyIdea>
+
+Plan freight across many orders at once: consolidate, choose modes, assign carriers and route, all within service promises. A TMS turns that into a daily routine and checks every bill.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'TMS', def: 'Transportation management system: software for planning, executing, tracking and auditing freight.' },
+  { term: 'Tendering', def: 'Offering a load to a carrier, which accepts or rejects it.' },
+  { term: 'Accessorial charges', def: 'Extra fees on top of the base rate, such as waiting time, extra stops or special handling.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+Transport planning turns orders into shipments, assigns modes and carriers, builds loads and routes, and schedules pickups and deliveries at minimum total cost within service windows and capacity limits. A TMS supports it end to end: rates and contracts, optimization, tendering, tracking, and freight audit and payment. The biggest savings usually come from planning across orders, through consolidation and mode choice, rather than from rate negotiation alone.
+
+</SayIt>
+
+<Q q="What are the main functions of a TMS?">
+
+Storing carrier contracts and rates, planning and optimizing shipments, loads and routes, tendering loads to carriers, tracking shipments and events, and auditing and paying freight invoices. Many also produce analytics on cost per shipment and carrier performance.
+
+</Q>
+
+<Q q="Where would you look for transport savings first?">
+
+Consolidation and load utilization (fewer, fuller trucks), mode choice (part loads that could be full loads, or air that could be road), fewer emergency shipments caused by poor planning, and freight audit to catch billing errors. Rate renegotiation comes after the network and planning basics.
+
+</Q>
+
+</InterviewKit>

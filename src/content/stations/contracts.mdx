@@ -1,0 +1,75 @@
+---
+title: Contracts & negotiation
+line: sourcing
+summary: Price, volume and flexibility terms that share risk between buyer and supplier, and how to negotiate them.
+minutes: { gist: 3 }
+status: draft
+keywords: [supply contracts, fixed price, cost-plus, index-linked pricing, volume commitment, take-or-pay, quantity flexibility, buyback, revenue sharing, SLA, penalties, BATNA, negotiation]
+connected: [supplier-selection, commodity-hedging, kraljic, make-vs-buy, sourcing-allocation]
+sources:
+  - text: "Cachon, G. P. (2003). Supply chain coordination with contracts. In Handbooks in Operations Research and Management Science, Vol. 11, 227–339. Elsevier."
+  - text: "Fisher, R., Ury, W. & Patton, B. Getting to Yes: Negotiating Agreement Without Giving In. Penguin."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="A contract decides who carries which risk. Price is only one clause." soon>
+
+A supply contract is a way of deciding who carries which risk. Price matters, but the terms around it, such as volumes, flexibility, penalties and how prices move, often matter more.
+
+**How price is set:**
+
+- **Fixed price:** stable and easy to budget; the supplier carries cost risk and prices that in.
+- **Cost-plus:** the buyer pays cost plus a margin. Useful when costs are hard to predict, but it gives the supplier little reason to cut cost.
+- **Index-linked:** price moves with a published index, such as steel, resin or diesel. Neither side gambles on the market.
+
+**How volume and flexibility are shared:**
+
+- **Volume commitment or take-or-pay:** the buyer promises a minimum and pays for it even if it buys less. The supplier invests with confidence and gives a better price.
+- **Quantity flexibility:** the buyer can adjust orders within a band, say ±20%, as demand becomes clearer.
+- **Buyback and revenue sharing:** the supplier takes back unsold stock or shares retail revenue, which encourages the retailer to stock more, as in publishing and film rental.
+
+**Service terms:** lead times, OTIF targets, quality levels, and penalties or rewards (service level agreements).
+
+In negotiation, know your **BATNA** (best alternative to a negotiated agreement): what you'll do if there's no deal. Trade across several terms instead of fighting over price alone, for example a longer commitment for a lower price, or faster payment for a discount.
+
+<KeyIdea>
+
+Write contracts to share risk sensibly: link prices to indices where costs swing, trade volume commitments for price, and buy flexibility where demand is uncertain.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Index-linked pricing', def: 'Price adjusts automatically with a published commodity or cost index.' },
+  { term: 'Take-or-pay', def: 'The buyer pays for a minimum quantity whether or not it takes delivery.' },
+  { term: 'BATNA', def: 'Best alternative to a negotiated agreement: your walk-away option.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+I see a supply contract as a risk-sharing tool. Pricing can be fixed, cost-plus or index-linked depending on how volatile costs are; volume terms like commitments or take-or-pay trade certainty for price; flexibility clauses, buybacks or revenue sharing handle demand uncertainty; and SLAs with penalties set service. In negotiation I'd know my BATNA and trade across terms rather than only pushing price.
+
+</SayIt>
+
+<Q q="Resin prices swing 30% a year. What pricing would you use for plastic parts?">
+
+Index-linked pricing: a base price for conversion and margin, plus a resin component that moves with a published index on an agreed schedule. Neither side has to gamble on the market, and disputes are rare because the formula is agreed upfront.
+
+</Q>
+
+<Q q="Why might a retailer accept a buyback contract with a slightly higher wholesale price?">
+
+Because the supplier takes back unsold stock, the retailer's cost of overstocking falls, so it orders more and sells more. When designed well, the higher total sales leave both sides better off than a simple wholesale-price contract.
+
+</Q>
+
+</InterviewKit>

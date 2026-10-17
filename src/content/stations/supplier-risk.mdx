@@ -1,0 +1,71 @@
+---
+title: Supplier risk & n-tier visibility
+line: sourcing
+summary: Seeing risks beyond your direct suppliers, scoring them, and acting before a sub-supplier you've never heard of stops your line.
+minutes: { gist: 3 }
+status: draft
+keywords: [supplier risk, n-tier visibility, tier 2, supply chain mapping, single point of failure, risk scoring, financial risk, geographic concentration, early warning, resilience]
+connected: [supplier-network, sourcing-allocation, resilience, scenario-planning, esg-risk]
+sources:
+  - text: "Choi, T. Y. & Hong, Y. (2002). Unveiling the structure of supply networks: case studies in Honda, Acura, and DaimlerChrysler. Journal of Operations Management, 20(5), 469–493."
+  - text: "Sheffi, Y. (2005). The Resilient Enterprise: Overcoming Vulnerability for Competitive Advantage. MIT Press."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Your risk sits two or three tiers down, where you have the least visibility." soon>
+
+Most companies know their direct suppliers well. Far fewer know who supplies those suppliers, and that's often where disruptions start. In 2021 the global chip shortage halted car assembly lines around the world, though carmakers rarely buy chips directly: the chips sat two or three tiers down, inside modules made by their suppliers.
+
+**N-tier visibility** means mapping the network beyond tier 1:
+
+1. **Map:** for critical parts, ask tier 1 suppliers where their key inputs come from, down to raw materials if needed.
+2. **Find concentration:** several suppliers depending on one sub-supplier, one region or one port is a hidden single point of failure.
+3. **Score risk:** financial health, geographic exposure (floods, earthquakes, conflict), quality history, compliance and ESG, and how long the part would take to replace.
+4. **Monitor:** news, weather and financial alerts that flag trouble early.
+5. **Act:** for the riskiest items, add safety stock, qualify alternatives, redesign to standard parts, or sign capacity agreements.
+
+A useful way to prioritize is to ask, for each part: if this supplier stopped tomorrow, **how long could we keep running** on the stock we have, and **how long would it take to recover** with another source? Parts where recovery takes longer than survival need attention first.
+
+Mapping is hard work. Suppliers may not want to reveal their sources, and networks change constantly, so companies focus on critical items rather than trying to map everything.
+
+<KeyIdea>
+
+Risk hides beyond tier 1. Map critical items deeper, look for shared dependencies, and fix the parts where recovery would take longer than your stock lasts.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'N-tier visibility', def: 'Knowing suppliers beyond tier 1, down to sub-suppliers and raw materials.' },
+  { term: 'Single point of failure', def: 'One supplier, site or route whose loss would stop supply.' },
+  { term: 'Risk scoring', def: 'Rating suppliers on financial, geographic, quality and compliance risk to set priorities.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+Supplier risk often sits beyond tier 1, so I'd map critical parts into tier 2 and beyond, look for concentration in one sub-supplier, region or route, and score suppliers on financial, geographic, quality, compliance and ESG risk. I'd prioritize parts where time to recover would exceed time to survive on current stock, then act with safety stock, alternative sources, redesign or capacity agreements, and keep monitoring for early warnings.
+
+</SayIt>
+
+<Q q="How would you start building n-tier visibility for a manufacturer?">
+
+Start with the most critical parts, those with high revenue at risk, long lead times or single sources. Ask their tier 1 suppliers to disclose key sub-suppliers and locations, combine that with external data, and look for shared dependencies. Then extend gradually; trying to map everything at once usually stalls.
+
+</Q>
+
+<Q q="Why did many car makers lose production in the 2021 chip shortage even though their direct suppliers were reliable?">
+
+Because the constraint was deeper in the network, with semiconductor makers and their capacity, two or three tiers down. Without visibility of that tier, companies couldn't see the shortage coming, secure capacity early or redesign around it.
+
+</Q>
+
+</InterviewKit>
