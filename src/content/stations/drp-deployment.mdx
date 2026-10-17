@@ -1,0 +1,69 @@
+---
+title: Replenishment & deployment (DRP)
+line: inventory
+summary: When each warehouse should be refilled and by how much, and where available stock goes when there isn't enough.
+minutes: { gist: 3 }
+status: draft
+keywords: [DRP, distribution requirements planning, deployment, fair share, net requirements, planned orders, scheduled receipts, replenishment, push and pull]
+connected: [mrp, meio, allocation, safety-stock, transport-planning]
+sources:
+  - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson."
+  - text: "Silver, E. A., Pyke, D. F. & Thomas, D. J. (2017). Inventory and Production Management in Supply Chains (4th ed.). CRC Press."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="MRP for warehouses, and what to do when supply runs short." soon>
+
+**DRP (distribution requirements planning)** is MRP for the distribution network. For each warehouse and each item, week by week, it works out what is needed:
+
+> forecast and customer orders + safety stock − stock on hand − deliveries already on the way = **net requirement**
+
+Net requirements are rounded to sensible shipment sizes and moved earlier by the transit time, giving **planned replenishment orders**. Those orders become the demand on the warehouse or plant upstream. That is how a store's forecast ripples back to the factory.
+
+**Deployment** is the step that follows when supply is limited: the plant has made a certain amount, so where should it go? Say the plant has 50,000 units and three warehouses ask for 60,000 between them: Mumbai 20,000, Pune 15,000 and Delhi 25,000.
+
+- A **fair-share** rule gives everyone the same fraction of what they asked for. Here that is 50/60, about 83%: Mumbai about 16,700, Pune 12,500, Delhi about 20,800.
+- A **priority** rule serves key customers or the highest margins first.
+- An **optimized** deployment weighs service targets, stock already in each region, transport cost and how soon more supply arrives.
+
+<KeyIdea>
+
+DRP asks when and how much each warehouse needs. Deployment asks where today's limited stock should go. The first is planning; the second is sharing out what you actually have.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Net requirement', def: 'What a location still needs after counting stock on hand and deliveries already scheduled.' },
+  { term: 'Scheduled receipt', def: 'An order already placed and on its way, counted as future supply.' },
+  { term: 'Fair share', def: 'A deployment rule that gives each location the same percentage of its requirement when supply is short.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+DRP is time-phased replenishment planning for each warehouse: forecast plus safety stock, minus stock on hand and scheduled receipts, gives net requirements, which become planned orders offset by transit time and pushed upstream as demand. Deployment then decides how available supply is shared, by fair share, priority or an optimization of service and cost, when there isn't enough to meet every request.
+
+</SayIt>
+
+<Q q="How is DRP different from MRP?">
+
+The logic is the same: net requirements, lot sizing and lead-time offset. MRP explodes a bill of materials into components for a plant. DRP works across the distribution network, from customer demand at warehouses back to the source of supply.
+
+</Q>
+
+<Q q="Supply is 50,000 units and three warehouses ask for 60,000. How would you decide?">
+
+Start with fair share, so each gets about 83% of its request. Then adjust for what matters: warehouses with key customers or low stock get priority, and I'd consider transport cost and when the next batch arrives. If the shortage repeats, the real fix is upstream in supply planning.
+
+</Q>
+
+</InterviewKit>

@@ -1,0 +1,72 @@
+---
+title: Probabilistic forecasting
+line: demand
+summary: Forecasting a range of outcomes and its quantiles instead of a single number, so stock can be set for the risk you choose.
+minutes: { gist: 3 }
+status: draft
+keywords: [probabilistic forecast, quantile forecast, P10, P50, P90, prediction interval, pinball loss, quantile loss, forecast distribution, uncertainty]
+connected: [safety-stock, newsvendor, forecast-accuracy, ml-forecasting, scenario-planning]
+sources:
+  - text: "Hyndman, R. J. & Athanasopoulos, G. Forecasting: Principles and Practice (3rd ed.). OTexts. Sections on prediction intervals and distributional forecasts."
+    url: "https://otexts.com/fpp3/"
+  - text: "Koenker, R. & Bassett, G. (1978). Regression quantiles. Econometrica, 46(1), 33–50."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="P10, P50 and P90: what they mean and why inventory needs them." soon>
+
+A normal forecast says "next week's demand will be 10,000 units." That single number hides the part planners care about most: how far off it could be. A **probabilistic forecast** gives the range instead:
+
+| Quantile | Meaning | Forecast |
+|---|---|---|
+| P10 | 10% chance demand is lower than this | 8,000 |
+| P50 | the middle: as likely above as below | 10,000 |
+| P90 | 90% chance demand is at or below this | 13,000 |
+
+This matters because stock isn't set from the middle of the range. It is set from the tail. If you want to avoid running out 90% of the time, you need roughly the P90 number on hand, not the P50. Plan for 10,000 and you'll be short fairly often; plan for 13,000 and you're protected, at the cost of more stock. The forecast now lets the business choose its risk openly.
+
+It also helps where the usual safety-stock formula struggles. That formula assumes demand follows a neat bell curve. Real demand is often skewed, with a hard floor at zero and occasional big spikes, especially for slow movers. A quantile forecast reads the tail from the data instead of assuming its shape.
+
+Quantile forecasts are scored with **pinball loss**, which penalizes errors unequally on purpose. For a P90 forecast, being too low costs nine times more than being too high, which mirrors how a stockout usually hurts more than a little extra stock.
+
+<KeyIdea>
+
+A point forecast tells you the middle; inventory decisions live in the tails. Forecast the quantile that matches your service target.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Quantile (P90)', def: 'The demand level that actual demand will be at or below 90% of the time.' },
+  { term: 'Prediction interval', def: 'A range expected to contain actual demand with a stated probability, such as P10 to P90.' },
+  { term: 'Pinball (quantile) loss', def: 'An error measure for quantile forecasts that weights misses on one side more than the other.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+A probabilistic forecast gives a distribution of possible demand, usually as quantiles like P10, P50 and P90, instead of one number. Inventory is set from the tail, not the middle: for a 95% service target you stock towards the P95 of lead-time demand. It also handles skewed and intermittent demand better than assuming a normal distribution, and quantile forecasts are evaluated with pinball loss rather than MAPE.
+
+</SayIt>
+
+<Q q="Your P50 is 10,000 and P90 is 13,000. How much do you stock?">
+
+It depends on the service target and the cost of each mistake. For about 90% protection, stock near 13,000. If leftovers are cheap and stockouts expensive, go higher; if stock perishes, the newsvendor critical ratio tells you which quantile to aim for.
+
+</Q>
+
+<Q q="Why not just use the point forecast plus a safety-stock formula?">
+
+That works when forecast errors are roughly normal. Many items, especially slow movers and promoted items, have skewed demand with spikes, where the normal assumption sets the buffer wrong. A quantile forecast reads the tail directly from the data.
+
+</Q>
+
+</InterviewKit>

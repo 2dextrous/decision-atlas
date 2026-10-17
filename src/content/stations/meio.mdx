@@ -1,0 +1,71 @@
+---
+title: Multi-echelon inventory (MEIO)
+line: inventory
+summary: Placing buffers across plant, warehouse and store as one system, instead of letting every site protect itself.
+minutes: { gist: 3 }
+status: draft
+keywords: [MEIO, multi-echelon inventory optimization, echelon, guaranteed service model, stochastic service model, safety stock placement, network inventory, service time]
+connected: [safety-stock, risk-pooling, drp-deployment, service-level-policy, scenario-modeling]
+sources:
+  - text: "Clark, A. J. & Scarf, H. (1960). Optimal policies for a multi-echelon inventory problem. Management Science, 6(4), 475–490."
+  - text: "Graves, S. C. & Willems, S. P. (2000). Optimizing strategic safety stock placement in supply chains. Manufacturing & Service Operations Management, 2(1), 68–83."
+  - text: "Silver, E. A., Pyke, D. F. & Thomas, D. J. (2017). Inventory and Production Management in Supply Chains (4th ed.). CRC Press."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Why buffering every stage separately double-counts, and what MEIO does instead." soon>
+
+Most products pass through several stages, or **echelons**, before a customer buys them: plant, central warehouse, regional warehouse, store. If each stage sizes its safety stock on its own, every stage protects itself against the same uncertainty. The result is buffers stacked on buffers.
+
+**Multi-echelon inventory optimization (MEIO)** treats the whole chain as one system and asks: where should the buffers sit so the end customer gets the target service at the lowest total inventory?
+
+Think of a shampoo network: one plant, a central warehouse and three regional warehouses. Two very different set-ups can give customers the same service:
+
+- **Push stock forward**, holding most of it in the regional warehouses close to customers. Delivery is fast, but each region carries its own buffer.
+- **Hold it centrally**, keeping a larger pooled buffer at the central warehouse and leaner stock in the regions, which are refilled quickly from the centre.
+
+MEIO weighs these options using each stage's lead time, demand uncertainty, holding cost and the service promise to the next stage. A common outcome is less stock at the expensive, fragmented end of the network and more at a pooled point upstream, though fast-delivery promises can push stock forward again.
+
+That's why MEIO appears in planning software as a separate capability from single-site safety stock. It needs good data across the network and a clear service target per customer segment.
+
+<KeyIdea>
+
+Single-site safety stock asks "how much here?" MEIO asks "where in the network should the protection sit?" Answering the second question usually takes out duplicate buffers.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Echelon', def: 'One stage or tier of the network: plant, central DC, regional DC, store.' },
+  { term: 'Service time', def: 'The delivery time one stage promises the next; longer promised times let downstream stages hold less.' },
+  { term: 'Guaranteed-service model', def: 'A classic MEIO approach that sets each stage’s promised service time and sizes buffers to meet it.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+MEIO optimizes inventory across all echelons together rather than site by site. Because stock at an upstream stage protects everything downstream of it, planning each site alone double-counts uncertainty. MEIO decides where buffers should sit, considering lead times, variability, holding costs and the service each stage promises the next, to hit customer service at the lowest total inventory.
+
+</SayIt>
+
+<Q q="What is the difference between single-echelon safety stock and MEIO?">
+
+Single-echelon sizes the buffer for one location as if it were alone. MEIO sizes all locations jointly, so an upstream buffer can cover several downstream sites and stock isn't duplicated along the chain.
+
+</Q>
+
+<Q q="Where would MEIO typically move inventory, and why?">
+
+Often upstream to a pooled central point, where one buffer protects many downstream locations, while downstream sites hold lean cycle stock. If customers need very fast delivery, MEIO may move stock forward instead. The answer depends on lead times, costs and service targets.
+
+</Q>
+
+</InterviewKit>

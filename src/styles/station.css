@@ -262,3 +262,9 @@ html[data-depth='2'] .level[data-n='3']:not(.is-open) .level-teaser,
 .lab-key .k-band { width: 14px; height: 10px; border-radius: 2px; background: color-mix(in srgb, var(--ink) 12%, transparent); }
 .lab-key .k-dot { width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--ink); background: var(--surface); }
 .lab-key .k-diamond { width: 8px; height: 8px; margin-inline: 1px; background: var(--critical); transform: rotate(45deg); }
+
+/* Stops with deeper levels still being written */
+.pill-soon { border-style: dashed; color: var(--muted); }
+.level-soon { display: flex; gap: 0.75rem; align-items: flex-start; margin-top: 1.75rem; padding: 0.85rem 1rem; border: 1px dashed var(--rule-2); border-radius: 12px; font-family: var(--font-ui); font-size: 0.9rem; line-height: 1.5; color: var(--ink-2); }
+.level-soon .dot { margin-top: 0.35rem; flex: none; }
+.level-soon strong { color: var(--ink); }

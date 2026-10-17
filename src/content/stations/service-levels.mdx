@@ -1,0 +1,68 @@
+---
+title: "Service levels: CSL vs fill rate"
+line: inventory
+summary: Two different meanings of “95% service”, and why the difference changes how much stock you need.
+minutes: { gist: 3 }
+status: draft
+keywords: [cycle service level, CSL, fill rate, OTIF, perfect order, stockout, backorder, lost sales, service level target]
+connected: [safety-stock, service-level-policy, supply-chain-kpis, inventory-segmentation, newsvendor]
+sources:
+  - text: "Silver, E. A., Pyke, D. F. & Thomas, D. J. (2017). Inventory and Production Management in Supply Chains (4th ed.). CRC Press."
+  - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapter on safety inventory."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Counting stockout events versus counting units served." soon>
+
+"We run at 95% service" sounds precise, but it can mean two very different things.
+
+- **Cycle service level (CSL)** is the chance of getting through a replenishment cycle without running out. It counts events: a cycle either had a stockout or it didn't.
+- **Fill rate** is the share of demand served straight from stock. It counts units.
+
+Here is why the gap matters. The café uses 1,200 kg of beans a year and orders 77.5 kg at a time, so it goes through about 15 replenishment cycles a year. Say it runs out in 2 of those 15 cycles, and each time it is short by about 3 kg before the delivery lands. Its cycle service level is about 87%, because 13 of 15 cycles had no stockout. But it missed only 6 kg out of 1,200 kg of demand, so its fill rate is about 99.5%.
+
+So the same buffer can be described as "87%" or "99.5%" depending on the definition. The standard safety-stock formula (the one with $z$) targets cycle service level, while customers feel the fill rate. Large orders and small shortfalls push fill rate well above CSL.
+
+Two more details matter in practice. When you run out, do customers wait (a backorder) or walk away (a lost sale)? And are you measuring units, order lines or whole orders? Many companies report **OTIF** (on time, in full), which is stricter still because an order counts only if every line arrives complete and on time.
+
+<KeyIdea>
+
+Before sizing a buffer, ask "95% of what?" Cycle service level counts stockout events; fill rate counts units served. The same stock gives very different numbers.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Cycle service level (CSL)', def: 'Probability of no stockout during a replenishment cycle. Set through z in the safety-stock formula.' },
+  { term: 'Fill rate', def: 'Fraction of demand (units, lines or orders) met directly from stock.' },
+  { term: 'OTIF', def: 'Share of orders delivered on time and in full; a strict, customer-facing measure.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+Service level has two common meanings. Cycle service level is the probability of not stocking out in a replenishment cycle; fill rate is the share of demand met from stock. For the same safety stock, fill rate is usually higher, especially when order quantities are large. The safety-stock formula targets cycle service level, while customers experience fill rate or OTIF, so I always clarify which one a target means.
+
+</SayIt>
+
+<Q q="A supplier claims 95% service. What do you ask?">
+
+95% of what: cycles without a stockout, units shipped, order lines, or orders delivered on time and in full? Over what period, and measured at item or order level? Each definition gives a different number for the same performance.
+
+</Q>
+
+<Q q="How can fill rate be 99% while cycle service level is only 90%?">
+
+Cycle service level counts any stockout as a failure, even a small one right before a delivery. Fill rate counts units. If shortages are small compared with the order quantity, nearly all demand is still served, so fill rate stays high while CSL looks poor.
+
+</Q>
+
+</InterviewKit>

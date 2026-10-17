@@ -1,0 +1,73 @@
+---
+title: S&OP and IBP
+line: supply
+summary: The monthly cycle where sales, supply and finance agree on one plan, and how integrated business planning extends it.
+minutes: { gist: 3 }
+status: draft
+keywords: [S&OP, sales and operations planning, IBP, integrated business planning, demand review, supply review, pre-S&OP, executive S&OP, one number plan, aggregate planning, chase strategy, level strategy]
+connected: [planning-hierarchy, consensus-fva, mps, control-tower, scenario-planning, demand-planning-in-sap]
+sources:
+  - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapters on aggregate planning and sales and operations planning."
+  - text: "Wallace, T. F. & Stahl, R. A. Sales & Operations Planning: The How-To Handbook. T. F. Wallace & Company."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="One monthly meeting cycle that turns competing numbers into one plan." soon>
+
+Without a shared process, every function plans on its own number. Sales expects 1 lakh units of shampoo next quarter. The plant can make 80,000. Finance's budget assumed 90,000 and doesn't want to pay for overtime. Each team is right from where it sits, and the result is stockouts in one place and excess stock in another.
+
+**Sales and operations planning (S&OP)** is the monthly cycle that settles this. A typical rhythm:
+
+1. **Portfolio review:** launches, phase-outs and changes to the range.
+2. **Demand review:** sales and marketing agree the unconstrained demand plan.
+3. **Supply review:** operations checks capacity, materials and inventory against it and flags gaps.
+4. **Pre-S&OP:** the teams work out options, such as overtime, a co-packer, building stock ahead or shaping demand, and cost each one.
+5. **Executive S&OP:** leaders pick an option and sign off one plan.
+
+For the shampoo case the decision might be: make 80,000 in-house, give 20,000 to a co-packer, and build some stock in October ahead of the festive peak. Everyone then works from the same numbers.
+
+The classic supply options are a **chase** strategy (match production to demand month by month, changing capacity), a **level** strategy (produce at a steady rate and let inventory absorb the swings) or a mix of the two.
+
+**Integrated business planning (IBP)** extends S&OP. It plans further ahead, often 24 months or more, works in money as well as units, connects to the financial plan and strategy, and tests scenarios.
+
+<KeyIdea>
+
+S&OP replaces several competing numbers with one agreed plan, made each month through demand, supply and executive reviews. IBP extends it into finance and strategy.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Unconstrained demand', def: 'What customers would buy if supply were unlimited; the starting point of the demand review.' },
+  { term: 'Chase vs level strategy', def: 'Match output to demand each month, or produce steadily and let inventory absorb the swings.' },
+  { term: 'IBP', def: 'Integrated business planning: S&OP extended to finance, strategy, longer horizons and scenarios.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+S&OP is the monthly process that aligns demand, supply and finance on one plan. It runs through portfolio, demand and supply reviews, a pre-S&OP meeting to cost the options, and an executive meeting that decides. The output is one agreed volume plan with inventory and capacity decisions, such as overtime, co-packing or building stock. IBP extends it with financial integration, longer horizons and scenario planning.
+
+</SayIt>
+
+<Q q="Demand is 1 lakh units but capacity is 80,000. How would S&OP handle it?">
+
+The supply review flags the 20,000 gap, and pre-S&OP costs the options: overtime or extra shifts, a co-packer, moving volume to another plant, building stock in earlier months, or shaping demand towards products with spare capacity. The executive meeting picks one based on cost, service and risk, and the agreed plan goes to the master schedule.
+
+</Q>
+
+<Q q="How is IBP different from S&OP?">
+
+IBP keeps the S&OP cycle but integrates the financial plan and strategy, looks further ahead, plans in value as well as volume, and uses scenarios. It is more of a business-management process than an operations one.
+
+</Q>
+
+</InterviewKit>

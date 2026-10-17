@@ -1,0 +1,78 @@
+---
+title: "How much to order: EOQ"
+line: inventory
+summary: Balancing the cost of ordering against the cost of holding stock to find the order size with the lowest total cost.
+minutes: { gist: 3 }
+status: draft
+keywords: [EOQ, economic order quantity, ordering cost, setup cost, holding cost, cycle stock, lot size, Harris formula, quantity discount, POQ]
+connected: [why-inventory, safety-stock, changeovers, inventory-segmentation, load-building]
+sources:
+  - text: "Harris, F. W. (1913). How many parts to make at once. Factory, The Magazine of Management, 10(2), 135–136."
+  - text: "Silver, E. A., Pyke, D. F. & Thomas, D. J. (2017). Inventory and Production Management in Supply Chains (4th ed.). CRC Press."
+  - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapter on cycle inventory."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Two opposing costs, one sweet spot, and why being roughly right is enough." soon>
+
+Every time you place an order, it costs something fixed: paperwork, calls, a delivery run, receiving and checking. Every unit you keep in stock costs something too: cash tied up, storage, spoilage. Order rarely in big batches and you save on ordering but pay to hold a mountain of stock. Order often in small batches and you hold little but pay the ordering cost again and again.
+
+The **economic order quantity (EOQ)** is the order size where the total of those two costs is lowest:
+
+$$
+EOQ = \sqrt{\frac{2DS}{H}}
+$$
+
+where $D$ is annual demand, $S$ the cost per order and $H$ the cost of holding one unit for a year.
+
+Take a café in Pune that uses 1,200 kg of coffee beans a year. Each order costs about ₹500 to place, and holding a kilogram for a year costs about ₹200. Then $EOQ = \sqrt{2 \times 1200 \times 500 / 200} = \sqrt{6000} \approx 77.5$ kg, about 15 orders a year. At that size the yearly ordering cost and holding cost come out equal, around ₹7,750 each.
+
+The useful surprise is how forgiving it is. If the café orders 100 kg instead (29% more than the EOQ), its total cost rises by only about 3%. So you can round EOQ to a pack size, a truck load or a supplier's minimum without losing much.
+
+<KeyIdea>
+
+EOQ answers *how much* to order, not *when*. And because the cost curve is flat near the bottom, a practical quantity close to the EOQ is good enough.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Ordering (setup) cost', def: 'The fixed cost of placing one order or running one production setup, whatever the quantity.' },
+  { term: 'Holding cost', def: 'The cost of keeping one unit in stock for a year.' },
+  { term: 'Square-root rule', def: 'EOQ grows with the square root of demand: four times the demand means twice the order size.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+EOQ balances two opposing costs: ordering often costs more in fixed ordering costs, ordering big costs more to hold. The optimum is the square root of 2DS over H, where the two costs are equal. I treat it as a starting point. The cost curve is flat near the optimum, so I'd round to pack sizes, truck loads or supplier minimums, and check quantity discounts separately.
+
+</SayIt>
+
+<Q q="What happens to the EOQ if annual demand quadruples?">
+
+It doubles, because EOQ grows with the square root of demand. Order frequency doubles too. That is why fast-moving items are ordered more often but not in proportionally bigger batches.
+
+</Q>
+
+<Q q="Why does it matter that the total cost curve is flat near the EOQ?">
+
+Because small deviations barely hurt. In the café example, ordering 29% more than the EOQ raises the total cost by about 3%. You can round to practical lot sizes, and errors in estimating the ordering or holding cost don't do much damage.
+
+</Q>
+
+<Q q="What does EOQ assume, and when does it break?">
+
+Steady demand, a fixed cost per order, a constant unit price and the whole batch arriving at once. It needs adjusting for quantity discounts (where a bigger order can be cheaper overall), for production that builds stock gradually, and for very uncertain or seasonal demand.
+
+</Q>
+
+</InterviewKit>

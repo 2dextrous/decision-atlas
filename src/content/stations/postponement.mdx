@@ -1,0 +1,71 @@
+---
+title: Postponement
+line: inventory
+summary: Holding generic stock and making the final version only when real demand is known.
+minutes: { gist: 3 }
+status: draft
+keywords: [postponement, delayed differentiation, late customization, form postponement, time postponement, place postponement, mass customization, risk pooling, decoupling point]
+connected: [risk-pooling, channel-design, manufacturing-footprint, distribution-designs, strategic-fit]
+sources:
+  - text: "Feitzinger, E. & Lee, H. L. (1997). Mass customization at Hewlett-Packard: The power of postponement. Harvard Business Review, 75(1), 116–121."
+  - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Section on postponement and aggregation."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Delay the point where products become different, and forecasting gets easier." soon>
+
+A paint shop doesn't stock 2,000 ready-mixed colours. It stocks a few white bases and a tinting machine, and mixes the exact shade when you ask for it. That is **postponement**: keep products generic for as long as possible and make the final, specific version only once real demand is known.
+
+Why it works: forecasting total paint demand is far easier than forecasting demand for each of 2,000 shades. The generic base pools the uncertainty of all the colours, so you need much less stock overall, and you rarely end up with cans of a colour nobody wants.
+
+The classic business case is Hewlett-Packard's printers. HP redesigned them so the country-specific parts, such as the power supply and the manuals, were added at regional warehouses instead of the factory. Regional stock stayed generic until orders arrived, which cut inventory and improved availability.
+
+Postponement comes in three forms:
+
+- **Form:** delay labelling, packaging, assembly or mixing (paint, printers, multi-language packs).
+- **Time:** make or ship only after the order arrives.
+- **Place:** hold stock centrally and send it out only when a region needs it.
+
+It isn't free. The final step close to the market can cost more per unit, products may need redesigning, and customers may wait a little for the last step.
+
+<KeyIdea>
+
+Postponement moves the point where products become different as close to the customer as possible, so you forecast the generic product, which is easier, instead of every variant.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Delayed differentiation', def: 'Another name for postponement: products split into variants as late as possible.' },
+  { term: 'Decoupling point', def: 'Where stock is held and work switches from forecast-driven to order-driven.' },
+  { term: 'Form postponement', def: 'Delaying the physical customization: labelling, packaging, assembly or mixing.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+Postponement means keeping products generic as long as possible and customizing only when demand is known, like paint tinted at the store or HP adding country-specific parts at regional warehouses. It pools forecast uncertainty across variants, so you hold less stock and avoid obsolete variants. The trade-offs are a costlier final step, product redesign and sometimes a little extra lead time.
+
+</SayIt>
+
+<Q q="Why does postponement reduce inventory?">
+
+Because aggregate demand for the generic product is more predictable than demand for each variant. Holding stock before differentiation pools the uncertainty, which is the same risk-pooling effect as centralizing warehouses, applied across product variants.
+
+</Q>
+
+<Q q="When would postponement be a bad idea?">
+
+When customization is expensive or slow near the market, when customers won't wait for the final step, or when there are few variants with stable demand and little uncertainty to pool. It shines with many variants and unpredictable mix.
+
+</Q>
+
+</InterviewKit>

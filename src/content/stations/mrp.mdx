@@ -1,0 +1,72 @@
+---
+title: "MRP: from BOM to orders"
+line: supply
+summary: Exploding the master schedule through the bill of materials into the components and raw materials to buy or make, and when.
+minutes: { gist: 3 }
+status: draft
+keywords: [MRP, material requirements planning, bill of materials, BOM explosion, gross requirements, net requirements, lead time offset, lot sizing, planned order, purchase requisition, dependent demand]
+connected: [mps, drp-deployment, inventory-mrp-in-sap, plan-to-produce, procurement-fundamentals]
+sources:
+  - text: "Silver, E. A., Pyke, D. F. & Thomas, D. J. (2017). Inventory and Production Management in Supply Chains (4th ed.). CRC Press. Chapter on material requirements planning."
+  - text: "Orlicky, J. (1975). Material Requirements Planning. McGraw-Hill."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="If you know what you'll build, you can calculate every part you need." soon>
+
+Once the master schedule says "make 30,000 bottles of shampoo in week 6", every component follows from arithmetic, not forecasting. The **bill of materials (BOM)** is the recipe: one bottle of shampoo needs one bottle, one cap, one label and 500 ml of liquid. **MRP (material requirements planning)** multiplies through:
+
+> 30,000 shampoos → 30,000 bottles, 30,000 caps, 30,000 labels, 15,000 litres of liquid
+
+Then, for every component, MRP runs the same steps:
+
+1. **Gross requirement:** what the plan needs.
+2. **Net requirement:** subtract stock on hand and orders already on the way. With 8,000 caps in stock and 5,000 arriving, it needs 17,000 more.
+3. **Lot sizing:** round to the supplier's pack size or an economic batch.
+4. **Lead-time offset:** if caps take 2 weeks to arrive, the order must go out in week 4.
+
+The output is a set of **planned orders**: purchase requisitions for bought parts and production orders for parts made in-house. In ERP systems such as SAP, this runs automatically, often every night.
+
+The key idea behind MRP is **dependent demand**. Components don't need their own forecast, because their demand depends on the finished goods plan. That is why MRP works best for manufacturing with clear BOMs, and why the plan is only as good as its inputs: wrong lead times, inaccurate stock records or outdated BOMs flow straight into wrong orders.
+
+<KeyIdea>
+
+Forecast the finished product, calculate the components. MRP turns the MPS and the BOM into time-phased purchase and production orders, and garbage in means garbage out.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Bill of materials (BOM)', def: 'The list of components and quantities needed to make one unit of a product.' },
+  { term: 'Dependent demand', def: 'Demand calculated from a higher-level plan rather than forecast on its own.' },
+  { term: 'Lead-time offset', def: 'Placing an order earlier by the lead time so it arrives when needed.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+MRP takes the master production schedule, explodes it through the bill of materials into gross component requirements, nets them against stock and open orders, applies lot sizes, and offsets by lead time to create planned purchase and production orders. It relies on dependent demand: components are calculated, not forecast. Its quality depends on accurate BOMs, lead times and stock records.
+
+</SayIt>
+
+<Q q="Why don't components need their own forecast?">
+
+Because their demand depends on the finished-goods plan. If you know you're building 30,000 bottles of shampoo, you know you need 30,000 caps. Forecasting them separately would add error. Only items with independent demand, like spare parts sold directly, need their own forecast.
+
+</Q>
+
+<Q q="MRP keeps suggesting orders for parts you already have. What would you check?">
+
+Stock accuracy (are the counts and storage locations right?), open purchase orders that were received but not posted, BOM quantities, lead times and lot-size settings in the material master, and whether safety stock is set too high. Most MRP problems trace back to master data.
+
+</Q>
+
+</InterviewKit>

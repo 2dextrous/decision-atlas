@@ -1,0 +1,71 @@
+---
+title: Demand sensing & shaping
+line: demand
+summary: Reading the latest short-term signals to correct the near-term forecast, and using price and promotion to steer demand toward supply.
+minutes: { gist: 3 }
+status: draft
+keywords: [demand sensing, demand shaping, POS data, short-term forecast, signals, weather, price elasticity, promotion, substitution, revenue management]
+connected: [promotions-cannibalization, control-tower, substitution, ml-forecasting, allocation]
+sources:
+  - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapters on demand forecasting and on pricing and revenue management."
+  - text: "Hyndman, R. J. & Athanasopoulos, G. Forecasting: Principles and Practice (3rd ed.). OTexts."
+    url: "https://otexts.com/fpp3/"
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Sensing detects what's changing now; shaping changes what customers do." soon>
+
+These two sound alike but do opposite jobs.
+
+**Demand sensing** answers: *what is changing right now?* A monthly forecast built on two years of history might say 100,000 units next month. Demand sensing looks at the latest signals, such as daily store sales (POS), distributor orders, retail stock levels, online searches, weather and local events, and corrects the next few days or weeks. If a heatwave hits and retailer stock of a sports drink is falling fast, the near-term forecast might move to 110,000. That update flows straight into replenishment, production and trucks. Sensing improves the short horizon; it doesn't replace the long-range forecast.
+
+**Demand shaping** answers: *how can we influence demand to fit what we can supply?* Instead of only predicting, the company pulls levers:
+
+- a discount on an overstocked item, or a promotion moved to a week with spare capacity,
+- recommending an available substitute when a product is short,
+- offering a cheaper slower delivery slot when the fast lane is full,
+- adjusting prices when demand runs ahead of supply.
+
+Shaping needs to know how customers respond, such as price elasticity and promotion lift, and it needs supply, sales and finance working together, because every lever has a cost.
+
+<KeyIdea>
+
+Demand sensing detects changes in demand early. Demand shaping deliberately changes demand to match supply. Mature planning uses both.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'POS data', def: 'Point-of-sale data: what actually sold at the till, store by store, day by day.' },
+  { term: 'Price elasticity', def: 'How much demand changes in percentage terms when price changes by 1%.' },
+  { term: 'Short-term horizon', def: 'The next few days to weeks, where sensing adds the most accuracy.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+Demand sensing uses recent, high-frequency signals such as POS, orders, retailer stock, weather and events to correct the short-term forecast faster than history-based models can. Demand shaping is the active side: using price, promotions, substitution and delivery options to steer demand toward available supply. Sensing tells you what's changing; shaping changes what customers do; and both feed supply and inventory decisions.
+
+</SayIt>
+
+<Q q="What is the difference between demand sensing and demand shaping?">
+
+Sensing is detection: it updates the near-term forecast using the latest signals. Shaping is influence: it uses commercial levers such as price, promotion and substitution to move demand toward what the supply chain can deliver profitably.
+
+</Q>
+
+<Q q="Give an example of demand shaping helping the supply chain.">
+
+A plant is short of capacity for the 1 litre pack but has plenty of 500 ml. Running a promotion on the 500 ml, or recommending it as a substitute online, shifts some demand to the available product and avoids stockouts and expensive overtime on the constrained line.
+
+</Q>
+
+</InterviewKit>

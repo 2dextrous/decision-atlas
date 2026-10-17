@@ -1,0 +1,78 @@
+---
+title: Bottlenecks & debottlenecking
+line: supply
+summary: Finding the one constraint that limits the whole system, then lifting it, before spending money anywhere else.
+minutes: { gist: 3 }
+status: draft
+keywords: [bottleneck, constraint, theory of constraints, TOC, five focusing steps, drum-buffer-rope, throughput, capacity, debottlenecking, Little's law]
+connected: [oee, rccp, changeovers, manufacturing-footprint, lean-six-sigma-toc]
+sources:
+  - text: "Goldratt, E. M. & Cox, J. (1984). The Goal: A Process of Ongoing Improvement. North River Press."
+  - text: "Hopp, W. J. & Spearman, M. L. Factory Physics. Waveland Press."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="The slowest step sets the pace for everything, so fix that one first." soon>
+
+A process can only go as fast as its slowest step. Picture a factory where each product passes through four stages:
+
+| Stage | Capacity per month |
+|---|---|
+| Cutting | 10,000 |
+| Assembly | 8,000 |
+| Painting | 12,000 |
+| Packaging | 15,000 |
+
+The plant can't ship more than 8,000 a month, because **assembly is the bottleneck**. Buying a faster cutting machine changes nothing except the pile of half-finished parts in front of assembly. An hour lost at the bottleneck is an hour lost for the whole plant; an hour saved anywhere else saves nothing.
+
+Eliyahu Goldratt's **theory of constraints (TOC)** turns this into five focusing steps:
+
+1. **Identify** the constraint.
+2. **Exploit** it: never let it stand idle. Run it through breaks, keep a small buffer in front of it, inspect before it so it never works on bad parts.
+3. **Subordinate** everything else to it: other stages work at its pace, not their own.
+4. **Elevate** it: only now spend money, on an extra shift, a second machine or outsourcing.
+5. **Repeat:** once assembly is faster, something else becomes the constraint.
+
+Steps 2 and 3 are often free and can unlock a surprising amount of output before any capital is spent.
+
+<KeyIdea>
+
+Find the constraint and make it work flat out. Improving anything else first only builds inventory, not output.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Bottleneck (constraint)', def: 'The resource with the least capacity relative to demand; it sets total output.' },
+  { term: 'Throughput', def: 'The rate at which the system produces sellable output.' },
+  { term: 'Drum-buffer-rope', def: 'TOC scheduling: the bottleneck sets the pace (drum), a buffer protects it, and material release is tied to it (rope).' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+System output is limited by its bottleneck, so I'd identify the constraint first, then follow the theory of constraints: exploit it so it never stops, subordinate other steps to its pace, and only then elevate it with investment. Improving non-bottlenecks just adds work-in-progress. Once the constraint is lifted, I'd look for the next one.
+
+</SayIt>
+
+<Q q="Assembly makes 8,000 a month and every other stage can make at least 10,000. Where do you invest?">
+
+Not in the other stages. First exploit assembly for free: cover breaks, cut its changeovers, make sure it never waits for material or works on defective parts. If that's not enough, elevate it with overtime, a second shift, extra equipment or outsourcing. Then re-check, since another stage may become the bottleneck.
+
+</Q>
+
+<Q q="How do you find the bottleneck on a real shop floor?">
+
+Look for where work-in-progress piles up and which resource runs nearly all the time while others wait. Compare each stage's effective capacity, not its rated capacity, with the demand placed on it. The bottleneck can shift with the product mix.
+
+</Q>
+
+</InterviewKit>

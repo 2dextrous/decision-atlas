@@ -1,0 +1,71 @@
+---
+title: Scheduling & sequencing
+line: supply
+summary: The order of jobs on each line, hour by hour, and the simple rules that decide what runs next.
+minutes: { gist: 3 }
+status: draft
+keywords: [production scheduling, sequencing, dispatching rules, FIFO, EDD, SPT, makespan, lateness, sequence-dependent setup, Johnson's rule, finite scheduling, APS]
+connected: [mps, changeovers, bottlenecks, workforce-planning, maintenance-planning]
+sources:
+  - text: "Pinedo, M. L. Scheduling: Theory, Algorithms, and Systems. Springer."
+  - text: "Hopp, W. J. & Spearman, M. L. Factory Physics. Waveland Press."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="What runs next on the line, and why the rule you pick changes the result." soon>
+
+Planning decides how much to make this week. **Scheduling** decides exactly what runs on which line, in which order, starting at what time:
+
+> 8:00–10:00 Shampoo A · 10:00–10:30 changeover · 10:30–13:00 Shampoo B · 13:00–14:00 Shampoo C
+
+The order matters because jobs compete for the same machines and each one has a due date. Simple **dispatching rules** pick the next job, and each rule optimizes something different:
+
+- **FIFO (first in, first out):** fair and simple, but blind to due dates and job length.
+- **EDD (earliest due date):** run the most urgent job first. It minimizes the worst lateness.
+- **SPT (shortest processing time):** run the quickest job first. It minimizes the average time jobs wait, but long jobs can sit for ages.
+
+Real lines add complications. Changeover time often depends on the sequence: going from a light shampoo to a dark one is quick, while the reverse needs a full clean. Good schedules group similar products to cut changeovers. Then there are breakdowns, material shortages, shift patterns and maintenance windows.
+
+That's why large plants use finite-capacity scheduling or **APS (advanced planning and scheduling)** software, which respects capacity and sequence rules and recalculates when something goes wrong, instead of assuming infinite capacity the way basic MRP does.
+
+<KeyIdea>
+
+There is no single best sequence, only the best one for your goal. EDD protects due dates, SPT cuts waiting time, and grouping similar products cuts changeovers.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Dispatching rule', def: 'A simple rule for which job runs next, such as FIFO, EDD or SPT.' },
+  { term: 'Makespan', def: 'Total time from the start of the first job to the end of the last.' },
+  { term: 'Sequence-dependent setup', def: 'Changeover time that depends on which product ran before.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+Scheduling turns the production plan into an exact sequence of jobs on each resource. Dispatching rules give quick answers: EDD minimizes maximum lateness, SPT minimizes average flow time, and FIFO is simple but ignores both. Real plants also sequence to minimize sequence-dependent changeovers and respect maintenance and shifts, often with finite-capacity APS tools that reschedule when disruptions hit.
+
+</SayIt>
+
+<Q q="Which rule would you use to minimize late orders, and which to minimize average waiting time?">
+
+Earliest due date minimizes the maximum lateness. Shortest processing time minimizes average flow time but can delay long jobs. In practice, plants often combine rules with changeover-aware sequencing.
+
+</Q>
+
+<Q q="Why does sequence matter so much in a paint or shampoo plant?">
+
+Because changeover time depends on the order. Light to dark colours or fragrances need little cleaning, while the reverse needs a full washout. Sequencing in a sensible order can recover hours of capacity every week without new equipment.
+
+</Q>
+
+</InterviewKit>

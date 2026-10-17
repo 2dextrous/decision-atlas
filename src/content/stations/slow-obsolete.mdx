@@ -1,0 +1,71 @@
+---
+title: Slow-moving & obsolete stock
+line: inventory
+summary: Spotting stock that has stopped moving before it loses its value, and choosing the least costly way out.
+minutes: { gist: 3 }
+status: draft
+keywords: [slow-moving inventory, SLOB, excess and obsolete, E&O, inventory ageing, days of cover, write-off, provision, liquidation, end of life]
+connected: [lifecycle-forecasting, intermittent-demand, inventory-segmentation, why-inventory, returns]
+sources:
+  - text: "Teunter, R. H., Syntetos, A. A. & Babai, M. Z. (2011). Intermittent demand: Linking forecasting to inventory obsolescence. European Journal of Operational Research, 214(3), 606–615."
+  - text: "Silver, E. A., Pyke, D. F. & Thomas, D. J. (2017). Inventory and Production Management in Supply Chains (4th ed.). CRC Press."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="How to find dead stock early and decide what to do with it." soon>
+
+Every warehouse collects stock that has stopped selling: phone cases for a model nobody buys any more, last season's colours, spare parts for retired machines. Companies often call it **SLOB** (slow-moving and obsolete) or **E&O** (excess and obsolete).
+
+The two words mean different things. **Slow-moving** stock still sells, just far slower than planned. **Obsolete** stock has no realistic future demand. Treating a slow mover as dead throws away value; treating dead stock as slow lets it lose value month after month.
+
+Spotting it early is mostly arithmetic:
+
+- **Ageing:** how long since the item last moved?
+- **Cover:** how many months would current stock last at the current sales rate? 5,000 phone cases selling 20 a month is 250 months of cover, which is effectively obsolete.
+- **Future demand:** is the product being phased out or replaced?
+
+Then choose the exit that recovers the most: stop reordering, move the stock to locations where it still sells, discount or bundle it, return it to the supplier, rework it, sell it to a liquidator, or scrap it. Waiting is rarely free, because value usually drops the longer stock sits.
+
+Finance cares too: when stock is unlikely to sell at its book value, companies set aside a provision or write it down, which hits profit. Good planning prevents the problem upstream with careful phase-out plans, smaller first orders for new or uncertain items, and forecasts that notice when demand is dying.
+
+<KeyIdea>
+
+Slow is not the same as dead. Measure ageing and cover, act early, and pick the exit that recovers the most value. Every month of waiting costs money.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Days (months) of cover', def: 'Stock on hand ÷ average usage: how long current stock would last.' },
+  { term: 'E&O / SLOB', def: 'Excess and obsolete, or slow-moving and obsolete: stock above any sensible future need.' },
+  { term: 'Write-down', def: 'Reducing the book value of stock that will not sell at cost; it reduces reported profit.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+I'd separate slow movers, which still sell but too slowly, from obsolete stock with no realistic demand. Ageing, months of cover and the product's lifecycle status flag them early. Then I choose the exit that recovers the most value: stop replenishment, transfer, promote or bundle, return to the supplier, rework, liquidate or scrap. Prevention matters more: phase-out planning, cautious buys for new items and forecasts that notice dying demand.
+
+</SayIt>
+
+<Q q="You find 5,000 units that sell 20 a month. What do you do?">
+
+That is 250 months of cover, effectively obsolete. Stop all replenishment immediately, check whether another region or channel still sells it, then compare the recovery from discounting, bundling, returning to the supplier or liquidating against the cost of keeping it. Provide for the expected loss in the books.
+
+</Q>
+
+<Q q="Why do standard forecasting methods struggle with dying products?">
+
+Croston's method only updates its estimates when a sale happens, so when sales stop it keeps forecasting the old rate indefinitely. Simple exponential smoothing does drift down, but slowly. TSB updates the probability of demand every period, so its forecast falls steadily as the product dies and replenishment stops in time.
+
+</Q>
+
+</InterviewKit>

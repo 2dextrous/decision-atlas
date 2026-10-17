@@ -1,0 +1,73 @@
+---
+title: Maintenance planning
+line: supply
+summary: Choosing between fixing things when they break, servicing on a schedule, and acting on condition data, and timing stops around production.
+minutes: { gist: 3 }
+status: draft
+keywords: [maintenance planning, reactive maintenance, preventive maintenance, predictive maintenance, condition-based maintenance, TPM, MTBF, MTTR, availability, downtime]
+connected: [oee, production-scheduling, bottlenecks, workforce-planning, ml-in-supply-chain]
+sources:
+  - text: "Nakajima, S. (1988). Introduction to TPM: Total Productive Maintenance. Productivity Press."
+  - text: "Hopp, W. J. & Spearman, M. L. Factory Physics. Waveland Press."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Planned stops that prevent unplanned ones, and how to time them." soon>
+
+Machines wear out. The question is whether you stop them on your terms or theirs. There are four broad approaches:
+
+- **Reactive:** run until it breaks, then fix it. Cheap until it happens on the bottleneck during the festive rush.
+- **Preventive:** service on a fixed schedule (every 500 running hours, every month), whether the part needs it or not. Predictable, but you sometimes replace parts that had life left.
+- **Predictive (condition-based):** measure vibration, temperature or oil quality and intervene when the data shows wear. Fewer surprises and fewer wasted services, but it needs sensors and analysis.
+- **TPM (total productive maintenance):** operators own basic care such as cleaning, lubricating and inspecting, so small problems are caught before they become breakdowns.
+
+Two numbers describe reliability:
+
+- **MTBF (mean time between failures):** how long it runs between breakdowns.
+- **MTTR (mean time to repair):** how long a repair takes.
+
+Availability is roughly MTBF ÷ (MTBF + MTTR). A machine that fails every 190 hours and takes 10 hours to fix is available about 95% of the time. You can improve it by failing less often, or by fixing faster with spare parts on hand and trained technicians.
+
+Planning matters as much as method: schedule stops in low-demand periods or alongside changeovers, protect the bottleneck most carefully, and build stock ahead of long shutdowns.
+
+<KeyIdea>
+
+Planned stops are cheaper than unplanned ones. Match the maintenance approach to how critical and how predictable each machine is, and schedule stops around the production plan.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'MTBF', def: 'Mean time between failures: average running time between breakdowns.' },
+  { term: 'MTTR', def: 'Mean time to repair: average time to get a failed machine running again.' },
+  { term: 'Predictive maintenance', def: 'Maintenance triggered by condition data, such as vibration or temperature, rather than a calendar.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+Maintenance strategy ranges from reactive to preventive to predictive, with TPM adding operator ownership of basic care. I'd choose by criticality: predictive or preventive on bottlenecks and critical assets, run-to-failure on cheap redundant ones. Reliability is tracked with MTBF and MTTR, and stops should be planned around demand, with stock built ahead of long shutdowns.
+
+</SayIt>
+
+<Q q="A machine fails every 190 hours and each repair takes 10 hours. What is its availability, and how would you improve it?">
+
+About 190 ÷ 200 = 95%. Increase MTBF with preventive or predictive maintenance, or cut MTTR with spare parts kept on site, standard repair procedures and trained technicians. On a bottleneck, both are worth paying for.
+
+</Q>
+
+<Q q="When is run-to-failure a reasonable choice?">
+
+For cheap, non-critical equipment with backup capacity, where a failure doesn't stop the line and preventive work would cost more than the occasional repair.
+
+</Q>
+
+</InterviewKit>

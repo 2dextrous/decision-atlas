@@ -1,0 +1,70 @@
+---
+title: Multi-plant allocation
+line: supply
+summary: Deciding which plant should make how much of each product, given different costs, capacities and distances to customers.
+minutes: { gist: 3 }
+status: draft
+keywords: [multi-plant allocation, production allocation, sourcing, linear programming, landed cost, capacity constraint, transportation cost, plant loading, network optimization]
+connected: [optimization-basics, manufacturing-footprint, rccp, sop-ibp, facility-location]
+sources:
+  - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapters on network design and aggregate planning."
+  - text: "Hillier, F. S. & Lieberman, G. J. Introduction to Operations Research. McGraw-Hill. Chapter on the transportation problem."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="The cheapest plant isn't always the right one once freight and capacity count." soon>
+
+A company with several plants making similar products has to decide each month who makes what. The cheapest plant per unit isn't automatically the answer, because freight, duties, capacity and changeovers all count.
+
+Take shampoo made in two plants:
+
+| | Cost to make | Freight to North India | Freight to South India | Monthly capacity |
+|---|---|---|---|---|
+| Plant A (Baddi) | ₹40 | ₹4 | ₹14 | 60,000 |
+| Plant B (Chennai) | ₹43 | ₹15 | ₹3 | 50,000 |
+
+North needs 50,000 units and South 40,000. Plant A is cheaper to run, but for the South it lands at ₹54 a unit against Plant B's ₹46. The sensible split is that A serves the North (₹44 landed) and B serves the South (₹46 landed). Both fit within capacity, and the total comes to ₹40.4 lakh. Sending everything from A would cost more and would also exceed its capacity.
+
+With dozens of products, plants and markets, this becomes a **linear program**: choose quantities that minimize total landed cost (production + freight + duties) while meeting demand and staying within each plant's capacity. Real models add setup costs and minimum runs, which turn it into a mixed-integer problem, plus things like keeping a second source qualified.
+
+<KeyIdea>
+
+Allocate on landed cost, not production cost: making plus moving plus duties, within each plant's capacity. At scale this is a linear program solved every planning cycle.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Landed cost', def: 'Production cost plus freight, duties and handling to the point of demand.' },
+  { term: 'Capacity constraint', def: 'The limit on how much each plant can make in the period.' },
+  { term: 'Transportation problem', def: 'The classic LP that assigns supply from sources to demand points at minimum cost.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+Multi-plant allocation decides how much of each product each plant makes for each market. The objective is minimum total landed cost, production plus freight plus duties, subject to meeting demand and each plant's capacity. It's a transportation-style linear program, extended with setup costs or minimum runs when needed, and the cheapest plant per unit often loses once freight is included.
+
+</SayIt>
+
+<Q q="Plant A makes at ₹40, Plant B at ₹43. Why might B still serve some markets?">
+
+Because freight can outweigh the production gap. If B is much closer to a market, its landed cost there can be lower. In the example, B lands at ₹46 in the South against ₹54 from A. Capacity limits at A may also force some volume to B.
+
+</Q>
+
+<Q q="How would you formulate this as an optimization problem?">
+
+Decision variables are the quantities from each plant to each market for each product. Minimize the sum of quantity times landed cost. Subject to: each market's demand is met, and each plant's total production stays within its capacity. Add binary setup variables if lines need minimum runs.
+
+</Q>
+
+</InterviewKit>

@@ -1,0 +1,77 @@
+---
+title: Forecasting fundamentals
+line: demand
+summary: What a demand forecast is made of, and why the decision it feeds sets its horizon and level of detail.
+minutes: { gist: 3 }
+status: draft
+keywords: [demand forecasting, demand planning, level, trend, seasonality, noise, time series decomposition, forecast horizon, granularity, naive forecast, baseline]
+connected: [demand-patterns, exponential-smoothing, forecast-accuracy, sop-ibp, planning-hierarchy]
+sources:
+  - text: "Hyndman, R. J. & Athanasopoulos, G. Forecasting: Principles and Practice (3rd ed.). OTexts. Free online."
+    url: "https://otexts.com/fpp3/"
+  - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapter on demand forecasting."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="The building blocks of a forecast and the questions to ask before choosing a method." soon>
+
+Factories, buyers and trucks all need time to react, so almost every supply chain decision is made against a forecast rather than real orders. A forecast is a best estimate of future demand, and every forecast is wrong. The useful questions are how wrong, and in which direction.
+
+Most demand histories are a mix of a few patterns:
+
+- **Level:** the typical amount sold right now.
+- **Trend:** steady growth or decline, like a brand gaining shelf space.
+- **Seasonality:** a pattern that repeats on the calendar, such as ice cream in summer, sweets before Diwali, or the weekend peak in a café.
+- **Noise:** the leftover randomness that no model will explain.
+
+Before choosing a method, start from the decision the forecast feeds, because that sets the horizon and the level of detail:
+
+- Replenishing a warehouse needs weekly numbers per item and location, a few weeks to a few months ahead.
+- Planning plant capacity needs monthly numbers per product family, several quarters ahead.
+- Budgeting needs yearly numbers per category.
+
+Forecasting at the wrong level gives a precise answer to the wrong question. A useful habit is to build the simplest possible forecast first, such as "next week = last week" (the **naive forecast**). Any method you adopt later has to beat it.
+
+People also separate **forecasting** (a statistical estimate from data) from **demand planning** (the business process that adds market knowledge, promotions and judgment, then agrees one demand plan for supply to work from).
+
+<KeyIdea>
+
+Start from the decision, not the model. The decision sets the horizon and the level of detail, and the simplest forecast sets the bar every method has to beat.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Seasonality', def: 'A pattern that repeats over a fixed period: weekly, monthly or yearly.' },
+  { term: 'Forecast horizon', def: 'How far ahead the forecast looks, set by the lead time of the decision it feeds.' },
+  { term: 'Naive forecast', def: 'Next period equals the last one. The baseline any serious method must beat.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+A forecast estimates future demand so supply can react in time. Demand usually breaks down into level, trend, seasonality and noise. Before choosing a method I'd start from the decision the forecast feeds, which sets the horizon and granularity, then benchmark every method against a naive forecast and measure both accuracy and bias.
+
+</SayIt>
+
+<Q q="What is the difference between forecasting and demand planning?">
+
+Forecasting is the statistical estimate from history and drivers. Demand planning is the business process around it: it adds promotions, market intelligence and customer input, reviews the numbers with sales and marketing, and produces one agreed demand plan that supply and finance use.
+
+</Q>
+
+<Q q="How do you choose the horizon and granularity of a forecast?">
+
+From the decision. Replenishment needs item-by-location weekly forecasts out to the lead time; capacity planning needs product-family monthly forecasts several quarters out; budgets need category-level annual numbers. Forecasting at the wrong level makes downstream decisions misaligned however good the model is.
+
+</Q>
+
+</InterviewKit>

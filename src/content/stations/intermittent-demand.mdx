@@ -1,0 +1,74 @@
+---
+title: "Intermittent demand: Croston, SBA, TSB"
+line: demand
+summary: Forecasting spare parts and slow movers that sell in occasional bursts with long gaps in between.
+minutes: { gist: 3 }
+status: draft
+keywords: [intermittent demand, Croston, SBA, Syntetos-Boylan approximation, TSB, demand interval, demand size, spare parts, obsolescence, bias]
+connected: [demand-patterns, service-parts, slow-obsolete, probabilistic-forecasting, forecast-accuracy]
+sources:
+  - text: "Croston, J. D. (1972). Forecasting and stock control for intermittent demands. Operational Research Quarterly, 23(3), 289–303."
+  - text: "Syntetos, A. A. & Boylan, J. E. (2005). The accuracy of intermittent demand estimates. International Journal of Forecasting, 21(2), 303–314."
+  - text: "Teunter, R. H., Syntetos, A. A. & Babai, M. Z. (2011). Intermittent demand: Linking forecasting to inventory obsolescence. European Journal of Operational Research, 214(3), 606–615."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Forecast the size and the gap separately, then fix the bias and the obsolescence problem." soon>
+
+Some items sell like this: 0, 0, 8, 0, 0, 0, 7, 0, 9, 0. Spare parts, slow-moving SKUs and specialist chemicals behave this way. Ordinary exponential smoothing struggles because it blends the zeros and the bursts into a small average that is wrong in every single period: too high when nothing sells, far too low when a burst arrives.
+
+**Croston's method (1972)** asks two separate questions:
+
+1. When demand happens, how big is it? (smoothed demand size, $z$)
+2. How many periods usually pass between demands? (smoothed interval, $p$)
+
+The forecast per period is the size divided by the gap: $z / p$. If bursts average 8 units and come every 3 periods, the forecast is about 2.7 units a period. That isn't a prediction that 2.7 units sell each week; it is the average rate, which is what replenishment needs.
+
+Two improvements matter in interviews:
+
+- **SBA (Syntetos-Boylan approximation)** fixes a known upward bias in Croston by multiplying the forecast by $(1 - \alpha/2)$.
+- **TSB (Teunter-Syntetos-Babai)** tracks the *probability* that demand occurs and updates it every period, zeros included. Croston only updates when a sale happens, so when a part stops selling it keeps forecasting the old rate for ever. TSB's forecast fades as the part dies out, so you stop buying stock nobody will need.
+
+Accuracy also needs different measures here. MAPE breaks on zero-demand periods, so use scaled errors or service-based measures instead.
+
+<KeyIdea>
+
+For intermittent items, forecast how big and how often separately. Use SBA to remove Croston's bias, and TSB when items may become obsolete.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Croston’s method', def: 'Smooths demand size and demand interval separately; forecast = size ÷ interval.' },
+  { term: 'SBA', def: 'Bias-corrected Croston: multiply by (1 − α/2).' },
+  { term: 'TSB', def: 'Updates the probability of demand every period, so the forecast decays when demand stops.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+For intermittent demand I wouldn't use plain exponential smoothing, because blending zeros and bursts gives a forecast that's wrong every period. Croston forecasts demand size and the interval between demands separately and divides them. SBA corrects Croston's upward bias, and TSB updates the probability of demand every period, so the forecast falls when an item is going obsolete. I'd also measure accuracy with scaled errors, not MAPE.
+
+</SayIt>
+
+<Q q="Why is Croston's method biased, and how is that fixed?">
+
+Dividing the smoothed size by the smoothed interval systematically overestimates the true rate, because of how the ratio of two estimates behaves. The Syntetos-Boylan approximation multiplies the forecast by (1 − α/2) to correct it.
+
+</Q>
+
+<Q q="A spare part's machine model was retired last year. Which method fits, and why?">
+
+TSB. It updates the probability of demand every period, so as zeros pile up the forecast falls towards zero and replenishment stops. Croston would keep forecasting the old rate because it only updates when a sale happens.
+
+</Q>
+
+</InterviewKit>

@@ -1,0 +1,75 @@
+---
+title: OEE & line performance
+line: supply
+summary: Availability × performance × quality, the losses each one hides, and how to read the number honestly.
+minutes: { gist: 3 }
+status: draft
+keywords: [OEE, overall equipment effectiveness, availability, performance, quality, six big losses, TPM, utilization, efficiency, cycle time]
+connected: [bottlenecks, maintenance-planning, changeovers, supply-chain-kpis, lean-six-sigma-toc]
+sources:
+  - text: "Nakajima, S. (1988). Introduction to TPM: Total Productive Maintenance. Productivity Press."
+  - text: "Hopp, W. J. & Spearman, M. L. Factory Physics. Waveland Press."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="One number that shows how much of a line's time turns into good output." soon>
+
+**OEE (overall equipment effectiveness)** asks a simple question: of the time a line was scheduled to run, how much turned into good product at full speed? It multiplies three factors:
+
+$$
+OEE = \text{Availability} \times \text{Performance} \times \text{Quality}
+$$
+
+Take one 8-hour shift (480 minutes) on a filling line rated at 100 bottles an hour, one every 0.6 minutes:
+
+- **Availability:** 48 minutes were lost to a breakdown and a changeover, so it ran 432 of 480 minutes: **90%**.
+- **Performance:** at full speed, 432 minutes would give 720 bottles. It made 648 because of minor stops and slow running: **90%**.
+- **Quality:** 616 of the 648 bottles were good, the rest underfilled or mislabelled: **95%**.
+
+OEE = 0.90 × 0.90 × 0.95 ≈ **77%**. Put simply, the line produced 77% of the good output it could have made in that shift.
+
+The breakdown is more useful than the headline. Low availability points to breakdowns and long changeovers; low performance to small stoppages and slow speeds; low quality to defects and rework. These are often grouped as the "six big losses" of total productive maintenance (TPM). An often-quoted world-class benchmark is about 85%, but a line's own trend matters more than comparisons across plants.
+
+Don't confuse OEE with **utilization**. A line can be busy 95% of the time and still have poor OEE if it runs slowly and makes scrap.
+
+<KeyIdea>
+
+OEE turns lost time, lost speed and lost quality into one number. Improve the factor that's lowest, and improve the bottleneck first, because that's where lost minutes cost the whole plant.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Availability', def: 'Run time ÷ planned production time; lost to breakdowns and changeovers.' },
+  { term: 'Performance', def: 'Actual output ÷ output at ideal speed during run time; lost to small stops and slow running.' },
+  { term: 'Quality', def: 'Good units ÷ total units; lost to scrap and rework.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+OEE measures how much of planned production time becomes good output at full speed: availability times performance times quality. A shift with 90% availability, 90% performance and 95% quality has an OEE of about 77%. I'd use the three factors to find the loss: downtime and changeovers, small stops and slow speed, or defects. And I'd focus improvement on the bottleneck, where every lost minute is lost for the whole plant.
+
+</SayIt>
+
+<Q q="Availability 90%, performance 90%, quality 95%. What is the OEE, and what would you look at first?">
+
+About 77%. Availability and performance are the bigger losses here. I'd break down the downtime into breakdowns versus changeovers, and look at minor stops and speed losses, especially if this line is the bottleneck.
+
+</Q>
+
+<Q q="Is a machine with 95% utilization performing well?">
+
+Not necessarily. Utilization only says it was busy. If it ran slowly or produced scrap, OEE could be much lower. And utilization on a non-bottleneck machine can be pointless, because it just builds inventory the bottleneck can't process.
+
+</Q>
+
+</InterviewKit>

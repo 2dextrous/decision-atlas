@@ -1,0 +1,75 @@
+---
+title: Master production scheduling
+line: supply
+summary: Which finished products to make, how many, and in which week, so the plan is concrete enough to buy and build against.
+minutes: { gist: 3 }
+status: draft
+keywords: [MPS, master production schedule, end item, time fence, frozen zone, available to promise, rough-cut capacity, projected available balance, make to stock, make to order]
+connected: [sop-ibp, mrp, rccp, atp-ctp, plan-to-produce]
+sources:
+  - text: "Silver, E. A., Pyke, D. F. & Thomas, D. J. (2017). Inventory and Production Management in Supply Chains (4th ed.). CRC Press."
+  - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Turning the agreed volume plan into a week-by-week build plan for each product." soon>
+
+S&OP agrees volumes by product family and month, for example 1 lakh units of shampoo in December. The plant can't build "shampoo"; it builds specific items: the 200 ml anti-dandruff pack, the 650 ml family pack. The **master production schedule (MPS)** turns the family plan into a plan for each finished item, week by week.
+
+A simple MPS takes demand (forecasts plus confirmed orders) and stock on hand, then plans production so stock doesn't run out:
+
+| Week | Demand | Planned production | Stock at end of week |
+|---|---|---|---|
+| 1 | 8,000 | 10,000 | 6,000 (started with 4,000) |
+| 2 | 9,000 | 10,000 | 7,000 |
+| 3 | 12,000 | 10,000 | 5,000 |
+
+Three ideas come up in interviews:
+
+- **Time fences:** the next week or two are usually **frozen**, because materials are already bought and lines are booked. Changes there need approval; further out the plan is open to change.
+- **Feasibility:** before release, a **rough-cut capacity check** tests the MPS against bottleneck lines.
+- **Promising:** the MPS shows what customers can be promised, its available-to-promise quantity.
+
+The MPS then drives MRP, which works out every component and raw material needed to build it.
+
+<KeyIdea>
+
+The MPS is where the plan becomes concrete: specific finished items, quantities and weeks. Keep the near weeks frozen so the plant and suppliers can execute without constant change.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'End item', def: 'A finished product the MPS plans, as opposed to the components MRP plans.' },
+  { term: 'Frozen zone', def: 'The near-term window where the schedule is locked except for approved changes.' },
+  { term: 'Available to promise', def: 'The part of planned supply not yet committed to customer orders.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+The master production schedule converts the S&OP family plan into a week-by-week build plan for each finished item, netting demand against stock. Time fences freeze the near-term weeks so execution stays stable, a rough-cut capacity check makes sure it's feasible at the bottlenecks, and it feeds MRP for components and available-to-promise for customer orders.
+
+</SayIt>
+
+<Q q="Why freeze the first weeks of the MPS?">
+
+Because materials are already ordered, capacity is booked and suppliers are working to the plan. Late changes cause expediting, idle lines and waste. Freezing the near term, with an approval route for real emergencies, keeps execution stable.
+
+</Q>
+
+<Q q="What is the difference between S&OP and the MPS?">
+
+S&OP plans product families monthly to balance demand, supply and finance. The MPS plans specific finished items weekly, within the S&OP volumes, and drives MRP and customer promising.
+
+</Q>
+
+</InterviewKit>

@@ -1,0 +1,69 @@
+---
+title: Hierarchical forecasting
+line: demand
+summary: "Making forecasts for SKUs, regions and the total add up: bottom-up, top-down, middle-out and optimal reconciliation."
+minutes: { gist: 3 }
+status: draft
+keywords: [hierarchical forecasting, reconciliation, coherence, bottom-up, top-down, middle-out, MinT, aggregation, product hierarchy, geography hierarchy]
+connected: [forecasting-fundamentals, consensus-fva, sop-ibp, forecast-accuracy, risk-pooling]
+sources:
+  - text: "Hyndman, R. J. & Athanasopoulos, G. Forecasting: Principles and Practice (3rd ed.). OTexts. Chapter on forecasting hierarchical and grouped time series."
+    url: "https://otexts.com/fpp3/hierarchical.html"
+  - text: "Wickramasuriya, S. L., Athanasopoulos, G. & Hyndman, R. J. (2019). Optimal forecast reconciliation for hierarchical and grouped time series through trace minimization. Journal of the American Statistical Association, 114(526), 804–819."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Different teams need different levels, and the numbers must agree." soon>
+
+Different people need the forecast at different levels. A warehouse planner needs SKU by location by week. A regional sales head needs region by month. Finance needs the national total by quarter. If each level is forecast separately, the numbers won't add up: SKUs might sum to 9,500 while the national forecast says 10,000. Forecasts that add up across the hierarchy are called **coherent**.
+
+There are four main ways to get there:
+
+- **Bottom-up:** forecast every SKU and add them up. It keeps local detail, but SKU-level data is noisy, so the totals can drift.
+- **Top-down:** forecast the total, which is smoother and easier to predict, then split it down using historical proportions. It's stable but loses local patterns, such as one region growing faster than others.
+- **Middle-out:** forecast at a middle level, say product family by region, then aggregate up and split down from there.
+- **Reconciliation (for example MinT):** forecast every level, then adjust all of them together into a coherent set, trusting each level according to how reliable its forecasts have been. Done well, this can be more accurate than any single level on its own.
+
+The hierarchy usually runs in several directions at once: product (category, brand, SKU), geography (country, region, warehouse) and time (week, month, quarter).
+
+<KeyIdea>
+
+Every planning level must see numbers that add up. Pick bottom-up, top-down or middle-out by where your signal is strongest, or reconcile all levels together.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Coherent forecasts', def: 'Forecasts that add up correctly across every level of the hierarchy.' },
+  { term: 'Middle-out', def: 'Forecast at a middle level, then aggregate upwards and disaggregate downwards.' },
+  { term: 'MinT reconciliation', def: 'Adjusts forecasts at all levels jointly, weighting by their error structure.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+Different functions need the forecast at different levels, and those numbers must add up. Bottom-up keeps local detail but inherits SKU noise; top-down is stable but loses local patterns; middle-out balances the two. Modern practice forecasts all levels and reconciles them, for example with MinT, which often improves accuracy as well as giving every team consistent numbers.
+
+</SayIt>
+
+<Q q="When would you choose top-down over bottom-up?">
+
+When low-level data is sparse or noisy, such as many slow-moving SKUs, and the main patterns live at an aggregate level. Bottom-up suits cases where SKUs behave differently and have enough history. Many companies use middle-out as a compromise.
+
+</Q>
+
+<Q q="Why can reconciliation improve accuracy?">
+
+Each level contains information the others miss: aggregates are smoother, while low levels capture local changes. Reconciliation combines them in a statistically sensible way, so errors at one level can be corrected by information from another.
+
+</Q>
+
+</InterviewKit>

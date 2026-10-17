@@ -1,0 +1,71 @@
+---
+title: Workforce planning & shifts
+line: supply
+summary: How many people, with which skills, on which shifts, so labour capacity follows demand without constant hiring and firing.
+minutes: { gist: 3 }
+status: draft
+keywords: [workforce planning, labour planning, staffing, shift scheduling, chase strategy, level strategy, overtime, temporary labour, cross-training, labour productivity]
+connected: [sop-ibp, rccp, warehousing, production-scheduling, planning-hierarchy]
+sources:
+  - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapter on aggregate planning."
+  - text: "Hopp, W. J. & Spearman, M. L. Factory Physics. Waveland Press."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Matching people and skills to demand, from the yearly headcount plan to tomorrow's roster." soon>
+
+Machines set a ceiling on capacity, but people often decide whether you reach it. Workforce planning works at two levels.
+
+**Staffing (months ahead):** how many people with which skills. With seasonal demand, such as a sweets maker before Diwali or a warehouse during a sale season, there are three basic options:
+
+- **Chase:** hire temporary staff for the peak and release them after. Capacity follows demand, but hiring and training cost money and new staff are slower.
+- **Level:** keep a steady team and build stock in quiet months for the peak. Stable and skilled, but you carry inventory.
+- **Mix:** a core team plus overtime, a few temporary workers and some pre-built stock. Most companies end up here.
+
+**Shift scheduling (days and weeks ahead):** building rosters that cover the required hours. A warehouse might need 40 pickers from 6 pm to midnight during a sale but 15 on a normal Tuesday morning. Good rosters respect labour laws, maximum hours and rest days, and fairness, because people quit unfair rosters.
+
+**Cross-training** makes everything easier: people who can work two or three stations let you move capacity to wherever the bottleneck is today.
+
+Labour is also measured: units picked or produced per labour hour shows whether the plan is realistic and where training or layout changes would help.
+
+<KeyIdea>
+
+Plan the size of the team for the season, and plan the roster for the week. A flexible core team, with overtime, temps and cross-training, covers peaks better than hiring and firing.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Chase vs level', def: 'Flex the workforce with demand, or keep it steady and use inventory to absorb swings.' },
+  { term: 'Cross-training', def: 'Training people for several roles so capacity can move to where it is needed.' },
+  { term: 'Labour productivity', def: 'Output per labour hour, such as picks per hour or units per shift.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+Workforce planning has a strategic layer, headcount and skills by season, and an operational layer, shift rosters. For seasonal demand I'd compare chase, level and mixed strategies on cost, quality and flexibility; usually a stable core team with overtime, temporary staff and some pre-built stock wins. Cross-training and productivity data make both levels more accurate.
+
+</SayIt>
+
+<Q q="A warehouse's volume triples during a two-week sale. How would you plan labour?">
+
+Forecast hourly volume by activity (receiving, picking, packing), convert it to labour hours using productivity rates, then cover the gap with overtime for the core team, temporary staff hired and trained early, cross-trained people moved to picking, and extended shifts. Also prepare by pre-picking or pre-packing best sellers where possible.
+
+</Q>
+
+<Q q="What are the risks of a pure chase strategy?">
+
+Constant hiring and layoffs cost money, new staff are slower and make more errors, morale suffers, and in a tight labour market you may not find people when you need them. That's why most firms keep a core team and flex at the edges.
+
+</Q>
+
+</InterviewKit>

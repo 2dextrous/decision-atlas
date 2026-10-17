@@ -1,0 +1,73 @@
+---
+title: Promotions, cannibalization & halo
+line: demand
+summary: Estimating how much extra a promotion sells, the dip that follows, and what it does to related products.
+minutes: { gist: 3 }
+status: draft
+keywords: [promotional forecasting, baseline, uplift, lift, post-promotion dip, forward buying, pantry loading, cannibalization, halo effect, trade promotion]
+connected: [ml-forecasting, demand-sensing-shaping, consensus-fva, lifecycle-forecasting, cost-to-serve]
+sources:
+  - text: "Hyndman, R. J. & Athanasopoulos, G. Forecasting: Principles and Practice (3rd ed.). OTexts. Chapters on regression and dynamic regression with predictors."
+    url: "https://otexts.com/fpp3/"
+  - text: "Makridakis, S., Spiliotis, E. & Assimakopoulos, V. (2022). M5 accuracy competition: Results, findings, and conclusions. International Journal of Forecasting, 38(4), 1346–1364."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Baseline plus lift, minus the dip, and the effect on everything else on the shelf." soon>
+
+A "buy one, get one free" on a 500 ml shampoo can double its sales for two weeks. Forecasting that well means separating two pieces:
+
+- **Baseline:** what would have sold without the promotion.
+- **Uplift (lift):** the extra caused by the promotion, which depends on discount depth, display, advertising and timing.
+
+Mixing them causes trouble both ways. If promotion spikes are left in the history, the baseline forecast is inflated for weeks with no promotion. If they're simply deleted, the company forgets how strongly customers react next time.
+
+Promotions also have side effects:
+
+- **Post-promotion dip:** shoppers stocked up, so sales fall below normal for a while afterwards. This is called pantry loading, or forward buying when retailers do it.
+- **Cannibalization:** the promoted 500 ml steals sales from the 200 ml pack and from a sister brand, so total category sales rise less than the promoted item's spike suggests.
+- **Halo:** related items sell more, such as conditioner alongside the promoted shampoo, or chips during a cola deal.
+
+So a promotion's true effect is lift, minus the dip, minus cannibalized sales, plus halo. That net number is what should drive production and stock, and it decides whether the promotion made money at all.
+
+<KeyIdea>
+
+Model the baseline and the promotional lift separately, then account for the dip, cannibalization and halo. The promoted item's spike is not the promotion's real effect.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Baseline demand', def: 'Expected sales without any promotion or special event.' },
+  { term: 'Cannibalization', def: 'Sales the promoted item takes from your own other products.' },
+  { term: 'Halo effect', def: 'Extra sales of related products caused by a promotion.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+I'd forecast promotions as baseline plus uplift, with the uplift driven by discount depth, display, advertising and timing. Then I'd adjust for the post-promotion dip, cannibalization of the company's own products, and halo effects on related items. The net incremental volume is what drives supply, and also tells us whether the promotion paid for itself.
+
+</SayIt>
+
+<Q q="A promotion doubled the item's sales. Was it a success?">
+
+Not necessarily. Subtract the post-promotion dip, the sales taken from sister products and the discount cost, and add any halo on related items. Only the net incremental margin tells you whether it worked, and whether the extra volume strained supply.
+
+</Q>
+
+<Q q="How should past promotions be treated in the history used for forecasting?">
+
+Don't feed raw spikes into the baseline model, and don't just delete them either. Flag promotion periods, model the baseline without their effect, and keep the promotion data to estimate uplift for future events. That is where ML models with promotion features do well.
+
+</Q>
+
+</InterviewKit>

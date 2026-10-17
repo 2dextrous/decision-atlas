@@ -1,0 +1,77 @@
+---
+title: Forecast accuracy & bias
+line: demand
+summary: MAPE, WMAPE, MASE, bias and tracking signal, what each one really measures and when each one misleads.
+minutes: { gist: 3 }
+status: draft
+keywords: [forecast accuracy, MAE, RMSE, MAPE, WMAPE, WAPE, MASE, bias, tracking signal, backtesting, rolling origin]
+connected: [forecasting-fundamentals, consensus-fva, safety-stock, intermittent-demand, probabilistic-forecasting]
+sources:
+  - text: "Hyndman, R. J. & Koehler, A. B. (2006). Another look at measures of forecast accuracy. International Journal of Forecasting, 22(4), 679–688."
+  - text: "Hyndman, R. J. & Athanasopoulos, G. Forecasting: Principles and Practice (3rd ed.). OTexts. Chapter on evaluating forecast accuracy."
+    url: "https://otexts.com/fpp3/accuracy.html"
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="How far off you are, which way you are off, and why the metric quietly shapes the forecast." soon>
+
+Two different questions hide behind "how good is the forecast?"
+
+- **Accuracy:** how far off are we, ignoring direction?
+- **Bias:** are we consistently too high or too low?
+
+Bias is the more dangerous one. Random errors partly cancel out over time; a steady 5% over-forecast doesn't, and it quietly fills warehouses month after month. Report both, always.
+
+The common accuracy measures each have a catch:
+
+- **MAE** (average absolute error) is easy to read but in units, so you can't compare a fast mover with a slow one.
+- **RMSE** squares errors before averaging, so it punishes big misses hardest. That is useful for inventory, because safety stock is driven by the size of the errors.
+- **MAPE** (average percentage error) is the corporate favourite, and a trap. It can't handle zero sales, it over-weights tiny items, and it treats over- and under-forecasts unequally, which pushes models toward forecasting low.
+- **WMAPE** (also called WAPE) divides total absolute error by total demand. Big items dominate, zeros are fine, and it's the practical default in many planning teams.
+- **MASE** compares your error with the error of a naive "repeat last period" forecast. Below 1 means you beat naive; above 1 means you would do better doing nothing clever.
+
+To track bias in production, use the **tracking signal**: the running sum of errors divided by the mean absolute deviation. If it drifts outside about ±4, errors are piling up on one side and the model needs attention.
+
+And test properly. Never judge a model on the data it was fitted to; backtest on rolling periods it hasn't seen, at the horizon the decision actually uses.
+
+<KeyIdea>
+
+Report accuracy and bias together, prefer WMAPE or MASE to plain MAPE, and backtest at the horizon the decision uses.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'WMAPE', def: 'Sum of absolute errors ÷ sum of actual demand; volume-weighted and safe with zeros.' },
+  { term: 'MASE', def: 'Your mean absolute error ÷ that of a naive forecast; below 1 beats naive.' },
+  { term: 'Tracking signal', def: 'Cumulative error ÷ mean absolute deviation; outside about ±4 signals bias.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+I'd measure accuracy and bias separately. For accuracy I prefer WMAPE, which is volume-weighted and handles zeros, or MASE, which is scale-free and benchmarked against naive, over plain MAPE, which breaks on zeros and over-weights small items. For bias I track the mean error and a tracking signal, and I evaluate models with rolling-origin backtests at the horizon the replenishment decision uses.
+
+</SayIt>
+
+<Q q="What's wrong with MAPE?">
+
+It divides by actual demand, so it's undefined when demand is zero and explodes for small items. It also weights small SKUs as much as big ones, and it penalizes over-forecasting without limit while under-forecasting is capped at 100%, which nudges models toward low forecasts and stockouts.
+
+</Q>
+
+<Q q="A forecast is accurate on average but the warehouse keeps overstocking. What's going on?">
+
+Probably bias: small errors that are always in the same direction. Accuracy metrics hide it because they ignore the sign. Check the mean error and the tracking signal; a persistent positive bias means the forecast, or an override process, is systematically too high.
+
+</Q>
+
+</InterviewKit>

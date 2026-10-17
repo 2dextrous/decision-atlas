@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Icon from '../../components/Icon.astro';
 import { lines, lineById, stations, zones, type Line } from '../../data/atlas';
+import { levelCount, totalMinutes } from '../../lib/levels';
 
 export function getStaticPaths() {
   return lines.map((line) => ({ params: { line: line.id }, props: { line } }));
@@ -39,7 +40,8 @@ const nextLine = lines[idx + 1];
         const entry = built.get(stop.slug);
         const others = st.lines.filter((l) => l !== line.id).map((l) => lineById.get(l)!);
         const href = entry ? `/${st.line}/${stop.slug}/` : undefined;
-        const minutes = entry ? entry.data.minutes.gist + entry.data.minutes.how + entry.data.minutes.deep : 0;
+        const minutes = entry ? totalMinutes(entry.data.minutes) : 0;
+        const count = entry ? levelCount(entry.data.minutes) : 0;
         return (
           <li id={stop.slug} class:list={['ls', { 'is-planned': !entry }]} data-slug={stop.slug}>
             <span class:list={['dot', { 'is-planned': !entry && !others.length, 'is-interchange': others.length > 0 }]} aria-hidden="true"></span>
@@ -49,7 +51,7 @@ const nextLine = lines[idx + 1];
               <p class="ls-summary">{entry?.data.summary ?? stop.summary}</p>
               <p class="ls-meta">
                 {entry ? (
-                  <span class="ls-ready"><span class="meter" data-levels="3" aria-hidden="true"><i></i><i></i><i></i></span>3 levels<span class="sep"><span class="sr-only">, </span></span>{minutes} min in full</span>
+                  <span class="ls-ready"><span class="meter" data-levels={count} aria-hidden="true"><i></i><i></i><i></i></span>{count === 1 ? "Gist" : `${count} levels`}<span class="sep"><span class="sr-only">, </span></span>{minutes} min in full</span>
                 ) : (
                   <span class="ls-soon">Being written</span>
                 )}

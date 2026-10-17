@@ -1,0 +1,70 @@
+---
+title: Risk pooling & centralization
+line: inventory
+summary: Why combining stock points shrinks the total buffer, and what you give up in return.
+minutes: { gist: 3 }
+status: draft
+keywords: [risk pooling, square-root law, centralization, aggregation, inventory pooling, transshipment, virtual pooling, correlation, Eppen]
+connected: [safety-stock, meio, postponement, distribution-designs, network-design-decisions]
+sources:
+  - text: "Eppen, G. D. (1979). Effects of centralization on expected costs in a multi-location newsboy problem. Management Science, 25(5), 498–501."
+  - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Section on aggregation and safety inventory."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="One shared buffer beats four separate ones, as long as demand doesn't move together." soon>
+
+Imagine a shampoo brand with four regional warehouses, in Mumbai, Pune, Delhi and Chennai. Each one holds safety stock against its own uncertain demand, say 500 units each, 2,000 in total.
+
+Now suppose all four regions are served from one central warehouse. On any given week Mumbai might sell more than forecast while Chennai sells less, so the surprises partly cancel out. The combined demand is less jumpy than the four pieces added up, and the central warehouse needs much less buffer to hit the same service level.
+
+If the four regions are similar and independent, the total safety stock falls by a factor of $\sqrt{n}$, where $n$ is the number of locations pooled. Four locations become one, so the buffer drops from 2,000 to about 1,000 units, half as much. This is often called the **square-root law**.
+
+Two catches keep it honest:
+
+- **Correlation.** If all regions rise and fall together (a national heatwave, a festival everywhere), the surprises don't cancel and the saving shrinks towards zero.
+- **Distance.** One central site is further from customers, so delivery takes longer and outbound freight usually costs more. Pooling trades inventory against speed and transport.
+
+You can get some of the benefit without closing warehouses: share stock between nearby sites (transshipment), use common components across products, or postpone the final customization.
+
+<KeyIdea>
+
+Pooling works because independent surprises cancel out. The more locations you combine and the less their demand moves together, the bigger the saving.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Square-root law', def: 'Pooling n similar, independent locations cuts total safety stock by a factor of √n.' },
+  { term: 'Correlation', def: 'How much demands move together; high positive correlation kills the pooling benefit.' },
+  { term: 'Virtual pooling', def: 'Keeping stock in several places but sharing it, for example through transshipment between sites.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+Risk pooling means serving several demand streams from one shared stock. Because independent surprises partly cancel, the combined variability is lower, and total safety stock falls by roughly the square root of the number of locations pooled. The benefit shrinks if demands are correlated, and centralizing usually costs response time and outbound freight, so I'd weigh the inventory saving against those.
+
+</SayIt>
+
+<Q q="Four warehouses each hold 500 units of safety stock. What happens if you centralize?">
+
+If the regions are similar and independent, the central buffer needs about 500 × √4 = 1,000 units for the same service level, half the original 2,000. With correlated demand the saving would be smaller.
+
+</Q>
+
+<Q q="Why doesn't every company run one giant warehouse?">
+
+Because pooling saves inventory but costs distance. Delivery times grow, outbound transport gets more expensive, and one site is a single point of failure. The right number of warehouses balances inventory, transport, facility cost and how fast customers need delivery.
+
+</Q>
+
+</InterviewKit>

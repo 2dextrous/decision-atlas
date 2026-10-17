@@ -4,9 +4,11 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import LineCard from '../components/LineCard.astro';
 import Icon from '../components/Icon.astro';
 import { zones, linesInZone, lines, stations, lineById, prepPaths } from '../data/atlas';
+import { levelMap } from '../lib/levels';
 
 const entries = await getCollection('stations');
-const built = new Set(entries.map((e) => e.id));
+const levels = levelMap(entries);
+const built = new Set(levels.keys());
 const stopCount = stations.size;
 const lineCount = lines.length;
 const continueIndex = JSON.stringify(
@@ -86,7 +88,7 @@ const continueIndex = JSON.stringify(
             <p class="muted">{z.blurb}</p>
           </header>
           <div class="zone-grid" data-count={zl.length}>
-            {zl.map((line) => <LineCard line={line} built={built} />)}
+            {zl.map((line) => <LineCard line={line} levels={levels} />)}
           </div>
         </section>
       );

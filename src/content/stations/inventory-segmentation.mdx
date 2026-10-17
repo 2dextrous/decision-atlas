@@ -1,0 +1,70 @@
+---
+title: Inventory segmentation (ABC-XYZ)
+line: inventory
+summary: Sorting items by value and predictability so each group gets a policy that fits, instead of one blanket rule.
+minutes: { gist: 3 }
+status: draft
+keywords: [ABC analysis, XYZ analysis, ABC-XYZ, Pareto, 80/20, coefficient of variation, CV, segmentation, service level by segment]
+connected: [safety-stock, service-levels, demand-patterns, segmentation-strategy, service-level-policy, slow-obsolete]
+sources:
+  - text: "Silver, E. A., Pyke, D. F. & Thomas, D. J. (2017). Inventory and Production Management in Supply Chains (4th ed.). CRC Press. Chapter on frameworks for inventory management."
+  - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Two quick classifications that decide where your attention and safety stock go." soon>
+
+A real café stocks hundreds of things: beans, milk, cups, syrups, napkins, a rare single-origin coffee. Nobody can tune every item by hand, and they don't all deserve the same care. Running out of milk is a disaster; running out of cinnamon is a shrug. Segmentation sorts items into groups so each group gets a sensible policy.
+
+**ABC sorts by money.** Rank items by annual value (usage × unit cost). A handful of items usually carry most of the value: the A items (roughly the top 70–80% of value), then B, then the long tail of C items that are many in number but small in money.
+
+**XYZ sorts by predictability**, using the coefficient of variation, $CV = \sigma / \text{mean}$. A common cut-off is X for CV below 0.5 (steady, like milk), Y for 0.5 to 1 (some swings), and Z above 1 (erratic, like the rare coffee that sells 0 kg one week and 5 kg the next).
+
+Crossing the two gives a 3 × 3 grid, and the corners tell you what to do:
+
+- **AX** (valuable, steady): run lean with frequent review and high service. Predictability keeps the buffer small anyway.
+- **AZ** (valuable, erratic): the danger zone. Put your best forecasting effort here, talk to customers, or make to order.
+- **CX** (cheap, steady): automate it. Order big batches rarely and keep a generous buffer; it costs almost nothing.
+- **CZ** (cheap, erratic): question whether to stock it at all. Make to order or delist, because this is where dead stock piles up.
+
+<KeyIdea>
+
+ABC tells you how much a mistake costs; XYZ tells you how likely you are to make one. Use both to decide which items get attention and how much safety stock each group deserves.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'ABC analysis', def: 'Ranking items by annual consumption value; a Pareto view of where the money sits.' },
+  { term: 'Coefficient of variation', def: 'Standard deviation ÷ mean: variability relative to the average.' },
+  { term: 'Policy by segment', def: 'Different review frequency, service target and forecasting effort for each ABC-XYZ cell.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+I'd segment items with ABC on annual value and XYZ on demand variability, measured by the coefficient of variation. The combination sets the policy: AX items run lean with high service, AZ items get the most forecasting attention, CX items are automated with a generous cheap buffer, and CZ items are made to order or reviewed for delisting. It stops the company spending the same effort and the same safety stock on every item.
+
+</SayIt>
+
+<Q q="Why isn't ABC on its own enough?">
+
+ABC says how valuable an item is, not how hard it is to predict. Two A items can need completely different handling: a steady one can run lean, an erratic one needs a bigger buffer or a different supply model. XYZ adds that second dimension.
+
+</Q>
+
+<Q q="Which cell would you worry about most, and why?">
+
+AZ: high value and unpredictable, so mistakes are both likely and expensive. That's where better forecasting, customer collaboration, shorter lead times or make-to-order pay off most.
+
+</Q>
+
+</InterviewKit>

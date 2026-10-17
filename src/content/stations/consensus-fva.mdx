@@ -1,0 +1,71 @@
+---
+title: Consensus forecasting & FVA
+line: demand
+summary: Letting sales, marketing and planner judgment into the forecast only where it actually makes the forecast better.
+minutes: { gist: 3 }
+status: draft
+keywords: [consensus forecast, forecast value add, FVA, judgmental adjustment, overrides, forecast bias, sandbagging, S&OP, demand review, CPFR]
+connected: [forecast-accuracy, sop-ibp, forecasting-fundamentals, hierarchical-forecasting, lifecycle-forecasting]
+sources:
+  - text: "Gilliland, M. (2010). The Business Forecasting Deal. Wiley."
+  - text: "Fildes, R., Goodwin, P., Lawrence, M. & Nikolopoulos, K. (2009). Effective forecasting and judgmental adjustments: an empirical evaluation and strategies for improvement in supply-chain planning. International Journal of Forecasting, 25(1), 3–23."
+  - text: "Fildes, R. & Goodwin, P. (2007). Against your better judgment? How organizations can improve their use of management judgment in forecasting. Interfaces, 37(6), 570–576."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Measure each step of the forecasting process and keep only the ones that help." soon>
+
+Most companies don't ship the statistical forecast untouched. Sales adds customer intelligence, marketing adds promotions, planners make overrides, and a monthly meeting agrees one **consensus forecast**. Human input can add real information that the data doesn't have, such as a big new customer or a competitor's stockout. It can also add bias: sales teams may lowball to beat their targets, or inflate numbers to secure stock.
+
+**Forecast value add (FVA)** checks whether each step earns its place. Lay the process out as a ladder and measure the accuracy at every rung:
+
+1. a naive forecast ("same as last period"), which is free,
+2. the statistical forecast,
+3. the planner's adjusted forecast,
+4. the final consensus forecast.
+
+FVA for a step is its accuracy minus the accuracy of the step before. If the statistical model has 30% error and planner overrides take it to 34%, those overrides have *negative* value: they cost time and made things worse. Studies of company forecasting processes have found that many small adjustments add little, while fewer, larger adjustments based on real information do better.
+
+FVA isn't about removing people. It's about directing their effort to the items and events where they know something the model doesn't, and measuring bias as well as accuracy for every contributor.
+
+<KeyIdea>
+
+Every touch on the forecast should make it better, and FVA measures whether it does. Keep the steps that add accuracy and stop the ones that only add work or bias.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Forecast value add (FVA)', def: 'Change in accuracy from one process step to the next, compared with a naive baseline.' },
+  { term: 'Consensus forecast', def: 'The single demand plan agreed across sales, marketing, finance and supply.' },
+  { term: 'Override', def: 'A manual change to the statistical forecast; worth keeping only if it improves accuracy.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+Human input should only stay in the forecast where it adds value. FVA measures accuracy at each step, from naive to statistical to planner override to consensus, and compares each with the step before. Steps with negative FVA, often frequent small overrides, should stop, while targeted adjustments based on real information, such as a new customer or a promotion, are kept. I'd track bias by contributor too, since incentives often skew sales input.
+
+</SayIt>
+
+<Q q="Planner overrides make the forecast worse on average. What do you do?">
+
+Measure FVA by planner and by item group to see where overrides help and where they hurt. Restrict overrides to cases with new information, require a reason code, and set a minimum size so small tweaks stop. Track bias too, because systematic over- or under-forecasting often comes from incentives.
+
+</Q>
+
+<Q q="Why compare against a naive forecast?">
+
+Because it costs nothing. If an expensive model or a long meeting can't beat "same as last period", the process is destroying value. The naive forecast is the honest baseline for FVA.
+
+</Q>
+
+</InterviewKit>

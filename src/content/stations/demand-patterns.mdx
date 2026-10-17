@@ -1,0 +1,74 @@
+---
+title: Demand patterns & classification
+line: demand
+summary: Smooth, erratic, intermittent or lumpy. Classify each item's demand first, because the class decides which methods can work.
+minutes: { gist: 3 }
+status: draft
+keywords: [demand classification, ADI, average demand interval, CV squared, smooth, erratic, intermittent, lumpy, Syntetos-Boylan, ABC-XYZ]
+connected: [intermittent-demand, exponential-smoothing, inventory-segmentation, forecast-accuracy, service-parts]
+sources:
+  - text: "Syntetos, A. A., Boylan, J. E. & Croston, J. D. (2005). On the categorization of demand patterns. Journal of the Operational Research Society, 56(5), 495–503."
+  - text: "Hyndman, R. J. & Athanasopoulos, G. Forecasting: Principles and Practice (3rd ed.). OTexts."
+    url: "https://otexts.com/fpp3/"
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Two numbers that place any item in one of four demand patterns." soon>
+
+A common forecasting mistake is to run one method across every item, then blame the method when spare parts and slow movers come out badly. Experienced planners classify the demand pattern first, because the pattern decides which methods can work at all.
+
+Two numbers do the job:
+
+- **ADI (average demand interval):** total periods ÷ periods with non-zero demand. It measures *how often* demand happens. An item that sells every month has ADI = 1; one that sells in 4 months out of 12 has ADI = 3.
+- **CV² (squared coefficient of variation) of the non-zero quantities:** it measures *how much the size jumps around* when demand does happen. Zero periods are left out on purpose; they belong to ADI.
+
+Using the cut-offs from Syntetos, Boylan and Croston (ADI = 1.32, CV² = 0.49), every item lands in one of four boxes:
+
+| | Steady sizes (CV² < 0.49) | Jumpy sizes (CV² ≥ 0.49) |
+|---|---|---|
+| **Frequent (ADI < 1.32)** | Smooth: classic methods work | Erratic: forecast, but buffer more |
+| **Sporadic (ADI ≥ 1.32)** | Intermittent: Croston family | Lumpy: hardest of all |
+
+A spare part that sells 5, 80, 12 and 150 units in four random months out of twelve has ADI = 3.0 and CV² ≈ 0.9: lumpy. No point forecast will predict it well, so the sensible move is to manage it through stock policy and a forecast of the range of demand.
+
+<KeyIdea>
+
+Classify before you forecast. How often demand happens and how much it varies are two separate questions, and together they rule most methods in or out.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'ADI', def: 'Average demand interval: periods per non-zero demand. Higher means more gaps.' },
+  { term: 'CV²', def: 'Squared coefficient of variation of the non-zero demand sizes. Higher means bigger swings.' },
+  { term: 'Lumpy demand', def: 'Sporadic and highly variable demand; manage it with stock policy rather than chasing a point forecast.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+Before forecasting I classify each item by ADI, how often it sells, and CV² of the non-zero sizes, how much the quantity varies. With the Syntetos-Boylan cut-offs of 1.32 and 0.49, that gives smooth, erratic, intermittent and lumpy. Smooth items suit exponential smoothing, intermittent ones the Croston family, and lumpy ones are better handled through safety stock and probabilistic forecasts than through a point forecast.
+
+</SayIt>
+
+<Q q="Why are zero-demand periods excluded when computing CV²?">
+
+Because the zeros are already measured by ADI. Including them drags the mean down and inflates the variation, so a steady intermittent item can be misclassified as lumpy and end up with the wrong method. The two numbers are meant to measure separate things: timing and size.
+
+</Q>
+
+<Q q="What would you do with a lumpy item?">
+
+Stop chasing an accurate point forecast. Use an intermittent method such as SBA or TSB for the average, size stock from the distribution of lead-time demand, and look at the causes: maybe a few large customers order in bulk and could share their plans.
+
+</Q>
+
+</InterviewKit>

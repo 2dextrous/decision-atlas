@@ -1,0 +1,73 @@
+---
+title: ML & global forecasting models
+line: demand
+summary: Gradient boosting, deep learning and foundation models that learn across thousands of series at once, and when they actually win.
+minutes: { gist: 3 }
+status: draft
+keywords: [machine learning forecasting, global model, LightGBM, gradient boosting, features, DeepAR, N-BEATS, TFT, foundation models, M4, M5]
+connected: [exponential-smoothing, forecast-accuracy, probabilistic-forecasting, promotions-cannibalization, ml-in-supply-chain]
+sources:
+  - text: "Makridakis, S., Spiliotis, E. & Assimakopoulos, V. (2022). M5 accuracy competition: Results, findings, and conclusions. International Journal of Forecasting, 38(4), 1346–1364."
+  - text: "Makridakis, S., Spiliotis, E. & Assimakopoulos, V. (2020). The M4 Competition: 100,000 time series and 61 forecasting methods. International Journal of Forecasting, 36(1), 54–74."
+  - text: "Hyndman, R. J. & Athanasopoulos, G. Forecasting: Principles and Practice (3rd ed.). OTexts."
+    url: "https://otexts.com/fpp3/"
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="From one model per item to one model that learns across all items." soon>
+
+Classic methods fit **one model per item**: thousands of SKUs means thousands of small models, each learning only from its own short history. A **global model** flips this. One model learns from all items together, so a new or sparse item can borrow patterns from similar ones.
+
+The most common version in practice is **gradient boosting** (LightGBM, XGBoost). You turn forecasting into a table of features and let the model learn how they relate to sales:
+
+- history features: sales last week, the same week last year, rolling averages
+- calendar features: day of week, festivals, paydays, school holidays
+- business features: price, discount depth, promotion flags, display space
+
+That is why these models shine when demand is driven by things you can see coming, such as promotions and price changes. In the Walmart-based **M5 competition** (2020), most of the top entries were LightGBM-based. In the earlier **M4** competition on mostly business and economic series without those drivers, combinations of statistical methods and a hybrid of exponential smoothing with a neural network did best.
+
+Deep learning models such as DeepAR, N-BEATS and the Temporal Fusion Transformer push the global idea further, and newer **foundation models** are pre-trained on huge collections of time series so they can forecast a new series with little or no training.
+
+They have limits. Tree models don't extrapolate trends beyond what they've seen, every model needs clean data and careful backtesting, and on stable items without drivers a well-tuned exponential smoothing model is very hard to beat.
+
+<KeyIdea>
+
+ML wins when there are many related series and real drivers such as price, promotions and events. Without those, classical methods are often just as accurate and much cheaper to run. Combining both is a common, strong choice.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Global model', def: 'One model trained across many series, sharing patterns between them.' },
+  { term: 'Feature engineering', def: 'Turning history, calendar and business drivers into model inputs.' },
+  { term: 'Foundation model', def: 'A model pre-trained on very many time series that can forecast new ones with little training.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+Forecasting has moved from one statistical model per SKU to global models that learn across many series. Gradient-boosted trees like LightGBM use history, calendar, price and promotion features, which is why they dominated the M5 retail competition. On series without such drivers, as in M4, statistical methods and combinations did best. So I'd choose by context: global ML when there are many related series and real drivers, classical methods as a strong baseline, and often an ensemble of both.
+
+</SayIt>
+
+<Q q="When would you not use machine learning for forecasting?">
+
+When there are few series, short histories and no meaningful drivers, a tuned statistical model is usually as accurate, simpler to explain and cheaper to maintain. ML also adds data and monitoring work, so it has to beat the baseline in backtests to earn its place.
+
+</Q>
+
+<Q q="Why do tree-based models struggle with trends?">
+
+Trees predict by averaging values they saw in training, so they can't produce numbers beyond that range. A growing product's forecast flattens at the highest level seen. Common fixes are differencing or detrending the target, or combining the trees with a statistical trend model.
+
+</Q>
+
+</InterviewKit>

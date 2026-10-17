@@ -9,7 +9,9 @@ const stations = defineCollection({
     line: z.string(),
     summary: z.string(),
     /** Reading time per level, in minutes. */
-    minutes: z.object({ gist: z.number(), how: z.number(), deep: z.number() }),
+    minutes: z
+      .object({ gist: z.number(), how: z.number().optional(), deep: z.number().optional() })
+      .refine((m) => !m.deep || m.how, { error: 'A deep dive needs a "how it works" level first.' }),
     /** 'draft' until the author has checked every claim; then 'reviewed' with a date. */
     status: z.enum(['draft', 'reviewed']).default('draft'),
     reviewed: z.coerce.date().optional(),

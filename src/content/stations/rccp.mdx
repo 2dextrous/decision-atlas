@@ -1,0 +1,70 @@
+---
+title: Rough-cut capacity check
+line: supply
+summary: Testing whether the production plan fits the bottleneck resources before anyone commits to it.
+minutes: { gist: 3 }
+status: draft
+keywords: [RCCP, rough-cut capacity planning, capacity requirements planning, CRP, bottleneck, capacity gap, load profile, critical resource, feasibility]
+connected: [mps, bottlenecks, sop-ibp, workforce-planning, make-vs-buy]
+sources:
+  - text: "Silver, E. A., Pyke, D. F. & Thomas, D. J. (2017). Inventory and Production Management in Supply Chains (4th ed.). CRC Press."
+  - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="A quick feasibility test against the few resources that really limit output." soon>
+
+A plan can look fine on paper and still be impossible on the shop floor. **Rough-cut capacity planning (RCCP)** is the quick check that catches this early. It doesn't look at every machine; it looks at the few **critical resources**, the bottleneck lines, scarce skills or a key supplier, and asks whether the plan fits.
+
+Say the plan calls for 50,000 units next month, and every unit passes through a filling line that can make 40,000. RCCP shows a 10,000-unit gap before anything is released. Management then chooses how to close it:
+
+- overtime or an extra shift,
+- moving some volume to another plant or a co-packer,
+- building stock in an earlier month with spare capacity,
+- changing the plan itself, by delaying, reducing or shaping demand.
+
+The important nuance: **RCCP finds the gap; it doesn't solve it.** Choosing the cheapest fix is a separate planning or optimization decision.
+
+RCCP has a more detailed cousin. **Capacity requirements planning (CRP)** runs after MRP and checks the load on every work centre, using the actual planned orders and routings. RCCP is fast and approximate, used on the MPS; CRP is detailed and used closer to execution.
+
+<KeyIdea>
+
+Check the plan against the bottleneck before committing. RCCP flags infeasible plans early, while there's still time to add shifts, move volume or change the plan.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Critical resource', def: 'A line, skill or supplier whose capacity limits total output.' },
+  { term: 'Capacity gap', def: 'Planned load minus available capacity on a critical resource.' },
+  { term: 'CRP', def: 'Capacity requirements planning: detailed load checking for every work centre after MRP.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+Rough-cut capacity planning checks whether the master schedule is feasible against critical or bottleneck resources before it's released. If a plan needs 50,000 units and the bottleneck can do 40,000, RCCP flags the 10,000-unit gap, and then planning decides how to close it through overtime, other plants, co-packers, pre-building stock or changing the plan. It identifies the gap; it doesn't solve it.
+
+</SayIt>
+
+<Q q="A company plans 50,000 units but its bottleneck line can only make 40,000. What concept flags this, and what can it do?">
+
+Rough-cut capacity planning flags the 10,000-unit gap. Options include overtime or extra shifts, moving volume to another plant or a co-manufacturer, producing earlier and holding stock, investing in capacity, or adjusting the plan. The choice depends on cost, lead time and service impact.
+
+</Q>
+
+<Q q="How is RCCP different from CRP?">
+
+RCCP is an approximate check of the MPS against a few critical resources, done early. CRP is a detailed check of every work centre using MRP's planned orders and routings, done closer to execution.
+
+</Q>
+
+</InterviewKit>

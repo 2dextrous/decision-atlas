@@ -1,0 +1,71 @@
+---
+title: Changeovers & lot sizing
+line: supply
+summary: Shorter switches between products, and run lengths that balance changeover time against inventory.
+minutes: { gist: 3 }
+status: draft
+keywords: [changeover, setup time, SMED, single-minute exchange of die, internal setup, external setup, lot sizing, campaign length, product wheel, economic production quantity]
+connected: [production-scheduling, oee, eoq, bottlenecks, lean-six-sigma-toc]
+sources:
+  - text: "Shingo, S. (1985). A Revolution in Manufacturing: The SMED System. Productivity Press."
+  - text: "Silver, E. A., Pyke, D. F. & Thomas, D. J. (2017). Inventory and Production Management in Supply Chains (4th ed.). CRC Press."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Why faster changeovers mean smaller batches, less stock and more flexibility." soon>
+
+A **changeover** is the time a line stands idle while it switches from one product to the next: cleaning tanks, swapping moulds, changing labels, running test samples. If a changeover takes 90 minutes, nobody wants to do it often, so the plant runs long batches. Long batches mean big piles of stock and a slow response when demand shifts.
+
+That's the classic trade-off in **lot sizing**: fewer, longer runs save changeover time but build inventory; shorter runs keep stock low but lose capacity to changeovers. It is the production version of EOQ, with the changeover playing the role of the ordering cost.
+
+The way out is to make changeovers shorter. **SMED** (single-minute exchange of die), developed by Shigeo Shingo, works in three steps:
+
+1. Separate **internal** work, which can only be done with the line stopped, from **external** work, which can be done while it runs.
+2. Move as much as possible to external: pre-stage the next labels, pre-mix the next batch, pre-heat the moulds.
+3. Streamline what remains with quick-release fittings, standard settings and practised teams.
+
+If a 90-minute changeover drops to 30, the plant can switch three times as often for the same lost time. Batches shrink, inventory falls and the line can follow demand more closely.
+
+Many process plants also use a **product wheel**: a fixed, repeating sequence of products, ordered to make each changeover as easy as possible.
+
+<KeyIdea>
+
+Long changeovers force big batches and big inventory. Cut the changeover with SMED first, and smaller, more frequent runs become cheap.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'SMED', def: 'Single-minute exchange of die: a method for cutting changeover time, aiming for under 10 minutes.' },
+  { term: 'Internal vs external setup', def: 'Work that needs the line stopped versus work that can be done while it runs.' },
+  { term: 'Product wheel', def: 'A repeating production sequence designed to keep changeovers short.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+Changeovers create a lot-sizing trade-off: long runs save setup time but build inventory; short runs keep inventory low but lose capacity. Rather than just optimizing batch size, I'd attack the changeover itself with SMED, moving setup work outside the stoppage and streamlining the rest. Shorter changeovers make smaller batches economical, which cuts inventory and improves responsiveness.
+
+</SayIt>
+
+<Q q="How does reducing changeover time reduce inventory?">
+
+Changeover time is the fixed cost that justifies big batches. When it shrinks, the economic batch size shrinks too, roughly with the square root of the setup cost. Smaller batches mean less cycle stock and quicker response to demand changes.
+
+</Q>
+
+<Q q="What is the first step in SMED?">
+
+Separate internal setup, which needs the machine stopped, from external setup, which can be done while it runs. Just moving preparation, such as fetching tools, materials and paperwork, outside the stoppage often removes a large share of the changeover time without any investment.
+
+</Q>
+
+</InterviewKit>

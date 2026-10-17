@@ -1,0 +1,75 @@
+---
+title: New products & phase-outs
+line: demand
+summary: Forecasting launches with no sales history, and running old products down without dead stock or lost sales.
+minutes: { gist: 3 }
+status: draft
+keywords: [new product introduction, NPI forecasting, analog forecasting, launch curve, Bass diffusion, product lifecycle, end of life, phase-out, phase-in, cannibalization]
+connected: [slow-obsolete, promotions-cannibalization, probabilistic-forecasting, scenario-planning, consensus-fva]
+sources:
+  - text: "Bass, F. M. (1969). A new product growth for model consumer durables. Management Science, 15(5), 215–227."
+  - text: "Hyndman, R. J. & Athanasopoulos, G. Forecasting: Principles and Practice (3rd ed.). OTexts. Section on judgmental forecasting."
+    url: "https://otexts.com/fpp3/"
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Borrowing history from similar products, then switching over cleanly at the end of life." soon>
+
+A new product has no sales history, so time-series methods have nothing to work with. Planners build the forecast from other evidence instead:
+
+- **Analogs:** a similar past launch, such as last year's flavour variant, gives a starting **launch curve** (slow start, growth, then a plateau).
+- **Adjustments:** scale that curve for what's different this time, such as a stronger brand, wider distribution, a higher price or a bigger marketing push.
+- **Drivers and judgment:** market size, distribution plan, pre-orders and sales-team input.
+- **Scenarios:** conservative, expected and aggressive versions, because uncertainty is highest at launch.
+
+Then the most important step: **reforecast quickly**. The first few weeks of real sales are worth more than any analog, so the plan should update fast and supply should stay flexible until the curve is clear. A classic model of how adoption spreads is the **Bass diffusion model**, which separates innovators who buy early from imitators who follow them.
+
+The other end of the lifecycle needs the same care. When a product is **phased out**, demand winds down while a replacement ramps up. Good phase-out planning:
+
+- links the old item to its successor, so the successor can inherit demand history,
+- stops buying components early enough to avoid dead stock,
+- times the last production run against remaining stock and the launch date of the new item.
+
+Cannibalization ties the two ends together: the new product's success often comes partly from the old one's sales.
+
+<KeyIdea>
+
+No history? Borrow it from analogs, adjust for what's different, plan in scenarios and reforecast fast. At the end of life, plan the handover so neither dead stock nor gaps appear.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Analog forecasting', def: 'Using the launch curve of a similar past product as the starting point.' },
+  { term: 'Launch (ramp-up) curve', def: 'The typical shape of early sales: introduction, growth, then maturity.' },
+  { term: 'Phase-in / phase-out', def: 'Planning the switch from an old item to its replacement, including demand transfer.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+For a new product there's no history, so I'd build a driver-based forecast: start from analog launches, adjust for differences in brand, price, distribution and marketing, add sales input and pre-orders, and plan conservative, expected and aggressive scenarios. Then I'd reforecast quickly as real sales arrive and keep supply flexible. At end of life, I'd link the old item to its successor and stop buying components early to avoid obsolete stock.
+
+</SayIt>
+
+<Q q="How would you forecast demand for a new flavour of an existing drink?">
+
+Pick analogs, such as earlier flavour launches in similar markets, and use their launch curve. Adjust for differences in distribution, price, marketing and season, account for cannibalization of existing flavours, and build scenarios. Then update weekly from early sales and keep the first production runs small.
+
+</Q>
+
+<Q q="What goes wrong if phase-outs aren't planned?">
+
+Components and finished goods for the old product are bought or made right up to the end, then become obsolete, while the new product's forecast starts from zero instead of inheriting demand. Linking the two items and setting a last-buy date avoids both problems.
+
+</Q>
+
+</InterviewKit>

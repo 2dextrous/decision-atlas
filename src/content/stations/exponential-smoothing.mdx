@@ -1,0 +1,73 @@
+---
+title: Exponential smoothing & ETS
+line: demand
+summary: SES, Holt, damped trend and Holt-Winters, all built on one idea, plus the ETS family that ties them together.
+minutes: { gist: 3 }
+status: draft
+keywords: [exponential smoothing, SES, alpha, Holt, damped trend, Holt-Winters, additive seasonality, multiplicative seasonality, ETS, AICc]
+connected: [forecasting-fundamentals, demand-patterns, forecast-accuracy, ml-forecasting, intermittent-demand]
+sources:
+  - text: "Hyndman, R. J. & Athanasopoulos, G. Forecasting: Principles and Practice (3rd ed.). OTexts. Chapter on exponential smoothing."
+    url: "https://otexts.com/fpp3/expsmooth.html"
+  - text: "Gardner, E. S. & McKenzie, E. (1985). Forecasting trends in time series. Management Science, 31(10), 1237–1246."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="One update rule, extended with trend and seasonality." soon>
+
+Exponential smoothing is the workhorse of supply chain forecasting because it is fast, needs little data and runs well across thousands of items. Every version rests on one idea:
+
+> new estimate = old estimate + α × (how wrong the last forecast was)
+
+The smoothing constant α, between 0 and 1, sets how much the forecast reacts. A handy rule: the forecast effectively remembers about the last 1/α periods. With α = 0.1 it remembers about 10 periods and moves calmly; with α = 0.5 it remembers about 2 and reacts to every blip.
+
+The family grows by adding pieces:
+
+- **Simple exponential smoothing (SES)** tracks only the level, so its forecast is a flat line. Good for steady demand with no trend.
+- **Holt's method** adds a trend, so the forecast becomes a sloped line.
+- **Damped trend** lets that slope fade over time. This matters, because an undamped trend keeps rising for ever: a level of 100 growing by 10 a month forecasts 220 a year out, while a damped version settles below 200. For longer horizons, damping is usually the safer default.
+- **Holt-Winters** adds seasonality, either **additive** (the seasonal swing is a fixed amount) or **multiplicative** (the swing is a percentage, so it grows as the business grows, which suits most retail and FMCG data).
+
+**ETS** (error, trend, seasonal) wraps all of these into one statistical framework. Software can then pick the best version automatically and give prediction intervals as well as a single number.
+
+<KeyIdea>
+
+α is a memory dial: low α remembers long and moves slowly, high α reacts fast but chases noise. Add trend and seasonality only when the data shows them, and damp the trend for long horizons.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Smoothing constant (α)', def: 'Weight on the latest error; effective memory is about 1/α periods.' },
+  { term: 'Damped trend', def: 'A trend that flattens out with the horizon instead of growing for ever.' },
+  { term: 'Multiplicative seasonality', def: 'Seasonal swings proportional to the level; they widen as sales grow.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+Exponential smoothing updates the forecast by a fraction α of the last error, so it weights recent data more. SES handles level only, Holt adds trend, damped trend stops the slope running away on long horizons, and Holt-Winters adds additive or multiplicative seasonality. ETS puts them in one statistical framework, so we can select the model automatically and get prediction intervals that feed safety stock.
+
+</SayIt>
+
+<Q q="What does a high α mean, and when is it a problem?">
+
+A high α reacts strongly to the latest data, with an effective memory of about 1/α periods. That is good after a genuine level shift but bad when it chases random noise: forecasts jump around, planners lose trust and safety stock goes up. If an optimizer picks α near 1, check for a level shift or a missing trend first.
+
+</Q>
+
+<Q q="How do you tell additive from multiplicative seasonality?">
+
+Plot the series. If the seasonal peaks stay the same size as the level rises, it's additive. If the peaks fan out as the series grows, it's multiplicative, which is typical of retail. Multiplicative models need strictly positive data, so they don't work for items with zero-demand periods.
+
+</Q>
+
+</InterviewKit>

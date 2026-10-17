@@ -1,0 +1,74 @@
+---
+title: Why inventory exists
+line: inventory
+summary: Cycle, safety, pipeline and anticipation stock, and what each one costs you to hold.
+minutes: { gist: 3 }
+status: draft
+keywords: [cycle stock, safety stock, pipeline stock, in-transit inventory, anticipation stock, seasonal stock, decoupling stock, holding cost, carrying cost, working capital]
+connected: [eoq, safety-stock, cash-conversion-cycle, slow-obsolete, supply-chain-kpis]
+sources:
+  - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapters on cycle inventory and safety inventory."
+  - text: "Silver, E. A., Pyke, D. F. & Thomas, D. J. (2017). Inventory and Production Management in Supply Chains (4th ed.). CRC Press."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="The four reasons companies hold stock, with everyday examples." soon>
+
+Inventory is stock you hold today so that tomorrow's need can be met straight away. Companies hold it because supply and demand never move in step: suppliers ship in batches, factories run long batches, and customers buy in small, unpredictable amounts. Stock is the buffer that lets each stage run at its own pace.
+
+Almost every unit on a shelf exists for one of four reasons:
+
+- **Cycle stock** comes from ordering in batches. A café that buys 77.5 kg of coffee beans at a time slowly works through each batch, so on average it holds about half a batch.
+- **Safety stock** covers surprises: a busier week than forecast, or a truck that arrives two days late.
+- **Pipeline stock** is on its way: on a ship, a truck or a production line. If 1,000 units a day spend 6 days at sea, about 6,000 units are always in transit, even though nobody can sell them yet.
+- **Anticipation stock** is built ahead of a peak you can see coming, such as sweets before Diwali or fans before summer, because the factory cannot make enough during the peak itself.
+
+None of it is free. Stock ties up cash that could be used elsewhere, needs space and insurance, and can be damaged, stolen or go out of date. Many companies put the yearly cost of holding an item at 20–30% of its value. Too little stock costs money too: lost sales, idle production lines and expensive rush deliveries.
+
+<KeyIdea>
+
+Every unit of inventory should have a reason: batching, uncertainty, transit or a coming peak. If nobody can name the reason, it is probably excess.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Cycle stock', def: 'Stock that exists because you order or produce in batches; on average about half the batch size.' },
+  { term: 'Pipeline stock', def: 'Stock in transit or in process. Average pipeline = flow per day × days in the pipeline.' },
+  { term: 'Holding (carrying) cost', def: 'The yearly cost of keeping one unit in stock: capital, storage, insurance, damage and obsolescence.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+Companies hold inventory because supply and demand don't match in timing or size. Cycle stock comes from ordering in batches, safety stock covers uncertainty, pipeline stock is what's in transit, and anticipation stock is built ahead of a known peak. Each type has a real holding cost, often 20–30% of the item's value a year, so the aim is to hold each type only for the reason it exists.
+
+</SayIt>
+
+<Q q="A CFO asks you to cut inventory by 20%. Where do you start?">
+
+Split the inventory by type before cutting anything. Cycle stock falls with smaller, more frequent orders, if ordering costs allow it. Safety stock falls with better forecasts and more reliable suppliers. Pipeline stock falls only if transit or process time gets shorter. Obsolete stock should be cleared. A blanket cut usually just removes safety stock and causes stockouts.
+
+</Q>
+
+<Q q="What is pipeline inventory, and how would you estimate it?">
+
+It is stock in transit or in process. On average it equals the flow rate times the time spent in the pipeline: 1,000 units a day with a 6-day transit means about 6,000 units in transit. You reduce it by shortening the lead time, not by ordering less often.
+
+</Q>
+
+<Q q="Is inventory good or bad?">
+
+Neither on its own. On the balance sheet it is an asset, but operationally it ties up cash and can hide problems such as unreliable suppliers or long changeovers. Inventory held for a clear reason is useful; inventory nobody can explain is waste.
+
+</Q>
+
+</InterviewKit>

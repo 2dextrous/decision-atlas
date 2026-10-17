@@ -1,0 +1,78 @@
+---
+title: The newsvendor model
+line: inventory
+summary: How much to stock when you get one shot and leftovers lose their value.
+minutes: { gist: 3 }
+status: draft
+keywords: [newsvendor, newsboy problem, critical ratio, overage cost, underage cost, salvage value, single-period inventory, perishable, overbooking]
+connected: [service-levels, probabilistic-forecasting, safety-stock, lifecycle-forecasting, promotions-cannibalization]
+sources:
+  - text: "Cachon, G. & Terwiesch, C. Matching Supply with Demand: An Introduction to Operations Management. McGraw-Hill. Chapter on the newsvendor model."
+  - text: "Silver, E. A., Pyke, D. F. & Thomas, D. J. (2017). Inventory and Production Management in Supply Chains (4th ed.). CRC Press."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Balancing the cost of a missed sale against the cost of a leftover." soon>
+
+Some decisions get one shot. A café bakes croissants each morning, and whatever is left at night is nearly worthless. A clothing brand orders a winter collection once. A sweet shop stocks up for Diwali. You must choose a quantity before you know the demand, and you can be wrong in two directions:
+
+- **Too many:** you paid for something you can't sell. That is the **overage cost**, $C_o$ = cost − salvage value.
+- **Too few:** a customer wanted it and you had none. That is the **underage cost**, $C_u$ = price − cost, the margin you missed.
+
+For the café, a croissant sells for ₹100, costs ₹40 to make and fetches ₹10 at night from a juice stall. So $C_o$ = ₹30 and $C_u$ = ₹60: running short hurts twice as much as over-baking.
+
+The model says to stock up to the **critical ratio**:
+
+$$
+CR = \frac{C_u}{C_u + C_o} = \frac{60}{90} \approx 0.67
+$$
+
+That means: bake enough to cover demand on about two days out of three. If daily demand averages 80 with a standard deviation of 20, the 67th percentile is about $80 + 0.43 \times 20 \approx 89$. So the café should bake around 89 croissants, not the 80 it sells on an average day.
+
+<KeyIdea>
+
+When a missed sale costs more than a leftover, stock deliberately above average demand. The critical ratio tells you exactly how far above.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Overage cost (Co)', def: 'Loss on each unit left unsold: cost minus whatever you recover.' },
+  { term: 'Underage cost (Cu)', def: 'Profit lost on each unit of demand you could not serve.' },
+  { term: 'Critical ratio', def: 'Cu ÷ (Cu + Co): the service level, or demand percentile, to stock up to.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+The newsvendor model handles one-shot decisions where leftovers lose value. I compare the cost of one unit too few, the lost margin, with one unit too many, the cost minus salvage. The best quantity is the demand percentile at the critical ratio, Cu over Cu plus Co. When stockouts hurt more than leftovers, you stock above the average on purpose.
+
+</SayIt>
+
+<Q q="Underage cost ₹60, overage cost ₹30, demand normal with mean 80 and standard deviation 20. How many do you stock?">
+
+The critical ratio is 60 ÷ 90 ≈ 0.67, which corresponds to z ≈ 0.43. So stock 80 + 0.43 × 20 ≈ 89 units.
+
+</Q>
+
+<Q q="Why is ordering the average demand usually wrong?">
+
+Ordering the mean is only optimal when the two mistakes cost the same, which gives a critical ratio of 0.5. In almost every real case they differ, so the right quantity tilts toward the cheaper mistake.
+
+</Q>
+
+<Q q="Where else does this logic show up?">
+
+Fresh food, fashion seasons, event merchandise, newspapers and seasonal vaccines. Airline overbooking uses the same balance: an empty seat is one cost, a bumped passenger another.
+
+</Q>
+
+</InterviewKit>

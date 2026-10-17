@@ -10,8 +10,10 @@ interface Props {
   /** Title of the next level, for the "go deeper" button. */
   next?: string;
   nextMinutes?: number;
+  /** Show a note that deeper levels are still being written. */
+  soon?: boolean;
 }
-const { n, title, minutes, teaser, next, nextMinutes } = Astro.props;
+const { n, title, minutes, teaser, next, nextMinutes, soon } = Astro.props;
 ---
 <section class="level" data-n={n} id={`level-${n}`} aria-labelledby={`level-${n}-title`}>
   <h2 class="level-h">
@@ -35,6 +37,12 @@ const { n, title, minutes, teaser, next, nextMinutes } = Astro.props;
         {nextMinutes && <span class="level-next-time">{nextMinutes} min</span>}
         <Icon name="arrow-right" />
       </button>
+    )}
+    {soon && (
+      <p class="level-soon">
+        <span class="dot is-planned" aria-hidden="true"></span>
+        <span><strong>More depth is on the way.</strong> “How it works” and “Deep dive” for this stop are being written. Until then, the interview kit below covers what you need to say.</span>
+      </p>
     )}
   </div>
 </section>

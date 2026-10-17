@@ -3,10 +3,10 @@ import { stations, type Line } from '../data/atlas';
 
 interface Props {
   line: Line;
-  built: Set<string>;
+  levels: Map<string, number>;
 }
-const { line, built } = Astro.props;
-const ready = line.stops.filter((s) => built.has(s.slug)).length;
+const { line, levels } = Astro.props;
+const ready = line.stops.filter((s) => levels.has(s.slug)).length;
 ---
 <article class="line-card card" data-tone={line.tone} id={`line-${line.id}`}>
   <header class="lc-head">
@@ -20,7 +20,8 @@ const ready = line.stops.filter((s) => built.has(s.slug)).length;
   <ol class="stops">
     {line.stops.map((stop) => {
       const st = stations.get(stop.slug)!;
-      const isBuilt = built.has(stop.slug);
+      const isBuilt = levels.has(stop.slug);
+      const count = levels.get(stop.slug) ?? 0;
       const interchange = st.lines.length > 1;
       const href = isBuilt ? `/${st.line}/${stop.slug}/` : `/${line.id}/#${stop.slug}`;
       return (
@@ -29,7 +30,7 @@ const ready = line.stops.filter((s) => built.has(s.slug)).length;
             <span class:list={['dot', { 'is-planned': !isBuilt && !interchange, 'is-interchange': interchange }]} aria-hidden="true"></span>
             <span class="stop-name">{stop.label}</span>
             {isBuilt ? (
-              <span class="meter" data-levels="3" title="Gist, how it works and deep dive"><i></i><i></i><i></i></span>
+              <span class="meter" data-levels={count} title={count === 3 ? "Gist, how it works and deep dive" : count === 2 ? "Gist and how it works" : "Gist so far"}><i></i><i></i><i></i></span>
             ) : (
               <span class="sr-only">(being written)</span>
             )}

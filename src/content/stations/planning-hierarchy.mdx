@@ -1,0 +1,69 @@
+---
+title: The planning hierarchy
+line: supply
+summary: Strategic, tactical and operational plans, how far ahead each looks, and how decisions hand down from one level to the next.
+minutes: { gist: 3 }
+status: draft
+keywords: [planning hierarchy, strategic planning, tactical planning, operational planning, aggregate planning, S&OP, MPS, MRP, scheduling, planning horizon, time fence]
+connected: [sop-ibp, mps, mrp, production-scheduling, network-design-decisions]
+sources:
+  - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapters on decision phases and aggregate planning."
+  - text: "Silver, E. A., Pyke, D. F. & Thomas, D. J. (2017). Inventory and Production Management in Supply Chains (4th ed.). CRC Press."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Years, months, weeks and hours: who decides what at each level." soon>
+
+Supply chain decisions come in layers. The further ahead a decision looks, the less detail it needs and the harder it is to undo.
+
+| Level | Horizon | Typical decisions | Detail |
+|---|---|---|---|
+| **Strategic** | Years | Where plants and warehouses go, how much capacity to build, which suppliers to partner with | Product families, regions |
+| **Tactical** | Months to a year | S&OP, aggregate production and inventory plans, contracts, workforce levels | Families or key items, monthly |
+| **Operational** | Weeks to hours | Master production schedule, MRP, scheduling, dispatching, daily replenishment | Item, line, shift |
+
+Each level sets the limits for the one below. Strategy fixes the capacity that S&OP can plan with. S&OP sets the volumes the master schedule must deliver. The master schedule drives MRP's component orders and the hour-by-hour line schedule. Feedback flows back up: when the line can't hit the schedule, the master schedule changes, and persistent gaps become an S&OP or a capacity investment topic.
+
+Take a shampoo company. The strategic plan decides to add a line in Baddi by next year. The monthly S&OP agrees to make 1 lakh units in December and build stock ahead of the festive season. The master schedule spreads that across weeks and pack sizes. MRP orders bottles, caps and labels in time, and the shift supervisor sequences the line by fragrance to keep cleaning time down.
+
+<KeyIdea>
+
+Plan at the level of detail the decision needs. Long-range plans work in families and months; short-range plans work in items and hours. Each level constrains the next one down.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Aggregate planning', def: 'Monthly volume, workforce and inventory plans for product families.' },
+  { term: 'Planning horizon', def: 'How far ahead a plan looks; it must exceed the lead time of the decisions it drives.' },
+  { term: 'Time fence', def: 'A cut-off inside which the plan is frozen or only changed with approval.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+Planning works in a hierarchy. Strategic decisions over years cover network and capacity; tactical plans over months, mainly S&OP and aggregate planning, set volumes, inventory and workforce; and operational plans over weeks and days, the MPS, MRP and scheduling, execute them. Each level constrains the next one down, detail increases as the horizon shortens, and feedback from execution flows back up.
+
+</SayIt>
+
+<Q q="Where does S&OP sit in the hierarchy, and what does it hand down?">
+
+It's the tactical bridge between strategy and execution. Monthly, at product-family level, it balances demand with supply and finance, and hands down agreed volumes and inventory targets that the master production schedule turns into item-level plans.
+
+</Q>
+
+<Q q="Why not plan everything at item level and by the hour?">
+
+Detailed long-range forecasts are very inaccurate and changing them constantly creates noise. Aggregate long-range plans are more reliable and quicker to agree; the detail is added only when it's close enough to act on.
+
+</Q>
+
+</InterviewKit>

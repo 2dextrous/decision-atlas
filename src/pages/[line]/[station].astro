@@ -5,6 +5,7 @@ import { getCollection, render, type CollectionEntry } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Icon from '../../components/Icon.astro';
 import { lineById, stations } from '../../data/atlas';
+import { levelCount, totalMinutes } from '../../lib/levels';
 
 export async function getStaticPaths() {
   const entries = await getCollection('stations');
@@ -28,7 +29,8 @@ const line = lineById.get(data.line)!;
 const index = line.stops.findIndex((s) => s.slug === slug);
 const prev = line.stops[index - 1];
 const next = line.stops[index + 1];
-const total = data.minutes.gist + data.minutes.how + data.minutes.deep;
+const total = totalMinutes(data.minutes);
+const levels = levelCount(data.minutes);
 const hrefFor = (s: string) => {
   const st = stations.get(s)!;
   return built.has(s) ? `/${st.line}/${s}/` : `/${st.line}/#${s}`;
@@ -92,7 +94,8 @@ const reviewed = data.reviewed?.toLocaleDateString('en-GB', { day: 'numeric', mo
         <h1>{data.title}</h1>
         <p class="station-lede">{data.summary}</p>
         <div class="station-meta">
-          <span class="pill"><Icon name="clock" />{data.minutes.gist} min gist<span class="sep"><span class="sr-only">, </span></span>{total} min in full</span>
+          <span class="pill"><Icon name="clock" />{levels === 1 ? `${data.minutes.gist} min read` : <Fragment>{data.minutes.gist} min gist<span class="sep"><span class="sr-only">, </span></span>{total} min in full</Fragment>}</span>
+          {levels < 3 && <span class="pill pill-soon">{levels === 1 ? "Deeper levels coming" : "Deep dive coming"}</span>}
           {data.status === 'reviewed' && reviewed ? (
             <span class="pill pill-reviewed">Checked by Dhiraj on {reviewed}</span>
           ) : (
@@ -101,14 +104,16 @@ const reviewed = data.reviewed?.toLocaleDateString('en-GB', { day: 'numeric', mo
         </div>
       </header>
 
-      <div class="depth" role="group" aria-labelledby="depth-label">
-        <p class="depth-label" id="depth-label">Read at<span>Change any time</span></p>
-        <div class="seg">
-          <label><input type="radio" name="page-depth" value="1" />Gist<small>{data.minutes.gist} min</small></label>
-          <label><input type="radio" name="page-depth" value="2" />How it works<small>+{data.minutes.how} min</small></label>
-          <label><input type="radio" name="page-depth" value="3" />Deep dive<small>+{data.minutes.deep} min</small></label>
+      {levels > 1 && (
+        <div class="depth" role="group" aria-labelledby="depth-label">
+          <p class="depth-label" id="depth-label">Read at<span>Change any time</span></p>
+          <div class="seg">
+            <label><input type="radio" name="page-depth" value="1" />Gist<small>{data.minutes.gist} min</small></label>
+            <label><input type="radio" name="page-depth" value="2" />How it works<small>+{data.minutes.how} min</small></label>
+            {levels === 3 && <label><input type="radio" name="page-depth" value="3" />Deep dive<small>+{data.minutes.deep} min</small></label>}
+          </div>
         </div>
-      </div>
+      )}
 
       <div class="station-body">
         <Content />
