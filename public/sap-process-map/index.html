@@ -1,0 +1,836 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SAP process map · Decision Atlas</title>
+<meta name="description" content="An interactive map of SAP's core processes, MM, PP, WM, SD and FI/CO, traced end to end with real Global Bike document numbers.">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Overpass:wght@400;600;800&family=Overpass+Mono:wght@500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EDF0F3; --panel:#FFFFFF; --ink:#16202C; --muted:#586474; --rule:#D2D8DF; --tint:#E4E9EF;
+  --mm:#2457C5; --pp:#8A3FA0; --wm:#A86200; --sd:#0B7F5E; --fi:#C22D38; --e2e:#16202C;
+  --font:"Overpass","Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;
+  --mono:"Overpass Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#11151B; --panel:#1A2029; --ink:#E7EBF0; --muted:#9BA7B6; --rule:#2D3642; --tint:#232B36;
+    --mm:#7EA5FF; --pp:#CF8BE3; --wm:#F2A940; --sd:#41CDA2; --fi:#FF7680; --e2e:#E7EBF0;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#11151B; --panel:#1A2029; --ink:#E7EBF0; --muted:#9BA7B6; --rule:#2D3642; --tint:#232B36;
+  --mm:#7EA5FF; --pp:#CF8BE3; --wm:#F2A940; --sd:#41CDA2; --fi:#FF7680; --e2e:#E7EBF0;
+}
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0;min-height:100%;background:var(--paper);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+:focus-visible{outline:3px solid var(--focus,var(--ink));outline-offset:2px;border-radius:6px}
+
+/* Header */
+.backlink{display:inline-block;margin-bottom:10px;color:var(--muted);font-weight:600;font-size:14px;text-decoration:none}
+.backlink:hover{color:var(--ink);text-decoration:underline}
+.top{max-width:1240px;margin:0 auto;padding:28px 20px 8px;display:grid;grid-template-columns:1fr minmax(260px,380px);gap:20px 32px;align-items:end}
+.top h1{margin:0;font-weight:800;font-size:clamp(28px,4vw,42px);line-height:1.05;letter-spacing:-0.02em}
+.top p{margin:8px 0 0;color:var(--muted);max-width:62ch}
+.search{position:relative}
+.search input{width:100%;padding:11px 14px;border:1.5px solid var(--rule);border-radius:10px;background:var(--panel);color:var(--ink);font:inherit}
+.search input::placeholder{color:var(--muted)}
+#results{position:absolute;z-index:20;left:0;right:0;top:calc(100% + 6px);margin:0;padding:6px;list-style:none;background:var(--panel);border:1.5px solid var(--rule);border-radius:10px;max-height:60vh;overflow:auto;box-shadow:0 12px 30px rgba(0,0,0,.18)}
+#results li button{width:100%;text-align:left;border:0;background:none;padding:8px 10px;border-radius:7px;cursor:pointer;display:flex;gap:10px;align-items:baseline}
+#results li button:hover,#results li button[aria-selected="true"]{background:var(--tint)}
+#results .none{padding:10px;color:var(--muted)}
+
+/* Line selector */
+.lines{max-width:1240px;margin:0 auto;padding:14px 20px 4px;display:flex;gap:8px;overflow-x:auto;scrollbar-width:thin}
+.lines button{flex:0 0 auto;display:flex;align-items:center;gap:10px;padding:7px 14px 7px 7px;border:1.5px solid var(--rule);border-radius:999px;background:var(--panel);cursor:pointer}
+.lines button[aria-pressed="true"]{border-color:var(--c);box-shadow:inset 0 0 0 1.5px var(--c)}
+.lines .nm{font-weight:600;white-space:nowrap}
+.bullet{display:inline-grid;place-items:center;min-width:34px;height:26px;padding:0 7px;border-radius:7px;background:var(--c);color:#fff;font-weight:800;font-size:13px;letter-spacing:.02em}
+:root[data-theme="dark"] .bullet{color:#11151B}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .bullet{color:#11151B}}
+.bullet.sm{min-width:30px;height:22px;font-size:12px;border-radius:6px}
+
+/* Layout */
+.layout{max-width:1240px;margin:0 auto;padding:14px 20px 40px;display:grid;grid-template-columns:minmax(300px,440px) 1fr;gap:24px;align-items:start}
+@media (max-width:860px){.layout{grid-template-columns:1fr}.top{grid-template-columns:1fr}}
+
+/* Map column */
+#map{background:var(--panel);border:1.5px solid var(--rule);border-radius:14px;padding:18px 16px 20px}
+.lineintro h2{margin:0;font-size:22px;font-weight:800;letter-spacing:-0.01em;display:flex;align-items:center;gap:10px}
+.lineintro p{margin:6px 0 4px;color:var(--muted);font-size:15px}
+.group{margin-top:18px}
+.group h3{margin:0 0 6px 44px;font-size:14px;font-weight:600;color:var(--muted)}
+.track{position:relative;margin:0;padding:0;list-style:none}
+.track::before{content:"";position:absolute;left:15px;top:14px;bottom:14px;width:8px;border-radius:4px;background:var(--c)}
+.track.setup::before{width:4px;left:17px;opacity:.55}
+.stop{position:relative}
+.stop>button{width:100%;display:grid;grid-template-columns:38px 1fr auto;gap:6px;align-items:center;text-align:left;border:0;background:none;padding:7px 8px 7px 0;border-radius:10px;cursor:pointer}
+.stop>button:hover{background:var(--tint)}
+.stop>button[aria-current="true"]{background:color-mix(in srgb,var(--c) 15%,transparent)}
+.dot{position:relative;z-index:1;justify-self:center;width:30px;height:30px;border-radius:50%;background:var(--panel);border:5px solid var(--c);display:grid;place-items:center;font-size:12px;font-weight:800;line-height:1}
+.setup .dot{width:20px;height:20px;border-width:4px}
+.stop.branch>button{padding-left:22px;grid-template-columns:38px 1fr auto}
+.stop.branch .dot{width:20px;height:20px;border-width:4px;border-style:dashed}
+.stop.branch::before{content:"";position:absolute;left:19px;top:50%;width:28px;height:3px;background:var(--c);opacity:.6}
+.stoptitle{font-weight:600;line-height:1.25}
+.stopsub{display:block;font-size:13px;color:var(--muted);line-height:1.3;margin-top:2px}
+.ix{display:flex;gap:4px;align-items:center;padding-right:2px}
+.ix i{display:block;width:11px;height:11px;border-radius:50%;background:var(--cc);border:2px solid var(--panel);box-shadow:0 0 0 1px var(--cc)}
+.meter{display:inline-flex;gap:2px;vertical-align:middle}
+.meter b{display:block;width:5px;height:12px;border-radius:2px;background:var(--rule)}
+.meter.l1 b:nth-child(-n+1),.meter.l2 b:nth-child(-n+2),.meter.l3 b:nth-child(-n+3){background:var(--c)}
+
+/* Detail */
+#detail{background:var(--panel);border:1.5px solid var(--rule);border-radius:14px;padding:22px 24px 26px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px);max-height:calc(100vh - 24px);overflow:auto}
+@media (max-width:860px){#detail{position:static;max-height:none}}
+.dhead{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:14px;font-weight:600}
+#detail h2{margin:8px 0 4px;font-size:clamp(24px,3vw,32px);line-height:1.1;font-weight:800;letter-spacing:-0.015em}
+.lede{margin:0 0 16px;color:var(--muted);max-width:68ch}
+.facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:0 22px;margin:0 0 6px;border-top:1.5px solid var(--rule)}
+.fact{padding:12px 0;border-bottom:1px solid var(--rule)}
+.fact dt{font-size:13px;font-weight:600;color:var(--muted);margin-bottom:2px}
+.fact dd{margin:0}
+.code{font-family:var(--mono);font-size:14px;background:var(--tint);padding:1px 6px;border-radius:5px;white-space:nowrap;line-height:1.9}
+.money{border-left:5px solid var(--fi);padding:10px 14px;background:color-mix(in srgb,var(--fi) 8%,transparent);border-radius:0 8px 8px 0;margin:16px 0 4px}
+.money .k{font-size:13px;font-weight:600;color:var(--muted)}
+.sec{margin-top:20px}
+.sec h3{margin:0 0 8px;font-size:17px;font-weight:800}
+.sec ul{margin:0;padding-left:20px;max-width:72ch}
+.sec li{margin:4px 0}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:8px;padding:5px 12px 5px 5px;border:1.5px solid var(--rule);border-radius:999px;background:var(--panel);cursor:pointer;font-weight:600;font-size:14px}
+.chip:hover{border-color:var(--cc)}
+.autoh{display:flex;align-items:center;gap:10px;margin-bottom:6px;color:var(--muted);font-size:14px;font-weight:600}
+.mine{margin-top:20px;padding:12px 14px;border:1.5px dashed var(--c);border-radius:10px}
+.mine .k{font-size:13px;font-weight:600;color:var(--muted)}
+.ewm{margin-top:14px;font-size:15px;color:var(--muted)}
+.ewm strong{color:var(--ink)}
+
+/* End to end */
+.e2e{list-style:none;margin:14px 0 0;padding:0;counter-reset:s}
+.e2e li{position:relative;padding:0 0 0 46px}
+.e2e li::before{counter-increment:s;content:counter(s);position:absolute;left:0;top:6px;width:30px;height:30px;border-radius:50%;border:5px solid var(--c);background:var(--panel);display:grid;place-items:center;font-size:12px;font-weight:800;line-height:1}
+.e2e li::after{content:"";position:absolute;left:12px;top:36px;bottom:-6px;width:6px;border-radius:3px;background:var(--c);opacity:.35}
+.e2e li:last-child::after{display:none}
+.e2e button{display:block;width:100%;text-align:left;border:0;background:none;padding:6px 8px 14px;border-radius:10px;cursor:pointer}
+.e2e button:hover{background:var(--tint)}
+.e2e .t{font-weight:600;display:grid;grid-template-columns:auto 1fr;gap:8px;align-items:start}
+.e2e .t .bullet{margin-top:1px}
+.e2e .h{display:block;font-size:13px;color:var(--muted);margin:2px 0 0 38px}
+
+.legend{max-width:1240px;margin:0 auto;padding:0 20px 36px;color:var(--muted);font-size:14px;display:flex;flex-wrap:wrap;gap:8px 24px;align-items:center}
+.legend span{display:inline-flex;align-items:center;gap:8px}
+.lg-dot{width:16px;height:16px;border-radius:50%;border:4px solid var(--ink)}
+.lg-hollow{width:12px;height:12px;border-radius:50%;border:3px solid var(--muted)}
+.themebtn{margin-left:auto;border:1.5px solid var(--rule);background:var(--panel);border-radius:999px;padding:5px 14px;cursor:pointer}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+</style>
+</head>
+<body>
+<header class="top">
+  <div>
+    <a class="backlink" href="/sap/">← Decision Atlas · SAP in practice</a>
+    <h1>SAP process map</h1>
+    <p>Follow a requirement as it becomes a purchase, a product, a shipment and a payment, and see exactly where each module hands work to the next.</p>
+  </div>
+  <div class="search">
+    <label class="sr" for="q">Search steps, transaction codes or tables</label>
+    <input id="q" type="search" placeholder="Search: MIGO, 601, EKKO, invoice" autocomplete="off" aria-controls="results" aria-expanded="false">
+    <ul id="results" role="listbox" hidden></ul>
+  </div>
+</header>
+<nav class="lines" id="lines" aria-label="Choose a module"></nav>
+<main class="layout">
+  <section id="map" aria-label="Process steps"></section>
+  <section id="detail" aria-live="polite"></section>
+</main>
+<div class="legend">
+  <span><i class="lg-dot"></i>Process step, in order</span>
+  <span><i class="lg-hollow"></i>Set up once (master data, configuration)</span>
+  <span><span class="ix" style="--c:var(--ink)"><i style="--cc:var(--fi)"></i><i style="--cc:var(--wm)"></i></span>Hands work to another module</span>
+  <span><span class="meter l2" style="--c:var(--ink)"><b></b><b></b><b></b></span>How automated it usually is in large companies</span>
+  <button class="themebtn" id="theme" type="button">Switch theme</button>
+</div>
+
+<script>
+const LINES = {
+  e2e:{code:"All",name:"End to end",color:"var(--e2e)",intro:"One order, followed across every module. Each stop shows what is handed to the next module."},
+  mm:{code:"MM",name:"Procure to pay",color:"var(--mm)",intro:"Materials Management: deciding what to buy, buying it, receiving it, paying for it and keeping stock right.",
+    groups:[{label:"Set up once",setup:true,ids:["mm-org","mm-mat","mm-bp","mm-src"]},
+            {label:"Runs for every purchase",ids:["mm-1","mm-2","mm-3","mm-4","mm-5","mm-6","mm-7","mm-8","mm-9","mm-10"]},
+            {label:"Keeps stock and books right",ids:["mm-11","mm-12"]}]},
+  pp:{code:"PP",name:"Plan to produce",color:"var(--pp)",intro:"Production Planning: turning demand into planned and production orders, consuming components and producing finished goods.",
+    groups:[{label:"Set up once",setup:true,ids:["pp-bom","pp-wc","pp-rout","pp-cost"]},
+            {label:"Runs for every production cycle",ids:["pp-1","pp-2","pp-3","pp-4","pp-5","pp-6","pp-7"]}]},
+  wm:{code:"WM",name:"Warehouse",color:"var(--wm)",intro:"Warehouse Management: knowing exactly which bin holds what, and moving goods in, out and around. Classic WM shown, with the EWM name for each step.",
+    groups:[{label:"Set up once",setup:true,ids:["wm-org","wm-mat"]},
+            {label:"Inbound: dock to bin",ids:["wm-1","wm-2","wm-3","wm-4"]},
+            {label:"Outbound: bin to truck",ids:["wm-5","wm-6","wm-7"]},
+            {label:"Internal",ids:["wm-8","wm-9"]}]},
+  sd:{code:"SD",name:"Order to cash",color:"var(--sd)",intro:"Sales and Distribution: from a customer asking a question to the customer's money in the bank.",
+    groups:[{label:"Set up once",setup:true,ids:["sd-org","sd-bp","sd-mat","sd-price"]},
+            {label:"Runs for every customer order",ids:["sd-1","sd-2","sd-3","sd-4","sd-5","sd-6","sd-7","sd-8","sd-9","sd-ret"]}]},
+  fi:{code:"FI",name:"Record to report",color:"var(--fi)",intro:"Finance and Controlling: where every logistics step lands as money, and where the books are closed.",
+    groups:[{label:"Set up once",setup:true,ids:["fi-coa","fi-acct","fi-co"]},
+            {label:"Runs continuously",ids:["fi-1","fi-2","fi-3","fi-4","fi-5","fi-6"]}]}
+};
+
+const AUTO = {3:"Largely automated in large companies",2:"Partly automated",1:"Mostly manual or a design decision"};
+
+const S = {
+/* ===================== MM ===================== */
+"mm-org":{line:"mm",t:"Organizational structure",sub:"Company code, plant, storage location, purchasing org",
+ what:"Models the company inside SAP: company code (the legal entity, US00), plant (MI00 Miami), storage location (TG00 trading goods), purchasing organization (US00) and purchasing group (N00). Every document carries these keys.",
+ app:"SPRO, Enterprise Structure",tcode:["SPRO","OX18","OX01","OX17"],docs:"T001 (company code), T001W (plant), T001L (storage location)",
+ stock:"None",fi:"None directly, but the company code decides whose books every posting lands in.",
+ links:["fi-coa","wm-org","sd-org"],auto:1,
+ autoItems:["A design decision, configured once by consultants and moved DEV to QA to PRD by transport.","Not a candidate for automation."],
+ real:["Centralized vs decentralized purchasing is decided here: one purchasing org for many plants, or one per plant.","Changing the structure after go-live is expensive. It is fixed in the design phase."]},
+"mm-mat":{line:"mm",t:"Material master",sub:"One record, many department views",
+ what:"Holds everything SAP knows about a material, split into views owned by different teams: basic data, purchasing, MRP (planning), accounting (valuation class, price control), sales, warehouse.",
+ app:"Manage Product Master Data",tcode:["MM01","MM02","MM03"],docs:"MARA (general), MARC (plant), MARD (storage location stock), MBEW (valuation)",
+ stock:"None",fi:"Valuation class (e.g. 3100) decides which inventory G/L account is hit, through OBYC. Price control: V moving average or S standard.",
+ links:["fi-acct","pp-bom","pp-1","sd-mat","wm-mat"],auto:2,
+ autoItems:["Master Data Governance (SAP MDG) workflows for create, review and approve.","Mass changes through mass maintenance apps or the Migration Cockpit.","AI-assisted duplicate detection and attribute enrichment."],
+ real:["Most process failures trace back here: wrong lead time, material not extended to a plant, wrong valuation class.","My 'material not maintained in plant DL00' error is the classic ticket.","Moving average price moved from 30.00 to 25.50 after my first goods receipt."],
+ mine:"CHSP1077 Chain Lock Security Pro 077, copied from CHLK1077, plant MI00 only, valuation class 3100, moving average price 30.00 at creation."},
+"mm-bp":{line:"mm",t:"Supplier (Business Partner)",sub:"FI supplier and purchasing roles",
+ what:"In S/4HANA every supplier is a Business Partner. The finance role holds the reconciliation account and payment terms; the purchasing role holds order currency and purchasing data.",
+ app:"Manage Business Partner Master Data",tcode:["BP"],docs:"BUT000 (business partner), LFA1, LFB1, LFM1 (supplier views kept in sync by CVI)",
+ stock:"None",fi:"Reconciliation account (3300000 trade payables in Global Bike). Every supplier invoice posts here automatically.",
+ links:["fi-2","sd-bp"],auto:2,
+ autoItems:["Supplier self-registration and onboarding through SAP Ariba or Business Network.","Automatic tax ID validation, bank account verification and sanctions screening.","Duplicate checks before a new supplier is created."],
+ real:["Duplicate suppliers and conflicting bank details are a fraud risk and the biggest blocker in ECC to S/4 migrations (CVI conversion).","Bank detail changes usually require two-person approval."]},
+"mm-src":{line:"mm",t:"Sources of supply",sub:"Info record, source list, contract",
+ what:"Tells SAP who to buy from and at what price, so requisitions can become POs without a buyer deciding each time. Info record (supplier + material + price), source list (allowed suppliers), quota arrangement (volume split), contracts and scheduling agreements.",
+ app:"Manage Purchasing Info Records, Manage Purchase Contracts",tcode:["ME11","ME01","MEQ1","ME31K","ME31L"],docs:"EINA/EINE (info record), EORD (source list), EKKO type K and L (contracts, scheduling agreements)",
+ stock:"None",fi:"None",
+ links:["mm-2","mm-5"],auto:3,
+ autoItems:["Automatic source determination on requisitions.","Automatic PO creation (ME59N) when exactly one source exists and the material allows automatic POs.","Info records created automatically from POs through the info update indicator."],
+ real:["My Round 1 PO quietly created info record 5300000521, which made Round 2 sourcing automatic.","A one-off emergency price saved into an info record becomes everyone's default. Companies control the info update flag."]},
+"mm-1":{line:"mm",t:"Requirement",sub:"MRP or a person identifies a need",
+ what:"A need appears: MRP sees projected stock falling below safety stock or a reorder point, or a person needs something for a cost center or project.",
+ app:"MRP Live, Monitor Material Coverage",tcode:["MD01N","MD04"],docs:"Planned order or purchase requisition (MRP output)",
+ stock:"None",fi:"None",
+ links:["pp-2","pp-1"],auto:3,
+ autoItems:["MRP runs nightly or continuously and creates requisitions for bought-in materials automatically.","Plans from IBP or demand-driven replenishment can feed requirements."],
+ real:["Wrong lead times or lot sizes in the material master cause over- or under-ordering.","Planners often override MRP. Measuring how often is a good analytics project."]},
+"mm-2":{line:"mm",t:"Purchase requisition",sub:"Internal request: what, how much, by when",
+ what:"An internal request for a material or service. It can be approved through flexible workflow (S/4) or a release strategy (ECC). No supplier commitment exists yet.",
+ app:"My Purchase Requisitions, Process Purchase Requisitions",tcode:["ME51N","ME53N","ME54N"],docs:"EBAN",
+ stock:"None",fi:"None. Optional budget commitment if charged to a cost center or project.",
+ links:["mm-1","pp-2","sd-3"],auto:3,
+ autoItems:["MRP creates most stock-item requisitions automatically.","Approval rules by value and category, with auto-approval below a threshold.","Catalog and self-service buying (punch-out) for non-stock items."],
+ real:["My requisitions auto-approved because flexible workflow is off for type NB. I confirmed this in SPRO.","Common tickets: stuck in approval, no source of supply ('0 Sources'), wrong purchasing group."],
+ mine:"PR 10066332 (300 EA, Round 1) and PR 10066334 (100 EA, Round 2)."},
+"mm-3":{line:"mm",t:"Check stock and coverage",sub:"What is on hand and on order",
+ what:"Look at stock by plant and storage location, plus open supply and demand. The case study checks after the requisition to show that a requisition moves nothing. In real life MRP does this check before creating the requisition.",
+ app:"Stock - Single Material, Display Stock Overview, Monitor Material Coverage",tcode:["MMBE","MD04"],docs:"MARD (stock), MATDOC (movements)",
+ stock:"Read only",fi:"None",
+ links:["pp-2","sd-3"],auto:3,
+ autoItems:["MRP and the availability check (ATP) do this continuously; people look only at exceptions.","Alerts in Monitor Material Coverage or an IBP control tower."],
+ real:["On-order stock appears only once a PO exists, not for a requisition.","In WM II I saw on-order stock of 10 in San Diego from a stock transport order."]},
+"mm-4":{line:"mm",t:"RFQ and quotations",sub:"Optional: when no agreed source exists",branch:true,
+ what:"Invite suppliers to bid, enter their quotations, compare them and award the best. The losing quotations are completed (rejected).",
+ app:"Manage RFQs, Manage Supplier Quotations, Compare Supplier Quotations",tcode:["ME41","ME47","ME49"],docs:"EKKO/EKPO with document category A (RFQ/quotation)",
+ stock:"None",fi:"None",
+ links:["mm-src","mm-5","sd-2"],auto:2,
+ autoItems:["Sourcing events and reverse auctions in SAP Ariba Sourcing.","AI extraction of supplier quotations from PDFs and emails.","Award recommendations using price, lead time and carbon footprint."],
+ real:["Awarding a quotation triggered an approval workflow in my system, which auto-approved.","Strategic categories usually run in Ariba; S/4 RFQs suit simpler purchases."],
+ mine:"RFQ 7000000204. Quotation 8000000545 (Boomtown, 26.00, rejected) and 8000000546 (Space Bike, 25.50, awarded)."},
+"mm-5":{line:"mm",t:"Purchase order",sub:"The legally binding order",
+ what:"Supplier, material, quantity, price, delivery date. The document type controls behaviour: NB standard, UB stock transport, FO framework order, plus returns and intercompany types.",
+ app:"Manage Purchase Orders",tcode:["ME21N","ME22N","ME23N","ME29N"],docs:"EKKO (header), EKPO (items), EKET (schedule lines)",
+ stock:"None yet. Shows as on-order stock.",fi:"No posting. A commitment for POs charged to a cost center or project.",
+ links:["mm-src","mm-6","mm-7","wm-8","sd-3"],auto:3,
+ autoItems:["Automatic POs from requisitions when the source is unique (ME59N).","Output by EDI (IDoc ORDERS) or SAP Business Network instead of print or email.","Approval rules by value through flexible workflow."],
+ real:["Prices typed by hand without an info record are a top cause of price-variance blocks at invoice time.","Your PO becomes the supplier's sales order: the same deal seen from the other side."],
+ mine:"PO 4500000546 (300 EA at 25.50 = 7,650 USD) and PO 4500000554 (100 EA = 2,550 USD)."},
+"mm-6":{line:"mm",t:"Confirmation and shipping notice",sub:"Supplier confirms; ASN creates an inbound delivery",
+ what:"The supplier confirms dates and quantities. When it ships, it sends an advance shipping notice (ASN) that creates an inbound delivery, so the warehouse can plan before the truck arrives.",
+ app:"Manage Inbound Deliveries",tcode:["ME22N","VL31N"],docs:"EKES (confirmations), LIKP/LIPS (inbound delivery)",
+ stock:"None",fi:"None",
+ links:["mm-7","wm-1","sd-4"],auto:3,
+ autoItems:["EDI ORDRSP (order response) and DESADV (ASN) update the PO automatically.","The confirmation control key decides which confirmations are expected.","Alerts for missing or late confirmations."],
+ real:["With an ASN, receiving becomes scanning against expected quantities.","Most failed inbound messages are master data mismatches, such as supplier part numbers."]},
+"mm-7":{line:"mm",t:"Goods receipt",sub:"Movement type 101: first stock and money impact",
+ what:"Goods arrive and are posted against the PO into a storage location and stock type: unrestricted, quality inspection or blocked. Movement 103 is the exception: goods receipt blocked stock, received but not yet valued.",
+ app:"Post Goods Receipt for Purchasing Document",tcode:["MIGO"],docs:"MATDOC (material document) plus a journal entry in ACDOCA",
+ stock:"Plus the received quantity in the chosen storage location and stock type.",fi:"Dr Inventory (BSX) / Cr GR/IR clearing (WRX). For consumables: Dr Expense / Cr GR/IR.",
+ links:["wm-1","fi-1","mm-8","fi-acct"],auto:2,
+ autoItems:["Scanning against the inbound delivery with handheld devices.","Automatic goods receipt from ASNs or from EWM.","Quality inspection lots created automatically when QM is active."],
+ real:["Late goods receipts distort stock and cause invoice-before-receipt blocks.","Wrong stock type: goods posted unrestricted that should have been inspected first."],
+ mine:"5000000985 (300 EA), 5000000993 (80 of 100 EA) and 5000000994 (remaining 20 EA)."},
+"mm-8":{line:"mm",t:"Invoice verification",sub:"3-way match and tolerance checks",
+ what:"Matches PO price times received quantity against the invoice. Tolerances decide whether variances block payment: PP price, DQ quantity, ST date (value times days early).",
+ app:"Create Supplier Invoice",tcode:["MIRO","MIR7","OMR6"],docs:"RBKP (header), RSEG (items), journal entry",
+ stock:"None, unless the price differs on a moving-average material with stock on hand: then the inventory value adjusts.",fi:"Dr GR/IR / Cr Supplier (payables). Price differences go to inventory (BSX) or price differences (PRD).",
+ links:["fi-2","mm-9","fi-acct"],auto:3,
+ autoItems:["OCR or AI capture of PDF invoices; electronic invoices by EDI INVOIC.","Automatic matching. The touchless invoice rate is the KPI.","ERS (MRRL): no supplier invoice at all; SAP creates it from goods receipt times price.","Duplicate invoice check."],
+ real:["My Round 1 invoice was blocked by date tolerance ST (500 USD): 7,650 USD times 31 days early.","My Round 2 invoice was blocked by quantity: 100 invoiced against 80 received.","A typo of 2,500 instead of 2,550 created a price difference aimed at the inventory account."],
+ mine:"5105600427 (blocked: date variance) and 5105600428 (blocked: quantity variance)."},
+"mm-9":{line:"mm",t:"Release blocked invoices",sub:"Remove payment block R",
+ what:"Blocked invoices stay blocked until someone, or a job, releases them, even after the cause is fixed.",
+ app:"Supplier Invoices List (Release)",tcode:["MRBR"],docs:"RBKP/RSEG blocking reasons",
+ stock:"None",fi:"Removes payment block R so the payment run can pay.",
+ links:["mm-8","fi-2"],auto:3,
+ autoItems:["MRBR automatic release as a daily job: releases invoices whose blocking reasons have gone.","Dispute agents explain blocks in plain language and route them to the buyer.","AI triage: goods in transit, supplier error or receiving error."],
+ real:["Receiving the last 20 units cleared the reason, but my invoice stayed blocked until I clicked Release.","Segregation of duties: whoever enters an invoice should not release it."]},
+"mm-10":{line:"mm",t:"Payment",sub:"Supplier paid, open item cleared",
+ what:"Due, unblocked invoices are paid, usually in a batch payment run that also creates the bank file.",
+ app:"Manage Automatic Payments, Post Outgoing Payments",tcode:["F110","F-53"],docs:"Payment journal entry and clearing",
+ stock:"None",fi:"Dr Supplier / Cr Bank. The supplier's open item is cleared.",
+ links:["fi-2","fi-4"],auto:3,
+ autoItems:["F110 pays all due, unblocked invoices in one run and creates the bank file.","Remittance advice (REMADV) sent to suppliers automatically.","Choosing when to pay to capture early-payment discounts."],
+ real:["Payment block R stops F110 but not a manual F-53 payment. A control question worth raising.","Blank payment terms made my Round 2 invoice due on the day it was posted."],
+ mine:"Payments 1500000157 (Round 1) and 1500000158 (Round 2)."},
+"mm-11":{line:"mm",t:"Inventory movements",sub:"Issues, transfers, scrapping, counts",
+ what:"Everything else that moves stock: 201 to a cost center, 261 to a production order, 311 between storage locations, 301 between plants, 321 quality to unrestricted, 122 return to supplier, 551 scrap, 701/702 physical inventory differences.",
+ app:"Post Goods Movement, Transfer Stock",tcode:["MIGO","MI01","MI04","MI07","OMJJ"],docs:"MATDOC",
+ stock:"Depends on the movement type.",fi:"Consumption: Dr Expense or production order / Cr Inventory (GBB, BSX). Differences: Dr/Cr inventory difference account.",
+ links:["pp-4","wm-9","sd-6"],auto:2,
+ autoItems:["Backflushing of components from production confirmations.","Scanner-driven transfers.","Automated kanban replenishment."],
+ real:["Movement types are configured (OMJJ); custom 9xx types are common.","Unposted consumption makes stock look higher than it really is."]},
+"mm-12":{line:"mm",t:"Period-end in MM",sub:"GR/IR clean-up, open the next period",
+ what:"Open the next material period, review GR/IR balances and clear old differences.",
+ app:"GR/IR reconciliation apps",tcode:["MMPV","MB5S","MR11","F.13"],docs:"Clearing entries in ACDOCA",
+ stock:"None",fi:"GR/IR differences cleared or written off; accruals for goods received but not invoiced.",
+ links:["fi-6"],auto:2,
+ autoItems:["Automatic GR/IR clearing (F.13).","Ageing analytics on GR/IR balances, e.g. open longer than 90 days."],
+ real:["Old GR/IR balances are an audit flag: received but never invoiced, or invoiced but never received.","My Round 2 GR/IR carried a 510 USD debit until the last 20 units arrived."]},
+
+/* ===================== PP ===================== */
+"pp-bom":{line:"pp",t:"Bill of materials",sub:"The recipe: components per product",
+ what:"Lists the components needed to make a product, e.g. a bike = frame + wheels + seat + chain. MRP explodes it to calculate component needs.",
+ app:"Manage Bills of Material",tcode:["CS01","CS02","CS03"],docs:"STKO/STPO",
+ stock:"None",fi:"None directly; feeds product costing.",
+ links:["mm-mat","pp-2","pp-cost"],auto:2,
+ autoItems:["Engineering BOMs transferred from PLM or CAD systems.","Mass changes controlled by engineering change numbers."],
+ real:["A wrong quantity in the BOM means wrong purchasing for every order.","Differences between engineering and manufacturing BOMs are a classic integration problem."]},
+"pp-wc":{line:"pp",t:"Work centers",sub:"Where operations happen",
+ what:"Machines, lines or teams with available capacity. Each is linked to a cost center so that time worked can be costed.",
+ app:"Manage Work Centers",tcode:["CR01","CR02"],docs:"CRHD",
+ stock:"None",fi:"Linked cost center and activity types supply the rates used in costing.",
+ links:["fi-co","pp-rout"],auto:1,
+ autoItems:["Mostly set up once; capacity data can be fed from shift calendars."],
+ real:["Unrealistic capacity data makes every schedule look feasible on paper."]},
+"pp-rout":{line:"pp",t:"Routing",sub:"Operations and standard times",
+ what:"The sequence of operations to make a product, with setup, machine and labour times per work center.",
+ app:"Manage Routings",tcode:["CA01","CA02"],docs:"PLKO/PLPO",
+ stock:"None",fi:"Times times activity rates feed the standard cost.",
+ links:["pp-wc","pp-cost"],auto:1,
+ autoItems:["Standard times can be updated from actual confirmation data (analytics, not automatic by default)."],
+ real:["Stale standard times create permanent production variances."]},
+"pp-cost":{line:"pp",t:"Standard cost estimate",sub:"What a product should cost",
+ what:"Components (BOM times prices) plus activities (routing times times rates) plus overhead. Released as the standard price for materials with price control S.",
+ app:"Manage Cost Estimates",tcode:["CK11N","CK24","CK40N"],docs:"KEKO/KEPH, MBEW (standard price)",
+ stock:"None",fi:"Sets the standard price used to value finished goods; a price change can revalue stock.",
+ links:["mm-mat","fi-co","pp-7"],auto:2,
+ autoItems:["Costing runs for all materials at once (CK40N).","What-if costing when supplier prices change."],
+ real:["Usually rolled once a year. Errors here surface later as large variances."]},
+"pp-1":{line:"pp",t:"Demand",sub:"Forecast plus customer orders",
+ what:"Planned independent requirements (the forecast, often from IBP) plus actual sales orders tell production what is needed and when.",
+ app:"Manage PIRs",tcode:["MD61","MD63"],docs:"PBIM/PBED (planned independent requirements), VBAP/VBEP (sales orders)",
+ stock:"None",fi:"None",
+ links:["sd-3","pp-2"],auto:3,
+ autoItems:["Forecasts released from IBP automatically.","Demand sensing adjusts short-term demand with recent orders."],
+ real:["Sales orders consume the forecast so demand is not counted twice."]},
+"pp-2":{line:"pp",t:"MRP run",sub:"Nets demand, explodes BOMs, plans supply",
+ what:"Compares demand with stock and open supply, explodes the BOM, and creates planned orders for things to make and purchase requisitions for things to buy, with dates from lead times.",
+ app:"Schedule MRP Runs, Monitor Material Coverage",tcode:["MD01N","MD04"],docs:"PLAF (planned orders), EBAN (requisitions)",
+ stock:"None",fi:"None",
+ links:["mm-1","mm-2","pp-bom","pp-3"],auto:3,
+ autoItems:["Runs automatically, nightly or more often with MRP Live.","Exception messages tell planners what needs attention."],
+ real:["Classic MRP assumes unlimited capacity; capacity must be checked separately (capacity levelling or PP/DS).","Small changes can create large rescheduling noise (a 'nervous' plan)."]},
+"pp-3":{line:"pp",t:"Production order",sub:"Converted from the planned order and released",
+ what:"The planned order becomes a production order. Components are reserved, operations scheduled and availability checked. Release makes it executable and triggers staging of components to the line.",
+ app:"Manage Production Orders",tcode:["CO01","CO40","CO41","CO02"],docs:"AUFK, AFKO, AFPO, RESB (reservations)",
+ stock:"Components reserved, not moved yet.",fi:"None at creation; the order collects costs from now on.",
+ links:["pp-2","wm-6","mm-11"],auto:2,
+ autoItems:["Automatic conversion and release for stable products.","Warehouse staging tasks created automatically."],
+ real:["Missing parts at release is the most common shop-floor complaint, and it traces back to MRP and purchasing."]},
+"pp-4":{line:"pp",t:"Issue components",sub:"Movement type 261 or backflush",
+ what:"Components leave stock and are charged to the production order.",
+ app:"Post Goods Movement",tcode:["MIGO"],docs:"MATDOC",
+ stock:"Minus components",fi:"Dr Production order / Cr Raw material inventory.",
+ links:["mm-11","fi-5"],auto:3,
+ autoItems:["Backflushing issues components automatically when operations are confirmed."],
+ real:["Backflushing with wrong BOM quantities silently corrupts stock."]},
+"pp-5":{line:"pp",t:"Confirmation",sub:"Quantities, scrap and time reported",
+ what:"The shop floor reports good quantity, scrap and time per operation. Activity costs post to the order.",
+ app:"Confirm Production Operation",tcode:["CO11N"],docs:"AFRU",
+ stock:"Backflushed components move if set up.",fi:"Activity allocation: Dr Production order / Cr Work center cost center.",
+ links:["fi-5","pp-wc"],auto:3,
+ autoItems:["MES and machine (IoT) integration post confirmations automatically.","The final confirmation can trigger the finished goods receipt."],
+ real:["Late confirmations make work in progress and capacity views wrong."]},
+"pp-6":{line:"pp",t:"Receive finished goods",sub:"Movement type 101 against the order",
+ what:"Finished products are received into stock from the production order.",
+ app:"Post Goods Movement",tcode:["MIGO"],docs:"MATDOC",
+ stock:"Plus finished goods, now available to promise to customers.",fi:"Dr Finished goods inventory (at standard price) / Cr Production order.",
+ links:["wm-1","sd-3"],auto:3,
+ autoItems:["Automatic goods receipt with the final confirmation, with labels and putaway tasks created."],
+ real:["Finished goods become available to promise only after this posting."]},
+"pp-7":{line:"pp",t:"Order settlement",sub:"Variances to finance, order closed",
+ what:"Actual costs are compared with the standard; the difference (variance) is settled to finance and the order is closed.",
+ app:"Settle Production Orders",tcode:["KO88","CO88"],docs:"COBK/COEP, ACDOCA",
+ stock:"None",fi:"Variances (actual minus standard) posted to price difference or variance accounts.",
+ links:["fi-5","fi-6","pp-cost"],auto:3,
+ autoItems:["Collective settlement as a month-end batch job.","Variance analytics: which orders and materials drive the differences."],
+ real:["Unsettled orders leave costs stuck in work in progress at period end."]},
+
+/* ===================== WM ===================== */
+"wm-org":{line:"wm",t:"Warehouse structure",sub:"Warehouse number, storage type, bin",
+ what:"Warehouse number (100 = San Diego) contains storage types (001 shelf, 002 pallet), storage sections and storage bins (STBN-1-077). Assigning warehouse 100 to plant SD00, storage location TG00 is what switches WM on.",
+ app:"SPRO, Logistics Execution",tcode:["SPRO","LS01N"],docs:"T300 (warehouse), T301 (storage type), LAGP (bins), LQUA (quants)",
+ stock:"None",fi:"None",
+ links:["mm-org"],auto:1,
+ autoItems:["A design decision. Bin naming and zones are planned with the warehouse team."],
+ real:["Storage type design decides picking efficiency for years."],
+ ewm:"EWM: four-character warehouse number, same hierarchy plus activity areas."},
+"wm-mat":{line:"wm",t:"Warehouse data on the material",sub:"Putaway and picking strategies",
+ what:"Warehouse views say where a material is put away and picked from, with strategies such as fixed bin, next empty bin or FIFO, and how many fit on a pallet.",
+ app:"Manage Product Master Data (warehouse views)",tcode:["MM02"],docs:"MLGN, MLGT",
+ stock:"None",fi:"None",
+ links:["mm-mat"],auto:2,
+ autoItems:["Slotting in EWM proposes the best bin based on how fast items move."],
+ real:["Missing warehouse views leave goods stuck in the goods receipt area."]},
+"wm-1":{line:"wm",t:"Goods arrive in the warehouse",sub:"Stock posted, not yet on a shelf",
+ what:"The MM goods receipt posts stock; WM places the quantity in an interim goods receipt area (storage type 902) until it is put away.",
+ app:"Post Goods Receipt for Purchasing Document",tcode:["MIGO"],docs:"MATDOC, quant in interim storage",
+ stock:"In stock for MM, but not yet in a bin.",fi:"Posted by MM: Dr Inventory / Cr GR/IR.",
+ links:["mm-7","pp-6","mm-6","wm-2"],auto:3,
+ autoItems:["Triggered automatically by the goods receipt."],
+ real:["Goods in the system but not on a shelf for minutes or hours is normal; for days it is a problem."],
+ ewm:"EWM: inbound delivery, goods receipt and unloading in EWM."},
+"wm-2":{line:"wm",t:"Transfer requirement",sub:"The warehouse to-do list",
+ what:"Created automatically: these goods need moving from the dock to a bin. It is the request, not yet the instruction.",
+ app:"Display Transfer Requirement",tcode:["LB10","LB03"],docs:"LTBK/LTBP",
+ stock:"None",fi:"None",
+ links:["wm-1","wm-3"],auto:3,
+ autoItems:["Created automatically from the goods receipt.","Transfer orders can be created automatically from it by a background job."],
+ real:["A pile of old transfer requirements means goods are waiting on the dock."],
+ ewm:"EWM: warehouse request."},
+"wm-3":{line:"wm",t:"Transfer order: put away",sub:"Move from dock to bin",
+ what:"The instruction: move 50 units from the goods receipt area to bin STBN-1-077. The putaway strategy proposes the bin.",
+ app:"Create Transfer Order",tcode:["LT04","LT06"],docs:"LTAK/LTAP",
+ stock:"Reserved for the move.",fi:"None",
+ links:["wm-2","wm-4"],auto:3,
+ autoItems:["Automatic transfer order creation and bin selection by strategy.","EWM task interleaving combines putaway and picking trips."],
+ real:["Workers overriding proposed bins creates 'lost' stock."],
+ ewm:"EWM: putaway warehouse task."},
+"wm-4":{line:"wm",t:"Confirm the transfer order",sub:"Goods are physically in the bin",
+ what:"The worker confirms the move, usually by scanning. The quant now sits in the bin.",
+ app:"Confirm Transfer Order",tcode:["LT12","LT11"],docs:"LTAK/LTAP status, LQUA",
+ stock:"Now in a specific bin.",fi:"None",
+ links:["wm-9"],auto:3,
+ autoItems:["Scanners confirm on the spot.","Automated storage, robots and conveyors confirm through equipment integration."],
+ real:["Unconfirmed transfer orders leave stock in limbo; supervisors monitor them daily."],
+ ewm:"EWM: confirm warehouse task."},
+"wm-5":{line:"wm",t:"Outbound delivery reaches the warehouse",sub:"A picking need is created",
+ what:"A sales delivery (or a stock transport delivery) for a warehouse-managed location creates the need to pick.",
+ app:"Create Outbound Deliveries",tcode:["VL01N","VL10"],docs:"LIKP/LIPS",
+ stock:"None yet.",fi:"None",
+ links:["sd-4","wm-6"],auto:3,
+ autoItems:["Deliveries created in batch and released to the warehouse in waves."],
+ real:["Wave timing is planned around carrier pickup times."],
+ ewm:"EWM: outbound delivery order."},
+"wm-6":{line:"wm",t:"Transfer order: pick",sub:"Which bin to take goods from",
+ what:"The transfer order tells the picker which bin to take goods from, using a picking strategy such as FIFO. Also used to stage components for production.",
+ app:"Create Transfer Order for Delivery",tcode:["LT03"],docs:"LTAK/LTAP",
+ stock:"Moves from bin to the outbound area once confirmed.",fi:"None",
+ links:["wm-5","sd-5","pp-3"],auto:3,
+ autoItems:["Wave planning, pick-by-voice, pick-by-light and robots."],
+ real:["Picking is often the largest share of warehouse labour, so it is the first thing companies optimize."],
+ ewm:"EWM: picking warehouse task, grouped into warehouse orders."},
+"wm-7":{line:"wm",t:"Confirm pick and issue goods",sub:"Movement type 601",
+ what:"The pick is confirmed, the delivery's picked quantity updates, and goods issue reduces stock and posts cost of goods sold.",
+ app:"Pick Outbound Delivery, Manage Outbound Deliveries",tcode:["LT12","VL02N"],docs:"LTAP, MATDOC",
+ stock:"Minus the shipped quantity.",fi:"Dr Cost of goods sold / Cr Inventory.",
+ links:["sd-6","fi-1"],auto:3,
+ autoItems:["Goods issue triggered automatically after pick or loading confirmation."],
+ real:["Billing waits for goods issue, so delays here delay revenue."],
+ ewm:"EWM: confirm picking, then post goods issue."},
+"wm-8":{line:"wm",t:"Stock transport between plants",sub:"Dallas to San Diego",
+ what:"A stock transport order (type UB) requests stock from your own plant. Goods issue at the supplying plant (351) puts it in transit; goods receipt at the receiving plant (101) brings it in, followed by putaway.",
+ app:"Create Purchase Order (UB), Post Goods Movement",tcode:["ME21N","MIGO"],docs:"EKKO/EKPO (type UB), MATDOC",
+ stock:"Leaves Dallas, in transit, then arrives in San Diego.",fi:"Value moves between plant inventories. No supplier invoice within the same company code.",
+ links:["mm-5","mm-7","wm-1"],auto:2,
+ autoItems:["MRP proposes stock transfers through special procurement keys.","Deliveries with movement 641 and shipment tracking in larger setups."],
+ real:["Stock stuck in transit because the receipt was never posted."],
+ ewm:"Same flow, with EWM handling picking at the source and putaway at the destination."},
+"wm-9":{line:"wm",t:"Physical inventory",sub:"Lock, count, recount, clear twice",
+ what:"Bins are locked, counted, and recounted if the deviation exceeds a tolerance. The difference is cleared first in WM (bin quantity), then in inventory management (quantity and value).",
+ app:"Carry out Continuous Inventory, Enter Inventory Count, Clear Differences",tcode:["LX16","LI11N","LI14","LI20","LI21"],docs:"LINK/LINP, MATDOC (711/712)",
+ stock:"Corrected to the counted quantity.",fi:"Gain: Dr Inventory / Cr Inventory difference. Loss: the reverse.",
+ links:["mm-11","fi-6"],auto:2,
+ autoItems:["Cycle counting by ABC class and zero-stock checks.","RFID or drone counting in advanced sites."],
+ real:["Clearing in WM but not in inventory management leaves the warehouse and finance disagreeing."],
+ ewm:"EWM: physical inventory documents, often counted with handheld scanners."},
+
+/* ===================== SD ===================== */
+"sd-org":{line:"sd",t:"Sales area and shipping point",sub:"Sales org, channel, division",
+ what:"A sales area is sales organization (UE00 US East) plus distribution channel (WH wholesale) plus division (BI bicycles). The shipping point (MI00) decides where deliveries leave from.",
+ app:"SPRO, Enterprise Structure",tcode:["SPRO"],docs:"TVKO, TVTW, TSPA, TVST",
+ stock:"None",fi:"Sales organizations are assigned to a company code.",
+ links:["mm-org","fi-coa"],auto:1,
+ autoItems:["A design decision made once."],
+ real:["Helmets in a different division than bikes is why the SD Challenge customer had to be extended."]},
+"sd-bp":{line:"sd",t:"Customer (Business Partner)",sub:"Roles, partner functions, credit",
+ what:"The customer as a Business Partner with finance and sales roles. Partner functions: sold-to (orders), ship-to (receives), bill-to (gets the invoice), payer (pays).",
+ app:"Manage Business Partner Master Data",tcode:["BP"],docs:"BUT000, KNA1/KNB1/KNVV (customer views kept in sync by CVI)",
+ stock:"None",fi:"Receivables reconciliation account; credit limit through SAP Credit Management.",
+ links:["fi-3","mm-bp"],auto:2,
+ autoItems:["Onboarding and approval workflows (MDG).","Credit scoring from external agencies."],
+ real:["I saw dozens of 'The Bike Zone' copies: duplicate customers in miniature.","'Customer not defined for sales area' appears when the customer is not extended to that sales area."],
+ mine:"The Bike Zone 077 (an existing record reused instead of creating a duplicate)."},
+"sd-mat":{line:"sd",t:"Material sales data",sub:"Sales views, customer part numbers",
+ what:"Sales views per sales organization and channel: item category group (NORM), delivering plant, loading group. Customer-material info records map the customer's part number to yours.",
+ app:"Manage Product Master Data (sales views)",tcode:["MM02","VD51"],docs:"MVKE, KNMT",
+ stock:"None",fi:"Account assignment group feeds revenue account determination.",
+ links:["mm-mat"],auto:2,
+ autoItems:["Customer part number mappings are what make EDI orders touchless."],
+ real:["A missing mapping makes an EDI order fail with 'material unknown'."]},
+"sd-price":{line:"sd",t:"Pricing conditions",sub:"Condition technique",
+ what:"Prices, discounts, freight and taxes are condition types assembled by a pricing procedure in a fixed sequence: base price (PR00, PPR0 in S/4), material discount (K004), percent from net (RA00), percent from gross (RA01), tax.",
+ app:"Manage Prices - Sales",tcode:["VK11","VK12","V/08"],docs:"KONH/KONP (condition records), PRCD_ELEMENTS (pricing results in S/4)",
+ stock:"None",fi:"Condition types map to revenue, discount and freight accounts.",
+ links:["sd-2","fi-acct"],auto:2,
+ autoItems:["Price lists uploaded in bulk; promotions and rebates calculated automatically.","AI price recommendations in specialised pricing tools."],
+ real:["Manual discounts are an audit risk. Choosing RA00 instead of RA01 changed my invoice by 12.50."]},
+"sd-1":{line:"sd",t:"Inquiry",sub:"Customer asks, no obligation",
+ what:"A customer asks for price and availability. Records the expected order value and probability.",
+ app:"Manage Sales Inquiries",tcode:["VA11"],docs:"VBAK/VBAP, document category A",
+ stock:"None",fi:"None",
+ links:["sd-2"],auto:2,
+ autoItems:["'Request a quote' on a portal can create inquiries automatically."],
+ real:["Many orders skip inquiry and quotation entirely, like the SD Challenge."]},
+"sd-2":{line:"sd",t:"Quotation",sub:"Binding offer with validity",
+ what:"A legally binding offer copied from the inquiry, with prices, discounts and a validity date.",
+ app:"Manage Sales Quotations",tcode:["VA21"],docs:"VBAK/VBAP, document category B",
+ stock:"None",fi:"None",
+ links:["sd-price","sd-3","mm-4"],auto:2,
+ autoItems:["CPQ tools generate quotations; discount approvals by workflow."],
+ real:["Quotation-to-order conversion rate is a key sales KPI.","The customer's RFQ is your inquiry; their quotation comparison is your quotation."]},
+"sd-3":{line:"sd",t:"Sales order",sub:"Pricing, availability, credit",
+ what:"The customer's order. SAP prices it, checks availability (ATP) and credit, schedules delivery, and passes the requirement to MRP.",
+ app:"Manage Sales Orders",tcode:["VA01","VA02","VA03"],docs:"VBAK (header), VBAP (items), VBEP (schedule lines), document category C",
+ stock:"Creates a requirement; nothing moves yet.",fi:"None. The credit check reads open receivables.",
+ links:["pp-1","mm-2","fi-3","mm-5","sd-4"],auto:3,
+ autoItems:["EDI ORDERS, web shops and APIs create orders automatically; the touchless order rate is the KPI.","AI extraction of PDF purchase orders into draft sales orders.","Credit and availability checks run automatically; only exceptions reach people."],
+ real:["Usual exceptions: price mismatch with the customer's PO, unknown part number, credit block, shortage.","A duplicate customer PO number check catches EDI orders sent twice.","Third-party items (category TAS) create a purchase requisition in MM automatically."]},
+"sd-4":{line:"sd",t:"Outbound delivery",sub:"Hand-off to logistics",
+ what:"The shipping document created from the order: what ships, from which shipping point, when.",
+ app:"Create Outbound Deliveries",tcode:["VL01N","VL10"],docs:"LIKP/LIPS, document category J",
+ stock:"None yet.",fi:"None",
+ links:["wm-5","sd-5","mm-6"],auto:3,
+ autoItems:["The delivery due list runs in batch and creates deliveries automatically."],
+ real:["Wrong shipping point or route determination delays shipments.","Your outbound delivery is your customer's inbound delivery (via an ASN)."]},
+"sd-5":{line:"sd",t:"Picking and packing",sub:"Staging goods for the customer",
+ what:"Goods are picked to the delivery quantities and packed. In warehouse-managed locations, WM transfer orders do the picking.",
+ app:"Pick Outbound Delivery",tcode:["VL02N"],docs:"LIPS (picked quantity), handling units",
+ stock:"Moved to the outbound area.",fi:"None",
+ links:["wm-6","sd-6"],auto:3,
+ autoItems:["Warehouse tasks, scanners and handling units."],
+ real:["Picking errors become customer complaints and returns."]},
+"sd-6":{line:"sd",t:"Post goods issue",sub:"Movement type 601: ownership passes",
+ what:"Stock leaves the company and ownership passes to the customer.",
+ app:"Manage Outbound Deliveries",tcode:["VL02N","VL06G"],docs:"MATDOC",
+ stock:"Minus finished goods.",fi:"Dr Cost of goods sold / Cr Inventory, valued at moving average or standard price.",
+ links:["mm-11","fi-1","wm-7"],auto:3,
+ autoItems:["Goods issue posted automatically after pick or loading confirmation.","Shipping notification (DESADV) sent to the customer automatically."],
+ real:["Delivery-related billing cannot happen until goods issue is posted."]},
+"sd-7":{line:"sd",t:"Billing",sub:"Customer invoice, revenue posts",
+ what:"The customer invoice, created from the delivery, and transferred to accounting.",
+ app:"Create Billing Documents, Manage Billing Documents",tcode:["VF01","VF04"],docs:"VBRK/VBRP, document category M",
+ stock:"None",fi:"Dr Customer (receivables) / Cr Revenue, plus tax payable. Revenue account found through VKOA.",
+ links:["fi-3","fi-acct"],auto:3,
+ autoItems:["The billing due list runs as a nightly job.","E-invoicing and EDI INVOIC output; tax engines such as Vertex calculate tax."],
+ real:["Revenue recognition timing (IFRS 15 / ASC 606) matters to auditors."]},
+"sd-8":{line:"sd",t:"Incoming payment",sub:"Cash received, invoice cleared",
+ what:"The customer's payment is matched to the open invoice and clears it.",
+ app:"Post Incoming Payments",tcode:["F-28"],docs:"Journal entry type DZ, clearing",
+ stock:"None",fi:"Dr Bank / Cr Customer. The open item is cleared.",
+ links:["fi-3","fi-4"],auto:3,
+ autoItems:["Electronic bank statements (FF_5) and lockbox files (FLB2) match payments automatically.","Machine learning proposes matches when references are missing."],
+ real:["Short payments and deductions turn into disputes.","The auto-match rate drives DSO."]},
+"sd-9":{line:"sd",t:"Document flow",sub:"Every step linked",
+ what:"Links inquiry, quotation, order, delivery, goods issue, invoice and payment, so any document leads to all the others.",
+ app:"Track Sales Orders, Display Document Flow",tcode:["VA03"],docs:"VBFA",
+ stock:"None",fi:"None",
+ links:["fi-1"],auto:3,
+ autoItems:["Maintained automatically with every follow-on document."],
+ real:["This is what end-to-end visibility looks like inside one company."]},
+"sd-ret":{line:"sd",t:"Returns",sub:"Optional: goods come back",branch:true,
+ what:"A returns order (type RE), a return delivery into blocked or quality stock (movement 651), inspection, then a credit memo.",
+ app:"Manage Customer Returns",tcode:["VA01","VL01N","VF01"],docs:"VBAK (returns order), LIKP, VBRK (credit memo)",
+ stock:"Plus returned goods, usually blocked until inspected.",fi:"Credit memo: Dr Revenue / Cr Customer.",
+ links:["wm-1","fi-3"],auto:2,
+ autoItems:["Advanced returns management tracks inspection, grading and refunds."],
+ real:["Reverse logistics: inspect, refurbish, scrap or return to the supplier."]},
+
+/* ===================== FI ===================== */
+"fi-coa":{line:"fi",t:"Chart of accounts and periods",sub:"G/L accounts, fiscal year, currencies",
+ what:"The list of G/L accounts, the fiscal year and posting periods, and currencies for each company code.",
+ app:"Manage G/L Account Master Data",tcode:["FS00","OB52"],docs:"SKA1/SKB1, T001B (posting periods)",
+ stock:"None",fi:"The framework every posting uses.",
+ links:["mm-org","sd-org"],auto:1,
+ autoItems:["A design decision; periods are opened and closed on a schedule."],
+ real:["Posting into a closed period is a common month-end error message."]},
+"fi-acct":{line:"fi",t:"Account determination",sub:"Where logistics talks to finance",
+ what:"Decides which G/L account every logistics posting hits automatically. OBYC for MM (BSX inventory, WRX GR/IR, PRD price differences, GBB offsetting entries), VKOA for SD revenue.",
+ app:"SPRO",tcode:["OBYC","VKOA"],docs:"T030 (MM), C001 and related tables (SD)",
+ stock:"None",fi:"Every goods movement, invoice and billing document uses it.",
+ links:["mm-mat","mm-7","mm-8","sd-7","sd-price"],auto:3,
+ autoItems:["Fully automatic once configured."],
+ real:["Wrong account determination gives correct quantities but wrong financial statements, which is very hard to spot."]},
+"fi-co":{line:"fi",t:"Controlling objects",sub:"Cost centers, profit centers, orders",
+ what:"Cost centers, profit centers and internal orders collect costs and revenues for management reporting; product costing and margin analysis build on them.",
+ app:"Manage Cost Centers",tcode:["KS01","KE51"],docs:"CSKS, CEPC",
+ stock:"None",fi:"Every posting carries controlling information alongside the G/L account.",
+ links:["pp-wc","pp-cost"],auto:1,
+ autoItems:["Set up once; derivation rules fill profit centers automatically."],
+ real:["Wrong cost center assignments distort department reports for months."]},
+"fi-1":{line:"fi",t:"Universal journal",sub:"Every posting, one table",
+ what:"All postings from MM, SD, PP, payables and receivables land in one table with finance and controlling detail together.",
+ app:"Manage Journal Entries, Display Line Items",tcode:["FB03","FAGLL03H"],docs:"ACDOCA",
+ stock:"None",fi:"The single source of truth for the books.",
+ links:["mm-7","sd-6","sd-7","pp-4","wm-7","sd-9"],auto:3,
+ autoItems:["Logistics postings are automatic; manual journal entries are the exception."],
+ real:["Manual journal entries are where auditors look first."]},
+"fi-2":{line:"fi",t:"Accounts payable",sub:"What we owe suppliers",
+ what:"Supplier invoices from invoice verification post here; payment runs pay them; balances are reviewed.",
+ app:"Manage Supplier Line Items, Display Supplier Balances",tcode:["FBL1N","FK10N","F110"],docs:"ACDOCA (open items)",
+ stock:"None",fi:"Cr Supplier at invoice, Dr Supplier at payment.",
+ links:["mm-8","mm-10","mm-bp","mm-9"],auto:3,
+ autoItems:["Payment runs, invoice capture, duplicate payment checks."],
+ real:["Fraud risks: changed bank details, duplicate invoices.","DPO (days payable outstanding) is the AP KPI."]},
+"fi-3":{line:"fi",t:"Accounts receivable",sub:"What customers owe us",
+ what:"Billing documents post here; dunning chases overdue invoices; credit management and disputes are handled here.",
+ app:"Manage Customer Line Items, Process Collections Worklist",tcode:["FBL5N","F150","UKM_BP"],docs:"ACDOCA (open items)",
+ stock:"None",fi:"Dr Customer at billing, Cr Customer at payment.",
+ links:["sd-7","sd-8","sd-bp","sd-3","sd-ret"],auto:3,
+ autoItems:["Dunning runs, collections worklists, dispute cases, credit scoring."],
+ real:["DSO is the AR KPI; disputes often hide inside short payments."]},
+"fi-4":{line:"fi",t:"Bank accounting",sub:"Statements in, payments out",
+ what:"House bank accounts, electronic bank statements, lockbox files and the payment files sent to banks.",
+ app:"Manage Bank Statements, Manage Incoming Payment Files",tcode:["FF_5","FLB2","FEBAN","FI12"],docs:"FEBKO/FEBEP (statements)",
+ stock:"None",fi:"Bank lines post and clear open items in AP and AR.",
+ links:["mm-10","sd-8"],auto:3,
+ autoItems:["Interpretation algorithms and posting rules match statement lines to open items."],
+ real:["Unapplied cash piles up when customers change their remittance format."]},
+"fi-5":{line:"fi",t:"Controlling",sub:"Cost centers, product cost, margin",
+ what:"Cost center accounting, activity allocation, production order costs and settlement, and margin analysis by product and customer.",
+ app:"Cost Centers - Actuals, Product Costs by Order",tcode:["KSB1","KKBC_ORD"],docs:"ACDOCA (controlling fields)",
+ stock:"None",fi:"Allocations and settlements between cost objects.",
+ links:["pp-4","pp-5","pp-7","fi-co"],auto:3,
+ autoItems:["Allocations and settlement run as period-end jobs; margins available in real time in S/4."],
+ real:["Unsettled orders and missed allocations distort product margins."]},
+"fi-6":{line:"fi",t:"Period-end close",sub:"Close the month, produce statements",
+ what:"Clear GR/IR, post accruals, revalue foreign currency, run depreciation, settle orders, close periods and produce financial statements.",
+ app:"Advanced Financial Closing, Balance Sheet/Income Statement",tcode:["F.13","MR11","FAGL_FCV","AFAB","OB52"],docs:"ACDOCA",
+ stock:"None",fi:"Closing entries and reports.",
+ links:["mm-12","pp-7","wm-9"],auto:2,
+ autoItems:["SAP Advanced Financial Closing orchestrates and schedules close tasks.","Automated reconciliations and continuous accounting shorten the close."],
+ real:["The close is only as clean as the logistics postings feeding it: unposted receipts, unsettled orders, uncleared inventory differences."]}
+};
+
+const E2E = [
+ {id:"sd-3",t:"Customer places a sales order",h:"Hands to PP: a requirement from the order's schedule lines."},
+ {id:"pp-2",t:"MRP plans production and purchasing",h:"Hands to MM: purchase requisitions for components to buy."},
+ {id:"mm-5",t:"Purchase order goes to the supplier",h:"Hands to the supplier: their sales order, by EDI or Business Network."},
+ {id:"mm-7",t:"Components are received",h:"Hands to WM (putaway) and FI (Dr Inventory / Cr GR/IR)."},
+ {id:"wm-3",t:"Components are put away into a bin",h:"Hands back to production: stock ready to stage."},
+ {id:"mm-8",t:"Supplier invoice is matched",h:"Hands to FI: a payable, paid later by the payment run."},
+ {id:"pp-4",t:"Production consumes components",h:"Hands to FI/CO: costs collected on the production order."},
+ {id:"pp-6",t:"Finished goods are received",h:"Hands to SD: stock available to promise."},
+ {id:"sd-4",t:"Outbound delivery is created",h:"Hands to WM: a picking requirement."},
+ {id:"wm-6",t:"Goods are picked from the bin",h:"Hands back to SD: picked quantities on the delivery."},
+ {id:"sd-6",t:"Goods issue posts",h:"Hands to FI: Dr Cost of goods sold / Cr Inventory."},
+ {id:"sd-7",t:"Customer is billed",h:"Hands to FI: Dr Receivable / Cr Revenue."},
+ {id:"sd-8",t:"Customer pays",h:"Hands to FI: bank statement clears the receivable."},
+ {id:"fi-6",t:"Month is closed",h:"Every module's postings come together in the financial statements."}
+];
+
+/* ============ helpers ============ */
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const bullet = (lineKey, sm) => `<span class="bullet${sm?" sm":""}" style="--c:${LINES[lineKey].color}">${LINES[lineKey].code}</span>`;
+const meter = (n,c) => `<span class="meter l${n}" style="--c:${c}" aria-hidden="true"><b></b><b></b><b></b></span>`;
+let current = {line:"e2e", id:null};
+
+function stepNumber(id){
+  const s=S[id], L=LINES[s.line];
+  for(const g of L.groups){
+    if(g.setup) continue;
+    let n=0;
+    for(const x of g.ids){ if(!S[x].branch) n++; if(x===id) return S[x].branch?null:n; }
+  }
+  return null;
+}
+function groupOf(id){ const L=LINES[S[id].line]; return L.groups.find(g=>g.ids.includes(id)); }
+function otherLines(id){
+  const own=S[id].line, set=[];
+  (S[id].links||[]).forEach(l=>{ const ln=S[l]&&S[l].line; if(ln&&ln!==own&&!set.includes(ln)) set.push(ln); });
+  return set;
+}
+
+/* ============ render: line selector ============ */
+function renderNav(){
+  $("#lines").innerHTML = Object.keys(LINES).map(k=>
+    `<button type="button" data-line="${k}" style="--c:${LINES[k].color}" aria-pressed="${current.line===k}">${bullet(k)}<span class="nm">${LINES[k].name}</span></button>`
+  ).join("");
+  const on=$("#lines [aria-pressed='true']");
+  if(on){ const nav=$("#lines"); const l=on.offsetLeft-16, r=on.offsetLeft+on.offsetWidth+16;
+    if(l<nav.scrollLeft||r>nav.scrollLeft+nav.clientWidth) nav.scrollLeft=Math.max(0,l); }
+}
+
+/* ============ render: map ============ */
+function renderMap(){
+  const k=current.line, L=LINES[k];
+  const map=$("#map"); map.style.setProperty("--c",L.color); map.style.setProperty("--focus",L.color);
+  let html=`<div class="lineintro"><h2>${bullet(k)} ${L.name}</h2><p>${L.intro}</p></div>`;
+  if(k==="e2e"){
+    html+=`<ol class="e2e">`+E2E.map(e=>{
+      const s=S[e.id];
+      return `<li style="--c:${LINES[s.line].color}"><button type="button" data-go="${e.id}"><span class="t">${bullet(s.line,true)} ${esc(e.t)}</span><span class="h">${esc(e.h)}</span></button></li>`;
+    }).join("")+`</ol>`;
+  } else {
+    L.groups.forEach(g=>{
+      html+=`<div class="group"><h3>${g.label}</h3><ul class="track${g.setup?" setup":""}">`;
+      let n=0;
+      g.ids.forEach(id=>{
+        const s=S[id]; const br=!!s.branch; if(!g.setup&&!br) n++;
+        const label = g.setup ? "" : (br ? "" : n);
+        const dots = otherLines(id).map(o=>`<i style="--cc:${LINES[o].color}" title="Connects to ${LINES[o].code}"></i>`).join("");
+        const srx = otherLines(id).map(o=>LINES[o].code).join(", ");
+        html+=`<li class="stop${br?" branch":""}"><button type="button" data-go="${id}" aria-current="${current.id===id}">
+          <span class="dot" aria-hidden="true">${label}</span>
+          <span><span class="stoptitle">${esc(s.t)}</span><span class="stopsub">${esc(s.sub)}</span>${srx?`<span class="sr">Connects to ${srx}.</span>`:""}</span>
+          <span class="ix">${dots}${meter(s.auto,L.color)}</span></button></li>`;
+      });
+      html+=`</ul></div>`;
+    });
+  }
+  map.innerHTML=html;
+}
+
+/* ============ render: detail ============ */
+function renderDetail(){
+  const d=$("#detail");
+  if(!current.id){
+    const L=LINES[current.line];
+    d.style.setProperty("--c",L.color);
+    d.innerHTML = current.line==="e2e"
+      ? `<div class="dhead">${bullet("e2e")} How to use this map</div><h2>Pick any stop to see what happens there</h2>
+         <p class="lede">Each stop tells you what SAP does, where you do it (Fiori app and T-code), which tables store it, what happens to stock and money, which modules it hands work to, how it is automated in large companies, and what goes wrong in real life.</p>
+         <div class="sec"><h3>Reading the end-to-end line</h3><ul><li>Each stop is one moment in the life of a single customer order.</li><li>The coloured badge shows which module owns that moment.</li><li>The smaller text under each stop says what is handed to the next module.</li></ul></div>
+         <div class="sec"><h3>Where my own Global Bike work appears</h3><p class="lede" style="margin:0">Stops I executed show my real document numbers in a dashed box: requisitions, POs, goods receipts, invoices and payments from Rounds 1 and 2.</p></div>`
+      : `<div class="dhead">${bullet(current.line)} ${L.name}</div><h2>Choose a stop on the line</h2><p class="lede">${L.intro}</p>`;
+    return;
+  }
+  const s=S[current.id], L=LINES[s.line], n=stepNumber(current.id), g=groupOf(current.id);
+  d.style.setProperty("--c",L.color); d.style.setProperty("--focus",L.color);
+  const where = g.setup ? "Set up once" : (s.branch ? "Optional branch" : `Step ${n} of the ${L.name.toLowerCase()} line`);
+  const codes = (s.tcode||[]).map(c=>`<span class="code">${esc(c)}</span>`).join(" ");
+  const chips = (s.links||[]).filter(x=>S[x]).map(x=>`<button type="button" class="chip" data-go="${x}" style="--cc:${LINES[S[x].line].color}">${bullet(S[x].line,true)}${esc(S[x].t)}</button>`).join("");
+  d.innerHTML = `
+    <div class="dhead">${bullet(s.line)} ${where}</div>
+    <h2>${esc(s.t)}</h2>
+    <p class="lede">${esc(s.what)}</p>
+    <dl class="facts">
+      <div class="fact"><dt>Fiori app</dt><dd>${esc(s.app)}</dd></div>
+      <div class="fact"><dt>Transaction codes</dt><dd>${codes||"None"}</dd></div>
+      <div class="fact"><dt>Stored in</dt><dd>${esc(s.docs)}</dd></div>
+      <div class="fact"><dt>Stock impact</dt><dd>${esc(s.stock)}</dd></div>
+    </dl>
+    <div class="money"><div class="k">Money impact</div>${esc(s.fi)}</div>
+    ${chips?`<div class="sec"><h3>Hands work to</h3><div class="chips">${chips}</div></div>`:""}
+    <div class="sec"><h3>Automation opportunities</h3><div class="autoh">${meter(s.auto,L.color)} ${AUTO[s.auto]}</div><ul>${s.autoItems.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>
+    <div class="sec"><h3>What happens in the real world</h3><ul>${s.real.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>
+    ${s.ewm?`<p class="ewm"><strong>In EWM:</strong> ${esc(s.ewm.replace(/^EWM:\s*/,""))}</p>`:""}
+    ${s.mine?`<div class="mine"><div class="k">From my SAP practice (Global Bike)</div>${esc(s.mine)}</div>`:""}`;
+}
+
+/* ============ navigation ============ */
+function go(id, opts={}){
+  if(!S[id]) return;
+  current = {line:S[id].line, id};
+  if(opts.keepLine) current.line = opts.keepLine;
+  renderAll();
+  try{ localStorage.setItem("sapmap:last", JSON.stringify(current)); }catch(e){}
+  try{ history.replaceState(null,"","#"+id); }catch(e){}
+  if(window.matchMedia("(max-width:860px)").matches){ $("#detail").scrollIntoView({block:"start"}); }
+}
+function showLine(k){
+  current={line:k,id:null};
+  renderAll();
+  try{ localStorage.setItem("sapmap:last", JSON.stringify(current)); }catch(e){}
+  try{ history.replaceState(null,"","#"+k); }catch(e){}
+}
+function renderAll(){ renderNav(); renderMap(); renderDetail(); }
+
+document.addEventListener("click",e=>{
+  const ln=e.target.closest("[data-line]"); if(ln){ showLine(ln.dataset.line); return; }
+  const g=e.target.closest("[data-go]"); if(g){
+    const inE2E = g.closest(".e2e");
+    go(g.dataset.go, inE2E ? {keepLine:"e2e"} : {});
+    hideResults();
+  }
+});
+
+/* ============ search ============ */
+const q=$("#q"), res=$("#results");
+function hideResults(){ res.hidden=true; q.setAttribute("aria-expanded","false"); }
+q.addEventListener("input",()=>{
+  const term=q.value.trim().toLowerCase();
+  if(!term){ hideResults(); return; }
+  const hits=Object.entries(S).filter(([id,s])=>
+    [s.t,s.sub,s.what,s.app,s.docs,(s.tcode||[]).join(" "),s.fi].join(" ").toLowerCase().includes(term)
+  ).slice(0,10);
+  res.innerHTML = hits.length
+    ? hits.map(([id,s])=>`<li><button type="button" role="option" data-go="${id}">${bullet(s.line,true)}<span>${esc(s.t)}<span class="stopsub">${esc(s.sub)}</span></span></button></li>`).join("")
+    : `<li class="none">No step matches "${esc(q.value)}". Try a T-code like MIGO or a table like EKKO.</li>`;
+  res.hidden=false; q.setAttribute("aria-expanded","true");
+});
+q.addEventListener("keydown",e=>{
+  if(e.key==="Escape"){ q.value=""; hideResults(); }
+  if(e.key==="Enter"){ const f=res.querySelector("[data-go]"); if(f){ go(f.dataset.go); hideResults(); } }
+});
+document.addEventListener("click",e=>{ if(!e.target.closest(".search")) hideResults(); });
+
+/* ============ theme ============ */
+$("#theme").addEventListener("click",()=>{
+  const r=document.documentElement;
+  const dark = r.dataset.theme ? r.dataset.theme==="dark" : window.matchMedia("(prefers-color-scheme: dark)").matches;
+  r.dataset.theme = dark ? "light" : "dark";
+  try{ localStorage.setItem("sapmap:theme", r.dataset.theme); }catch(e){}
+});
+try{ const t=localStorage.getItem("sapmap:theme"); if(t) document.documentElement.dataset.theme=t; }catch(e){}
+
+/* ============ start ============ */
+(function start(){
+  const h=(location.hash||"").slice(1);
+  if(S[h]){ current={line:S[h].line,id:h}; }
+  else if(LINES[h]){ current={line:h,id:null}; }
+  else {
+    try{ const saved=JSON.parse(localStorage.getItem("sapmap:last")||"null"); if(saved&&LINES[saved.line]&&(!saved.id||S[saved.id])) current=saved; }catch(e){}
+  }
+  renderAll();
+})();
+window.addEventListener("hashchange",()=>{
+  const h=(location.hash||"").slice(1);
+  if(S[h]) go(h); else if(LINES[h]) showLine(h);
+});
+</script>
+</body>
+</html>

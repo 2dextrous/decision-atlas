@@ -1,0 +1,90 @@
+---
+title: Procure to pay (MM)
+line: sap
+summary: "From requisition to payment in SAP MM: ME51N to F110, the three-way match, and what each step posts in finance."
+minutes: { gist: 3 }
+status: draft
+keywords: [procure to pay, SAP MM, purchase requisition, ME51N, RFQ, ME41, purchase order, ME21N, goods receipt, MIGO, movement type 101, invoice verification, MIRO, tolerance, MRBR, F110, GR/IR]
+connected: [procurement-fundamentals, record-to-report, inventory-mrp-in-sap, sap-process-map, supplier-selection]
+sources:
+  - text: "Magal, S. R. & Word, J. (2012). Integrated Business Processes with ERP Systems. Wiley. Chapter on the procurement process."
+  - text: "SAP Help Portal. SAP S/4HANA Sourcing and Procurement documentation."
+    url: "https://help.sap.com/"
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+import FromPractice from '../../components/content/FromPractice.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Six steps, the T-codes behind them, and the accounting each one triggers." soon>
+
+Procure to pay in SAP follows the business process step by step, with a transaction (and a Fiori app) for each:
+
+| Step | T-code | What happens | Finance posting |
+|---|---|---|---|
+| Purchase requisition | ME51N | Internal request, often created by MRP | None |
+| RFQ and quotations (optional) | ME41, ME47, ME49 | Invite bids, enter quotes, compare prices | None |
+| Purchase order | ME21N | Binding order to the supplier | None (a commitment) |
+| Goods receipt | MIGO, movement type 101 | Stock increases | Dr Inventory / Cr GR/IR clearing |
+| Invoice verification | MIRO | Three-way match against PO and goods receipt | Dr GR/IR / Cr Supplier |
+| Payment | F110 | Payment run pays due, unblocked invoices | Dr Supplier / Cr Bank |
+
+The **GR/IR clearing account** is the bridge: the goods receipt credits it and the invoice debits it. If they don't balance, something was received but not invoiced, or invoiced but not received, and old GR/IR balances are a classic audit question.
+
+At invoice verification, SAP compares price, quantity and dates against **tolerances** (set in OMR6). An invoice outside tolerance is **blocked for payment**, and someone must release it (MRBR) once the cause is fixed. The payment run (F110) skips blocked invoices.
+
+Master data does a lot of quiet work: purchasing **info records** remember supplier prices, **source lists** restrict allowed suppliers, and the material master's valuation class decides which inventory account a goods receipt hits.
+
+<FromPractice>
+
+I ran this cycle twice for material CHSP1077. **Round 1:** requisition `10066332` for 300 units; an RFQ (`7000000204`) compared Boomtown at 26.00 with Space Bike at 25.50, and Space Bike won; PO `4500000546` for 300 × 25.50 = 7,650 USD; goods receipt `5000000985`. Invoice `5105600427` was blocked by the date tolerance because it arrived 31 days early; after release it was paid in payment `1500000157`. That PO also created info record `5300000521`, so in Round 2 the source was found automatically.
+
+**Round 2:** PO `4500000554` for 100 units, but only 80 arrived at first (`5000000993`). Invoice `5105600428` for 100 was blocked for quantity, and GR/IR showed a 510 USD difference. Receiving the last 20 (`5000000994`) removed the cause, yet the invoice stayed blocked until I released it; it was paid in `1500000158`.
+
+</FromPractice>
+
+<KeyIdea>
+
+PR → PO → GR (MIGO 101) → invoice (MIRO, three-way match) → payment (F110). The goods receipt and the invoice meet in the GR/IR account, and tolerances decide which invoices get blocked.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'GR/IR clearing account', def: 'Bridge account credited at goods receipt and debited at invoice receipt.' },
+  { term: 'Tolerance limits', def: 'Allowed price, quantity and date differences before an invoice is blocked.' },
+  { term: 'Movement type 101', def: 'Goods receipt against a purchase order.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+Procure to pay in SAP runs from purchase requisition (ME51N) through optional RFQs, purchase order (ME21N), goods receipt in MIGO with movement type 101, which posts inventory against the GR/IR clearing account, invoice verification in MIRO with a three-way match and tolerances, which posts GR/IR against the supplier, and payment through the F110 payment run. Blocked invoices are released in MRBR once the cause is fixed.
+
+</SayIt>
+
+<Q q="What is the difference between MIRO and F110?">
+
+MIRO records and verifies the supplier invoice against the PO and goods receipt and creates the payable. F110 is the automatic payment program that pays due, unblocked payables in a batch and generates the payment file. MIRO creates the liability; F110 settles it.
+
+</Q>
+
+<Q q="What accounting entries does a goods receipt against a PO create?">
+
+For a stock material: debit inventory (via account determination key BSX) and credit the GR/IR clearing account (WRX). The invoice later debits GR/IR and credits the supplier; price differences go to inventory or a price difference account depending on stock and price control.
+
+</Q>
+
+<Q q="Why was an invoice blocked even though the goods arrived?">
+
+Something exceeded tolerance: price above the PO price, quantity invoiced above quantity received, or a date variance such as invoicing far earlier than planned. Even after the cause is fixed, the payment block stays until the invoice is released.
+
+</Q>
+
+</InterviewKit>

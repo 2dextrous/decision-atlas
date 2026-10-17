@@ -1,0 +1,8 @@
+---
+interface Props { label?: string }
+const { label = 'From my SAP practice · Global Bike case' } = Astro.props;
+---
+<aside class="callout practice">
+  <p class="callout-label">{label}</p>
+  <div class="callout-body"><slot /></div>
+</aside>

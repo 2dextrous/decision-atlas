@@ -1,0 +1,81 @@
+---
+title: SAP & S/4HANA basics
+line: sap
+summary: What an ERP does, how SAP is organized into modules and organizational units, and what changed with S/4HANA.
+minutes: { gist: 3 }
+status: draft
+keywords: [SAP, ERP, S/4HANA, ECC, HANA, Fiori, T-code, organizational structure, company code, plant, storage location, purchasing organization, sales area, master data, Business Partner, ACDOCA, MATDOC]
+connected: [procure-to-pay, order-to-cash, plan-to-produce, record-to-report, sap-process-map]
+sources:
+  - text: "Magal, S. R. & Word, J. (2012). Integrated Business Processes with ERP Systems. Wiley."
+  - text: "SAP Help Portal. SAP S/4HANA product documentation."
+    url: "https://help.sap.com/"
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+import FromPractice from '../../components/content/FromPractice.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="One system, one database, every department working on the same records." soon>
+
+An **ERP (enterprise resource planning)** system runs a company's core processes on one shared database: buying, making, storing, selling and accounting. When a warehouse worker posts a goods receipt, stock goes up *and* the accounting entry is made at the same moment, because it's one system. SAP is the most widely used ERP among large companies.
+
+SAP is organized into **modules** that match business areas:
+
+| Module | Covers | Process it runs |
+|---|---|---|
+| MM (Materials Management) | Purchasing, goods receipt, stock, invoices | Procure to pay |
+| PP (Production Planning) | BOMs, MRP, production orders | Plan to produce |
+| WM / EWM (Warehouse Management) | Bins, putaway, picking | Warehouse execution |
+| SD (Sales and Distribution) | Orders, pricing, delivery, billing | Order to cash |
+| FI / CO (Finance and Controlling) | Accounts, payables, receivables, costs | Record to report |
+
+Every transaction is tied to an **organizational structure**: a *company code* (the legal entity), *plants* (factories or sites), *storage locations*, a *purchasing organization*, and *sales areas*. **Master data**, such as the material master, the Business Partner record for customers and suppliers, and prices, is set up once and reused by every transaction.
+
+**S/4HANA** is SAP's current generation, replacing the older ECC. It runs only on the in-memory **HANA** database, simplifies the data model (one material document table, **MATDOC**, and the **Universal Journal**, **ACDOCA**, for all financial postings), makes **Business Partner** the single record for customers and suppliers, and offers **Fiori** apps alongside the classic transaction codes (T-codes) such as ME21N or VA01.
+
+<FromPractice>
+
+I practised on SAP's Global Bike case, a fictional bicycle company used in SAP's university programme. Its structure: company code **US00**, plants **MI00** (Miami), **DL00** (Dallas) and **SD00** (San Diego), storage location **TG00** for trading goods, purchasing organization **US00**, and sales area **UE00 / WH / BI** (US East, wholesale, bicycles).
+
+</FromPractice>
+
+<KeyIdea>
+
+An ERP is one database shared by every department, so each business event updates stock and accounts together. Learn the modules, the organizational units and the master data, and the transactions start to make sense.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Company code / plant', def: 'The legal entity that keeps its own books / a physical site where stock is held or made.' },
+  { term: 'Master data vs transactional data', def: 'Stable records such as materials and partners, versus events such as orders and receipts.' },
+  { term: 'Universal Journal (ACDOCA)', def: 'The single S/4HANA table holding all finance and controlling postings.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+SAP is an integrated ERP: modules such as MM, PP, WM/EWM, SD and FI/CO share one database, so a logistics event like a goods receipt updates stock and finance at the same moment. Transactions sit within an organizational structure of company code, plant, storage location, purchasing organization and sales area, and reuse master data like the material master and Business Partner. S/4HANA simplified the data model with MATDOC and the Universal Journal ACDOCA, made Business Partner mandatory, and added Fiori apps.
+
+</SayIt>
+
+<Q q="What is the difference between master data and transactional data?">
+
+Master data is relatively stable reference data used by many transactions: materials, customers, suppliers, BOMs, prices. Transactional data records business events: purchase orders, goods receipts, sales orders, invoices. Errors in master data, such as a wrong lead time or a material not extended to a plant, cause problems in every transaction that uses it.
+
+</Q>
+
+<Q q="What changed from ECC to S/4HANA?">
+
+S/4HANA runs only on the HANA in-memory database, simplifies tables (MATDOC for material documents, ACDOCA as the Universal Journal for finance and controlling), makes Business Partner the single model for customers and vendors, introduces Fiori as the main user experience, and adds faster processes such as MRP Live and real-time reporting.
+
+</Q>
+
+</InterviewKit>

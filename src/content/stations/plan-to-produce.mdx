@@ -1,0 +1,81 @@
+---
+title: Plan to produce (PP)
+line: sap
+summary: BOMs, routings, MRP runs and production orders in SAP PP, from demand to finished goods and settled costs.
+minutes: { gist: 3 }
+status: draft
+keywords: [plan to produce, SAP PP, bill of materials, CS01, work center, CR01, routing, CA01, planned independent requirements, MD61, MRP Live, MD01N, planned order, production order, CO01, goods issue 261, confirmation CO11N, settlement]
+connected: [mrp, mps, inventory-mrp-in-sap, record-to-report, sap-process-map]
+sources:
+  - text: "Magal, S. R. & Word, J. (2012). Integrated Business Processes with ERP Systems. Wiley. Chapter on the production process."
+  - text: "SAP Help Portal. SAP S/4HANA Manufacturing documentation."
+    url: "https://help.sap.com/"
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Master data first, then the cycle from demand to settled production order." soon>
+
+Production in SAP rests on three pieces of master data, set up once:
+
+- **Bill of materials (CS01):** the components per product. A bike = frame + wheels + seat + chain.
+- **Work centers (CR01):** machines, lines or teams with capacity, each linked to a cost center.
+- **Routings (CA01):** the sequence of operations with setup and run times per work center.
+
+Together with prices and activity rates they produce the **standard cost** of each product (cost estimate, CK11N).
+
+Then the cycle runs for every production period:
+
+| Step | T-code | What happens |
+|---|---|---|
+| Demand | MD61 | Forecast entered as planned independent requirements, plus sales orders |
+| MRP | MD01N, MD04 | Nets demand, explodes BOMs; planned orders to make, requisitions to buy |
+| Production order | CO01, or convert a planned order | Components reserved, operations scheduled, availability checked |
+| Release | CO02 | Order becomes executable; components staged to the line |
+| Goods issue | MIGO, movement type 261 (or backflush) | Components leave stock, cost charged to the order |
+| Confirmation | CO11N | Quantities, scrap and time reported per operation |
+| Goods receipt | MIGO, movement type 101 | Finished goods into stock, now available to promise |
+| Settlement | KO88 or CO88 | Variances between actual and standard cost go to finance; order closed |
+
+**Backflushing** issues components automatically when an operation is confirmed, which saves effort but silently corrupts stock if BOM quantities are wrong. **Settlement** is easy to forget: unsettled orders leave costs stuck in work in progress at month end.
+
+<KeyIdea>
+
+PP runs on BOMs, work centers and routings. The cycle goes PIR → MRP → production order → issue (261) → confirm → receive (101) → settle, and costs follow the order all the way.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Routing', def: 'The sequence of operations, work centers and standard times to make a product.' },
+  { term: 'Backflushing', def: 'Automatic goods issue of components when production is confirmed.' },
+  { term: 'Order settlement', def: 'Moving the production order’s cost variances to finance and closing it.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+Plan to produce in SAP starts with master data: BOMs, work centers and routings, which also drive standard costing. Demand enters as planned independent requirements and sales orders; MRP creates planned orders, which become production orders. Components are issued with movement type 261 or backflushed, operations are confirmed in CO11N, finished goods are received with movement type 101, and the order is settled so cost variances reach finance.
+
+</SayIt>
+
+<Q q="What is the difference between a planned order and a production order?">
+
+A planned order is MRP's internal proposal: it can still change or be deleted automatically by the next MRP run. A production order is the firm, executable order: components are reserved, operations scheduled, costs collected, and it goes through release, confirmation and settlement.
+
+</Q>
+
+<Q q="Why does production order settlement matter?">
+
+It transfers the difference between actual and standard cost (the variances) to finance and closes the order. Without it, costs remain in work in progress, inventory valuation and product margins are wrong, and month-end close is incomplete.
+
+</Q>
+
+</InterviewKit>

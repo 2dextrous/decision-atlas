@@ -1,0 +1,79 @@
+---
+title: Inventory & MRP in SAP
+line: sap
+summary: Where safety stock, reorder points, lot sizes and lead times live in the material master, and how MRP uses them.
+minutes: { gist: 3 }
+status: draft
+keywords: [SAP MRP, material master, MRP views, MRP type, PD, VB, VM, reorder point, safety stock, lot size, EX, FX, HB, planned delivery time, MRP Live, MD01N, MD04, MMBE]
+connected: [safety-stock, mrp, eoq, plan-to-produce, sap-basics]
+sources:
+  - text: "SAP Help Portal. SAP S/4HANA: material requirements planning and material master MRP views."
+    url: "https://help.sap.com/"
+  - text: "Magal, S. R. & Word, J. (2012). Integrated Business Processes with ERP Systems. Wiley."
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+import FromPractice from '../../components/content/FromPractice.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="The inventory formulas become fields in the material master." soon>
+
+Everything on the Inventory line ends up as settings in the **material master**, in its MRP views, maintained per plant (MM01 to create, MM02 to change):
+
+| Concept | Where it lives in SAP |
+|---|---|
+| How the item is planned | **MRP type**: PD for full MRP, VB for manual reorder point planning, VM for automatic reorder point, ND for no planning |
+| Reorder point | **Reorder point** field (used by VB and VM) |
+| Safety stock | **Safety stock** field, or a coverage profile for dynamic safety stock in days |
+| How much to order | **Lot size**: EX lot-for-lot, FX fixed quantity, HB replenish up to a maximum, plus minimums and rounding values |
+| Lead time | **Planned delivery time** (purchased) or in-house production time, plus goods receipt processing time |
+
+**MRP** reads these settings. MRP Live (MD01N) runs planning; for each material it compares demand (sales orders and planned independent requirements) with stock and open supply, and creates **planned orders** (to make) or **purchase requisitions** (to buy), with dates offset by the lead times. The **stock/requirements list (MD04)** shows the result: every receipt and requirement for a material, line by line, which is where planners investigate shortages. Stock overview (MMBE) shows quantities by plant, storage location and stock type.
+
+The formulas from the safety stock stop don't run themselves inside basic MRP. Someone calculates the safety stock and reorder point, or an inventory optimization tool such as IBP for inventory does, and the results are written into these fields. Wrong values here, such as a lead time that's too short, a forgotten lot-size minimum, or a material not extended to a plant, are behind many real MRP problems.
+
+<FromPractice>
+
+When I created the Global Bike material **CHSP1077** (Chain Lock Security Pro, copied from CHLK1077), I extended it to plant MI00 only. Trying to use it in Dallas then produced the classic error "material not maintained in plant DL00": the material master must exist for every plant that plans or stocks it.
+
+</FromPractice>
+
+<KeyIdea>
+
+In SAP, inventory policy is master data: MRP type, reorder point, safety stock, lot size and lead times per material and plant. MRP is only as good as those fields.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'MRP type', def: 'Material master setting that decides how a material is planned, such as PD or VB.' },
+  { term: 'Lot-sizing procedure', def: 'How MRP sizes orders: EX lot-for-lot, FX fixed, HB up to maximum, and others.' },
+  { term: 'MD04', def: 'Stock/requirements list: all receipts and requirements for a material, used to analyse shortages.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+In SAP, inventory policy lives in the material master's MRP views per plant: the MRP type (PD for MRP, VB or VM for reorder point planning), reorder point, safety stock or a coverage profile, lot-sizing procedure, and planned delivery and GR processing times. MRP Live (MD01N) uses them to create planned orders and purchase requisitions, and MD04 shows the resulting receipts and requirements. Safety stocks and reorder points are calculated outside basic MRP, often in an inventory optimization tool, then maintained here.
+
+</SayIt>
+
+<Q q="What is the difference between MRP type PD and VB?">
+
+PD plans against all requirements, such as sales orders and forecast PIRs, netting them against stock and open supply. VB is manual reorder point planning: a procurement proposal is triggered only when stock falls below the reorder point maintained in the material master.
+
+</Q>
+
+<Q q="MRP keeps creating requisitions too late. Where would you look?">
+
+Lead-time fields first: planned delivery time, GR processing time and in-house production time. Then check the safety stock and lot-size settings, open orders or receipts that weren't posted, and whether demand is entering MRP late.
+
+</Q>
+
+</InterviewKit>

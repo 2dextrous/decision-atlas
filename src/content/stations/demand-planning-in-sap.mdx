@@ -1,0 +1,73 @@
+---
+title: Demand planning in SAP
+line: sap
+summary: How the forecasting ideas on this map show up in SAP IBP, and how the agreed forecast reaches MRP in S/4HANA.
+minutes: { gist: 3 }
+status: draft
+keywords: [SAP IBP, integrated business planning, demand planning, statistical forecasting, forecast models, exponential smoothing, Croston, demand sensing, consensus demand, planned independent requirements, PIR, MD61]
+connected: [forecasting-fundamentals, exponential-smoothing, consensus-fva, sop-ibp, inventory-mrp-in-sap]
+sources:
+  - text: "SAP Help Portal. SAP Integrated Business Planning for Supply Chain: demand planning and forecast models."
+    url: "https://help.sap.com/"
+  - text: "Hyndman, R. J. & Athanasopoulos, G. Forecasting: Principles and Practice (3rd ed.). OTexts."
+    url: "https://otexts.com/fpp3/"
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="From statistical forecast to consensus plan to MRP input." soon>
+
+In the SAP world, demand planning usually happens in **SAP IBP (Integrated Business Planning)**, a cloud planning tool, while execution happens in **S/4HANA**. The flow mirrors the Demand line on this map:
+
+1. **History in:** sales history and customer orders flow from S/4HANA into IBP.
+2. **Clean the data:** pre-processing steps correct outliers and fill gaps, so a one-off bulk order doesn't distort the baseline.
+3. **Statistical forecast:** IBP offers forecast models such as moving averages, simple, double and triple exponential smoothing (Holt-Winters), automated exponential smoothing, Croston's method for intermittent items, regression, ARIMA and gradient-boosted trees. Planners assign models by segment, or let the system choose.
+4. **Measure the error:** IBP calculates error measures, such as MAPE and others, so planners can compare models and track accuracy.
+5. **Consensus:** sales and marketing add their input in planning views, often in Excel, and the S&OP process agrees one demand plan.
+6. **Short-term sensing:** demand sensing uses recent orders and other signals to adjust the next few weeks.
+7. **Hand-off to execution:** the agreed forecast goes back to S/4HANA as **planned independent requirements (PIRs)**, the demand that MRP plans against (in S/4HANA they can also be maintained with transaction MD61).
+
+From there, MRP takes over: it nets the PIRs against stock and open orders and creates planned orders and purchase requisitions.
+
+The concepts don't change because the tool is SAP. Classification, method choice, bias and value-add all still apply; IBP just runs them at scale.
+
+<KeyIdea>
+
+IBP turns history into a statistical forecast, adds human input through consensus, and sends the agreed plan to S/4HANA as planned independent requirements, which MRP then plans against.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'SAP IBP', def: 'SAP’s cloud planning suite for demand, supply, inventory and S&OP.' },
+  { term: 'Planned independent requirement (PIR)', def: 'Forecast demand stored in S/4HANA for MRP to plan against.' },
+  { term: 'Pre-processing', def: 'Cleaning sales history, such as outlier correction, before statistical forecasting.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+In SAP, demand planning typically runs in IBP. Sales history from S/4HANA is cleaned in pre-processing, statistical models such as exponential smoothing, Croston or gradient boosting generate the baseline, error measures compare models, and sales and marketing input feeds a consensus plan in S&OP. The agreed forecast flows back to S/4HANA as planned independent requirements that MRP plans against.
+
+</SayIt>
+
+<Q q="How does a forecast in IBP reach production planning in S/4HANA?">
+
+The released consensus forecast is transferred to S/4HANA as planned independent requirements. MRP nets them against stock and open supply, explodes BOMs, and creates planned orders for production and purchase requisitions for bought materials.
+
+</Q>
+
+<Q q="Which IBP forecast model would you use for spare parts with sporadic demand?">
+
+Croston's method, which is designed for intermittent demand, rather than standard exponential smoothing. I'd also check accuracy with measures that handle zero demand, and size stock from the demand distribution.
+
+</Q>
+
+</InterviewKit>
