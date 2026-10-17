@@ -2,7 +2,7 @@
 title: Demand patterns & classification
 line: demand
 summary: Smooth, erratic, intermittent or lumpy. Classify each item's demand first, because the class decides which methods can work.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 3 }
 status: draft
 keywords: [demand classification, ADI, average demand interval, CV squared, smooth, erratic, intermittent, lumpy, Syntetos-Boylan, ABC-XYZ]
 connected: [intermittent-demand, exponential-smoothing, inventory-segmentation, forecast-accuracy, service-parts]
@@ -10,16 +10,19 @@ sources:
   - text: "Syntetos, A. A., Boylan, J. E. & Croston, J. D. (2005). On the categorization of demand patterns. Journal of the Operational Research Society, 56(5), 495–503."
   - text: "Hyndman, R. J. & Athanasopoulos, G. Forecasting: Principles and Practice (3rd ed.). OTexts."
     url: "https://otexts.com/fpp3/"
+  - text: "Nikolopoulos, K., Syntetos, A. A., Boylan, J. E., Petropoulos, F., & Assimakopoulos, V. (2011). An aggregate–disaggregate intermittent demand approach (ADIDA) to forecasting: An empirical proposition and analysis. Journal of the Operational Research Society, 62(3), 544–554."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Two numbers that place any item in one of four demand patterns." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Two numbers that place any item in one of four demand patterns." next="How it works" nextMinutes={3}>
 
 A common forecasting mistake is to run one method across every item, then blame the method when spare parts and slow movers come out badly. Experienced planners classify the demand pattern first, because the pattern decides which methods can work at all.
 
@@ -48,6 +51,96 @@ Classify before you forecast. How often demand happens and how much it varies ar
   { term: 'CV²', def: 'Squared coefficient of variation of the non-zero demand sizes. Higher means bigger swings.' },
   { term: 'Lumpy demand', def: 'Sporadic and highly variable demand; manage it with stock policy rather than chasing a point forecast.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="Computing ADI and CV² step by step, classifying four example items, and matching each pattern to methods." next="Deep dive" nextMinutes={3}>
+
+### Computing the two numbers
+
+For each item, take a fixed stretch of history, say 12 months:
+
+1. **ADI** = number of periods ÷ number of periods with demand.
+2. Take only the non-zero quantities, compute their mean $\mu$ and standard deviation $\sigma$, then $CV^2 = (\sigma/\mu)^2$.
+3. Place the item using the cut-offs ADI = 1.32 and $CV^2$ = 0.49.
+
+<Example title="four items, twelve months each">
+
+<div class="table-wrap">
+
+| Item | Monthly demand | ADI | $CV^2$ | Pattern |
+|---|---|---|---|---|
+| Shampoo 200 ml | 40, 55, 38, 61, 47, 52, 44, 58, 49, 53, 42, 60 | 1.0 | 0.02 | Smooth |
+| Industrial adhesive | 5, 90, 12, 140, 8, 70, 20, 110, 15, 95, 10, 130 | 1.0 | 0.73 | Erratic |
+| Pump seal kit | 0, 0, 6, 0, 0, 5, 0, 0, 0, 7, 0, 6 | 3.0 | 0.01 | Intermittent |
+| Spare gearbox part | 5, 80, 12 and 150 in four months, zero in the rest | 3.0 | 0.91 | Lumpy |
+
+</div>
+
+The seal kit and the gearbox part both sell in only 4 months out of 12. But the seal kit sells about 6 each time, while the gearbox part's orders range from 5 to 150. Same frequency, completely different problems.
+
+</Example>
+
+Here $\sigma$ is the plain (population) standard deviation of the non-zero quantities. Some tools use the sample version, which gives slightly higher values, so stick to one convention.
+
+### From pattern to method
+
+<div class="table-wrap">
+
+| Pattern | Forecasting approach | Inventory approach |
+|---|---|---|
+| Smooth | Exponential smoothing, ARIMA, regression or ML | Standard safety-stock formulas work |
+| Erratic | As above, plus causal drivers if the swings have a cause | Larger buffers; check whether a few big customers drive the swings |
+| Intermittent | Croston family (SBA), or TSB for items that may die | Fit a distribution of demand over the lead time, such as Poisson |
+| Lumpy | SBA, TSB, bootstrapping, or no forecast at all | Make to order or hold central stock; agree lead times with customers |
+
+</div>
+
+For smooth items, check trend and seasonality next. Plot the series and compare each month's average with the overall average: a **seasonal index** of 1.3 means a month runs 30% above normal.
+
+<KeyIdea>
+
+ADI measures how often demand occurs; CV² of the non-zero sizes measures how much they vary. The four patterns that result decide both the forecasting method and the inventory policy.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={3} teaser="Time buckets that change the answer, why big customers make demand lumpy, breaks, and living with the cut-offs.">
+
+### The time bucket changes the answer
+
+The same item can be lumpy week by week and smooth month by month. Adding periods together (**temporal aggregation**) reduces the zeros and smooths the sizes. Some methods exploit this on purpose: forecast at a coarser bucket where the pattern is easier, then split the result back down (the ADIDA approach). Choose the bucket that matches the decision: weekly replenishment needs weekly patterns, while capacity planning can use monthly ones.
+
+### Look behind the pattern
+
+Erratic or lumpy demand often has a visible cause:
+
+- **A few large customers:** one customer ordering 150 units twice a year makes an item lumpy even if many small customers buy steadily. Forecasting that customer separately, or simply asking about their plans, turns noise into information.
+- **Order batching:** customers who order monthly instead of weekly create lumps out of smooth consumption. Their sell-through or usage data removes the lumps.
+- **Promotions and events:** spikes that should be modelled as uplift, not left in as variability.
+
+Before choosing a method for an awkward item, ask *why* it is awkward.
+
+### Patterns change
+
+Items move between classes as they grow, mature and decline: a new product may be intermittent at launch, smooth at maturity and intermittent again before phase-out. A structural break, such as a lost contract or a new channel, can change the pattern overnight. Re-classify regularly, and use only recent history after a known break.
+
+### Where the cut-offs come from
+
+The values 1.32 and 0.49 were derived by comparing the theoretical errors of Croston's method, its bias-corrected version and exponential smoothing: they mark the regions where each tends to do best. They are sensible defaults, not physical constants, and many teams adjust them after checking which method actually wins on their own data.
+
+<Trap>
+
+Including zero periods when computing CV² mixes the two questions together. An item that sells exactly 6 units every time it sells would look highly variable just because it sometimes sells nothing. Frequency belongs in ADI; size variation belongs in CV².
+
+</Trap>
+
+<KeyIdea>
+
+Patterns depend on the time bucket and change over the lifecycle. Look for the cause behind erratic demand, such as big customers or batching, and treat the cut-offs as tested defaults to check against your own data.
+
+</KeyIdea>
 
 </Level>
 

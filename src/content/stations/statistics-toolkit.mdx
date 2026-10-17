@@ -2,7 +2,7 @@
 title: Statistics you will actually use
 line: analytics
 summary: Averages, spread, box plots, outliers and stationarity, the handful of statistics behind most supply chain analysis.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 4 }
 status: draft
 keywords: [mean, median, standard deviation, coefficient of variation, box plot, quartiles, IQR, outliers, z-score, stationarity, ADF test, univariate, multivariate, correlation]
 connected: [demand-patterns, forecast-accuracy, ml-in-supply-chain, lean-six-sigma-toc, forecasting-fundamentals]
@@ -11,16 +11,20 @@ sources:
   - text: "Hyndman, R. J. & Athanasopoulos, G. Forecasting: Principles and Practice (3rd ed.). OTexts. Sections on time series features and stationarity."
     url: "https://otexts.com/fpp3/stationarity.html"
   - text: "Iglewicz, B. & Hoaglin, D. C. (1993). How to Detect and Handle Outliers. ASQC Quality Press."
+  - text: "Granger, C. W. J., & Newbold, P. (1974). Spurious regressions in econometrics. Journal of Econometrics, 2(2), 111–120."
+  - text: "Montgomery, D. C., & Runger, G. C. (2018). Applied Statistics and Probability for Engineers (7th ed.). Wiley."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Centre, spread, outliers and whether the pattern stays put." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Centre, spread, outliers and whether the pattern stays put." next="How it works" nextMinutes={3}>
 
 Most supply chain analysis rests on a few statistical ideas.
 
@@ -47,6 +51,99 @@ Know the centre (and whether spikes distort it), the spread, which points are un
   { term: 'Outlier', def: 'A value far from the rest, flagged by a rule such as 1.5 × IQR beyond the quartiles.' },
   { term: 'Stationarity', def: 'Constant mean and variance over time; often needed before modelling.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="The gist's sales data worked through: robust outlier checks, how one spike changes an item's class, and a simple price regression." next="Deep dive" nextMinutes={4}>
+
+### One spike, many effects
+
+Take the eleven days of sales from the gist: 10, 11, 12, 13, 14, 14, 15, 16, 17, 18 and 45.
+
+<Example title="what the 45 does to the numbers">
+
+<div class="table-wrap">
+
+| Measure | With the 45 | Without it |
+|---|---|---|
+| Mean | 16.8 | 14.0 |
+| Standard deviation | 9.66 | 2.58 |
+| Coefficient of variation | 0.58 (class Y) | 0.18 (class X) |
+
+</div>
+
+- **The z-score test misses it:** $(45 - 16.8)/9.66 \approx 2.9$, under the usual cut-off of 3, because the spike has inflated the standard deviation it is measured against. This is called **masking**.
+- **A robust test catches it:** use the median (14) and the median absolute deviation (MAD). The absolute deviations from 14 have a median of 2, so the robust z-score is $0.6745 \times (45 - 14)/2 \approx 10.5$, far beyond any threshold.
+- **One spike changes the class:** the item's coefficient of variation jumps from 0.18 to 0.58, moving it from X (steady) to Y (variable) and inflating its safety stock.
+
+</Example>
+
+The lesson: check for outliers with robust measures (median, MAD, IQR), decide whether each one is a real part of demand, and only then compute the statistics that drive policies.
+
+### Relationships: correlation and regression
+
+Weekly sales of a product at five price points:
+
+<div class="table-wrap">
+
+| Price (₹) | 100 | 95 | 90 | 85 | 80 |
+|---|---|---|---|---|---|
+| Sales | 200 | 215 | 236 | 250 | 270 |
+
+</div>
+
+A straight-line fit gives sales ≈ 549.2 − 3.5 × price, so each ₹1 cut adds about 3.5 units a week. The correlation is −0.998, very strong. At the average price and sales, the **price elasticity** is −3.5 × 90 / 234.2 ≈ −1.35: a 1% price cut raises sales by about 1.35%.
+
+### Distributions that come up again and again
+
+- **Normal:** sums of many small effects, such as demand over a lead time for steady items. The basis of z-values in safety stock.
+- **Poisson:** counts of rare, independent events, such as spare-part demand or breakdowns.
+- **Lognormal and other skewed shapes:** lead times and repair times, which can't go below zero but have long right tails.
+
+<KeyIdea>
+
+Spikes distort the mean, the standard deviation and every policy built on them, and can even hide from the z-score test. Use robust measures to find outliers, regression to quantify relationships such as price elasticity, and distributions that match the data's shape.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={4} teaser="Testing stationarity properly, autocorrelation, spurious correlation and Simpson's paradox, and the difference between significant and important.">
+
+### Testing stationarity
+
+Two common tests have opposite starting assumptions, which is why they are often used together:
+
+- **ADF (augmented Dickey-Fuller):** assumes the series has a unit root (it wanders without returning to a mean). A small p-value rejects that, suggesting stationarity.
+- **KPSS:** assumes the series is stationary. A small p-value rejects that, suggesting it isn't.
+
+If ADF says stationary and KPSS agrees, fine; if they disagree, look at the plot and consider trend-stationary versus difference-stationary behaviour. Fixes include **differencing** (working with changes rather than levels), **seasonal differencing** (this month minus the same month last year) and **log or Box-Cox transforms** to stabilize variance that grows with the level.
+
+### Autocorrelation
+
+The **autocorrelation function (ACF)** shows how strongly a series is related to its own past values at each lag. A spike at lag 12 in monthly data signals yearly seasonality; slowly decaying autocorrelation suggests a trend or a unit root. The partial autocorrelation (PACF) helps choose ARIMA model orders. Autocorrelated forecast errors are a sign that a model has missed a pattern.
+
+### Correlation traps
+
+- **Spurious correlation:** two series that both trend over time (say, sales of a product and the population of a city) will correlate strongly even with no link. Granger and Newbold (1974) showed how regressions between unrelated trending series produce misleadingly "significant" results. Difference the series or model the trend first.
+- **Simpson's paradox:** a pattern in the total can reverse within every group. Overall, faster carriers might seem to have more damage, but within each product type they have less, because they carry more fragile goods. Always check results within relevant segments.
+- **Causation:** a correlation between promotions and sales doesn't measure the promotion's effect if promotions were run when sales were expected to rise anyway. Controlled experiments or careful causal methods are needed.
+
+### Significant versus important
+
+With enough data, tiny effects become statistically significant: a picking method that is 0.3% faster may pass a test and still not matter. Report the size of effects with confidence intervals, and judge them against what they are worth in practice.
+
+<Trap>
+
+Deleting every point flagged as an outlier removes real demand: festival spikes, bulk orders from genuine customers, the start of a new trend. Investigate each one, remove only true errors or one-off events from the baseline, and model the rest.
+
+</Trap>
+
+<KeyIdea>
+
+Use ADF and KPSS together and transform series until they are stable, read the ACF for trend and seasonality, beware spurious correlation and Simpson's paradox, and judge effects by their size, not just their significance.
+
+</KeyIdea>
 
 </Level>
 

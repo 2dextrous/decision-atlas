@@ -2,7 +2,7 @@
 title: Plan to produce (PP)
 line: sap
 summary: BOMs, routings, MRP runs and production orders in SAP PP, from demand to finished goods and settled costs.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 4 }
 status: draft
 keywords: [plan to produce, SAP PP, bill of materials, CS01, work center, CR01, routing, CA01, planned independent requirements, MD61, MRP Live, MD01N, planned order, production order, CO01, goods issue 261, confirmation CO11N, settlement]
 connected: [mrp, mps, inventory-mrp-in-sap, record-to-report, sap-process-map]
@@ -13,13 +13,15 @@ sources:
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Master data first, then the cycle from demand to settled production order." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Master data first, then the cycle from demand to settled production order." next="How it works" nextMinutes={3}>
 
 Production in SAP rests on three pieces of master data, set up once:
 
@@ -55,6 +57,109 @@ PP runs on BOMs, work centers and routings. The cycle goes PIR → MRP → produ
   { term: 'Backflushing', def: 'Automatic goods issue of components when production is confirmed.' },
   { term: 'Order settlement', def: 'Moving the production order’s cost variances to finance and closing it.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="A production order's statuses, availability and capacity checks, the goods movements involved, and a cost variance worked through to settlement." next="Deep dive" nextMinutes={4}>
+
+### The life of a production order
+
+<div class="table-wrap">
+
+| Status | Meaning |
+|---|---|
+| CRTD | Created: planned, not yet executable |
+| REL | Released: can be printed, issued to and confirmed |
+| PCNF / CNF | Partially confirmed / confirmed: work reported |
+| DLV | Delivered: goods receipt posted for the full quantity |
+| TECO | Technically complete: no more work expected; open reservations cleared |
+| CLSD | Closed: after settlement, no more postings |
+
+</div>
+
+### Checks before and during execution
+
+- **Material availability:** at creation or release, the order checks whether components will be available. Shortages appear in the missing parts list (CO24).
+- **Capacity:** the routing's setup and run times load each work center. Capacity evaluation (CM01) shows overloads; capacity levelling (CM21) or PP/DS in S/4HANA reschedules operations to fit.
+- **Scheduling:** operations are scheduled backwards from the due date or forwards from the start, including queue and move times.
+
+### Goods movements
+
+- **261:** components issued to the order (manually, or by backflush at confirmation).
+- **262:** reversal of a component issue.
+- **101:** finished product received from the order.
+- **531:** by-product received.
+
+Failed automatic movements, such as a backflush with no stock, land in COGI for correction; until they are cleared, stock and costs are wrong.
+
+### Costs from plan to settlement
+
+<Example title="an order for 100 bikes">
+
+The standard cost is 1,000 USD a bike, so the plan is 100,000 USD: 70,000 of components and 30,000 of labour and machine time.
+
+- **Actual:** extra scrap used 72,000 USD of components, and a slow line used 31,000 USD of activities: 103,000 USD collected on the order.
+- **Goods receipt** of 100 bikes credits the order at standard: 100,000 USD.
+- **Balance:** 3,000 USD left on the order. Variance calculation splits it into categories (input quantity for the scrap, resource usage for the extra time), and **settlement** (KO88, or CO88 for many orders) moves it to finance, typically a price difference account or margin analysis.
+
+</Example>
+
+Orders still open at month end hold their costs as **work in process**, calculated before settlement so the balance sheet is right.
+
+<KeyIdea>
+
+Production orders move from created through released, confirmed and delivered to technically complete and closed. Availability and capacity checks protect execution, movements 261 and 101 carry the material flow, and variance calculation and settlement carry the money flow to finance.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={4} teaser="Discrete, repetitive and process manufacturing, make-to-order and sales order stock, product costing steps, PP/DS and MES, and the problems that keep plants up at night.">
+
+### Three manufacturing styles
+
+- **Discrete manufacturing:** production orders for each batch, as above. Suits job shops and varied products.
+- **Repetitive manufacturing:** for stable, high-volume lines, production is planned as run schedule quantities, reported with simple backflushing confirmations and costed by period on a product cost collector, without individual orders.
+- **Process manufacturing (PP-PI):** process orders and master recipes for chemicals, food and pharmaceuticals, with batch management, resources instead of work centers, and process instructions.
+
+**Kanban** in SAP supports pull replenishment between supply areas and production.
+
+### Make to order
+
+In make-to-order (for example, strategy 20), each sales order gets its own planned and production orders, and the finished goods go into **sales order stock**, reserved for that customer and valued separately. Costs can be tracked by order, which matters for configured or engineered products.
+
+### Product costing
+
+1. Maintain BOMs, routings, work center activity types and planned activity prices.
+2. Create a cost estimate (CK11N) that rolls up material and activity costs.
+3. Mark and release it (CK24) as the material's standard price for the period.
+4. Compare actual order costs with the standard and analyse variances by category.
+
+With the material ledger active in S/4HANA, actual costing can revalue inventory and cost of goods sold to actual costs at period end, if the company uses it.
+
+### PP/DS and MES
+
+PP/DS (production planning and detailed scheduling), embedded in S/4HANA, schedules orders on finite capacity with setup optimization and sequence rules. A **manufacturing execution system** on the shop floor dispatches operations, records machine data and confirmations, and sends them back to S/4HANA.
+
+### Problems that keep plants up at night
+
+- Orders can't be released: missing parts, status blocks, or missing master data.
+- Backflush errors pile up in COGI, so stock and costs drift.
+- Capacity overloads ignored by MRP, so planned dates are unrealistic.
+- Orders left open or unsettled, so costs stay in work in process and variances appear late.
+- BOM or routing changes not reflected in costing, so standards are wrong.
+
+<Trap>
+
+Backflushing with inaccurate BOMs quietly corrupts stock: the system issues the BOM quantity, not what was used. Keep BOMs accurate, report scrap, and clear COGI errors daily.
+
+</Trap>
+
+<KeyIdea>
+
+Choose discrete, repetitive or process manufacturing to fit the plant, use sales order stock for make-to-order, follow the costing chain from estimate to settlement, add PP/DS and MES for finite scheduling and shop-floor data, and watch release blocks, COGI and unsettled orders.
+
+</KeyIdea>
 
 </Level>
 

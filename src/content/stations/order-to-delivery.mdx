@@ -2,23 +2,26 @@
 title: Order to delivery basics
 line: orders
 summary: Everything that happens between a customer's order and the delivery at their door, and the measures that show whether it worked.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 3 }
 status: draft
 keywords: [order to cash, O2C, order fulfilment, order capture, credit check, availability check, picking, goods issue, proof of delivery, perfect order, order cycle time, OTIF]
 connected: [atp-ctp, order-to-cash, warehousing, supply-chain-kpis, order-visibility]
 sources:
   - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson."
   - text: "Magal, S. R. & Word, J. (2012). Integrated Business Processes with ERP Systems. Wiley."
+  - text: "Christopher, M. (2016). Logistics & Supply Chain Management (5th ed.). Pearson."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="The sell-side mirror of procurement, from order to cash in the bank." soon>
+<Level n={1} title="The gist" minutes={3} teaser="The sell-side mirror of procurement, from order to cash in the bank." next="How it works" nextMinutes={3}>
 
 When a supermarket chain orders 500 cases of shampoo, a chain of steps starts. Together they're called **order to cash (O2C)**, the sell-side mirror of procure-to-pay:
 
@@ -48,6 +51,88 @@ Order to delivery runs from capture through credit, availability, picking, shipp
   { term: 'Perfect order rate', def: 'Share of orders that are on time, complete, undamaged and correctly documented.' },
   { term: 'Proof of delivery (POD)', def: 'The customer’s confirmation that goods arrived, in what quantity and condition.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="Where order cycle time really goes, how OTIF and the perfect order are calculated, and backward scheduling from the requested date." next="Deep dive" nextMinutes={3}>
+
+### Where the time goes
+
+<Example title="one order's 53 hours">
+
+<div class="table-wrap">
+
+| Step | Hours | Mostly |
+|---|---|---|
+| Order capture and checks | 1 | Work |
+| Credit check, including holds | 3 | Waiting |
+| Availability check and allocation | 1 | Work |
+| Waiting for the picking wave | 6 | Waiting |
+| Picking and packing | 2 | Work |
+| Waiting for the truck | 8 | Waiting |
+| Transit | 30 | Moving |
+| Unloading and proof of delivery | 2 | Work |
+
+</div>
+
+Of the 21 hours before the truck leaves, only about 4 are work; the rest is waiting for a credit release, a picking wave or a truck. Cutting those waits usually shortens the cycle more than speeding up any single task.
+
+</Example>
+
+### OTIF and the perfect order
+
+**OTIF** counts an order as a success only if it arrives on time *and* complete. The **perfect order** adds more conditions: undamaged, with correct documents and a correct invoice. Because every condition must hold, the rate is roughly the product of the individual rates:
+
+$$
+0.96 \times 0.97 \times 0.99 \times 0.98 \approx 0.90
+$$
+
+Four measures that each look good (96% on time, 97% in full, 99% undamaged, 98% correct paperwork) give only about 90% perfect orders.
+
+### Backward scheduling
+
+To deliver on the requested date, the system works backwards: requested delivery date, minus transit time, gives the goods-issue date; minus loading time gives the loading date; minus picking and packing time gives the date the stock must be available. If stock won't be available by then, the system works forwards from the earliest availability date and proposes a new delivery date.
+
+<KeyIdea>
+
+Most order cycle time is waiting between steps, not work. OTIF and the perfect order multiply conditions, so they are always lower than any single measure. Backward scheduling from the requested date shows when each step must happen.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={3} teaser="Measuring against the requested date, order management design, differentiated service, and what retailers' OTIF penalties change.">
+
+### On time to what?
+
+"On time" can be measured against the date the customer **requested** or the date the company **promised**. Measuring against the promised date flatters performance: if the company promises late dates, it can be "on time" while customers wait longer than they wanted. Track both, and treat the gap between requested and promised dates as a measure of its own.
+
+### Designing order management
+
+- **Order channels:** EDI (electronic data interchange) messages from large customers, portals and apps for smaller ones, each validated automatically against prices, pack sizes and delivery rules.
+- **Credit management:** automatic release for low-risk customers and small amounts, with holds reviewed quickly; a credit hold that sits overnight can cost the delivery date.
+- **Order prioritization:** when resources are short, rules decide which orders are picked and shipped first.
+- **Backorders:** clear rules for partial shipments, backorders and cancellations, agreed with customers in advance.
+
+### Differentiated service
+
+Not every customer needs the same promise. Companies segment customers and set different delivery times, order cut-offs and minimum order sizes, priced into the commercial terms. A key retailer may get daily deliveries with tight windows; a small distributor, twice-weekly deliveries. Designing these promises deliberately, rather than serving everyone the same way, controls the cost to serve.
+
+### When customers measure you
+
+Large retailers score suppliers on OTIF at their own warehouses, often within narrow delivery windows, and charge penalties for misses. That moves the definition of "on time" into the customer's hands and makes accurate appointment booking, loading and transit as important as stock. Suppliers respond by measuring OTIF exactly as each key customer does, finding the causes of misses, and fixing the handful that dominate.
+
+<Trap>
+
+Reporting OTIF against promised dates, at line level and excluding "customer-caused" delays, can produce an impressive number that no customer recognizes. Measure the way your customers measure, starting from what they asked for.
+
+</Trap>
+
+<KeyIdea>
+
+Measure delivery against the requested date as well as the promised one, design order management to remove waits and holds, differentiate service by segment deliberately, and align your OTIF definition with your key customers'.
+
+</KeyIdea>
 
 </Level>
 

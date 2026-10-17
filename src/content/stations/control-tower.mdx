@@ -2,7 +2,7 @@
 title: Control tower & S&OE
 line: orders
 summary: Spotting this week's problems early and fixing them fast, the execution layer that sits below monthly S&OP.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 3 }
 status: draft
 keywords: [control tower, S&OE, sales and operations execution, exception management, alerts, playbook, short-term planning, visibility, KPIs, root cause]
 connected: [sop-ibp, order-visibility, eta-visibility, allocation, demand-sensing-shaping]
@@ -12,13 +12,15 @@ sources:
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="S&OP sets the monthly plan; S&OE keeps this week on track." soon>
+<Level n={1} title="The gist" minutes={3} teaser="S&OP sets the monthly plan; S&OE keeps this week on track." next="How it works" nextMinutes={3}>
 
 S&OP agrees the plan once a month. Real life doesn't wait a month: a supplier ships short on Tuesday, a truck breaks down on Wednesday, a promotion sells twice the forecast by Thursday. **Sales and operations execution (S&OE)** is the weekly, sometimes daily, rhythm that catches these problems and fixes them inside the S&OP plan, covering roughly the next few weeks.
 
@@ -44,6 +46,107 @@ S&OP plans the month; S&OE and the control tower defend the plan week by week by
   { term: 'Exception management', def: 'Focusing attention on deviations from plan rather than on everything.' },
   { term: 'Playbook', def: 'A pre-agreed set of responses for a common type of problem.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="Defining exceptions, ranking them by impact and urgency, a playbook worked through, and the weekly S&OE rhythm." next="Deep dive" nextMinutes={3}>
+
+### Define the exceptions
+
+An exception is a measurable condition that needs action, with a threshold, an owner and a time limit. Examples:
+
+- Projected stock of an A item falls below safety stock within the next two weeks.
+- An inbound shipment for a critical part is predicted more than 24 hours late.
+- A customer order is at risk of missing its confirmed date.
+- A bottleneck line is loaded over 100% next week.
+
+### Rank by impact and urgency
+
+<Example title="Monday's four exceptions">
+
+<div class="table-wrap">
+
+| Exception | Value at risk | Days until it hits | Value ÷ days |
+|---|---|---|---|
+| E1: component container delayed 5 days, feeding ₹2 crore of orders | ₹200 lakh | 8 | 25 |
+| E2: key customer order short 10% after a picking error, ships tomorrow | ₹30 lakh | 1 | 30 |
+| E3: Pune stock of one item below safety stock in 10 days | ₹10 lakh | 10 | 1 |
+| E4: truck breakdown, two small orders due today | ₹2 lakh | 0.5 | 4 |
+
+</div>
+
+Order of work: E2, then E1, then E4, then E3. Value at risk alone would put E1 first; urgency alone would put E4 first. Combining them, and adding customer importance, gives a sensible queue.
+
+</Example>
+
+### A playbook for a late inbound container
+
+1. Check stock of the component at other plants and warehouses, and in transit.
+2. Re-sequence production to run products that don't need it first.
+3. If the gap remains, compare expediting options (air freight for part of the quantity) against the margin at risk.
+4. Allocate the available components to the highest-priority orders.
+5. Inform affected customers with new dates.
+6. Record the root cause (supplier, port, documents) for the weekly review.
+
+Playbooks make responses fast and consistent, and set out which decisions a planner can take and which need escalation.
+
+### The S&OE rhythm
+
+- **Daily:** short stand-up on new exceptions and progress.
+- **Weekly S&OE meeting:** next 4 to 13 weeks: demand changes, supply problems, inventory against targets, decisions and escalations.
+- **Monthly:** persistent gaps go to S&OP.
+
+<KeyIdea>
+
+A control tower runs on defined exceptions with thresholds and owners, a queue ranked by impact and urgency, playbooks that set out actions and decision rights, and a daily–weekly–monthly rhythm linked to S&OP.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={3} teaser="From visibility to automated response, alert fatigue, decision rights, measuring value, and why many control towers become wallpaper.">
+
+### Maturity: from seeing to acting
+
+1. **Visibility:** one view of orders, stock and shipments.
+2. **Alerts:** exceptions detected automatically.
+3. **Playbooks:** standard responses with decision rights.
+4. **Prescriptive:** the system recommends the best response, testing options on a model of the network.
+5. **Automated:** routine responses (re-allocating stock, re-booking a carrier) happen without a person, within limits.
+
+Each step needs more trust in data and models. Most value appears from step 3 onwards.
+
+### Alert fatigue
+
+A control tower that raises hundreds of alerts a day trains people to ignore them. Good practice: few, well-designed exception types; thresholds tuned to what is actionable; alerts grouped by root cause (one late container, not fifty affected orders); and regular pruning of alerts nobody acts on.
+
+### Decision rights and speed
+
+Speed comes from knowing who can decide what. A planner might approve expediting up to ₹50,000, a manager up to ₹5 lakh, and anything larger goes to the S&OE meeting. Without such rules, every exception becomes a meeting and the control tower slows the business down.
+
+### Measuring its value
+
+- Exceptions caught before the customer noticed.
+- Time from detection to resolution.
+- Revenue protected compared with the cost of the response (expediting, overtime).
+- Recurring root causes eliminated over time.
+- OTIF and inventory performance before and after.
+
+### Why many control towers become wallpaper
+
+Common failures: a dashboard built before deciding what decisions it supports; data that lags reality by a day; no authority to act; and no follow-up on root causes. A smaller control tower with clear decisions and fresh data beats a large one that only displays.
+
+<Trap>
+
+Building the screens first and defining the decisions later produces an expensive display. Start from the few decisions that matter most, define the exceptions and playbooks for them, then build the data and views those decisions need.
+
+</Trap>
+
+<KeyIdea>
+
+Control towers create value as they move from visibility to playbooks, prescription and selective automation. Avoid alert fatigue, define decision rights, measure revenue protected and causes removed, and start from decisions, not dashboards.
+
+</KeyIdea>
 
 </Level>
 

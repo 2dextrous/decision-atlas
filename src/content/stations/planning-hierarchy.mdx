@@ -2,23 +2,26 @@
 title: The planning hierarchy
 line: supply
 summary: Strategic, tactical and operational plans, how far ahead each looks, and how decisions hand down from one level to the next.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 3 }
 status: draft
 keywords: [planning hierarchy, strategic planning, tactical planning, operational planning, aggregate planning, S&OP, MPS, MRP, scheduling, planning horizon, time fence]
 connected: [sop-ibp, mps, mrp, production-scheduling, network-design-decisions]
 sources:
   - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapters on decision phases and aggregate planning."
   - text: "Silver, E. A., Pyke, D. F. & Thomas, D. J. (2017). Inventory and Production Management in Supply Chains (4th ed.). CRC Press."
+  - text: "Hax, A. C., & Meal, H. C. (1975). Hierarchical integration of production planning and scheduling. In M. A. Geisler (Ed.), Studies in the Management Sciences, Vol. 1: Logistics. North-Holland."
+  - text: "Vollmann, T. E., Berry, W. L., Whybark, D. C., & Jacobs, F. R. (2005). Manufacturing Planning and Control for Supply Chain Management (5th ed.). McGraw-Hill."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Years, months, weeks and hours: who decides what at each level." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Years, months, weeks and hours: who decides what at each level." next="How it works" nextMinutes={3}>
 
 Supply chain decisions come in layers. The further ahead a decision looks, the less detail it needs and the harder it is to undo.
 
@@ -43,6 +46,81 @@ Plan at the level of detail the decision needs. Long-range plans work in familie
   { term: 'Planning horizon', def: 'How far ahead a plan looks; it must exceed the lead time of the decisions it drives.' },
   { term: 'Time fence', def: 'A cut-off inside which the plan is frozen or only changed with approval.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="How a family plan becomes item, week and hour plans, what each level hands down, and the fences that keep it stable." next="Deep dive" nextMinutes={3}>
+
+### What each level hands to the next
+
+<div class="table-wrap">
+
+| Level | Typical cycle | Input from above | Output to below |
+|---|---|---|---|
+| Strategic plan | Yearly | Business strategy | Capacity, network and supplier decisions |
+| S&OP | Monthly | Available capacity | Agreed volumes by family and month, inventory targets |
+| Master production schedule | Weekly | S&OP volumes | Quantities per finished item and week |
+| MRP | Daily or weekly run | MPS and bills of materials | Planned purchase and production orders |
+| Scheduling | Daily, hourly | Released production orders | Job sequence per line and shift |
+
+</div>
+
+### Disaggregation: from families to items
+
+Each step down splits a total into more detail. If S&OP agrees 1 lakh units of shampoo for December, the master schedule might split it by the recent mix: 40,000 of the 200 ml pack, 35,000 of the 650 ml pack and 25,000 sachets, then spread each across the weeks of December. The check runs the other way too: the items in the MPS must add back up to the family volume S&OP signed off. When they don't, either the mix assumption or the plan is wrong.
+
+### Planning buckets and horizons
+
+Higher levels use bigger time buckets and longer horizons: S&OP looks 18 months or more ahead in months, the MPS a few months in weeks, and scheduling a few days in hours or minutes. Each level must look at least as far ahead as the lead time of the decisions it controls: a plan that releases supplier orders needs a horizon longer than the supplier's lead time.
+
+### Time fences
+
+Plans near today are expensive to change, because materials are bought and lines are booked. Most companies divide the horizon into zones:
+
+- **Frozen:** the next one or two weeks. Changes need management approval.
+- **Slushy:** a few weeks further out. Changes are allowed within limits, for example swapping items but not changing the total.
+- **Liquid:** further out. The plan is free to change.
+
+<KeyIdea>
+
+Each level turns the plan above it into more detail, in shorter buckets, and the details must add back up to the agreed totals. Horizons must cover the lead times they control, and time fences keep the near term stable enough to execute.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={3} teaser="Why plans are layered, where layering breaks, concurrent planning in modern tools, and the false comfort of detail.">
+
+### Why plan in layers at all
+
+Hax and Meal's work on hierarchical production planning in the 1970s set out the logic: solving everything in one giant detailed model was impossible, and also unwise, because detailed forecasts far ahead are mostly noise. Aggregate decisions (capacity, workforce, seasonal stock) are made on aggregate data, where forecasts are more accurate, and detail is added only when it is needed and more reliable.
+
+### Where layering breaks
+
+- **Mix problems hidden in totals:** the family plan fits total capacity, but one SKU runs only on one line, which is overloaded. Aggregate plans need checks on the critical resources for each item group.
+- **Inconsistency:** if the levels use different numbers (finance's plan, sales' plan, the factory's plan), layering amplifies the confusion instead of controlling it.
+- **Nervousness:** a small change at the top cascades into many changes below, especially when lot sizes and lead-time offsets amplify it.
+- **Slow feedback:** if problems on the shop floor take a month to reach S&OP, the higher levels keep committing to plans that can't be executed.
+
+### Concurrent planning in modern tools
+
+Advanced planning systems can solve several levels together: a constrained master plan that already respects material availability and key capacities, instead of the classic sequence where MRP assumes infinite capacity and problems are found later. This shortens the loop, but it needs accurate capacity and lead-time data, and planners still need the layered view to understand the result.
+
+### Demand-driven alternatives
+
+Some companies decouple the operational layers with strategic buffers instead of planning every component from a forecast: demand-driven MRP (DDMRP) places stock buffers at chosen points and replenishes them from actual consumption. The tactical layer (S&OP) stays; the operational layer becomes more pull-based.
+
+<Trap>
+
+More detail is not more accuracy. Planning every SKU by day for next year produces precise-looking numbers that are mostly noise, takes huge effort to maintain and gives planners false confidence. Match detail to the decision and the horizon.
+
+</Trap>
+
+<KeyIdea>
+
+Layered planning exists because aggregate decisions work best on aggregate data. Watch for mix problems hidden in totals, inconsistent numbers between levels and slow feedback, and use detail only where the decision needs it.
+
+</KeyIdea>
 
 </Level>
 

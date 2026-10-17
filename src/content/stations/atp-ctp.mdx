@@ -2,23 +2,27 @@
 title: "Order promising: ATP & CTP"
 line: orders
 summary: What you can promise a customer from stock and planned supply, and what you could make or buy in time.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 4 }
 status: draft
 keywords: [available to promise, ATP, capable to promise, CTP, order promising, committed orders, scheduled receipts, confirmed date, allocation, backorder]
 connected: [mps, allocation, order-to-delivery, order-to-cash, substitution]
 sources:
   - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson."
   - text: "Silver, E. A., Pyke, D. F. & Thomas, D. J. (2017). Inventory and Production Management in Supply Chains (4th ed.). CRC Press."
+  - text: "Ball, M. O., Chen, C.-Y., & Zhao, Z.-Y. (2004). Available to promise. In D. Simchi-Levi, S. D. Wu & Z.-J. Shen (Eds.), Handbook of Quantitative Supply Chain Analysis. Springer."
+  - text: "Littlewood, K. (1972). Forecasting and control of passenger bookings. AGIFORS Symposium Proceedings, 12, 95–117."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Promise only what you can deliver: from stock first, then from capacity." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Promise only what you can deliver: from stock first, then from capacity." next="How it works" nextMinutes={3}>
 
 A customer asks: "Can you deliver 5,000 units by 10 October?" A reliable answer needs more than looking at the shelf.
 
@@ -43,6 +47,85 @@ ATP promises from stock and planned supply that isn't yet committed; CTP checks 
   { term: 'CTP', def: 'Whether production capacity and materials can supply an order by a requested date.' },
   { term: 'Confirmed date', def: 'The delivery date promised to the customer after the availability check.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="Cumulative ATP with look-ahead, a CTP check worked step by step, and the rules modern promising engines apply." next="Deep dive" nextMinutes={4}>
+
+### Cumulative ATP and look-ahead
+
+ATP is calculated per period, but later commitments can use earlier supply. A correct check therefore looks ahead.
+
+<Example title="why look-ahead matters">
+
+No starting stock. Week 1: 500 units arrive and 200 are already promised. Week 2: nothing arrives and 300 are promised.
+
+- **Without look-ahead:** week 1 shows 300 available, and a salesperson could promise them to a new customer.
+- **With look-ahead:** week 2's 300 can only be covered by week 1's leftover, so week 1's ATP is really zero.
+
+Promising the 300 would break an existing commitment.
+
+</Example>
+
+### A CTP check, step by step
+
+Back to the gist: a customer wants 5,000 units by 10 October, and ATP can cover 4,300. For the remaining 700:
+
+1. **Capacity:** the filling line has space for 1,000 units on 8 and 9 October.
+2. **Materials:** bottles are short; the supplier needs 5 days, so an order placed today arrives on 7 October, in time.
+3. **Logistics:** production finishes on 9 October; delivery takes 3 days.
+4. **Answer:** confirm 4,300 for 10 October and 700 for 12 October, or ask whether the customer prefers one delivery on the 12th.
+
+CTP is only as good as the capacity and material data behind it, and the slot it uses must then be reserved so it isn't promised twice.
+
+### Rules a promising engine applies
+
+- **Product substitution:** offer an equivalent item if the requested one is short.
+- **Location substitution:** check other warehouses or plants, with the extra freight or time included.
+- **Allocation:** reserve ATP for customer groups or channels, so the first order doesn't take everything.
+- **Partial deliveries:** whether the customer accepts splits, and the minimum quantity per delivery.
+
+<KeyIdea>
+
+ATP must be cumulative with look-ahead, or later commitments get broken. CTP checks capacity, materials and logistics for what ATP can't cover, then reserves the slot, and modern engines add substitution, alternative locations and allocation rules.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={4} teaser="Promise fidelity, backorder re-planning, reserving supply for more valuable orders, and the limits of capable-to-promise.">
+
+### Promise fidelity
+
+The real test of order promising is whether promises are kept. **Promise fidelity**, the share of confirmed dates actually met, separates a promising process that reflects reality from one that simply says yes. Low fidelity usually traces back to inaccurate stock records, optimistic lead times or capacity data, or promises made outside the system.
+
+### Re-planning backorders
+
+When supply changes (a delayed receipt, a cancelled order, extra production), existing confirmations may need to change. **Backorder processing** re-runs the check for open orders in priority order, re-confirming dates and moving supply from low-priority to high-priority orders where the rules allow. It should run regularly, with customers told about changes rather than discovering them on the delivery date.
+
+### Reserving supply for more valuable orders
+
+If a premium customer segment typically orders later but pays more, giving all ATP to the first orders that arrive can leave nothing for them. Revenue management offers a rule: **Littlewood's rule** (1972) says to protect units for the higher-value class as long as the probability that its demand exceeds the protected quantity is at least the ratio of the low value to the high value. With margins of ₹80 for standard orders and ₹120 for premium ones, keep protecting units while the chance that premium demand will use them is at least 80/120 ≈ 67%. Allocation-based ATP puts such protection levels into practice.
+
+### Profitable to promise
+
+Some companies extend the idea further: rather than asking only "can we deliver?", the system evaluates "should we, and where from?", comparing the margin of each promising option after freight, expediting and the cost of displacing other orders.
+
+### The limits of CTP
+
+Capable-to-promise needs a planning engine that respects finite capacity and material availability, and it must not double-book slots used by other planned orders. In complex factories, full CTP for every order can be slow or unreliable; many companies use CTP for selected products or customers and simpler ATP with lead-time rules for the rest.
+
+<Trap>
+
+Promising from stock on hand, without subtracting quantities already committed or looking ahead to future commitments, overpromises. The order looks confirmed today and fails next week. Use cumulative ATP with look-ahead, always.
+
+</Trap>
+
+<KeyIdea>
+
+Measure promise fidelity, re-plan backorders when supply changes, protect supply for higher-value orders using rules like Littlewood's, and use CTP where the planning data can support it.
+
+</KeyIdea>
 
 </Level>
 

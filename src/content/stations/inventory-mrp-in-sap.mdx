@@ -2,7 +2,7 @@
 title: Inventory & MRP in SAP
 line: sap
 summary: Where safety stock, reorder points, lot sizes and lead times live in the material master, and how MRP uses them.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 4, deep: 4 }
 status: draft
 keywords: [SAP MRP, material master, MRP views, MRP type, PD, VB, VM, reorder point, safety stock, lot size, EX, FX, HB, planned delivery time, MRP Live, MD01N, MD04, MMBE]
 connected: [safety-stock, mrp, eoq, plan-to-produce, sap-basics]
@@ -13,6 +13,8 @@ sources:
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
@@ -20,7 +22,7 @@ import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 import FromPractice from '../../components/content/FromPractice.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="The inventory formulas become fields in the material master." soon>
+<Level n={1} title="The gist" minutes={3} teaser="The inventory formulas become fields in the material master." next="How it works" nextMinutes={4}>
 
 Everything on the Inventory line ends up as settings in the **material master**, in its MRP views, maintained per plant (MM01 to create, MM02 to change):
 
@@ -53,6 +55,101 @@ In SAP, inventory policy is master data: MRP type, reorder point, safety stock, 
   { term: 'Lot-sizing procedure', def: 'How MRP sizes orders: EX lot-for-lot, FX fixed, HB up to maximum, and others.' },
   { term: 'MD04', def: 'Stock/requirements list: all receipts and requirements for a material, used to analyse shortages.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={4} teaser="What an MRP run does step by step, how lead-time scheduling dates a purchase requisition, reorder-point planning in numbers, and the exception messages planners act on." next="Deep dive" nextMinutes={4}>
+
+### One MRP run, step by step
+
+For each material in the planning file (materials with changes since the last run, or all materials):
+
+1. **Net requirements:** available stock (minus safety stock) plus firmed receipts, against requirements (sales orders, PIRs, dependent requirements, reservations).
+2. **Lot size:** shortages are grouped and rounded by the lot-sizing procedure (lot-for-lot, fixed, weekly and so on), minimums and rounding values.
+3. **Procurement type:** in-house (E) creates planned orders; external (F) creates purchase requisitions or schedule lines; special procurement keys handle cases such as transfers from another plant.
+4. **Scheduling:** dates are calculated backwards from the requirement date.
+5. **BOM explosion:** for in-house items, planned orders create dependent requirements for components, which are planned in turn.
+6. **Exception messages** flag where existing orders no longer fit the plan.
+
+### Dating a purchase requisition
+
+For an externally procured material, MRP works backwards from the date the material is needed:
+
+- **Goods receipt processing time** (days to inspect and put away) moves the delivery date earlier.
+- **Planned delivery time** (the supplier's lead time) gives the date the order must be placed.
+- **Purchasing processing time** (days for the buyer to process the requisition) gives the requisition's release date.
+
+If any of these is too short in the master data, every requisition is created too late, and planners spend their days expediting.
+
+<Example title="reorder-point planning (MRP type VB)">
+
+A material has a reorder point of 60, safety stock of 20 and a fixed lot size of 100. When stock (plus fixed receipts) falls to 55, below the reorder point, the next MRP run creates a purchase requisition for 100. The reorder point should equal expected demand over the replenishment lead time plus safety stock; with MRP type VM, the system calculates it from the material's consumption forecast instead.
+
+</Example>
+
+### Reading MD04 and its exception messages
+
+The stock/requirements list (MD04) shows each receipt and requirement in date order with the projected available quantity. Common exception messages:
+
+- **10:** bring the order forward (it arrives after it is needed).
+- **15:** postpone the order (it arrives earlier than needed).
+- **20:** cancel the order (no longer needed).
+- **96:** stock has fallen below the safety stock.
+
+Collective lists (MD06, MD07) and Fiori apps such as Manage Material Coverage let planners work through exceptions across many materials.
+
+<KeyIdea>
+
+MRP nets requirements against stock and receipts, applies lot sizes, chooses make or buy, schedules backwards through processing and delivery times, explodes BOMs and raises exceptions. Its dates are only as good as the lead times in the material master.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={4} teaser="Lot-sizing options, static and dynamic safety stock, consumption-based planning, MRP areas, and the master-data errors behind most bad plans.">
+
+### Lot-sizing options
+
+- **Static:** lot-for-lot (EX), fixed lot size (FX), replenish up to a maximum stock level (HB).
+- **Periodic:** daily (TB), weekly (WB) or monthly (MB) lots, grouping all requirements of the period.
+- **Optimum:** procedures that balance ordering and holding costs period by period, such as part-period balancing, least unit cost, dynamic lot size creation and Groff's procedure.
+- **Modifiers:** minimum and maximum lot sizes, rounding values or rounding profiles (for pallets or cases), and scrap percentages.
+
+### Safety stock, static and dynamic
+
+- **Static safety stock:** a fixed quantity in the MRP 2 view, calculated outside or by an optimization tool.
+- **Dynamic safety stock:** a **range of coverage profile** sets safety stock as days of average future demand, so it rises and falls with the forecast.
+- **Safety time:** plans receipts a set number of days early, protecting against supply delays rather than demand surprises.
+
+Inventory optimization in IBP can calculate targets across echelons and write them into these fields.
+
+### Consumption-based planning
+
+Not every material needs full MRP. Cheap, regularly used items can be planned on reorder points (VB, or VM with an automatic reorder point) or on a forecast of their own consumption (VV), using the forecast view of the material master. This keeps the MRP effort on the materials that matter.
+
+### MRP areas
+
+MRP normally plans at plant level. **MRP areas** allow separate planning for parts of a plant (a storage location with its own replenishment), for stock provided to a subcontractor, or for other special cases, each with its own MRP parameters.
+
+### Where bad plans come from
+
+- Materials not extended to the plant, or not marked as relevant for MRP.
+- Wrong procurement type or special procurement key (planned orders for something bought, or the reverse).
+- Lead times, lot sizes and rounding values set years ago and never reviewed.
+- Unconsumed old PIRs and forgotten open orders creating phantom requirements or receipts.
+- Inaccurate stock, so MRP plans from numbers that aren't on the shelf.
+
+<Trap>
+
+Setting a material's MRP type to ND (no planning) to stop "annoying" requisitions also stops MRP from protecting it at all. Fix the cause (lead time, lot size, safety stock, stale demand) rather than switching planning off.
+
+</Trap>
+
+<KeyIdea>
+
+Choose lot sizes, static or dynamic safety stock and consumption-based planning per material, use MRP areas where parts of a plant plan differently, and look first at master data when plans go wrong.
+
+</KeyIdea>
 
 </Level>
 

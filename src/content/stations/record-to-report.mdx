@@ -2,7 +2,7 @@
 title: Record to report (FI/CO)
 line: sap
 summary: Where every logistics step lands in the books, how account determination picks the accounts, and what month-end close involves.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 3 }
 status: draft
 keywords: [record to report, SAP FI, SAP CO, universal journal, ACDOCA, account determination, OBYC, VKOA, valuation class, BSX, WRX, PRD, GR/IR clearing, accounts payable, accounts receivable, period-end close, price control]
 connected: [procure-to-pay, order-to-cash, plan-to-produce, cash-conversion-cycle, sap-basics]
@@ -13,6 +13,8 @@ sources:
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
@@ -20,7 +22,7 @@ import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 import FromPractice from '../../components/content/FromPractice.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Every goods movement is also a journal entry. Here's how SAP picks the accounts." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Every goods movement is also a journal entry. Here's how SAP picks the accounts." next="How it works" nextMinutes={3}>
 
 In SAP, logistics and finance aren't separate worlds. Each goods receipt, goods issue, invoice and payment creates an accounting entry automatically, and in S/4HANA all of them land in one table, the **Universal Journal (ACDOCA)**, together with their controlling details such as cost center, profit center and order.
 
@@ -31,7 +33,7 @@ The postings you'll meet most often:
 | Goods receipt for a purchase order | Dr Inventory / Cr GR/IR clearing |
 | Supplier invoice | Dr GR/IR clearing / Cr Supplier (payables) |
 | Payment run | Dr Supplier / Cr Bank |
-| Components issued to production | Dr Production order / Cr Raw material inventory |
+| Components issued to production | Dr Consumption, charged to the production order / Cr Raw material inventory |
 | Post goods issue to a customer | Dr Cost of goods sold / Cr Inventory |
 | Customer billing | Dr Customer (receivables) / Cr Revenue, plus tax |
 | Customer payment | Dr Bank / Cr Customer |
@@ -59,6 +61,97 @@ Every logistics event posts automatically to finance. Account determination (OBY
   { term: 'Valuation class', def: 'Material master field that links a material to its inventory G/L accounts.' },
   { term: 'Price control (S vs V)', def: 'Standard price, fixed with variances posted separately, versus moving average price, updated by each receipt.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="OBYC keys and valuation classes in more detail, moving average price recalculated by hand, the Global Bike typo explained, and the month-end close in transactions." next="Deep dive" nextMinutes={3}>
+
+### Account determination in more detail
+
+OBYC combines the **chart of accounts**, a **valuation grouping code** (to treat plants differently if needed), the material's **valuation class** and a **transaction key** to find the account. Key transaction keys:
+
+<div class="table-wrap">
+
+| Key | Used for |
+|---|---|
+| BSX | Inventory postings (every movement that changes stock value) |
+| WRX | GR/IR clearing |
+| PRD | Price differences (mainly with standard price) |
+| GBB | The offsetting entry for inventory postings, refined by modifiers such as VBR (consumption), VAX/VAY (goods issue for sales), INV (inventory differences) and BSA (initial stock entry) |
+| UMB | Revaluation gains or losses |
+
+</div>
+
+Standard valuation classes include 3000 for raw materials, 3100 for trading goods, 7900 for semi-finished and 7920 for finished products, each pointing to its own inventory account.
+
+### Moving average price, worked
+
+<Example title="a new receipt changes the average">
+
+Stock: 100 units valued at 25.00 each (2,500). A goods receipt brings 300 units at the PO price of 25.50 (7,650).
+
+New moving average price = (2,500 + 7,650) / 400 = 25.375.
+
+</Example>
+
+When a later invoice differs from the PO price and the material uses moving average price, the difference is posted to the inventory account (BSX) and the average updated, as long as enough stock remains to absorb it. That is what happened with the Global Bike typo: an invoice entered at 2,500 instead of 2,550 created a difference aimed at the inventory account. With standard price, the same difference would have gone to the price difference account (PRD), leaving the stock value unchanged.
+
+### The close, in transactions
+
+- **Periods:** open the new posting period in FI (OB52) and in materials management (MMPV).
+- **GR/IR:** analyse and clear old items, then reclassify balances for the balance sheet.
+- **Foreign currency:** revalue open items and balances (FAGL_FCV).
+- **Fixed assets:** run depreciation (AFAB).
+- **Production:** calculate work in process and variances, and settle orders (CO88).
+- **Reporting:** produce the financial statements and management reports.
+
+<KeyIdea>
+
+OBYC uses valuation class and transaction keys (BSX, WRX, PRD, GBB with modifiers, UMB) to find accounts. Moving average price updates with each receipt and absorbs invoice differences while stock lasts, and the close runs through periods, GR/IR, revaluation, depreciation, settlement and reporting.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={3} teaser="Controlling in S/4HANA, the material ledger, lower-of-cost valuation, why a goods receipt can fail on a closed period, and what makes a close fast.">
+
+### Controlling in S/4HANA
+
+- **Cost center accounting:** costs of departments and functions.
+- **Internal orders:** costs of projects, campaigns or events.
+- **Product costing:** standard costs, actual order costs and variances.
+- **Margin analysis:** profitability by customer, product and region. In S/4HANA the account-based approach (margin analysis) is the standard, and because postings land in ACDOCA, finance and controlling report from the same line items.
+
+### The material ledger
+
+The material ledger is always active for inventory valuation in S/4HANA, recording values in several currencies or valuations. Companies can also use **actual costing**, which collects price and exchange-rate differences during the period and revalues inventory and cost of goods sold to actual cost at period end.
+
+### Valuing stock at the lower of cost
+
+Accounting standards require inventory at the lower of cost and net realisable value. SAP supports this with balance sheet valuation functions that compare stock values with market prices, movement rates or range of coverage, and propose write-downs for slow-moving or overvalued stock, which links the slow and obsolete stock stop to the books.
+
+### "Posting only possible in periods…"
+
+A goods receipt or goods issue fails with a message that posting is only possible in two specific periods when the materials management period hasn't been moved forward (MMPV), even though FI's period is open. Materials management allows postings only in the current and previous period, so the period roll-over at month start is a small step with large consequences.
+
+### What makes a close fast
+
+- Clean logistics postings during the month: receipts on time, invoices matched, orders settled.
+- Automated reconciliations: GR/IR, intercompany, subledgers to the general ledger.
+- A close calendar with owners and dependencies, monitored daily.
+- Exceptions investigated during the month, not discovered at its end.
+
+<Trap>
+
+Assuming finance can fix logistics errors at month end creates a slow, painful close. Every wrong price, missing receipt or unsettled order becomes a manual correction later; the cleaner the daily postings, the faster the close.
+
+</Trap>
+
+<KeyIdea>
+
+Controlling and finance share ACDOCA in S/4HANA, the material ledger is always on, balance sheet valuation applies lower-of-cost rules, the MM period roll-over (MMPV) prevents classic posting errors, and a fast close depends on clean daily logistics postings.
+
+</KeyIdea>
 
 </Level>
 

@@ -2,7 +2,7 @@
 title: "Intermittent demand: Croston, SBA, TSB"
 line: demand
 summary: Forecasting spare parts and slow movers that sell in occasional bursts with long gaps in between.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 4, deep: 4 }
 status: draft
 keywords: [intermittent demand, Croston, SBA, Syntetos-Boylan approximation, TSB, demand interval, demand size, spare parts, obsolescence, bias]
 connected: [demand-patterns, service-parts, slow-obsolete, probabilistic-forecasting, forecast-accuracy]
@@ -10,16 +10,20 @@ sources:
   - text: "Croston, J. D. (1972). Forecasting and stock control for intermittent demands. Operational Research Quarterly, 23(3), 289–303."
   - text: "Syntetos, A. A. & Boylan, J. E. (2005). The accuracy of intermittent demand estimates. International Journal of Forecasting, 21(2), 303–314."
   - text: "Teunter, R. H., Syntetos, A. A. & Babai, M. Z. (2011). Intermittent demand: Linking forecasting to inventory obsolescence. European Journal of Operational Research, 214(3), 606–615."
+  - text: "Syntetos, A. A., & Boylan, J. E. (2001). On the bias of intermittent demand estimates. International Journal of Production Economics, 71(1–3), 457–466."
+  - text: "Willemain, T. R., Smart, C. N., & Schwarz, H. F. (2004). A new approach to forecasting intermittent demand for service parts inventories. International Journal of Forecasting, 20(3), 375–387."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Forecast the size and the gap separately, then fix the bias and the obsolescence problem." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Forecast the size and the gap separately, then fix the bias and the obsolescence problem." next="How it works" nextMinutes={4}>
 
 Some items sell like this: 0, 0, 8, 0, 0, 0, 7, 0, 9, 0. Spare parts, slow-moving SKUs and specialist chemicals behave this way. Ordinary exponential smoothing struggles because it blends the zeros and the bursts into a small average that is wrong in every single period: too high when nothing sells, far too low when a burst arrives.
 
@@ -48,6 +52,95 @@ For intermittent items, forecast how big and how often separately. Use SBA to re
   { term: 'SBA', def: 'Bias-corrected Croston: multiply by (1 − α/2).' },
   { term: 'TSB', def: 'Updates the probability of demand every period, so the forecast decays when demand stops.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={4} teaser="Croston, SBA and TSB worked through on the same series, including what happens when demand stops." next="Deep dive" nextMinutes={4}>
+
+### The update rules
+
+Croston updates only in periods with demand. When a demand of size $y$ arrives $q$ periods after the previous one:
+
+$$
+z \leftarrow z + \alpha\,(y - z) \qquad p \leftarrow p + \alpha\,(q - p) \qquad \text{forecast} = \frac{z}{p}
+$$
+
+In periods with zero demand, nothing changes.
+
+**SBA** multiplies the result by $(1 - \alpha/2)$ to remove Croston's upward bias.
+
+**TSB** replaces the interval with a demand probability $d$, updated *every* period with its own constant $\beta$: towards 1 when demand occurs and towards 0 when it doesn't. The size $z$ updates only when demand occurs, and the forecast is $d \times z$.
+
+<Example title="0, 0, 8, 0, 0, 0, 7, 0, 9, 0 with α = β = 0.2">
+
+Start Croston at the first demand: size $z$ = 8, interval $p$ = 3.
+
+- Period 7, a demand of 7 after 4 periods: $z$ = 7.8, $p$ = 3.2, forecast 2.44.
+- Period 9, a demand of 9 after 2 periods: $z$ = 8.04, $p$ = 2.96, forecast **2.72**.
+- SBA: 2.72 × 0.9 = **2.44**. The real average over the ten periods is 24 / 10 = 2.4.
+
+TSB, starting from $d$ = 1/3 and $z$ = 8 after period 3, ends period 10 with $d$ ≈ 0.33 and $z$ = 8.04, a forecast of **2.67**.
+
+Now suppose the machine this part fits is retired and **ten more periods pass with no demand**:
+
+- Croston and SBA don't move at all: still 2.72 and 2.44 a period, for ever.
+- TSB's probability decays every period, $0.33 \times 0.8^{10} \approx 0.036$, so its forecast falls to about **0.29** and keeps falling.
+
+</Example>
+
+That last comparison is why TSB matters for parts at risk of becoming obsolete.
+
+### From forecast to stock
+
+An intermittent forecast is a rate, but stocking decisions need the distribution of demand over the lead time. Two common approaches:
+
+- **A compound distribution:** assume demand occurrences follow a Poisson process and sizes follow another distribution, then compute the stock that meets the service target.
+- **Bootstrapping:** resample past periods, zeros included, to simulate many possible lead-time totals, and read off the quantile you need.
+
+The policy, often a periodic review with an order-up-to level, is then set from that distribution, not from a normal curve built around the average rate.
+
+<KeyIdea>
+
+Croston separates size and interval, SBA corrects its bias, and TSB updates the chance of demand every period, so it notices when an item dies. Stock levels come from the distribution of lead-time demand, not from the average rate.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={4} teaser="Why Croston is biased, why common error measures reward forecasting zero, and smarter ways to judge and stock slow items.">
+
+### Where Croston's bias comes from
+
+Croston divides one smoothed estimate by another. Even if each is unbiased, the average of a ratio is not the ratio of the averages: random variation in the interval estimate pushes the expected forecast above the true rate. Syntetos and Boylan (2001) showed this bias analytically, and SBA's factor of $(1 - \alpha/2)$ is a simple approximate correction. The bias grows with $\alpha$, one reason small smoothing constants (0.05 to 0.2) are usual for intermittent items.
+
+### Why the usual error measures mislead
+
+- **MAPE** divides by actual demand, so zero periods make it undefined.
+- **MAE** has a hidden flaw: it is minimized by the *median*. For an item that sells nothing in most periods the median is zero, so a forecast of zero every period can score the best MAE while being useless for stocking.
+- Better choices are errors scaled by a benchmark, such as MASE or a scaled squared error, which reward getting the average rate right, or measures of the inventory outcome itself: the service achieved and the stock needed to achieve it.
+
+### Simpler and smarter tricks
+
+- **Aggregate over time:** forecasting quarterly totals and splitting them down can beat forecasting weekly zeros directly (the ADIDA idea).
+- **Aggregate over items:** forecast a family of similar parts and allocate by share.
+- **Use the installed base:** demand for spare parts depends on how many machines are in service, how old they are and when they are maintained. Forecasting from the installed base usually beats any pure time-series method, especially near end of life.
+- **Question stocking altogether:** for very lumpy items, it may be better to hold no local stock, keep one central buffer, or agree lead times with customers.
+
+### The bigger picture
+
+Intermittent items are typically a large share of SKUs, a small share of revenue and a large share of slow and obsolete stock. Getting them right is less about a clever forecast than about the combination: a sensible rate, a realistic distribution, a service target that reflects how critical the item is, and a review that catches decline early.
+
+<Trap>
+
+Plugging Croston's average rate into the normal safety-stock formula, with a standard deviation from ordinary smoothing, misjudges the buffer badly, because lead-time demand for these items is skewed and often zero. Use a distribution that fits intermittent demand, or simulate it.
+
+</Trap>
+
+<KeyIdea>
+
+Croston's ratio is biased upward, and SBA corrects it. Judge intermittent forecasts with scaled or inventory-based measures, never with MAPE or plain MAE, and use time aggregation, installed-base data and central stock where single-item forecasts struggle.
+
+</KeyIdea>
 
 </Level>
 

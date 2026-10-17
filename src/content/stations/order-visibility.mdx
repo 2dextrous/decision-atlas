@@ -2,23 +2,26 @@
 title: Order visibility & analytics
 line: orders
 summary: Tracking every order through its lifecycle, predicting which ones will be late, and finding why they fail.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 4 }
 status: draft
 keywords: [order visibility, order tracking, order lifecycle, OTIF analysis, late order prediction, root cause analysis, reason codes, order status, analytics, dashboards]
 connected: [control-tower, eta-visibility, order-to-delivery, supply-chain-kpis, service-copilots]
 sources:
   - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson."
   - text: "Christopher, M. Logistics & Supply Chain Management. Pearson."
+  - text: "van der Aalst, W. M. P. (2016). Process Mining: Data Science in Action (2nd ed.). Springer."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Know where every order stands, which ones are at risk, and why the late ones were late." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Know where every order stands, which ones are at risk, and why the late ones were late." next="How it works" nextMinutes={3}>
 
 An order passes through many systems: the order lands in the ERP, the warehouse system handles picking, the transport system handles the truck, the carrier tracks delivery, and finance handles the invoice. When a customer asks "where's my order?", someone often has to check four screens and call two people.
 
@@ -43,6 +46,97 @@ Track every order as one timeline, flag at-risk orders early, and use reason cod
   { term: 'Reason code', def: 'A standard label explaining why an order was late, short or wrong.' },
   { term: 'At-risk order', def: 'An order predicted to miss its promised date while there is still time to intervene.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="Building one timeline per order from several systems, investigating an OTIF drop with reason codes, and judging a late-order prediction model." next="Deep dive" nextMinutes={4}>
+
+### One timeline per order
+
+Each system records events: order created (ERP), credit released (ERP), allocated (ERP), wave released and picked (WMS), loaded and shipped (WMS, TMS), carrier scans (carrier), delivered with proof (carrier), invoiced (ERP). Joining them needs common identifiers (order, delivery and shipment numbers) and the planned time for each milestone, so every step can be compared with its plan as it happens.
+
+### Investigating an OTIF drop
+
+<Example title="OTIF fell from 95% to 89%">
+
+10,000 orders a quarter. Failures rose from 500 to 1,100. Reason codes for both quarters:
+
+<div class="table-wrap">
+
+| Reason | Last quarter | This quarter | Change |
+|---|---|---|---|
+| Stock not available | 150 | 440 | +290 |
+| Missed truck | 100 | 275 | +175 |
+| Carrier delay | 120 | 165 | +45 |
+| Credit hold | 70 | 110 | +40 |
+| Picking error | 40 | 66 | +26 |
+| Other | 20 | 44 | +24 |
+| **Total** | **500** | **1,100** | **+600** |
+
+</div>
+
+Two causes explain 465 of the 600 extra failures (78%). Next, drill into each: which items ran out (perhaps a few SKUs after a forecast miss), and which warehouse and shift missed trucks (perhaps a new wave schedule that finishes after the carrier's pickup).
+
+</Example>
+
+### Predicting late orders
+
+A model can score each open order's risk of being late from features such as order type, customer, items and their stock, warehouse workload, carrier and lane performance, and time remaining. Judge it with two numbers:
+
+- **Precision:** of the orders it flags, how many really would have been late?
+- **Recall:** of the orders that end up late, how many did it flag in time?
+
+If the model flags 200 orders a week, 120 of which would have been late, precision is 60%. If 160 orders would have been late in total, recall is 75%. Raising the threshold improves precision but misses more late orders; the right balance depends on how much an intervention costs compared with a late order.
+
+<KeyIdea>
+
+Join events from every system into one timeline per order, compare each milestone with its plan, explain failures with reason codes and their changes over time, and judge late-order models on precision and recall against the cost of acting.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={4} teaser="Process mining, keeping reason codes honest, proactive customer updates, and the data plumbing that makes visibility reliable.">
+
+### Process mining
+
+Process mining reconstructs how orders actually flow from system event logs, rather than how the process is documented. It reveals the real variants: orders that loop back through credit checks, deliveries changed after picking, invoices corrected twice. Van der Aalst (2016) describes the methods. For order management, it typically shows that a small number of variants and rework loops explain most delays and cost.
+
+### Keeping reason codes honest
+
+Reason codes are only as good as the people and systems that set them:
+
+- **Standard list:** a short, mutually exclusive list with clear definitions, the same across sites.
+- **Automatic where possible:** derive the reason from system data (stock was zero at allocation; the truck left before the order was loaded) rather than relying on manual entries.
+- **Independence:** the person who caused a delay shouldn't be the only one choosing its reason.
+- **Watch "other":** if it grows beyond a small share, the list or the discipline needs fixing.
+
+### Proactive updates
+
+Customers contact service mainly when they are uncertain. Sending a proactive message when an order ships, when the delivery window is set and when a delay is predicted reduces "where is my order?" contacts, and turns a late delivery from a surprise into a managed event. Visibility is most valuable when it reaches the customer before they ask.
+
+### The data plumbing
+
+- **Common identifiers** across ERP, WMS, TMS and carrier data, maintained when orders are split or combined.
+- **Timestamps in one time zone** with clear definitions (when exactly is an order "shipped"?).
+- **Latency:** carrier updates that arrive hours late limit how early problems can be seen.
+- **Master data:** planned lead times and cut-off times must be right for planned-versus-actual comparisons to mean anything.
+
+### From analytics to improvement
+
+The aim is to change the process: fix the few causes behind most failures, then re-measure. A quarterly cycle of "Pareto of reasons, root-cause projects, re-measure" usually does more for OTIF than any dashboard.
+
+<Trap>
+
+Letting each warehouse choose its own reason codes, entered manually at the end of a shift, produces data that can't be compared or trusted, with "other" and "customer issue" absorbing everything uncomfortable. Standardize and automate reason capture.
+
+</Trap>
+
+<KeyIdea>
+
+Use process mining to see how orders really flow, keep reason codes standard and automatic, update customers before they ask, and invest in identifiers, timestamps and master data so visibility can be trusted.
+
+</KeyIdea>
 
 </Level>
 

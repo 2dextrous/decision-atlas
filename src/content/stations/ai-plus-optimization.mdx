@@ -2,7 +2,7 @@
 title: AI + optimization
 line: analytics
 summary: Why prediction and optimization are stronger together, and how agents connect them into a decision process.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 3 }
 status: draft
 keywords: [decision intelligence, predict then optimize, prescriptive analytics, AI and optimization, optimization under uncertainty, stochastic optimization, agents, orchestration]
 connected: [optimization-basics, ml-in-supply-chain, ai-agents, probabilistic-forecasting, scenario-modeling]
@@ -12,13 +12,15 @@ sources:
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Prediction tells you what's coming; optimization tells you what to do about it." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Prediction tells you what's coming; optimization tells you what to do about it." next="How it works" nextMinutes={3}>
 
 AI and optimization solve two different halves of a supply chain decision.
 
@@ -48,6 +50,86 @@ Prediction without optimization leaves the decision unmade; optimization without
   { term: 'Prescriptive analytics', def: 'Analytics that recommends what to do, not just what will happen.' },
   { term: 'Optimization under uncertainty', def: 'Choosing plans that perform well across a range of possible inputs.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="A production decision optimized on a point forecast and on a forecast range, and why the answers differ." next="Deep dive" nextMinutes={3}>
+
+### Point forecast or range?
+
+<Example title="how much to produce for next month">
+
+Demand scenarios: 110,000 units (25% likely), 120,000 (50%) and 135,000 (25%). Each unit sold earns ₹40. Each unit left over costs ₹15 (holding and markdowns). Each unit short costs the lost ₹40 plus a ₹10 penalty.
+
+Expected profit for three production plans:
+
+<div class="table-wrap">
+
+| Produce | Expected profit |
+|---|---|
+| 110,000 | ₹42.9 lakh |
+| 120,000 (the point forecast) | ₹46.25 lakh |
+| 135,000 | ₹46.44 lakh |
+
+</div>
+
+Planning on the point forecast of 120,000 is not the best choice. Because a shortage costs more than a leftover, the best plan leans towards the high scenario. In newsvendor terms the critical ratio is (40 + 10) / (40 + 10 + 15) ≈ 0.77, well above the median.
+
+</Example>
+
+The difference here is modest, but it grows with the asymmetry of costs and the width of the range, and in network or capacity decisions it can decide whether a plan survives a bad month.
+
+### The predict-optimize-act pipeline
+
+1. **Predict:** forecasts with ranges (quantiles or scenarios), lead-time distributions, supplier risks.
+2. **Optimize:** a model that uses those ranges, through scenarios (stochastic programming), protection against bad cases (robust optimization), or simple quantile rules where they fit.
+3. **Act:** release orders and plans, with explanations: which constraints bind, what extra capacity would be worth (shadow prices), and how sensitive the plan is.
+4. **Learn:** compare outcomes with predictions and plans, and update both models.
+
+<KeyIdea>
+
+Optimizing on a single forecast throws away what you know about uncertainty. Feed ranges or scenarios into the optimization, so the plan reflects the costs of being over and under, then act and learn from the results.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={3} teaser="Training predictions for the decision, prescriptive analytics, machine learning inside solvers, language models drafting models, and earning planners' trust.">
+
+### Train predictions for the decision
+
+Standard practice trains forecasts to minimize prediction error, then feeds them to an optimizer. But the decision cares only about errors that change the decision. **Smart "predict, then optimize"** (Elmachtoub and Grigas, 2022) trains the prediction model to minimize the cost of the resulting decisions instead, which can give better decisions even when the forecasts look slightly less accurate by conventional measures.
+
+### Prescriptive analytics
+
+Bertsimas and Kallus (2020) showed how to go from data and machine learning directly to decisions: use methods such as nearest neighbours or tree ensembles to find past situations similar to today's, and optimize against the outcomes observed in those situations. This uses rich data (weather, promotions, events) without having to forecast every quantity separately.
+
+### Machine learning inside solvers
+
+Learning also helps optimization itself: predicting good starting solutions, choosing which variables to branch on, tuning solver settings, or learning fast heuristics for problems solved repeatedly, such as daily routing. The optimizer still guarantees feasibility; learning makes it faster.
+
+### Language models and optimization
+
+Language models can help translate a planner's description into a draft optimization model, explain results in plain language, and answer "why" questions about a plan using its shadow prices and binding constraints. Formulations they produce still need expert checking: a constraint in the wrong direction gives a confident, wrong plan.
+
+### Earning planners' trust
+
+- **Explain:** show binding constraints, trade-offs and what changes the answer.
+- **Compare:** run the new approach alongside the current method and show results over time.
+- **Allow overrides,** recorded with reasons, and learn from them.
+- **Start where the value is clear** and the decision repeats often, then expand.
+
+<Trap>
+
+Feeding a biased forecast into an excellent optimizer produces an excellent plan for the wrong future, with false confidence attached. Check forecast bias and range calibration before trusting optimized plans.
+
+</Trap>
+
+<KeyIdea>
+
+Train predictions for decision quality, consider prescriptive methods that go from data to decisions, use learning to speed up solvers, let language models draft and explain but not certify models, and build planners' trust through explanation, comparison and recorded overrides.
+
+</KeyIdea>
 
 </Level>
 

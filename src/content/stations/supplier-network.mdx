@@ -2,23 +2,26 @@
 title: Supplier network design
 line: sourcing
 summary: Which supplier sites should feed which plants, weighing landed cost, lead time and risk, and where local sourcing beats global.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 3 }
 status: draft
 keywords: [supplier network design, sourcing network, local sourcing, global sourcing, nearshoring, landed cost, tier 1, tier 2, supplier park, lead time, risk]
 connected: [sourcing-allocation, supplier-risk, manufacturing-footprint, tariffs-trade, network-design-decisions]
 sources:
   - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapters on sourcing decisions and global network design."
   - text: "Choi, T. Y. & Hong, Y. (2002). Unveiling the structure of supply networks: case studies in Honda, Acura, and DaimlerChrysler. Journal of Operations Management, 20(5), 469–493."
+  - text: "Simchi-Levi, D., Schmidt, W., & Wei, Y. (2014). From superstorms to factory fires: Managing unpredictable supply-chain disruptions. Harvard Business Review, 92(1/2), 96–101."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="The same network logic as warehouses, applied to the supply side." soon>
+<Level n={1} title="The gist" minutes={3} teaser="The same network logic as warehouses, applied to the supply side." next="How it works" nextMinutes={3}>
 
 Supplier network design applies network thinking to the supply side: which supplier sites should feed which of your plants, and how much should be sourced locally versus globally?
 
@@ -46,6 +49,101 @@ Design the supply side like the distribution side: compare landed cost, lead tim
   { term: 'Nearshoring', def: 'Moving supply closer to the point of use to cut lead time and risk.' },
   { term: 'Supplier park', def: 'A cluster of suppliers located next to a plant for frequent, small deliveries.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="Landed cost for each supplier-plant pairing, an assignment where the cheapest quote isn't used, and inbound practices for local suppliers." next="Deep dive" nextMinutes={3}>
+
+### Landed cost by pairing
+
+For each supplier and each plant it could serve, add the price, freight, duties and packaging, and the inventory cost of the lead time.
+
+<Example title="wiring harnesses for two plants">
+
+Annual demand: Pune plant 60,000 harnesses, Chennai plant 40,000.
+
+<div class="table-wrap">
+
+| Supplier | Price | Capacity | Landed at Pune | Landed at Chennai |
+|---|---|---|---|---|
+| S1, near Pune | ₹1,000 | 70,000 | ₹1,010 | ₹1,060 |
+| S2, near Chennai | ₹1,020 | 50,000 | ₹1,080 | ₹1,030 |
+| S3, overseas | ₹900 | 100,000 | ₹1,040 | ₹1,040 |
+
+</div>
+
+S3's landed cost includes ₹120 of freight and duty and ₹20 of extra inventory for its long lead time.
+
+Cheapest assignment: S1 supplies Pune (60,000 at ₹1,010) and S2 supplies Chennai (40,000 at ₹1,030), a total of ₹10.18 crore a year. S3 has the lowest quote and supplies nothing.
+
+S3 is still useful: if S2 were disrupted, S3 could supply Chennai for only ₹10 a unit more, which makes it a sensible qualified backup.
+
+</Example>
+
+### Local suppliers and inbound flow
+
+Close suppliers enable practices distant ones can't:
+
+- **Frequent small deliveries** (several a day), keeping line-side stock low.
+- **Just-in-sequence** delivery, where parts arrive in the exact order of the vehicles on the line (seats, dashboards, wiring).
+- **Milk runs:** one truck collects from several nearby suppliers on a fixed loop, giving frequent deliveries without many part-empty trucks.
+- **Supplier parks:** key suppliers located next to the assembly plant.
+
+### Modelling it
+
+At scale this is an optimization like distribution network design, applied upstream: choose supplier sites and flows to minimize landed cost, within capacities, lead-time limits and rules such as a minimum share for a second source, and then test it against scenarios like a tariff change or a supplier outage.
+
+<KeyIdea>
+
+Compare suppliers by landed cost for each plant, not by quoted price. Optimize the assignment within capacities, keep cheap-to-switch alternatives as backups, and use local suppliers for frequent, sequenced deliveries.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={3} teaser="Concentration hidden in lower tiers, regionalization and local-content rules, design choices that simplify the supply base, and resilience as a design goal.">
+
+### Concentration in the lower tiers
+
+A network that looks diverse at tier 1 can depend on a handful of tier 2 or tier 3 sources: one resin producer, one chip foundry, one specialty chemical plant. Network design that stops at tier 1 misses the true single points of failure. For critical categories, map deeper, and treat a shared sub-supplier as a risk to model, not a detail.
+
+### Regionalization and local-content rules
+
+Several forces push supply networks towards regions:
+
+- **Trade policy:** tariffs and export controls change landed costs and access.
+- **Local-content incentives:** schemes such as India's production-linked incentives and phased manufacturing programmes reward local value addition.
+- **"China plus one":** many companies have added suppliers in other countries, including India, to reduce concentration.
+- **Speed:** shorter supply lines support faster product changes and lower inventory.
+
+Regional networks usually cost more per unit than the single cheapest global source, so the business case rests on lower risk, inventory and lead time, and sometimes on access to incentives.
+
+### Design decisions shape the supply base
+
+Engineering choices decide how many suppliers a company needs and how replaceable they are. Common parts across products and plants concentrate volume and simplify sourcing; standard specifications allow more suppliers to compete; proprietary components lock in one source. Involving procurement early in design avoids accidental single sources.
+
+### Resilience as a design goal
+
+Resilient supply networks are designed, not hoped for:
+
+- qualified alternatives for critical parts, ideally in different regions,
+- flexibility to move volume between suppliers and plants,
+- buffer stocks placed where recovery would be slowest,
+- visibility of supplier capacity and status.
+
+Each costs money in normal times, so the design should be explicit about which risks it protects against and at what price.
+
+<Trap>
+
+Comparing suppliers on ex-works prices and choosing the cheapest global source for bulky or fast-changing parts ignores freight, duties, inventory and responsiveness. Landed cost and lead time often favour the nearer supplier.
+
+</Trap>
+
+<KeyIdea>
+
+Look below tier 1 for hidden concentration, weigh regional supply against its higher unit cost with risk, inventory and incentives in view, involve procurement in design choices, and pay for resilience deliberately where recovery would be slow.
+
+</KeyIdea>
 
 </Level>
 

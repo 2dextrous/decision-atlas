@@ -2,7 +2,7 @@
 title: Intermodal & drayage
 line: logistics
 summary: Moving containers between ship, rail and road, and managing the short truck legs and free-time charges that decide the real cost.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 3 }
 status: draft
 keywords: [intermodal, multimodal, container, drayage, inland container depot, ICD, rail, port, demurrage, detention, free time, dedicated freight corridor]
 connected: [lane-mode, transport-fundamentals, incoterms, carbon-aware-design, tariffs-trade]
@@ -10,16 +10,20 @@ sources:
   - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapter on transportation in a supply chain."
   - text: "Rodrigue, J.-P. The Geography of Transport Systems. Routledge. Free online edition."
     url: "https://transportgeography.org/"
+  - text: "Rodrigue, J.-P. (2020). The Geography of Transport Systems (5th ed.). Routledge."
+  - text: "Levinson, M. (2006). The Box: How the Shipping Container Made the World Smaller and the World Economy Bigger. Princeton University Press."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="One container, several modes, and the charges that pile up while it waits." soon>
+<Level n={1} title="The gist" minutes={3} teaser="One container, several modes, and the charges that pile up while it waits." next="How it works" nextMinutes={3}>
 
 **Intermodal** transport moves goods in a standard container across more than one mode without unpacking them: a container leaves a plant in Ludhiana by truck, rides a train to a port in Gujarat, crosses the ocean by ship, and finishes by truck to a warehouse abroad. Because the box itself is moved by crane, transfers are quick and the goods are handled less.
 
@@ -45,6 +49,90 @@ Intermodal gets the economy of rail and sea with the reach of road. The real cos
   { term: 'Demurrage vs detention', def: 'Charges for containers held too long inside the terminal, or kept outside it too long.' },
   { term: 'ICD', def: 'Inland container depot: an inland terminal where containers are handled and cleared by customs.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="Road against rail-plus-road on one container worked in rupees, how free time turns into charges, and choosing container sizes." next="Deep dive" nextMinutes={3}>
+
+### One container, two ways
+
+<Example title="an inland factory exporting through a western port">
+
+Illustrative costs for one 40-foot container on a route of about 1,200 km:
+
+- **All road:** ₹75,000, about 3 days.
+- **Intermodal:** ₹8,000 truck to the inland container depot, ₹42,000 rail to the port, ₹6,000 terminal handling: ₹56,000, about 5 days.
+
+Intermodal saves ₹19,000 per container, as long as the rail schedule fits the vessel cut-off and the container doesn't wait at either terminal.
+
+</Example>
+
+The saving can vanish quickly. If the container misses its vessel and sits at the port for three days beyond the free time, demurrage at a few thousand rupees a day eats into it, and a missed sailing can delay the shipment by a week.
+
+### Free time, demurrage and detention
+
+- **Free time:** the days the terminal and shipping line allow before charges start.
+- **Demurrage:** for a loaded or empty container left inside the terminal beyond free time.
+- **Detention:** for keeping the shipping line's container outside the terminal (at your factory or warehouse) beyond free time.
+
+Planning pickups, unloading and empty returns within free time is part of the freight cost, not an afterthought.
+
+### Choosing container sizes
+
+- **20-foot containers (one TEU)** suit heavy cargo such as metals, ceramics and grains, which reach the weight limit before filling the space.
+- **40-foot and 40-foot high-cube containers** suit light, bulky cargo such as garments, furniture and electronics.
+- **Refrigerated containers** for food and pharmaceuticals need power at every stage, including rail and storage yards.
+
+### Inland container depots
+
+An **ICD** is an inland "dry port": containers are stuffed, customs-cleared and sealed inland, then moved by rail to the seaport. Exporters far from the coast get port services near their factories, and the rail leg moves the heavy kilometres efficiently.
+
+<KeyIdea>
+
+Intermodal saves on long hauls when rail schedules fit and terminal time is controlled. Free time, demurrage and detention are part of the real cost, and container choice depends on whether cargo hits the weight or the volume limit first.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={3} teaser="Empty containers and imbalances, India's corridors, waterways and coastal shipping, documentation, and comparing modes honestly.">
+
+### Empty containers and trade imbalances
+
+Containers go where trade flows. When a region exports more than it imports, empty boxes must be brought in to load exports, and someone pays for repositioning them. During the disruptions of 2020–21, containers piled up in the wrong places, freight rates soared and exporters struggled to get equipment. Container availability, not just the freight rate, is part of intermodal planning.
+
+### Infrastructure shifting the balance in India
+
+- **Dedicated freight corridors:** separate freight tracks, with double-stack container trains on the Western corridor towards the ports of Gujarat and Maharashtra, give faster and more predictable rail transit.
+- **Inland waterways:** National Waterway 1 on the Ganga, and others, offer low-cost movement for bulk and containers where volumes and draft allow.
+- **Coastal shipping:** moving containers between Indian ports by sea instead of long road hauls, encouraged under the Sagarmala programme.
+- **Multimodal logistics parks:** hubs that combine rail, road and warehousing.
+
+### Documentation and responsibility
+
+International intermodal moves involve the bill of lading (the contract of carriage and title document), customs filings at the ICD or port, and Incoterms that decide who pays and carries risk for each leg. A single **through bill of lading** covering all legs simplifies paperwork and claims; separate contracts for each leg give more control but more interfaces.
+
+### Comparing honestly
+
+A fair comparison of road against intermodal includes:
+
+- door-to-door cost, including drayage, terminal handling and any storage,
+- door-to-door time and its variability, not just the rail transit,
+- the inventory cost of slower or less predictable delivery,
+- damage risk from extra handling (lower for containers than for loose cargo),
+- emissions, which are usually much lower for rail and sea.
+
+<Trap>
+
+Comparing a rail rate per container with a road rate per container, without the drayage, terminal and waiting costs at each end, makes intermodal look better than it is on short routes and in congested terminals. Always compare door to door.
+
+</Trap>
+
+<KeyIdea>
+
+Intermodal depends on container availability, terminals and schedules as much as on rates. India's corridors, waterways and coastal shipping are improving the economics, and comparisons must be door to door, including time, variability and emissions.
+
+</KeyIdea>
 
 </Level>
 

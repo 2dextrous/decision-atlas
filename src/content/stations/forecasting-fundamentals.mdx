@@ -2,7 +2,7 @@
 title: Forecasting fundamentals
 line: demand
 summary: What a demand forecast is made of, and why the decision it feeds sets its horizon and level of detail.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 4, deep: 4 }
 status: draft
 keywords: [demand forecasting, demand planning, level, trend, seasonality, noise, time series decomposition, forecast horizon, granularity, naive forecast, baseline]
 connected: [demand-patterns, exponential-smoothing, forecast-accuracy, sop-ibp, planning-hierarchy]
@@ -10,16 +10,19 @@ sources:
   - text: "Hyndman, R. J. & Athanasopoulos, G. Forecasting: Principles and Practice (3rd ed.). OTexts. Free online."
     url: "https://otexts.com/fpp3/"
   - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapter on demand forecasting."
+  - text: "Makridakis, S., Spiliotis, E., & Assimakopoulos, V. (2020). The M4 Competition: 100,000 time series and 61 forecasting methods. International Journal of Forecasting, 36(1), 54–74."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="The building blocks of a forecast and the questions to ask before choosing a method." soon>
+<Level n={1} title="The gist" minutes={3} teaser="The building blocks of a forecast and the questions to ask before choosing a method." next="How it works" nextMinutes={4}>
 
 Factories, buyers and trucks all need time to react, so almost every supply chain decision is made against a forecast rather than real orders. A forecast is a best estimate of future demand, and every forecast is wrong. The useful questions are how wrong, and in which direction.
 
@@ -51,6 +54,111 @@ Start from the decision, not the model. The decision sets the horizon and the le
   { term: 'Forecast horizon', def: 'How far ahead the forecast looks, set by the lead time of the decision it feeds.' },
   { term: 'Naive forecast', def: 'Next period equals the last one. The baseline any serious method must beat.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={4} teaser="The forecasting process from decision to backtest, with a small series where the simplest method wins." next="Deep dive" nextMinutes={4}>
+
+### A repeatable process
+
+1. **Define the decision.** What will the forecast drive? How far ahead must it look (at least the time needed to act on it), at what level of detail, and how often will it be updated?
+2. **Get the right data.** Forecast *demand*, not shipments: when stock runs out, shipments understate what customers wanted. Flag promotions, stockouts and one-off events so they don't distort the pattern.
+3. **Look before you model.** Plot the history. Is there a trend? A seasonal pattern? A sudden break, such as a lost customer?
+4. **Set a baseline.** Start with the naive forecast (next period = last period) or the seasonal naive (same period last year).
+5. **Fit candidate methods** and test them on data they have not seen.
+6. **Forecast, monitor and review.** Track error and bias every cycle, and investigate when they drift.
+
+### Testing on unseen data
+
+The honest test is a **backtest**: pretend it is week 3, forecast week 4, compare with what happened, move on a week and repeat. Never judge a method on the data it was fitted to; almost anything looks good on its own training data.
+
+<Example title="weekly cold-coffee sales">
+
+Sales over eight weeks: 120, 135, 128, 140, 150, 145, 160, 158. Backtest weeks 4 to 8 with two simple methods (errors ignore their sign):
+
+<div class="table-wrap">
+
+| Week | Actual | Naive forecast | Error | 3-week average | Error |
+|---|---|---|---|---|---|
+| 4 | 140 | 128 | 12 | 127.7 | 12.3 |
+| 5 | 150 | 140 | 10 | 134.3 | 15.7 |
+| 6 | 145 | 150 | 5 | 139.3 | 5.7 |
+| 7 | 160 | 145 | 15 | 145.0 | 15.0 |
+| 8 | 158 | 160 | 2 | 151.7 | 6.3 |
+| **Average error** | | | **8.8** | | **11.0** |
+
+</div>
+
+The moving average sounds more sophisticated but loses, because sales are rising and an average of past weeks always lags behind a trend. Any method that models the trend has to beat 8.8 to earn its place.
+
+</Example>
+
+### Horizon, lag and level
+
+- **Horizon** must cover the time it takes to act. If a supplier needs eight weeks, the forecast for week nine onward is what drives the order.
+- **Lag** is how far ahead a forecast was made. Measure accuracy at the lag the decision uses: the forecast made eight weeks before, not the one made last Monday.
+- **Level** should match the decision. Forecast where the signal is strongest, then add up or split down carefully; the hierarchical forecasting stop shows how.
+
+<KeyIdea>
+
+Define the decision, forecast real demand, look at the data, set a naive baseline, and backtest every method on unseen data at the lag the decision uses. Simple methods win more often than people expect.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={4} teaser="Forecasts versus targets and plans, why aggregates are easier, how error grows with horizon, and combining methods.">
+
+### A forecast is not a target or a plan
+
+Three numbers often get mixed up:
+
+- **Forecast:** what we expect to happen.
+- **Target or budget:** what we want to happen.
+- **Plan:** what we will do (produce, buy, ship), given the forecast and our constraints.
+
+When a forecast is quietly set equal to the sales target, it becomes biased by design, and the supply chain builds stock for sales that were only hoped for. Keeping the three separate, and showing the gap between them, is one of the most valuable habits in planning.
+
+### Why aggregates are easier
+
+Forecast error shrinks relative to volume when you add things up. A product family is easier to forecast than each of its SKUs, a month easier than each of its days, and a country easier than each store, because independent errors partly cancel (the same square-root effect behind risk pooling). That is why capacity is planned on families and months while replenishment works with SKUs and weeks, and why the detailed levels need safety stock.
+
+### Error grows with horizon
+
+The further ahead you forecast, the more can change, so errors grow with the horizon. The practical consequences: commit as late as you can, keep long-range plans at aggregate level, and shorten lead times, because a shorter lead time means a nearer, more accurate forecast is enough.
+
+### The main families of methods
+
+<div class="table-wrap">
+
+| Family | Examples | Best when |
+|---|---|---|
+| Time series | Naive, moving average, exponential smoothing, ARIMA | History is the best guide |
+| Causal | Regression on price, promotions, weather | Known drivers move demand |
+| Machine learning | Gradient boosting or neural networks across many items | Many related series and rich drivers |
+| Judgmental | Sales-force input, expert panels, Delphi | New products, rare events, market intelligence |
+
+</div>
+
+Large forecasting competitions have repeatedly found that **combining** several methods, even by simple averaging, is more accurate on average than picking a single best one, because their errors partly cancel.
+
+### Data traps
+
+- **Censored demand:** sales capped by stockouts understate demand.
+- **Shipments instead of demand:** customer orders swing with their own stocking decisions.
+- **Breaks:** a pandemic, a lost customer or a channel shift makes old history misleading. Shorten the history or model the break.
+
+<Trap>
+
+Reporting accuracy at "lag 0", the forecast made just before the period, flatters everyone. The decisions were taken weeks earlier, on older forecasts. Always measure the forecast that actually drove the decision.
+
+</Trap>
+
+<KeyIdea>
+
+Keep forecast, target and plan separate. Forecast at aggregate levels where you can, expect error to grow with the horizon, combine methods, and clean stockouts, shipment noise and breaks out of the data before trusting any model.
+
+</KeyIdea>
 
 </Level>
 

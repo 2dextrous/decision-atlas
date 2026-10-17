@@ -2,23 +2,26 @@
 title: Fleet sizing & mix
 line: logistics
 summary: How many vehicles of which types to own, lease or hire, so the fleet covers base demand cheaply and peaks flexibly.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 3 }
 status: draft
 keywords: [fleet sizing, fleet mix, own vs hire, dedicated fleet, market vehicles, utilization, peak demand, total cost of ownership, vehicle type, capacity planning]
 connected: [vehicle-routing, transport-planning, carrier-procurement, workforce-planning, scenario-modeling]
 sources:
   - text: "Toth, P. & Vigo, D. (Eds.) (2014). Vehicle Routing: Problems, Methods, and Applications (2nd ed.). SIAM."
   - text: "Rushton, A., Croucher, P. & Baker, P. The Handbook of Logistics and Distribution Management. Kogan Page."
+  - text: "Rushton, A., Croucher, P., & Baker, P. (2022). The Handbook of Logistics and Distribution Management (7th ed.). Kogan Page."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Own the base load, hire for the peaks, and match vehicle size to the work." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Own the base load, hire for the peaks, and match vehicle size to the work." next="How it works" nextMinutes={3}>
 
 A company that runs its own deliveries has to decide how many vehicles to keep, of which sizes, and how many to hire when needed. Too few, and orders wait or expensive market trucks fill the gap. Too many, and vehicles sit idle while their EMIs, insurance and drivers' wages keep running.
 
@@ -43,6 +46,98 @@ Size the owned fleet for the steady base and hire for peaks, and match vehicle t
   { term: 'Market vehicle', def: 'A truck hired trip by trip from the open market.' },
   { term: 'Fleet utilization', def: 'Share of available vehicle time or capacity actually used.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="When to own and when to hire, the break-even in working days, and a festive-season fleet worked through." next="Deep dive" nextMinutes={3}>
+
+### The own-or-hire break-even
+
+Owned vehicles carry fixed costs whether they move or not; hired vehicles cost more per day but only when used.
+
+<Example title="20 trucks normally, 32 in the festive season">
+
+An owned truck costs ₹10.95 lakh a year in fixed costs (loan, insurance, permits and the driver's base pay), about ₹3,000 a calendar day, plus ₹2,500 for each working day (fuel, maintenance, allowances). A hired truck costs ₹7,000 a day, all in.
+
+- **Break-even:** an owned truck saves ₹4,500 on each day it works, so it pays for its fixed cost after 10,95,000 / 4,500 ≈ 243 working days a year.
+- The first 20 trucks work about 300 days a year: well above break-even, so own them.
+- The extra 12 are needed for about 60 peak days: far below break-even, so hire them.
+
+<div class="table-wrap">
+
+| Plan | Fixed costs | Running and hire costs | Total a year |
+|---|---|---|---|
+| Own all 32 | ₹350.4 lakh | ₹168.0 lakh | ₹518.4 lakh |
+| Own 20, hire the peak | ₹219.0 lakh | ₹150.0 lakh + ₹50.4 lakh hire | ₹419.4 lakh |
+
+</div>
+
+Hiring for the peak saves about ₹99 lakh a year, provided hired trucks are really available in the peak.
+
+</Example>
+
+### The demand curve tells you how many to own
+
+Rank the days of the year by how many trucks are needed. Each additional owned truck is used only on the days demand exceeds the trucks already owned. Keep adding trucks while the next one would still work more days than the break-even; hire beyond that.
+
+### Matching the mix to the routes
+
+<div class="table-wrap">
+
+| Route type | Typical vehicle | Why |
+|---|---|---|
+| Quick commerce, dense city | Two-wheelers, e-scooters | Small orders, narrow lanes, speed |
+| Kirana and small-store routes | Small vans and light trucks | Many small drops, city access |
+| Warehouse transfers | 20- to 32-foot trucks | Full loads, cost per tonne |
+| Long-haul, heavy goods | Multi-axle trucks, rail | Lowest cost per tonne-km |
+
+</div>
+
+<KeyIdea>
+
+Own vehicles that will work more days than the own-or-hire break-even, hire for the rest, and decide by ranking the year's daily demand. Match vehicle types to route types, because the wrong size wastes money on every drop.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={3} teaser="Peak availability risk, electric fleets, telematics and utilization, replacement timing, and driver supply.">
+
+### The peak is when hiring is hardest
+
+Everyone needs extra trucks at the same time, during festive seasons, harvests and sale events, so market rates jump and availability drops just when the plan depends on hiring. Ways to secure peak capacity:
+
+- **Seasonal contracts** with transporters, agreed months ahead.
+- **Dedicated fleets from a 3PL,** with guaranteed vehicles for an agreed period.
+- **Flattening the peak:** moving some deliveries earlier, building stock at regional warehouses before the season.
+
+### Electric fleets
+
+Electric vans and two-wheelers have higher purchase prices but lower running costs (energy and maintenance), which makes them attractive for predictable, high-mileage urban routes with depot charging. The comparison is a total cost of ownership over the vehicle's life, including charging infrastructure, range limits, battery life and resale value, plus any incentives. Long-haul electric trucks are at an earlier stage.
+
+### Telematics and utilization
+
+GPS and vehicle data show how many hours and kilometres each vehicle actually works, idle time, fuel use and driving behaviour. Utilization data often reveals that a fleet is larger than needed on most days, or that some vehicles sit idle while others are overloaded. Better dispatching can then cut fleet size without hurting service.
+
+### When to replace a vehicle
+
+As vehicles age, ownership cost per year falls (depreciation is spread) but operating costs rise (repairs, fuel, breakdowns). The economic life is the age at which the average annual total cost is lowest. Replacing on a fixed calendar, or running vehicles until they fail, both miss it.
+
+### Drivers
+
+Fleet capacity is also driver capacity. Driver shortages, long hours away from home and safety concerns limit how many vehicles can actually run, especially in peaks. Better working conditions, relay operations (drivers swapping at midpoints so they return home) and planned rest raise both availability and safety.
+
+<Trap>
+
+Sizing the owned fleet to the average day, and assuming the market will supply the rest, fails in the peak, when hired trucks are scarce and expensive. Secure peak capacity in advance, or the cheapest plan on paper becomes the most expensive in practice.
+
+</Trap>
+
+<KeyIdea>
+
+Secure peak capacity before the peak, evaluate electric vehicles on total cost of ownership for suitable routes, use telematics to raise utilization, replace vehicles at their economic life, and treat drivers as part of fleet capacity.
+
+</KeyIdea>
 
 </Level>
 

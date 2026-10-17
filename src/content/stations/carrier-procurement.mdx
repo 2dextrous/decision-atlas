@@ -2,7 +2,7 @@
 title: Carrier selection & freight tenders
 line: logistics
 summary: Running freight tenders, choosing carriers lane by lane, and balancing contract rates against the spot market.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 4 }
 status: draft
 keywords: [carrier selection, freight procurement, freight tender, RFP, rate card, contract rate, spot rate, tender acceptance, carrier scorecard, lane award, combinatorial bidding]
 connected: [lane-mode, transport-planning, supplier-selection, contracts, eta-visibility]
@@ -12,13 +12,15 @@ sources:
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Buying freight like any other category, lane by lane, with performance kept on the scorecard." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Buying freight like any other category, lane by lane, with performance kept on the scorecard." next="How it works" nextMinutes={3}>
 
 Freight is one of the biggest things a manufacturer or retailer buys, so it's procured like any other category, through periodic **freight tenders** (RFPs):
 
@@ -43,6 +45,93 @@ Award freight on total value: rate, capacity, reliability and how often the carr
   { term: 'Tender acceptance rate', def: 'Share of offered loads a carrier accepts at the contracted rate.' },
   { term: 'Spot rate', def: 'A one-off market price for a single load, often volatile.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="Comparing bids on effective cost per load, routing guides, and bundle bids that reward carriers for round trips." next="Deep dive" nextMinutes={4}>
+
+### Effective cost per load
+
+The contract rate is only part of the price. If a carrier rejects some loads, those go to the spot market; if it is late, there are costs downstream.
+
+<Example title="two carriers on one lane">
+
+Spot rate on the lane: ₹52,000. Cost of each late delivery: about ₹5,000 (expediting, penalties, lost sales).
+
+<div class="table-wrap">
+
+| | Carrier X | Carrier Y |
+|---|---|---|
+| Contract rate | ₹40,000 | ₹42,000 |
+| Tender acceptance | 70% | 95% |
+| Expected freight per load | 0.7 × 40,000 + 0.3 × 52,000 = ₹43,600 | 0.95 × 42,000 + 0.05 × 52,000 = ₹42,500 |
+| On-time delivery | 85% | 95% |
+| Expected late cost per load | ₹750 | ₹250 |
+| **Effective cost per load** | **₹44,350** | **₹42,750** |
+
+</div>
+
+The carrier ₹2,000 cheaper on paper costs ₹1,600 more per load in practice.
+
+</Example>
+
+### Routing guides
+
+Award each lane to a primary carrier with a target share, plus one or two backups, and write the order into the routing guide the TMS follows. Review acceptance and performance monthly, and shift volume between carriers based on the results, within the contract.
+
+### Bundles and round trips
+
+A carrier who wins both Pune → Hyderabad and Hyderabad → Pune can run round trips and avoid empty returns, so it can price the pair lower than the two lanes separately. In a **combinatorial** tender, carriers bid on bundles, for example ₹50,000 for both directions against ₹30,000 and ₹28,000 bid separately, and the shipper chooses the set of bids that covers all lanes at the lowest cost. Choosing the winners is an optimization problem in its own right, solved with integer programming.
+
+### What to ask in a tender
+
+- Lane volumes with seasonality, equipment needs and service requirements.
+- Rates, fuel adjustment terms and accessorial charges (waiting, extra stops, loading help).
+- Capacity commitment by lane and season.
+- Safety, insurance, permits and compliance documents.
+- Tracking capability and data sharing.
+
+<KeyIdea>
+
+Compare carriers on effective cost per load, including rejected loads bought at spot rates and the cost of late deliveries. Use routing guides with backups, and let carriers bid on bundles that give them round trips.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={4} teaser="Freight market cycles, fuel clauses, being a shipper of choice, combinatorial auctions, and vetting carriers.">
+
+### The market moves in cycles
+
+Truck freight markets swing between periods of spare capacity, when carriers compete and spot rates fall below contract rates, and tight periods, when demand outruns trucks and drivers, spot rates jump and contracted carriers reject loads to chase better-paying spot freight. Contracts are tested in tight markets. Tender acceptance is the clearest signal of how a market is turning.
+
+### Fuel clauses
+
+Diesel is one of the biggest costs in road transport, so contracts often link rates to fuel prices: a base rate at a reference diesel price, adjusted by an agreed formula when the official price moves beyond a band. This keeps rates fair to both sides without renegotiating every time fuel changes.
+
+### Being a shipper of choice
+
+Carriers prefer customers who load and unload quickly, give accurate and early load information, offer steady volumes and round trips, and pay on time. Those shippers get higher acceptance and better rates in tight markets. Cutting waiting time at your own docks is often worth more than winning another rupee per tonne in a tender.
+
+### Combinatorial auctions
+
+Caplice and Sheffi (2003) describe how large shippers use optimization-based procurement: carriers submit bids on individual lanes and on packages, with conditions such as minimum or maximum volumes, and the shipper solves for the cheapest set of awards that covers every lane, while respecting business rules such as a maximum number of carriers per lane or a minimum share for incumbents. The method lets carriers express their real economics (backhaul, network fit), which lowers total cost.
+
+### Vetting carriers
+
+Price means little if a carrier is unsafe or non-compliant. Checks include vehicle permits and fitness, insurance cover, driver licensing and training, GST registration and compliance, safety records, and increasingly fleet age and emissions. Digital freight platforms and brokers widen the pool of carriers, but the shipper remains responsible for whom it lets carry its goods.
+
+<Trap>
+
+Awarding every lane to the lowest bidder ignores capacity, acceptance and reliability, and in a tight market the cheapest contract can turn into the most expensive freight bill as rejected loads go to spot. Evaluate effective cost and carrier capacity together.
+
+</Trap>
+
+<KeyIdea>
+
+Freight markets cycle, so contracts must hold up when capacity is tight. Link rates to fuel, become a shipper carriers want, use combinatorial bidding to capture network economics, and vet carriers on safety and compliance, not price alone.
+
+</KeyIdea>
 
 </Level>
 

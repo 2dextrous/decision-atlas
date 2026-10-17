@@ -2,7 +2,7 @@
 title: Supplier selection & TCO
 line: sourcing
 summary: Choosing suppliers on total cost of ownership and a balanced scorecard, not on the lowest quoted price.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 3 }
 status: draft
 keywords: [supplier selection, total cost of ownership, TCO, landed cost, supplier scorecard, RFI, RFQ, RFP, reverse auction, qualification, OTIF, quality]
 connected: [kraljic, sourcing-allocation, contracts, supplier-risk, procurement-fundamentals]
@@ -12,13 +12,15 @@ sources:
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Price is one line of the cost. The rest decides who's actually cheaper." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Price is one line of the cost. The rest decides who's actually cheaper." next="How it works" nextMinutes={3}>
 
 Supplier selection usually follows a funnel:
 
@@ -52,6 +54,109 @@ Compare suppliers on total cost of ownership, not unit price, and keep scoring t
   { term: 'RFQ vs RFP', def: 'Price quote for a defined spec, versus a proposal for how to solve a need.' },
   { term: 'Supplier scorecard', def: 'Regular ratings of a supplier on quality, delivery, cost, service, risk and ESG.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="A weighted scoring model worked through, where TCO fits in it, and what a supplier scorecard looks like." next="Deep dive" nextMinutes={3}>
+
+### Weighted scoring
+
+1. Choose the criteria and agree their weights **before** seeing any bids.
+2. Define what each score means (for example, delivery 9 = 98% on time in trial orders).
+3. Score each supplier on evidence: audits, samples, references, TCO.
+4. Multiply by the weights and add up.
+
+<Example title="choosing between two suppliers">
+
+<div class="table-wrap">
+
+| Criterion | Weight | Supplier A | Supplier B |
+|---|---|---|---|
+| Quality (audit, samples) | 30% | 7 | 8 |
+| Total cost of ownership | 30% | 6 | 8 |
+| Delivery (lead time, reliability) | 20% | 6 | 9 |
+| Technical capability | 10% | 8 | 7 |
+| Risk and ESG | 10% | 5 | 8 |
+| **Weighted score** | | **6.4** | **8.1** |
+
+</div>
+
+B wins clearly, although A scores higher on technical capability. The TCO score reflects the full cost comparison (₹112 against ₹116 per unit in the gist), not the unit price.
+
+</Example>
+
+### Building the TCO
+
+TCO adds up costs before, during and after the purchase:
+
+- **Before:** finding and qualifying the supplier, samples, audits, tooling.
+- **During:** price, freight, duties, packaging, payment terms, currency.
+- **After:** inspection, defects and rework, warranty claims, extra inventory for long or unreliable lead times, disposal.
+
+Not every cost is known exactly; reasonable estimates are far better than leaving them out.
+
+### Scorecards after the award
+
+<div class="table-wrap">
+
+| Measure | Target | This quarter |
+|---|---|---|
+| On time, in full (OTIF) | 95% | 94% |
+| Defects (parts per million) | 500 | 1,200 |
+| Price against contract | 100% | 100% |
+| Responsiveness to issues | Within 48 hours | 72 hours |
+| Corrective actions closed | 100% | 60% |
+
+</div>
+
+A scorecard like this one triggers a review: quality is well below target, and corrective actions aren't being closed. Scores feed volume allocation, so good performance earns more business.
+
+<KeyIdea>
+
+Fix criteria and weights before bids arrive, score on evidence with TCO in place of price, and keep scoring after the award, with consequences for future volume.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={3} teaser="Should-cost models, when auctions backfire, qualification in regulated industries, ESG due diligence, and the biases that skew selection.">
+
+### Should-cost: knowing what it ought to cost
+
+A **should-cost** (or clean-sheet) model builds the price bottom-up: material weight × material price, machine time × machine rate, labour, overhead, scrap, packaging, freight and a fair margin. Comparing it with the quote shows where the gap is, which turns negotiation from haggling into a discussion of specific cost elements, such as "your scrap rate assumption is twice the industry norm."
+
+### When auctions work and when they backfire
+
+Reverse auctions, where suppliers bid prices down in real time, work well for well-specified items with several qualified suppliers and low switching costs: leverage items. They backfire for strategic categories: suppliers who feel squeezed hold back innovation, capacity and priority when supply is short, and the winning bid may come from a supplier who can't sustain it.
+
+### Qualification in regulated industries
+
+In automotive, the Production Part Approval Process (PPAP) requires suppliers to prove their process makes conforming parts at volume, with documented measurements, process controls and failure-mode analysis, before production starts. Pharmaceuticals, food and aerospace have similar regimes. Qualification takes months, which is why second sources must be qualified *before* they are needed.
+
+### Due diligence beyond price
+
+Supplier selection increasingly includes legal duties: forced-labour import rules such as the US Uyghur Forced Labor Prevention Act, the EU's corporate sustainability due diligence directive, and customers' own codes of conduct. Selection therefore checks labour practices, environmental compliance and the supplier's own sources, not only its factory gate.
+
+### Biases that skew selection
+
+- **Incumbent bias:** the current supplier is judged on its relationship, newcomers on their price.
+- **Price anchoring:** the lowest quote dominates the discussion even when it scores poorly on TCO.
+- **Weights chosen after scoring,** to justify a favourite.
+- **Halo effects:** one impressive factory tour colours every score.
+
+Fixed criteria, evidence-based scoring and cross-functional panels (procurement, quality, engineering, finance) reduce them.
+
+<Trap>
+
+A scorecard without consequences is decoration. If poor scores never change volume allocation or trigger improvement plans, suppliers learn to ignore them.
+
+</Trap>
+
+<KeyIdea>
+
+Should-cost models make negotiation factual, auctions suit leverage items only, qualification takes time so start early, due diligence now reaches labour and environmental practices, and structured panels guard against selection bias.
+
+</KeyIdea>
 
 </Level>
 

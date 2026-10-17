@@ -2,23 +2,27 @@
 title: "Optimization basics: LP and MILP"
 line: analytics
 summary: Objective, decision variables and constraints in plain words, with a worked linear program and when you need integers.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 4 }
 status: draft
 keywords: [optimization, linear programming, LP, mixed integer linear programming, MILP, objective function, decision variables, constraints, feasible region, solver, Gurobi, shadow price]
 connected: [facility-location, plant-allocation, sourcing-allocation, ai-plus-optimization, sustainable-optimization]
 sources:
   - text: "Hillier, F. S. & Lieberman, G. J. Introduction to Operations Research. McGraw-Hill."
   - text: "Winston, W. L. Operations Research: Applications and Algorithms. Cengage Learning."
+  - text: "Hillier, F. S., & Lieberman, G. J. (2021). Introduction to Operations Research (11th ed.). McGraw-Hill."
+  - text: "Wolsey, L. A. (2020). Integer Programming (2nd ed.). Wiley."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Decide, aim, respect the limits: the three parts of every optimization model." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Decide, aim, respect the limits: the three parts of every optimization model." next="How it works" nextMinutes={3}>
 
 Every optimization model has three parts:
 
@@ -49,6 +53,104 @@ Optimization means choosing decision variables to maximize or minimize an object
   { term: 'Binary variable', def: 'A 0/1 decision such as open or closed; it makes a model a MILP.' },
   { term: 'Shadow price', def: 'How much the objective improves if one constraint is relaxed by one unit.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="The gist's LP solved corner by corner, what shadow prices say about each resource, and modelling yes-or-no decisions with binary variables." next="Deep dive" nextMinutes={4}>
+
+### Solving the LP by its corners
+
+An LP's best solution is always at a corner of the feasible region (or along an edge between two equally good corners). For the gist's problem, the corners are:
+
+<div class="table-wrap">
+
+| Corner | Product A | Product B | Profit |
+|---|---|---|---|
+| Make nothing | 0 | 0 | ₹0 |
+| Machine hours limit, only A | 50 | 0 | ₹2,500 |
+| Both limits binding | 40 | 20 | **₹2,800** |
+| Labour hours limit, only B | 0 | 40 | ₹1,600 |
+
+</div>
+
+Solvers don't list corners (there can be billions); the simplex method walks from corner to better corner until no neighbour improves.
+
+### Shadow prices: what each resource is worth
+
+At the optimum both resources are fully used. How much would one more hour of each add?
+
+<Example title="valuing machine and labour hours">
+
+Write $y_1$ for the value of a machine hour and $y_2$ for a labour hour. At the optimum, each product's profit equals the value of the resources it uses:
+
+- Product A: $2y_1 + y_2 = 50$
+- Product B: $y_1 + 2y_2 = 40$
+
+Solving gives $y_1$ = ₹20 and $y_2$ = ₹10. One extra machine hour adds ₹20 of profit; one extra labour hour adds ₹10. Check: 100 × ₹20 + 80 × ₹10 = ₹2,800, exactly the optimal profit.
+
+</Example>
+
+So if overtime on the machine costs less than ₹20 an hour, it pays; labour overtime pays only below ₹10 an hour. Shadow prices hold within a range: beyond some point, another constraint starts to bind and the values change. Solvers report these ranges in a **sensitivity report**.
+
+### Yes-or-no decisions with binary variables
+
+Real supply chain decisions need logic that plain LPs can't express. Binary variables ($y$ = 0 or 1) handle it:
+
+- **Fixed cost:** a warehouse with fixed cost $f$ and capacity $K$: add $f\,y$ to the cost and require flow $x \le K\,y$, so a closed site carries nothing.
+- **Minimum batch:** if a product is made at all, make at least $m$: $m\,y \le x \le M\,y$.
+- **Either-or:** use at most two of five suppliers: $y_1 + \dots + y_5 \le 2$.
+
+<KeyIdea>
+
+LP optima sit at corners, shadow prices value each scarce resource, and binary variables bring in fixed costs, minimum batches and either-or rules, turning LPs into the MILPs that network and sourcing decisions need.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={4} teaser="How solvers find integer solutions, why formulation strength matters, the optimality gap, modelling tools, and what to do when a model misbehaves.">
+
+### How MILP solvers work
+
+- **Branch and bound:** solve the LP version (ignoring integrality). If a binary variable comes out at 0.6, branch into two subproblems, one with it fixed at 0 and one at 1, and keep the best integer solution found as a benchmark to prune branches that can't beat it.
+- **Cutting planes:** add constraints that cut off fractional solutions without removing any integer ones, tightening the LP bound.
+- **Heuristics:** quickly find good integer solutions to prune more of the tree.
+
+Modern solvers combine all three (branch and cut) and solve problems that were out of reach a few decades ago.
+
+### Formulation strength
+
+Two formulations of the same problem can solve at very different speeds. In $x \le M\,y$, choosing $M$ far larger than needed lets the LP relaxation set $y$ to a tiny fraction, giving weak bounds and huge search trees. Use the smallest valid $M$ (a site's true capacity, or total demand), and prefer formulations whose LP relaxation is close to the integer problem.
+
+### The optimality gap
+
+Solvers report the best solution found and a bound on how good the best possible solution could be. The **gap** between them measures how far from optimal the current answer might be. Stopping at 1% often saves hours, and for decisions based on uncertain forecasts, a 1% gap is usually irrelevant.
+
+### Tools
+
+Models are written in modelling languages or libraries (such as Pyomo, PuLP or Google OR-Tools in Python, or AMPL and GAMS), which keep data separate from the model and connect to commercial or open-source solvers. Excel Solver suits small teaching models.
+
+### When a model misbehaves
+
+- **Infeasible:** no solution meets all constraints. Look for conflicting data, such as demand above total capacity, or a constraint written in the wrong direction. Solvers can identify a minimal conflicting set.
+- **Unbounded:** profit can grow forever, usually a missing constraint or a sign error.
+- **Strange answers:** check units, data scaling and whether the objective really reflects the decision.
+
+### Beyond linear
+
+Some costs are not linear: safety stock grows with a square root, and quantity discounts jump. Common techniques approximate them piecewise with linear segments, or use specialized nonlinear solvers. Uncertainty can be handled with scenarios (stochastic programming) or by protecting against worst cases within a range (robust optimization).
+
+<Trap>
+
+An optimal solution is optimal only for the model and data you gave it. Check the inputs, test sensitivity to the uncertain ones, and look for answers that seem too good, which usually point to a missing constraint.
+
+</Trap>
+
+<KeyIdea>
+
+MILP solvers use branch and cut; tight formulations with small big-M values solve faster; a small optimality gap is usually good enough; and infeasible, unbounded or surprising results almost always trace back to data or formulation errors.
+
+</KeyIdea>
 
 </Level>
 

@@ -2,23 +2,26 @@
 title: Master production scheduling
 line: supply
 summary: Which finished products to make, how many, and in which week, so the plan is concrete enough to buy and build against.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 4 }
 status: draft
 keywords: [MPS, master production schedule, end item, time fence, frozen zone, available to promise, rough-cut capacity, projected available balance, make to stock, make to order]
 connected: [sop-ibp, mrp, rccp, atp-ctp, plan-to-produce]
 sources:
   - text: "Silver, E. A., Pyke, D. F. & Thomas, D. J. (2017). Inventory and Production Management in Supply Chains (4th ed.). CRC Press."
   - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson."
+  - text: "Vollmann, T. E., Berry, W. L., Whybark, D. C., & Jacobs, F. R. (2005). Manufacturing Planning and Control for Supply Chain Management (5th ed.). McGraw-Hill."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Turning the agreed volume plan into a week-by-week build plan for each product." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Turning the agreed volume plan into a week-by-week build plan for each product." next="How it works" nextMinutes={3}>
 
 S&OP agrees volumes by product family and month, for example 1 lakh units of shampoo in December. The plant can't build "shampoo"; it builds specific items: the 200 ml anti-dandruff pack, the 650 ml family pack. The **master production schedule (MPS)** turns the family plan into a plan for each finished item, week by week.
 
@@ -49,6 +52,97 @@ The MPS is where the plan becomes concrete: specific finished items, quantities 
   { term: 'Frozen zone', def: 'The near-term window where the schedule is locked except for approved changes.' },
   { term: 'Available to promise', def: 'The part of planned supply not yet committed to customer orders.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="The MPS record with projected balance and available-to-promise, worked week by week, plus demand and planning time fences." next="Deep dive" nextMinutes={4}>
+
+### The MPS record
+
+For each finished item, the MPS keeps a weekly table:
+
+- **Forecast** and **customer orders** already booked.
+- **Projected available balance:** last week's balance plus MPS production minus demand. Near term, demand is usually the larger of forecast and orders.
+- **MPS quantity:** what is planned to be produced, in sensible lot sizes.
+- **Available to promise (ATP):** the part of stock and planned production not yet promised to customers.
+
+<Example title="200 ml shampoo, MPS of 10,000 a week">
+
+Starting stock 4,000.
+
+<div class="table-wrap">
+
+| Week | 1 | 2 | 3 | 4 |
+|---|---|---|---|---|
+| Forecast | 8,000 | 9,000 | 12,000 | 10,000 |
+| Customer orders | 7,000 | 6,000 | 3,000 | 1,000 |
+| MPS production | 10,000 | 10,000 | 10,000 | 10,000 |
+| Projected balance | 6,000 | 7,000 | 5,000 | 5,000 |
+| ATP | 7,000 | 4,000 | 7,000 | 9,000 |
+| Cumulative ATP | 7,000 | 11,000 | 18,000 | 27,000 |
+
+</div>
+
+ATP in week 1 is stock plus that week's production minus orders until the next production: 4,000 + 10,000 − 7,000 = 7,000. Later weeks are each week's production minus its orders.
+
+A customer asking for 15,000 by week 3 can be promised: cumulative ATP reaches 18,000. A customer wanting 12,000 in week 2 can get 11,000 then and 1,000 in week 3.
+
+</Example>
+
+The projected balance plans production against the forecast; ATP protects promises against orders. Both are needed.
+
+### Two time fences
+
+- **Demand time fence:** inside it, only customer orders count as demand; the remaining forecast is assumed not to materialize.
+- **Planning time fence:** inside it, the system doesn't create or move MPS quantities automatically; the master scheduler decides.
+
+### Checking feasibility
+
+Before the MPS is released, a rough-cut capacity check tests it against the bottleneck resources, and the master scheduler resolves overloads by moving quantities, adding capacity or escalating to S&OP.
+
+<KeyIdea>
+
+The MPS plans production per item and week against forecast and orders, keeps a projected balance, and computes available-to-promise for order promising. Time fences define where the forecast stops counting and where changes need a person.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={4} teaser="Where to master-schedule in make-to-stock, assemble-to-order and make-to-order, planning bills, hedging the mix, and the bow wave.">
+
+### What to master-schedule depends on the business
+
+- **Make to stock:** schedule finished items, as in the shampoo example. There are relatively few end items and many customers.
+- **Assemble to order:** a few modules combine into thousands of end products (laptops, cars, industrial pumps). Scheduling every combination is hopeless, so the MPS plans the **modules and options**, and a separate **final assembly schedule** builds each specific product once an order arrives.
+- **Make to order:** each order is planned when it arrives; the MPS manages capacity and long-lead materials rather than end items.
+
+### Planning bills and hedging the mix
+
+In assemble-to-order, a **planning bill** describes an average product as percentages of options. If laptop demand is 10,000 a month and 60% of buyers choose 16 GB memory and 40% choose 8 GB, the MPS plans 6,000 and 4,000 memory modules. Because the mix itself is uncertain, many companies **overplan the options**, for example by 10%: 6,600 and 4,400, a total of 11,000 modules for 10,000 laptops. The extra 1,000 is a buffer against the mix, not against the total, and it is much cheaper than holding finished laptops in every configuration.
+
+### Stability against responsiveness
+
+Each change to the MPS ripples down through MRP to suppliers and the shop floor. Common practices:
+
+- Freeze the near term and measure **schedule adherence**: how much of what was planned was actually built.
+- Allow changes beyond the fence only through the master scheduler, who checks capacity and materials.
+- Review the MPS weekly, not daily, unless the business truly needs it.
+
+### The bow wave
+
+When an MPS is overloaded, unfinished quantities roll into the next week, adding to an already full plan. Week after week, past-due quantities pile up at the front of the schedule like a bow wave in front of a ship. The plan loses credibility, and people start working from their own lists. The cure is an honest MPS that fits capacity, with the overload resolved by decisions rather than carried forward.
+
+<Trap>
+
+An MPS that simply copies the forecast, ignoring stock, lot sizes and capacity, is not a schedule. It pushes infeasibility down to MRP and the plant, where it shows up as past-due orders and expediting.
+
+</Trap>
+
+<KeyIdea>
+
+Master-schedule at the level with the fewest items: finished goods in make-to-stock, modules with planning bills in assemble-to-order. Hedge the mix with option overplanning, freeze the near term, and keep the MPS within capacity to avoid a bow wave of past-due orders.
+
+</KeyIdea>
 
 </Level>
 

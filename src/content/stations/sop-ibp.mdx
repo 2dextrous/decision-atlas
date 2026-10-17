@@ -2,23 +2,27 @@
 title: S&OP and IBP
 line: supply
 summary: The monthly cycle where sales, supply and finance agree on one plan, and how integrated business planning extends it.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 4 }
 status: draft
 keywords: [S&OP, sales and operations planning, IBP, integrated business planning, demand review, supply review, pre-S&OP, executive S&OP, one number plan, aggregate planning, chase strategy, level strategy]
 connected: [planning-hierarchy, consensus-fva, mps, control-tower, scenario-planning, demand-planning-in-sap]
 sources:
   - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapters on aggregate planning and sales and operations planning."
   - text: "Wallace, T. F. & Stahl, R. A. Sales & Operations Planning: The How-To Handbook. T. F. Wallace & Company."
+  - text: "Grimson, J. A., & Pyke, D. F. (2007). Sales and operations planning: An exploratory study and framework. The International Journal of Logistics Management, 18(3), 322–346."
+  - text: "Wallace, T. F. (2004). Sales & Operations Planning: The How-To Handbook (2nd ed.). T. F. Wallace & Company."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="One monthly meeting cycle that turns competing numbers into one plan." soon>
+<Level n={1} title="The gist" minutes={3} teaser="One monthly meeting cycle that turns competing numbers into one plan." next="How it works" nextMinutes={3}>
 
 Without a shared process, every function plans on its own number. Sales expects 1 lakh units of shampoo next quarter. The plant can make 80,000. Finance's budget assumed 90,000 and doesn't want to pay for overtime. Each team is right from where it sits, and the result is stockouts in one place and excess stock in another.
 
@@ -47,6 +51,93 @@ S&OP replaces several competing numbers with one agreed plan, made each month th
   { term: 'Chase vs level strategy', def: 'Match output to demand each month, or produce steadily and let inventory absorb the swings.' },
   { term: 'IBP', def: 'Integrated business planning: S&OP extended to finance, strategy, longer horizons and scenarios.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="The monthly cycle step by step, what each review produces, and chase versus level strategies worked in rupees." next="Deep dive" nextMinutes={4}>
+
+### One month, five steps
+
+<div class="table-wrap">
+
+| Step | Who | Produces |
+|---|---|---|
+| Data gathering | Planning team | Last month's actuals, updated statistical forecast, KPI pack |
+| Demand review | Sales, marketing, demand planning | Unconstrained demand plan, with assumptions and risks |
+| Supply review | Operations, procurement, logistics | Capacity and material check, gaps, supply options |
+| Pre-S&OP (integrated review) | Planning, finance, function heads | Costed scenarios and a recommendation |
+| Executive S&OP | Leadership team | Decisions and one signed-off plan |
+
+</div>
+
+Each step has a fixed date in the month and a clear output. The executive meeting should spend its time on decisions, not on reconciling numbers that should have been agreed earlier.
+
+### Chase or level: the classic supply choice
+
+<Example title="a festive peak">
+
+Demand for the next three months is 70,000, 80,000 and 120,000 units. Regular capacity is 90,000 a month, holding a unit for a month costs ₹5, and overtime production costs ₹12 a unit extra. Starting stock is zero.
+
+- **Level:** produce 90,000 every month. Stock ends the months at 20,000, 30,000 and 0, so holding costs (20,000 + 30,000) × ₹5 = ₹2,50,000.
+- **Chase:** produce 70,000, 80,000 and 120,000. The 30,000 above capacity in month 3 costs 30,000 × ₹12 = ₹3,60,000 in overtime, and spare capacity in the first two months goes unused.
+
+Level is ₹1.1 lakh cheaper here, if the warehouse has room and the product keeps. A mix, such as building some stock and using some overtime, is often cheapest when storage is tight or overtime is limited.
+
+</Example>
+
+### What makes it work
+
+- **One set of numbers** in units and money, so finance can see the plan's revenue, cost and inventory.
+- **Assumptions written down,** so the next cycle can check what changed and why.
+- **Decision rights:** the executive meeting decides; the planners prepare options.
+- **A few KPIs** reviewed every month: forecast accuracy and bias, service, inventory, and plan adherence.
+
+<KeyIdea>
+
+S&OP runs a fixed monthly sequence from data to demand review, supply review, integrated options and an executive decision. Chase and level strategies are costed explicitly, and the meeting exists to decide, not to report.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={4} teaser="How S&OP matures, why it fails, what IBP adds, and how scenarios and finance turn it into a management process.">
+
+### How S&OP matures
+
+Studies of S&OP practice describe a progression, for example the five-stage framework of Grimson and Pyke (2007): from no process, through a reactive meeting focused on last month's problems, to a standard process with one agreed plan, then an integrated process that links finance and uses optimization, and finally a proactive one that plans profit and runs scenarios. Most companies sit in the middle stages, and the jumps are about behaviour as much as tools.
+
+### Why S&OP fails
+
+- **It becomes a supply meeting.** Sales and leadership stop attending, and the plan is no longer a business decision.
+- **It looks backwards.** Most of the time goes on explaining last month's variances instead of deciding about months three to eighteen.
+- **Too much detail.** Reviewing SKUs in the executive meeting crowds out the decisions only leaders can take.
+- **Two numbers.** The operational plan and the financial budget drift apart, and each function quietly works to its own.
+- **No decisions.** Options are presented but not chosen, so the gaps reach the factory unresolved.
+
+### What IBP adds
+
+Integrated business planning extends S&OP in several directions:
+
+- **Money as well as units:** revenue, margin, cash and inventory value are part of every plan, reconciled with the financial forecast.
+- **Longer horizon:** 24 to 36 months, linking to the strategic plan and capital decisions.
+- **Portfolio and strategy:** launches, phase-outs, pricing and investments are planned in the same cycle.
+- **Scenarios:** what if demand is 15% lower, a supplier fails or a new plant is late? The leadership team chooses a plan knowing the alternatives.
+
+### Linking to the rest of planning
+
+The signed-off plan sets the volumes the master schedule must deliver, the inventory targets for deployment, the capacity and workforce decisions, and the financial forecast. Persistent gaps between plan and execution flow back as agenda items, which is what makes S&OP a closed loop rather than a monthly report.
+
+<Trap>
+
+An S&OP process that reviews last month's numbers in detail and decides nothing about the future is reporting, not planning. Judge it by the decisions it produces and how well they are carried out.
+
+</Trap>
+
+<KeyIdea>
+
+S&OP matures from a reactive meeting to a process that plans profit with scenarios. It fails when it becomes a backward-looking supply meeting with two sets of numbers. IBP adds money, a longer horizon, the portfolio and scenarios.
+
+</KeyIdea>
 
 </Level>
 

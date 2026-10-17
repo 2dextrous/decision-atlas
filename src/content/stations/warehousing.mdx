@@ -2,23 +2,28 @@
 title: Warehousing & throughput
 line: logistics
 summary: How a warehouse works from dock to dock, and how slotting, picking methods and layout get more orders out of the same building.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 4 }
 status: draft
 keywords: [warehousing, receiving, putaway, picking, packing, shipping, slotting, batch picking, zone picking, wave picking, WMS, throughput, lines per hour, order accuracy]
 connected: [warehouse-in-sap, cross-docking, workforce-planning, inventory-segmentation, order-to-delivery]
 sources:
   - text: "Bartholdi, J. J. & Hackman, S. T. Warehouse & Distribution Science. Georgia Institute of Technology. Free online."
   - text: "Frazelle, E. H. World-Class Warehousing and Material Handling. McGraw-Hill."
+  - text: "Bartholdi, J. J., & Hackman, S. T. Warehouse & Distribution Science. Georgia Institute of Technology."
+    url: "https://www.warehouse-science.com/"
+  - text: "Roodbergen, K. J., & de Koster, R. (2001). Routing methods for warehouses with multiple cross aisles. International Journal of Production Research, 39(9), 1865–1883."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Receive, put away, pick, pack, ship, and why walking time is the enemy." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Receive, put away, pick, pack, ship, and why walking time is the enemy." next="How it works" nextMinutes={3}>
 
 A warehouse does five things, in order:
 
@@ -49,6 +54,102 @@ Picking is where the time goes. Slot fast movers close to dispatch, pick in batc
   { term: 'Wave picking', def: 'Releasing orders in timed groups, often to match truck departure times.' },
   { term: 'WMS', def: 'Warehouse management system: software that directs and records every warehouse movement.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="Where a picker's time goes, slotting and batching worked in numbers, and capacity planning for space and throughput." next="Deep dive" nextMinutes={4}>
+
+### Where the time goes
+
+In a manual picking operation, a large share of a picker's time is spent walking between locations; the rest goes on searching, picking, scanning and paperwork. Reducing travel is therefore the biggest single lever.
+
+<Example title="the effect of better slotting">
+
+A picker manages 100 order lines an hour, and travel takes half of the time.
+
+- Moving the fastest movers into the locations nearest the packing area cuts travel by 30%.
+- Time per line falls to 0.5 + 0.5 × 0.7 = 0.85 of what it was.
+- Productivity rises to 100 / 0.85 ≈ 118 lines an hour, an 18% gain with no new equipment.
+
+</Example>
+
+### Slotting rules
+
+- **Velocity:** rank items by how often they are picked (order lines, not units) and put the top movers closest to dispatch and at waist-to-shoulder height (the "golden zone").
+- **Size and weight:** heavy items low, light items high, large items where handling equipment can reach them.
+- **Affinity:** items often ordered together placed near each other.
+- **Review regularly:** seasonal items and new products change the ranking.
+
+### Batching and waves
+
+- **Batch picking:** one picker collects several orders in one walk, sorting into separate totes. Travel per order falls sharply, but sorting is needed.
+- **Zone picking:** each picker stays in a zone and orders pass between zones, which suits large warehouses.
+- **Wave picking:** orders are released in timed groups so picking finishes in time for each truck's departure.
+
+### Planning capacity
+
+Two capacities matter:
+
+- **Storage:** pallet and bin positions needed for average and peak stock. Warehouses run poorly when nearly full, because putaway slows and stock gets placed in temporary locations, so plan for headroom at peak.
+- **Throughput:** lines, cases or pallets a day that labour, docks and equipment can handle. Peak days, not average days, set staffing and dock schedules.
+
+<KeyIdea>
+
+Travel is the largest part of picking time, so slot fast movers near dispatch, batch or zone the picking, and release work in waves. Plan storage with headroom and throughput for peak days.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={4} teaser="Storage systems compared, when automation pays, e-commerce fulfilment, routing pickers through aisles, and the measures that matter.">
+
+### Storage systems: density against access
+
+<div class="table-wrap">
+
+| System | Density | Access | Suits |
+|---|---|---|---|
+| Selective pallet racking | Medium | Every pallet directly | Many SKUs, mixed movers |
+| Drive-in or push-back racking | High | Last in, first out by lane | Few SKUs with many pallets each |
+| Very narrow aisle racking | High | Every pallet, with special trucks | Large ranges in expensive space |
+| Shelving and flow racks | High for cases and items | Fast hand picking | Case and each picking |
+| Automated storage and retrieval | Very high | Machine-controlled | High volume, high labour cost, steady flows |
+
+</div>
+
+### When automation pays
+
+Conveyors, sorters, shuttles, goods-to-person systems and robots raise throughput and accuracy and reduce labour, but they cost a lot and are hard to change. The business case is strongest when volumes are high and fairly steady, labour is scarce or expensive, accuracy requirements are very high, or space is costly. Flexible options, such as mobile robots that bring shelves to pickers, reduce the risk when the future is uncertain. Automating a messy process only makes the mess faster, so fix the process first.
+
+### E-commerce fulfilment
+
+Online orders are many and small: often one or two items each. That changes the warehouse:
+
+- **Each picking** instead of cases and pallets.
+- **Batch picking with put walls,** where items picked for many orders are sorted into order cubbies.
+- **Packing stations** choosing box sizes to avoid shipping air.
+- **Cut-off times** driven by carrier departures, with waves planned backwards from them.
+- **Returns processing** as a regular flow, not an exception.
+
+### Routing pickers through aisles
+
+Even with good slotting, the path through the aisles matters. Simple rules such as the **S-shape** (walk through every aisle that contains a pick) or the **largest gap** method (enter and leave an aisle from the same end when the picks are near it), and optimal routing in layouts with cross aisles, cut travel further. Roodbergen and de Koster (2001) compared such methods for warehouses with multiple cross aisles.
+
+### Measures that matter
+
+Lines picked per labour hour, order accuracy, dock-to-stock time (how fast receipts become available for orders), order cycle time, inventory record accuracy from cycle counts, storage utilization, and cost per order or per unit shipped.
+
+<Trap>
+
+Running the warehouse at 100% storage utilization looks efficient but slows everything: putaway takes longer, stock goes into temporary spots, pickers search, and errors rise. Plan space so peaks fit with room to work.
+
+</Trap>
+
+<KeyIdea>
+
+Choose storage systems on the trade-off between density and access, automate stable, high-volume processes after fixing them, design e-commerce flows around each picking and cut-offs, and route pickers sensibly through the aisles.
+
+</KeyIdea>
 
 </Level>
 

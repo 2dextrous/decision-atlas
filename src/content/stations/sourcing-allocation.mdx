@@ -2,23 +2,27 @@
 title: Single, dual or multi-sourcing
 line: sourcing
 summary: How many suppliers to use for an item, and how to split the volume once capacity, lead time and risk are counted.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 3 }
 status: draft
 keywords: [single sourcing, dual sourcing, multi-sourcing, volume allocation, quota arrangement, supplier allocation, optimization, capacity constraint, lead time, supply risk]
 connected: [supplier-selection, kraljic, supplier-risk, optimization-basics, resilience]
 sources:
   - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapter on sourcing decisions."
   - text: "Sodhi, M. S. & Tang, C. S. (2012). Managing Supply Chain Risk. Springer."
+  - text: "Tomlin, B. (2006). On the value of mitigation and contingency strategies for managing supply chain disruption risks. Management Science, 52(5), 639–657."
+  - text: "Nishiguchi, T., & Beaudet, A. (1998). The Toyota group and the Aisin fire. Sloan Management Review, 40(1), 49–59."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="One supplier is simpler, two is safer. Constraints decide the split." soon>
+<Level n={1} title="The gist" minutes={3} teaser="One supplier is simpler, two is safer. Constraints decide the split." next="How it works" nextMinutes={3}>
 
 **Single sourcing** gives a supplier all your volume. You get better prices, simpler coordination and a closer relationship, but if that supplier has a fire, a strike or a quality problem, you have nothing.
 
@@ -47,6 +51,91 @@ Single sourcing buys efficiency; multi-sourcing buys resilience. When you split 
   { term: 'Quota arrangement', def: 'A rule that splits volume between suppliers by percentage.' },
   { term: 'Volume allocation', def: 'Deciding how much each supplier gets, given cost and constraints.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="Volume splitting as a linear program, how the answer changes with the deadline, and putting a price on disruption risk." next="Deep dive" nextMinutes={3}>
+
+### The allocation model
+
+- **Decision:** $x_s$, the quantity ordered from supplier $s$.
+- **Objective:** minimize $\sum_s p_s\,x_s$, the purchase cost (or landed cost, if freight differs).
+- **Constraints:** total quantity meets demand; each $x_s$ stays within capacity; suppliers that can't meet the deadline get zero; optional rules such as a maximum share per supplier or minimum order quantities.
+
+Minimum order quantities and quantity discounts need yes-or-no variables, which makes it a mixed-integer program, still easy for a solver at this size.
+
+<Example title="the 50,000-unit order, two deadlines">
+
+Suppliers: A at ₹100 (30,000 capacity, 7 days), B at ₹104 (40,000, 5 days), C at ₹98 (20,000, 15 days).
+
+- **Within 10 days:** C is excluded. A 30,000 + B 20,000 = ₹50.8 lakh.
+- **Within 20 days:** C is allowed. C 20,000 + A 30,000 = ₹49.6 lakh, ₹1.2 lakh cheaper.
+
+The deadline is worth ₹1.2 lakh here; if the business can wait ten more days, it saves that much.
+
+</Example>
+
+### Putting a price on single sourcing
+
+<Example title="single or dual source for a critical part">
+
+Annual volume 1 lakh units. Supplier X charges ₹100; supplier Y ₹103. Assume a 5% yearly chance that X is disrupted, which would cost ₹2 crore in lost production if there were no backup.
+
+- **Single source (X):** purchases ₹1 crore, expected disruption cost 5% × ₹2 crore = ₹10 lakh. Total ₹1.10 crore.
+- **Dual source (70% X, 30% Y):** purchases ₹70 lakh + ₹30.9 lakh = ₹1.009 crore. Y can ramp up if X fails, so the loss falls to, say, ₹50 lakh: an expected ₹2.5 lakh. Total about ₹1.034 crore.
+
+Dual sourcing costs ₹90,000 more in purchases but saves about ₹6.6 lakh in expected disruption cost.
+
+</Example>
+
+The numbers depend on judgement about probabilities and impacts, but writing them down turns "is a second source worth it?" into a discussion of specific assumptions.
+
+<KeyIdea>
+
+Split volume with a cost-minimizing model that respects capacity, deadlines and share rules, and put an expected cost on disruption so the value of a second source can be weighed against its price premium.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={3} teaser="What research says about mitigation versus contingency, when single sourcing works, parallel sourcing, and keeping a second source real.">
+
+### Mitigation or contingency?
+
+Tomlin (2006) compared ways of handling supplier disruptions: **mitigation** decided in advance (holding inventory, sourcing from two suppliers) versus **contingency** actions taken when the disruption happens (rerouting demand to a backup with spare capacity). The best choice depends on the disruption's character: frequent, short disruptions favour inventory; rare, long ones favour dual sourcing or contingent backups, because no affordable buffer lasts long enough.
+
+### When single sourcing works
+
+Single sourcing works best when the relationship is close and the network can respond. When a fire in 1997 destroyed the only plant making a critical brake valve for Toyota, the Toyota group's suppliers organized emergency production across dozens of firms and restored supply within days (Nishiguchi and Beaudet, 1998). The protection came from relationships, shared know-how and slack capacity in the network rather than from a second contract.
+
+### Parallel sourcing
+
+In **parallel sourcing**, each part has one supplier, but similar parts are spread across several suppliers. Each supplier gets the scale and commitment of single sourcing, while the buyer keeps competition (performance on one part affects the award of the next) and capable alternatives for emergencies. It is common in automotive.
+
+### Keeping a second source real
+
+- Order regularly from the second source, so its process stays proven and its people practised.
+- Keep tooling, specifications and quality approvals current.
+- Agree in advance how quickly it can scale up and at what price.
+- Test it occasionally with larger orders.
+
+A second source qualified years ago and never used is a document, not a backup.
+
+### Splits in ERP
+
+ERP systems implement splits with quota arrangements: each source gets a target share, and the system assigns new requisitions to the source furthest below its quota. The quotas should come from the allocation analysis and be reviewed when prices, capacity or risks change.
+
+<Trap>
+
+Splitting 50/50 by habit gives up the volume advantage of one supplier without capturing the price, capacity or risk logic behind a proper split. Set shares deliberately, and revisit them when conditions change.
+
+</Trap>
+
+<KeyIdea>
+
+Match the protection to the disruption: inventory for short, frequent ones, second sources or contingent backups for rare, long ones. Single sourcing can work with strong relationships, parallel sourcing combines scale with competition, and a backup must be used to stay real.
+
+</KeyIdea>
 
 </Level>
 

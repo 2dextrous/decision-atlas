@@ -2,23 +2,27 @@
 title: Scheduling & sequencing
 line: supply
 summary: The order of jobs on each line, hour by hour, and the simple rules that decide what runs next.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 4 }
 status: draft
 keywords: [production scheduling, sequencing, dispatching rules, FIFO, EDD, SPT, makespan, lateness, sequence-dependent setup, Johnson's rule, finite scheduling, APS]
 connected: [mps, changeovers, bottlenecks, workforce-planning, maintenance-planning]
 sources:
   - text: "Pinedo, M. L. Scheduling: Theory, Algorithms, and Systems. Springer."
   - text: "Hopp, W. J. & Spearman, M. L. Factory Physics. Waveland Press."
+  - text: "Pinedo, M. L. (2016). Scheduling: Theory, Algorithms, and Systems (5th ed.). Springer."
+  - text: "Johnson, S. M. (1954). Optimal two- and three-stage production schedules with setup times included. Naval Research Logistics Quarterly, 1(1), 61–68."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="What runs next on the line, and why the rule you pick changes the result." soon>
+<Level n={1} title="The gist" minutes={3} teaser="What runs next on the line, and why the rule you pick changes the result." next="How it works" nextMinutes={3}>
 
 Planning decides how much to make this week. **Scheduling** decides exactly what runs on which line, in which order, starting at what time:
 
@@ -45,6 +49,108 @@ There is no single best sequence, only the best one for your goal. EDD protects 
   { term: 'Makespan', def: 'Total time from the start of the first job to the end of the last.' },
   { term: 'Sequence-dependent setup', def: 'Changeover time that depends on which product ran before.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="Four jobs scheduled with FIFO, SPT and EDD, the measures each rule optimizes, and the critical ratio rule." next="Deep dive" nextMinutes={4}>
+
+### Four jobs, three rules
+
+<Example title="one machine, four jobs (hours)">
+
+Jobs arrived in the order A, B, C, D.
+
+<div class="table-wrap">
+
+| Job | Processing time | Due at hour |
+|---|---|---|
+| A | 6 | 8 |
+| B | 2 | 6 |
+| C | 8 | 18 |
+| D | 3 | 15 |
+
+</div>
+
+<div class="table-wrap">
+
+| Rule | Sequence | Average completion time | Late jobs | Worst lateness | Total lateness |
+|---|---|---|---|---|---|
+| FIFO | A, B, C, D | 12.25 h | 2 | 4 h | 6 h |
+| SPT (shortest first) | B, D, A, C | 9.25 h | 2 | 3 h | 4 h |
+| EDD (earliest due first) | B, A, D, C | 10.0 h | 1 | 1 h | 1 h |
+
+</div>
+
+SPT gives the shortest average completion time; EDD gives the smallest worst lateness and, here, the fewest late jobs. FIFO is the easiest to explain and the worst on every measure.
+
+</Example>
+
+These results hold in general for a single machine: SPT always minimizes the average time jobs spend in the system, and EDD always minimizes the maximum lateness.
+
+### The critical ratio rule
+
+A dynamic rule used in many shops:
+
+$$
+CR = \frac{\text{time remaining until the due date}}{\text{processing time remaining}}
+$$
+
+A ratio below 1 means the job will be late even if started now; around 1 it is on the edge; well above 1 it has slack. Each time a machine frees up, it takes the job with the lowest critical ratio, and the ratios are recalculated as time passes.
+
+### Beyond one machine
+
+- **Two machines in series:** Johnson's rule gives the shortest total time (makespan). Jobs whose first-machine time is shorter than their second go first, in increasing order of first-machine time; the rest go last, in decreasing order of second-machine time.
+- **Many machines and routes (a job shop):** no simple rule is optimal; scheduling software combines rules, heuristics and optimization.
+
+<KeyIdea>
+
+Pick the rule for the goal: SPT minimizes average time in the system, EDD minimizes the worst lateness, and the critical ratio balances urgency against remaining work. For multi-machine shops, simple rules give way to scheduling software.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={4} teaser="Why scheduling is hard, sequence-dependent set-ups, robust schedules and rescheduling, and how APS and MES fit together.">
+
+### Why scheduling is hard
+
+With 10 jobs on one machine there are 3.6 million possible sequences; with 20 jobs, more than the number of seconds since the universe began. Most realistic scheduling problems (job shops, sequence-dependent set-ups, multiple objectives) have no fast exact method, so practice relies on good rules, heuristics such as local search, and optimization solvers with time limits. A good schedule found in a minute usually beats a perfect one found tomorrow.
+
+### Sequence-dependent set-ups
+
+When changeover times depend on the order of products, the sequence decides how much capacity is lost. Schedulers group products into families with short changeovers between them, follow a natural order (light to dark, low to high viscosity, allergen-free first), and use fixed product wheels where demand is stable enough.
+
+### Schedules break, so plan for repair
+
+Machines break down, materials arrive late and rush orders appear. Two approaches:
+
+- **Robust schedules:** leave slack in the right places, especially before the bottleneck and before key due dates, so small disruptions are absorbed.
+- **Rescheduling policies:** decide in advance when to reschedule (periodically, or only after events above a threshold) and how much to change. Rescheduling everything at every event creates confusion on the floor; never rescheduling lets the plan drift from reality.
+
+Keeping the next few hours frozen and repairing the schedule beyond that is a common compromise.
+
+### APS and MES
+
+- **APS (advanced planning and scheduling)** creates schedules that respect finite capacity, set-up rules and material availability, and recalculates them quickly.
+- **MES (manufacturing execution system)** runs the schedule on the floor: it dispatches jobs, records what actually happened, and feeds real start times, quantities and stops back to planning.
+
+The loop between them, plan, execute, record, replan, is what keeps a schedule credible.
+
+### Measuring scheduling performance
+
+Schedule adherence (did jobs run when planned?), on-time completion against due dates, average lateness, bottleneck utilization and changeover time per shift. Watch them together: a schedule can hit due dates by running the bottleneck inefficiently, or keep the bottleneck busy while orders run late.
+
+<Trap>
+
+A clever schedule built on wrong data (optimistic run rates, outdated routings, missing changeover times) is wrong from the first hour. Feed the scheduler with demonstrated rates and real changeover times from the shop floor.
+
+</Trap>
+
+<KeyIdea>
+
+Realistic scheduling problems are too large to solve perfectly, so good heuristics, sensible sequences and slack in the right places matter. Decide how and when to reschedule, and close the loop between APS and MES with real shop-floor data.
+
+</KeyIdea>
 
 </Level>
 

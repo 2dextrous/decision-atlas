@@ -2,7 +2,7 @@
 title: Climate & ESG risk
 line: risk
 summary: Exposure to climate events, carbon rules and social and governance failures across the supply chain, and how companies manage it.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 3 }
 status: draft
 keywords: [ESG, climate risk, physical risk, transition risk, social risk, forced labour, due diligence, BRSR, supplier audits, carbon border adjustment, CBAM, reporting]
 connected: [carbon-aware-design, sustainable-optimization, supplier-risk, regulatory-compliance, resilience]
@@ -10,16 +10,20 @@ sources:
   - text: "Securities and Exchange Board of India. Business Responsibility and Sustainability Reporting (BRSR) requirements for listed entities."
   - text: "Task Force on Climate-related Financial Disclosures (2017). Recommendations of the Task Force on Climate-related Financial Disclosures."
   - text: "World Resources Institute & WBCSD. The Greenhouse Gas Protocol: Corporate Value Chain (Scope 3) Standard."
+  - text: "IFRS Foundation (2023). IFRS S2 Climate-related Disclosures. International Sustainability Standards Board."
+  - text: "Securities and Exchange Board of India. Business Responsibility and Sustainability Report (BRSR) circulars, 2021 and 2023."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Floods, carbon rules and supplier misconduct are supply chain risks too." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Floods, carbon rules and supplier misconduct are supply chain risks too." next="How it works" nextMinutes={3}>
 
 ESG stands for environmental, social and governance. In supply chains, each part shows up as a concrete risk:
 
@@ -45,6 +49,85 @@ Treat climate and ESG issues as supply chain risks: map exposure across sites an
   { term: 'Supplier due diligence', def: 'Checking suppliers for social, environmental and governance risks before and during the relationship.' },
   { term: 'BRSR', def: 'Business Responsibility and Sustainability Report: SEBI’s ESG disclosure for large listed companies in India.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="Assessing physical climate risk site by site, a flood adaptation decision in rupees, and how social risk is checked in practice." next="Deep dive" nextMinutes={3}>
+
+### Physical climate risk, site by site
+
+Risk at a site combines three things:
+
+- **Hazard:** how likely and how severe floods, heat, cyclones or droughts are at that location, today and under future climate scenarios.
+- **Exposure:** what sits there: stock, equipment, the flows that depend on the site.
+- **Vulnerability:** how badly the site is affected and how quickly it recovers (building height, drainage, backup power, alternative sites).
+
+<Example title="a warehouse on a flood plain">
+
+A Chennai warehouse has about a 10% chance each year of a flood that closes it for 2 weeks. It handles ₹5 crore of sales a week at a 20% margin.
+
+- Impact of one flood: 2 weeks × ₹5 crore × 20% = ₹2 crore of lost margin.
+- Expected loss: 10% × ₹2 crore = ₹20 lakh a year.
+- Adaptation (raising racking, moving stock to higher locations before the monsoon, a standby site agreement) costs ₹8 lakh a year and cuts the impact by 70%, saving about ₹14 lakh a year in expected loss.
+
+The adaptation pays, before counting customer goodwill.
+
+</Example>
+
+### Transition risk in numbers
+
+Transition risk shows up as costs: a carbon price on emissions, carbon border charges on exports to the EU, higher costs for high-emission materials, or customers moving to lower-carbon suppliers. Modelling the effect of a carbon price on landed costs, as in carbon-aware network design, shows which products and routes are most exposed.
+
+### Checking social risk
+
+1. **Prioritize** suppliers by country, sector and spend, since some sectors and regions carry higher risks of forced or child labour or unsafe conditions.
+2. **Self-assessment questionnaires,** followed by **audits** for higher-risk suppliers, often against recognized standards such as SMETA or SA8000.
+3. **Corrective action plans** with deadlines, verified by follow-up.
+4. **Grievance channels** that workers can use safely.
+5. **Trace materials** to their origin where laws require it, such as cotton or polysilicon under forced-labour import rules.
+
+<KeyIdea>
+
+Assess physical climate risk through hazard, exposure and vulnerability, and compare expected losses with adaptation costs. Quantify transition risk as cost, and manage social risk through prioritized checks, corrective actions, grievance channels and traceability.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={3} teaser="The reporting frameworks converging on supply chains, double materiality, the limits of audits, and greenwashing rules in India.">
+
+### Frameworks converging on supply chains
+
+- **ISSB standards (IFRS S1 and S2, 2023):** a global baseline for sustainability and climate disclosures, building on the earlier TCFD recommendations, including climate risks and Scope 3 emissions.
+- **EU CSRD and its reporting standards:** detailed sustainability reporting for large companies, including value-chain information.
+- **EU due diligence rules:** obligations to identify and address human-rights and environmental harms in supply chains.
+- **India's BRSR:** SEBI's Business Responsibility and Sustainability Report for the largest listed companies, with a core set of indicators subject to assurance and growing expectations of value-chain disclosure.
+
+For suppliers, this means customers will ask for emissions data, policies and evidence, and the questions will become more standardized.
+
+### Double materiality
+
+European reporting uses **double materiality**: a topic matters if it affects the company's finances (outside-in) or if the company's activities significantly affect people and the environment (inside-out). Supply chain teams contribute to both: climate risks to sites and suppliers, and the company's impacts through its suppliers' practices.
+
+### The limits of audits
+
+Social audits find some problems and miss others: they are announced in advance, they last a day or two, and they can be manipulated with false records and coached workers. Better results come from combining audits with worker voice (anonymous channels and surveys), long-term supplier relationships that support improvement, responsible purchasing practices (realistic prices and lead times, since squeezing suppliers can push them towards abuses), and traceability for high-risk materials.
+
+### Greenwashing rules in India
+
+Environmental claims are now regulated more tightly. The Advertising Standards Council of India issued guidelines on environmental claims in 2023, and the Central Consumer Protection Authority issued guidelines in 2024 on preventing greenwashing and misleading environmental claims. Claims such as "eco-friendly" or "carbon neutral" need specific, verifiable evidence. Supply chain data is often that evidence, so its quality has legal consequences.
+
+<Trap>
+
+Collecting supplier questionnaires and filing them is not risk management. Without verification, prioritization and follow-up on what they reveal, questionnaires create a false sense of security and can become evidence that the company knew and did nothing.
+
+</Trap>
+
+<KeyIdea>
+
+ISSB, CSRD, due-diligence laws and BRSR are pushing ESG into supply chains. Apply double materiality, go beyond audits with worker voice and responsible purchasing, and back every environmental claim with verifiable supply chain data.
+
+</KeyIdea>
 
 </Level>
 

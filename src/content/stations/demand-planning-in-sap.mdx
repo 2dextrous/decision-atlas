@@ -2,7 +2,7 @@
 title: Demand planning in SAP
 line: sap
 summary: How the forecasting ideas on this map show up in SAP IBP, and how the agreed forecast reaches MRP in S/4HANA.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 4 }
 status: draft
 keywords: [SAP IBP, integrated business planning, demand planning, statistical forecasting, forecast models, exponential smoothing, Croston, demand sensing, consensus demand, planned independent requirements, PIR, MD61]
 connected: [forecasting-fundamentals, exponential-smoothing, consensus-fva, sop-ibp, inventory-mrp-in-sap]
@@ -14,13 +14,15 @@ sources:
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="From statistical forecast to consensus plan to MRP input." soon>
+<Level n={1} title="The gist" minutes={3} teaser="From statistical forecast to consensus plan to MRP input." next="How it works" nextMinutes={3}>
 
 In the SAP world, demand planning usually happens in **SAP IBP (Integrated Business Planning)**, a cloud planning tool, while execution happens in **S/4HANA**. The flow mirrors the Demand line on this map:
 
@@ -47,6 +49,87 @@ IBP turns history into a statistical forecast, adds human input through consensu
   { term: 'Planned independent requirement (PIR)', def: 'Forecast demand stored in S/4HANA for MRP to plan against.' },
   { term: 'Pre-processing', def: 'Cleaning sales history, such as outlier correction, before statistical forecasting.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="How planned independent requirements work in S/4HANA, planning strategies 10 and 40 compared, forecast consumption, and how IBP sends its numbers across." next="Deep dive" nextMinutes={4}>
+
+### Planned independent requirements
+
+A **planned independent requirement (PIR)** is a forecast quantity for a material, plant and period that MRP plans against. PIRs are created by IBP integration or entered with MD61 (changed with MD62, displayed with MD63). Each PIR carries a **requirements type**, derived from the material's **planning strategy**, which decides how PIRs and sales orders interact.
+
+### Strategy 10 versus strategy 40
+
+The strategy group is set in the material master's MRP 3 view.
+
+<Example title="a month with a PIR of 1,000 and sales orders of 300">
+
+- **Strategy 10 (make-to-stock, net requirements planning):** sales orders are delivered from stock and don't add to MRP's requirements on their own. The PIR of 1,000 drives production, and it is reduced when goods are issued for deliveries. Total requirement for MRP: 1,000.
+- **Strategy 40 (planning with final assembly):** sales orders **consume** the PIR. The 300 ordered reduce the open PIR to 700, and the orders themselves become requirements. Total: 700 + 300 = 1,000. If orders reach 1,200, they exceed the forecast, and MRP plans for 1,200.
+
+Without consumption, the forecast and the orders would be added together (1,300), double-counting the same demand.
+
+</Example>
+
+### Consumption mode and periods
+
+For strategies that consume, the MRP 3 view also sets the **consumption mode** (backward, forward or both) and the number of days to look back and forward. A sales order for 15 June with backward consumption of 30 days can consume PIRs dated between 16 May and 15 June. Getting these right decides whether an order early or late in the month finds "its" forecast.
+
+### How IBP sends its numbers
+
+In IBP, demand planners work with **key figures** (actuals, statistical forecast, consensus demand) at planning levels such as product, customer, location and month. Forecast models are set up in steps: **pre-processing** (outlier correction, filling missing values), the **forecasting algorithms**, and **post-processing** (error measures). When the consensus is agreed, an integration job, typically through SAP's cloud integration services, sends the released demand to S/4HANA as PIRs at the right material, plant and period.
+
+<KeyIdea>
+
+PIRs carry the forecast into S/4HANA, and the planning strategy decides how sales orders interact with them. Strategy 40 consumes the forecast with orders (within the consumption window); strategy 10 doesn't. IBP sends its released consensus demand as PIRs.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={4} teaser="Algorithms and drivers in IBP, demand sensing, cleaning up old forecasts, choosing strategies by business type, and from APO to IBP.">
+
+### Algorithms and drivers in IBP
+
+Beyond smoothing methods and Croston for intermittent items, IBP offers regression with external variables and gradient-boosted decision trees that can use drivers such as price and promotions. Models are assigned to product segments, often based on ABC-XYZ or demand-pattern classification, and IBP can pick the best model automatically by comparing backtested errors. Forecast error key figures (MAPE, MAD, RMSE, bias and others) are stored so planners can compare models and track accuracy over time.
+
+### Demand sensing
+
+IBP's demand sensing uses recent orders and shipments, plus other signals, to adjust the forecast for the next few weeks, at a finer level such as daily or weekly by location. It sits on top of the monthly consensus, not instead of it, and should be judged at short lags against the plan it adjusts.
+
+### Cleaning up old forecasts
+
+PIRs dated in the past that were never consumed or reduced still look like demand to MRP, inflating requirements and creating unnecessary orders. S/4HANA provides reorganization transactions (MD74 to adjust requirements, MD75 to delete old requirements, MD76 to delete history) to clean them up. Running them regularly, or making sure the integration replaces old PIRs correctly, is part of good planning hygiene.
+
+### Choosing a strategy by business type
+
+<div class="table-wrap">
+
+| Business | Typical strategy | Behaviour |
+|---|---|---|
+| Make to stock, finished goods sold from stock | 10 | Forecast drives production; orders served from stock |
+| Make to stock, sales orders should net against forecast | 40 | Orders consume forecast within the consumption window |
+| Make to order | 20 | Each sales order drives its own production |
+| Assemble to order with forecast-planned components | 50 or 70-type strategies | Components planned from forecast; final assembly waits for orders |
+| Gross requirements planning | 11 | Plan production regardless of stock (e.g. to keep a line running) |
+
+</div>
+
+### From APO to IBP
+
+Many companies used SAP APO Demand Planning (part of SAP SCM) for years. APO's mainstream maintenance also ends in 2027, so companies are moving to IBP, which runs in the cloud and covers demand, supply, inventory and S&OP in one model. The concepts (forecast models, consensus, release to execution) carry over; the data model, user interface and integration are new.
+
+<Trap>
+
+A wrong planning strategy is a common cause of inflated MRP demand: if sales orders don't consume PIRs when they should, forecast and orders add up, and the plant builds stock twice. Check the strategy group and consumption settings whenever MRP demand looks too high.
+
+</Trap>
+
+<KeyIdea>
+
+IBP adds driver-based models, automatic model selection and short-term sensing. Clean up old PIRs so MRP doesn't plan for stale forecasts, choose planning strategies by business type, and expect APO users to move to IBP as support ends.
+
+</KeyIdea>
 
 </Level>
 

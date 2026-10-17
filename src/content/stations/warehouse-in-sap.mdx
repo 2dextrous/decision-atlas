@@ -2,7 +2,7 @@
 title: Warehouse (WM / EWM)
 line: sap
 summary: How SAP knows which bin holds what, and the transfer orders that move goods from dock to bin to truck.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 4 }
 status: draft
 keywords: [SAP WM, SAP EWM, warehouse number, storage type, storage bin, quant, transfer requirement, transfer order, LT04, LT03, LT12, warehouse task, putaway strategy, picking strategy, stock transport order, physical inventory]
 connected: [warehousing, procure-to-pay, order-to-cash, sap-process-map, sap-basics]
@@ -13,6 +13,8 @@ sources:
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
@@ -20,7 +22,7 @@ import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 import FromPractice from '../../components/content/FromPractice.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Inventory management knows how much; warehouse management knows exactly where." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Inventory management knows how much; warehouse management knows exactly where." next="How it works" nextMinutes={3}>
 
 Inventory management in MM knows *how much* stock sits in a plant and storage location. Warehouse management knows *exactly where*: which bin, on which rack, in which zone. SAP models a warehouse as a hierarchy: a **warehouse number** contains **storage types** (shelving, pallet racking, a goods receipt area), which contain **storage bins**. Each bin holds **quants**, quantities of a material.
 
@@ -58,6 +60,102 @@ WM adds the "where" to inventory: warehouse, storage type, bin and quant. Transf
   { term: 'Transfer order', def: 'WM instruction to move a quantity from one bin to another; EWM calls it a warehouse task.' },
   { term: 'Quant', def: 'A quantity of one material, with the same characteristics, in one bin.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="Putaway and picking strategies, interim storage types, an inbound and outbound flow traced with the Global Bike bin, and clearing inventory differences." next="Deep dive" nextMinutes={4}>
+
+### Strategies that choose the bin
+
+**Putaway strategies** decide where incoming stock goes, for example:
+
+- **Fixed bin:** each material has its own bin (common for picking areas).
+- **Next empty bin:** the first free bin in sequence (common for pallet racking).
+- **Addition to existing stock:** put the new quantity where the material already is.
+- **Open storage:** one bin per storage section, for bulky goods.
+
+**Picking strategies** decide where to take stock from:
+
+- **FIFO:** the oldest quant first.
+- **Shelf-life expiration date:** the earliest expiry first, for food and pharmaceuticals.
+- **Fixed bin:** pick from the material's fixed bin.
+
+A **storage type search sequence** tells the system which storage types to try, in order.
+
+### Interim storage types
+
+Goods between inventory management and a bin sit in **interim storage types**: 902 is the goods receipt area, 916 the shipping area for outbound deliveries, and 999 holds differences found in counts. Quants in interim types are normal for minutes or hours; quants that stay there for days are a sign that transfer orders weren't created or confirmed.
+
+<Example title="inbound and outbound at Global Bike's San Diego warehouse">
+
+**Inbound:**
+
+1. MIGO posts the goods receipt (movement type 101); 50 units appear in interim type 902 and a transfer requirement is created.
+2. LT04 creates a transfer order from the requirement; the putaway strategy proposes bin STBN-1-077.
+3. The warehouse moves the goods and confirms the transfer order (LT12). Only now does the system show the stock in the bin.
+
+**Outbound:**
+
+1. VL01N creates the outbound delivery.
+2. LT03 creates a picking transfer order; the picking strategy proposes the bin.
+3. The picker confirms (LT12), and the goods move to the shipping area.
+4. VL02N posts goods issue (movement type 601).
+
+</Example>
+
+### Counting and differences
+
+Physical inventory in WM can run as an annual count or continuously during the year (LX16 for continuous inventory). Counts are entered (LI11N); differences are moved to interim type 999 (LI21) and then posted in inventory management (LI20), which creates the accounting entry for the gain or loss.
+
+<KeyIdea>
+
+Putaway and picking strategies choose bins, storage type search sequences choose areas, and interim types 902, 916 and 999 hold stock between steps. Confirmation makes moves real, and differences pass through 999 before inventory management posts them.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={4} teaser="EWM's building blocks, embedded versus decentralized EWM, the end of classic WM, automation and RF, and troubleshooting stock that isn't where the system says.">
+
+### EWM's building blocks
+
+- **Warehouse requests:** the incoming or outgoing need, created from deliveries.
+- **Warehouse tasks:** the individual moves (successors to transfer orders), grouped into **warehouse orders** for a worker or resource.
+- **Handling units:** pallets or cartons tracked as units with their contents.
+- **Storage control:** process-oriented (steps such as unloading, quality check, deconsolidation, putaway) and layout-oriented (moving through intermediate points such as conveyors).
+- **Waves:** groups of picks released together to meet carrier departure times.
+- **Further functions:** slotting, labour management, yard management, cross-docking, value-added services and kitting.
+
+### Embedded or decentralized
+
+**Embedded EWM** runs inside S/4HANA, sharing master data and avoiding interfaces, and suits most warehouses. **Decentralized EWM** runs on a separate system, which can make sense for very large, highly automated warehouses that must keep running even when the central ERP is down. SAP distinguishes basic and advanced EWM functions, with the advanced ones (such as labour management, slotting and material flow control) licensed separately.
+
+### The end of classic WM
+
+Classic WM (LE-WM) is not the target architecture in S/4HANA. It was available only under a compatibility arrangement that ended in 2025, so companies moving to S/4HANA migrate warehouses to EWM or, for simple storerooms, to lighter options such as stock room management. Understanding WM still helps: many concepts and many interview questions carry over directly.
+
+### Automation and radio frequency
+
+EWM's **RF framework** drives handheld scanners for every step, and its material flow system connects to conveyors, sorters and automated storage, sending them tasks and receiving confirmations. In highly automated sites, most moves are confirmed by machines rather than people.
+
+### When stock isn't where the system says
+
+- **Stuck in interim areas:** tasks not created or not confirmed. Check open tasks and interim quants.
+- **IM and WM disagree:** a difference was cleared on one side but not the other, or a movement bypassed the warehouse.
+- **Bin blocked:** a block for counting or putaway prevents picking.
+- **Handling-unit mismatches:** a pallet's recorded contents don't match reality after an unrecorded repack.
+
+<Trap>
+
+Confirming warehouse tasks in the office "to tidy up the system", without the physical move having happened, makes the system report stock in bins where it isn't. Confirmation must reflect the real move, ideally by scanning at the bin.
+
+</Trap>
+
+<KeyIdea>
+
+EWM works with warehouse requests, tasks and orders, handling units, storage control and waves; embedded EWM suits most sites. Classic WM is being retired in S/4HANA, RF and material flow systems connect people and automation, and stock discrepancies trace back to unconfirmed tasks, one-sided corrections or unrecorded moves.
+
+</KeyIdea>
 
 </Level>
 

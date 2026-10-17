@@ -2,7 +2,7 @@
 title: SAP interview questions
 line: sap
 summary: The questions SAP functional interviews ask most often across MM, SD, PP and finance integration, with answers you can build on.
-minutes: { gist: 4 }
+minutes: { gist: 4, how: 4, deep: 4 }
 status: draft
 keywords: [SAP interview questions, SAP MM interview, SAP SD interview, movement types, three-way match, info record, sales area, condition technique, account determination, price control, S/4HANA]
 connected: [procure-to-pay, order-to-cash, plan-to-produce, record-to-report, sap-basics]
@@ -13,13 +13,14 @@ sources:
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={4} teaser="How SAP functional interviews are built, and how to answer so it sounds like experience." soon>
+<Level n={1} title="The gist" minutes={4} teaser="How SAP functional interviews are built, and how to answer so it sounds like experience." next="How it works" nextMinutes={4}>
 
 SAP functional interviews tend to test four things, usually in this order:
 
@@ -48,6 +49,100 @@ Answer SAP questions in four layers: the business step, the transaction and docu
   { term: 'Integration', def: 'How one module’s transaction automatically affects another, especially finance.' },
   { term: 'Master data issue', def: 'The most common root cause of SAP errors: missing or wrong material, partner or pricing data.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={4} teaser="Six troubleshooting scenarios interviewers love, each answered in the four layers: business step, transaction, posting and what to check." next="Deep dive" nextMinutes={4}>
+
+### Scenario 1: "MRP isn't creating a requisition for a material that's short."
+
+Check, in order: the material is extended to the plant with MRP views; the MRP type plans it (not ND); the planning file has an entry and the run covered it; the procurement type is F or X; the demand is MRP-relevant (schedule line category CP, correct planning strategy); lot-size settings or a maximum stock level aren't suppressing it; and MD04 shows the shortage you expect.
+
+### Scenario 2: "An invoice is blocked for payment."
+
+Find the block reason in the invoice: price, quantity or date variance beyond the tolerance keys (PP, DQ, DW in OMR6), or a missing goods receipt with GR-based invoice verification. Fix the cause (post the receipt, correct the PO price or get a credit note) or confirm the variance is acceptable, then release with MRBR so the next F110 payment run picks it up.
+
+### Scenario 3: "The goods receipt fails with an account determination error."
+
+The combination of chart of accounts, valuation grouping code, valuation class and transaction key has no account in OBYC. Check the material's valuation class in the accounting view, then the BSX and WRX entries for that class. Explain the money: the receipt should post Dr inventory (BSX), Cr GR/IR (WRX).
+
+### Scenario 4: "A sales order was saved but nothing happens next."
+
+Open the incompletion log for missing data; check for credit, delivery or billing blocks; check ATP confirmation (no confirmed quantity, no delivery); check the schedule line category if production should have been triggered.
+
+### Scenario 5: "The invoice to the customer isn't in accounting."
+
+Revenue account determination (VKOA) failed for the account key and account assignment groups. Correct VKOA, then release the billing document to accounting (VFX3).
+
+### Scenario 6: "The warehouse can't find stock that MMBE shows."
+
+The stock may be in an interim storage type (902) because the putaway transfer order or warehouse task wasn't created or confirmed, or IM and WM records differ after a one-sided correction. Check open transfer orders or tasks and interim quants.
+
+### A structure for any scenario
+
+1. **Restate** the business step affected.
+2. **Name** the transaction and document involved.
+3. **State** what it should post and hand over.
+4. **List** what you would check, starting with master data, then configuration, then the document itself.
+
+<KeyIdea>
+
+Troubleshooting answers follow one pattern: business step, transaction and document, expected posting and hand-off, then a checklist from master data to configuration. Practising six common scenarios covers a large share of SAP functional interviews.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={4} teaser="S/4HANA questions, configuration-level questions with their transactions, how to use your practice experience, and how to handle what you don't know.">
+
+### S/4HANA questions
+
+- **"What is the Universal Journal?"** ACDOCA: one line-item table for financial and controlling postings, so finance and management reporting share the same data.
+- **"What happened to MKPF and MSEG?"** Material documents are stored in MATDOC; compatibility views keep old reports working.
+- **"Why is Business Partner mandatory?"** One record for customers and suppliers with roles, synchronized by customer-vendor integration.
+- **"What is MRP Live?"** MRP running in the HANA database (MD01N), much faster than classic runs.
+- **"What does advanced ATP add?"** Product allocation, alternative-based confirmation and backorder processing.
+- **"What replaces SD rebates?"** Condition contracts in settlement management.
+- **"What happens to classic WM?"** Replaced by EWM (embedded or decentralized) or simpler stock room management.
+
+### Configuration-level questions
+
+<div class="table-wrap">
+
+| Question | Answer |
+|---|---|
+| Where are invoice tolerances set? | OMR6, by tolerance key (PP, DQ, DW and others) |
+| Where is automatic account determination for MM? | OBYC, by valuation class and transaction key |
+| Where is the pricing procedure determined? | OVKK, from sales area, document and customer pricing procedures |
+| Where is revenue account determination? | VKOA |
+| Where do you open MM periods? | MMPV (and OB52 for FI) |
+| Where is the planning strategy set? | Strategy group in the material master's MRP 3 view |
+
+</div>
+
+### Using your practice experience
+
+Interviewers value specific experience. Instead of "I know MIRO", say what happened: "In my Global Bike exercise, an invoice for 100 units was blocked for quantity because only 80 had arrived; the GR/IR account showed a 510 difference until the remaining 20 were received, and then I released the invoice." One concrete story like this shows more understanding than a list of T-codes.
+
+### When you don't know
+
+Say what you do know and how you would find out: "I haven't configured that, but I'd expect it in the IMG under the pricing settings, and I'd check the condition type's access sequence first." Interviewers test reasoning as much as recall, and an honest, structured answer beats a confident guess.
+
+### Practise out loud
+
+Take each stop on the SAP line, explain its process in two minutes, then answer its interview questions without notes. Record yourself once: the gaps you hear are the ones the interviewer will find.
+
+<Trap>
+
+Reciting T-codes without explaining the business step, the posting and the hand-off sounds memorized. Interviewers listen for understanding: why the step exists, what it changes in stock and money, and what can go wrong.
+
+</Trap>
+
+<KeyIdea>
+
+Prepare S/4HANA changes, know where key configuration lives, tell concrete stories from your own practice, answer unknowns with structured reasoning, and rehearse explanations out loud.
+
+</KeyIdea>
 
 </Level>
 

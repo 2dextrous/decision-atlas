@@ -2,23 +2,26 @@
 title: Vehicle routing & last mile
 line: logistics
 summary: Planning delivery routes to many doors with limited vehicles and time windows, and why the last mile is the costliest leg.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 4, deep: 4 }
 status: draft
 keywords: [vehicle routing problem, VRP, travelling salesman problem, TSP, time windows, capacitated VRP, savings algorithm, last mile, route optimization, failed delivery, dark store]
 connected: [optimization-basics, load-building, transport-planning, eta-visibility, distribution-designs]
 sources:
   - text: "Toth, P. & Vigo, D. (Eds.) (2014). Vehicle Routing: Problems, Methods, and Applications (2nd ed.). SIAM."
   - text: "Clarke, G. & Wright, J. W. (1964). Scheduling of vehicles from a central depot to a number of delivery points. Operations Research, 12(4), 568–581."
+  - text: "Dantzig, G. B., & Ramser, J. H. (1959). The truck dispatching problem. Management Science, 6(1), 80–91."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Which van visits which customers, in which order, within everyone's time window." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Which van visits which customers, in which order, within everyone's time window." next="How it works" nextMinutes={4}>
 
 A distributor in Pune has 8 vans and 120 kirana stores to deliver to today. Each store orders a different amount, some can only receive goods before 11 am, and each van holds a limited load. Which van visits which stores, in what order?
 
@@ -44,6 +47,94 @@ Routing assigns stops to vehicles and orders them within capacities and time win
   { term: 'Time window', def: 'The period during which a customer can receive a delivery.' },
   { term: 'Savings algorithm', def: 'Clarke-Wright heuristic: merge routes in the order that saves the most distance.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={4} teaser="The Clarke-Wright savings algorithm worked by hand on four customers, time windows, and the economics of drops per route." next="Deep dive" nextMinutes={4}>
+
+### The savings idea
+
+Start by serving every customer with its own trip from the depot. Joining customers $i$ and $j$ into one route saves the trip back to the depot and the trip out again:
+
+$$
+s_{ij} = d_{0i} + d_{0j} - d_{ij}
+$$
+
+Sort all pairs by saving, and merge them in that order whenever the merge keeps the route within capacity and joins customers at the ends of their routes.
+
+<Example title="four customers, vans of capacity 10">
+
+Distances from the depot: A 10, B 12, C 15, D 11 km. Between customers: A–B 5, A–C 14, A–D 18, B–C 9, B–D 20, C–D 12. Demands: A 4, B 3, C 5, D 6.
+
+Savings, largest first: B–C 18, A–B 17, C–D 14, A–C 11, A–D 3, B–D 3.
+
+1. **B–C (18):** join into depot–B–C–depot, load 8. Accepted.
+2. **A–B (17):** adding A would make the load 12. Rejected.
+3. **C–D (14):** adding D would make 14. Rejected.
+4. **A–C (11):** load 12. Rejected.
+5. **A–D (3):** join into depot–A–D–depot, load 10. Accepted.
+
+Separate trips would cover 2 × (10 + 12 + 15 + 11) = 96 km. The two routes cover 36 + 39 = 75 km, saving 21 km (the 18 + 3 of the accepted savings). Here that happens to be the best possible plan with two vans.
+
+</Example>
+
+The method is simple enough to run by hand, which is why it is still taught. Modern routing software starts from solutions like this and improves them with search methods that move and swap stops between routes.
+
+### Time windows change everything
+
+If customer B can only receive before 9 am and C only after 2 pm, the B–C route that saved the most may become impossible, or force a long wait. Time windows, driver hours and loading times are added as constraints, and they often matter more to the final plan than distance.
+
+### Drops per route drive last-mile cost
+
+A van costing ₹3,000 a day delivers at ₹100 a drop with 30 drops, and ₹50 a drop with 60. Failed deliveries are expensive because they consume a drop slot and come back for another one. Time slots, delivery notifications and pickup points all aim to raise successful drops per route.
+
+<KeyIdea>
+
+Clarke-Wright merges customers in order of the distance they save, within capacity. Real routing adds time windows and driver rules, and last-mile cost comes down to successful drops per route.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={4} teaser="The family of routing problems, how modern solvers work, why density beats distance, and dynamic routing for on-demand delivery.">
+
+### A family of problems
+
+Since Dantzig and Ramser framed the "truck dispatching problem" in 1959, the vehicle routing problem has grown many variants:
+
+- **Capacitated (CVRP)** and **with time windows (VRPTW).**
+- **Pickup and delivery,** where items are collected and delivered within the same route, as in courier collections.
+- **Multi-depot** and **heterogeneous fleet** versions.
+- **Periodic** routing, where customers need visits on certain days of the week.
+- **Dynamic** routing, where orders arrive during the day and routes change in real time.
+
+### How solvers work
+
+Exact methods, such as branch-and-price, can prove optimality for problems with up to a few hundred customers, given time. Practical systems mostly use **metaheuristics** (tabu search, adaptive large neighbourhood search, genetic algorithms) that repeatedly destroy and rebuild parts of a solution, reaching near-optimal routes for thousands of stops in minutes. The quality of the input data (road travel times by hour, service times at stops, accurate time windows) usually matters more than the choice of algorithm.
+
+### Density beats distance
+
+A classic result in probability (Beardwood, Halton and Hammersley, 1959) says that the shortest tour through $n$ random points in an area $A$ grows in proportion to $\sqrt{nA}$. So the distance per stop shrinks as stops get denser: doubling the number of deliveries in the same area increases total route length by only about 41%. That is the mathematical reason last-mile delivery gets cheaper with density, and why companies fight for more orders per neighbourhood rather than more neighbourhoods.
+
+### Dynamic routing for on-demand delivery
+
+Food and quick-commerce deliveries arrive continuously and promise minutes, not days. Dispatch decides, every few seconds, which rider takes which order, whether to batch two orders going the same way, and whether to wait a moment for another order to batch. Waiting improves efficiency but risks the promise, the same consolidation trade-off at a much faster pace.
+
+### Plans that drivers follow
+
+Drivers know local realities the model doesn't: a lane closed for a market, a customer who is only in after lunch, a gate that opens late. Routes that ignore this get overridden. Collecting driver feedback, learning actual service times from tracking data and measuring plan adherence keep plans realistic.
+
+<Trap>
+
+Minimizing kilometres is not the same as minimizing cost. Time windows, traffic by hour, city restrictions on truck entry and long unloading times often matter more. Optimize on time and cost, with realistic travel and service times.
+
+</Trap>
+
+<KeyIdea>
+
+Routing is a family of problems solved in practice by metaheuristics fed with good data. Density reduces distance per stop roughly with the square root, dynamic dispatch trades waiting against batching, and realistic data plus driver input keeps plans usable.
+
+</KeyIdea>
 
 </Level>
 

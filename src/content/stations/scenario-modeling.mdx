@@ -2,23 +2,27 @@
 title: Scenario modeling & digital twins
 line: network
 summary: Stress-testing a network on a computer model before building it, and keeping that model alive to test decisions as things change.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 4 }
 status: draft
 keywords: [scenario modeling, what-if analysis, sensitivity analysis, digital twin, simulation, network optimization, resilience testing, Monte Carlo, scenario planning]
 connected: [greenfield, simulation, scenario-planning, resilience, facility-location]
 sources:
   - text: "Ivanov, D. & Dolgui, A. (2021). A digital supply chain twin for managing the disruption risks and resilience in the era of Industry 4.0. Production Planning & Control, 32(9), 775–788."
   - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapter on designing global supply chain networks under uncertainty."
+  - text: "Law, A. M. (2015). Simulation Modeling and Analysis (5th ed.). McGraw-Hill."
+  - text: "Birge, J. R., & Louveaux, F. (2011). Introduction to Stochastic Programming (2nd ed.). Springer."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Ask 'what if?' on a model instead of in the real world." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Ask 'what if?' on a model instead of in the real world." next="How it works" nextMinutes={3}>
 
 Network decisions are expensive to get wrong, so companies test them on a model first. **Scenario modeling** asks "what if?" in a structured way:
 
@@ -46,6 +50,107 @@ Test decisions on a model before testing them on customers. Run scenarios, compa
   { term: 'Digital twin', def: 'A model of the real network kept current with live data, used to test decisions.' },
   { term: 'Sensitivity analysis', def: 'Measuring how much results change when one input changes.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="Running a scenario study, a regret table across three network designs, and when to optimize versus simulate." next="Deep dive" nextMinutes={4}>
+
+### A scenario study, step by step
+
+1. **Ask a clear question:** for example, which of three network designs should we build?
+2. **Agree the measures:** total cost, service, risk exposure, emissions.
+3. **Validate the baseline:** the model must reproduce today's performance.
+4. **Design scenarios:** the base case plus plausible changes in the key drivers (demand by region, costs, disruptions), alone and in combination.
+5. **Run every design in every scenario,** letting flows re-optimize in each, and compare.
+
+<Example title="three designs, three futures">
+
+Annual cost in ₹ crore:
+
+<div class="table-wrap">
+
+| Design | Base | South demand +30% | Fuel +20% |
+|---|---|---|---|
+| A: 2 warehouses | **30.0** | 36.0 | **33.0** |
+| B: 3 warehouses | 31.0 | **33.0** | 33.5 |
+| C: 4 warehouses | 33.0 | 34.0 | 34.5 |
+
+</div>
+
+**Regret** is each design's extra cost compared with the best design for that scenario:
+
+<div class="table-wrap">
+
+| Design | Base | South +30% | Fuel +20% | Worst regret | Expected cost (50/25/25%) |
+|---|---|---|---|---|---|
+| A | 0 | 3.0 | 0 | 3.0 | 32.25 |
+| B | 1.0 | 0 | 0.5 | **1.0** | **32.13** |
+| C | 3.0 | 1.0 | 1.5 | 3.0 | 33.63 |
+
+</div>
+
+A wins the base case, but B has the smallest worst-case regret and the lowest expected cost. B is the robust choice: never far from the best, whatever happens.
+
+</Example>
+
+### Optimize or simulate?
+
+- **Optimization** finds the best decisions for given inputs, usually averages. It answers "what should the network look like?"
+- **Simulation** plays out operations over time with random demand, delays and failures. It answers "how will this design actually perform, including service levels, queues and stock?"
+
+A common pattern: optimize to shortlist designs, then simulate the shortlist to check service and resilience under variability.
+
+<KeyIdea>
+
+Run every design in every scenario, then choose with regret or expected cost rather than the base case alone. Optimize to find candidate designs and simulate them to see how they behave under variability.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={4} teaser="What makes a digital twin, levels of maturity, keeping models honest, and choosing robust decisions under deep uncertainty.">
+
+### What makes a digital twin
+
+A network model becomes a digital twin when it is connected to live data (stock, orders, capacity, transport status) and refreshed often enough to support current decisions. Maturity usually grows in steps:
+
+1. **Descriptive:** an up-to-date picture of the network, so everyone sees the same state.
+2. **Diagnostic:** explaining why performance changed.
+3. **Predictive:** forecasting what will happen, such as a stockout next week if nothing changes.
+4. **Prescriptive:** recommending, and testing, the best response.
+
+Many projects stop at the first step and become dashboards; the value comes from the last two.
+
+### Keeping models honest
+
+- **Validate against history:** replay a past period and check the model reproduces what actually happened.
+- **Check face validity:** walk experienced planners through the model's behaviour; they will spot impossible flows quickly.
+- **Match fidelity to the question:** a strategic network question needs weekly flows by region, not every pallet movement. Too much detail slows the model and hides errors.
+- **Keep data fresh:** a twin running on last quarter's freight rates and lead times gives last quarter's answers.
+
+### Decisions under deep uncertainty
+
+When probabilities can't be estimated with any confidence, as with geopolitical shocks, pandemics or new regulations, expected-cost calculations become guesswork. Approaches that help:
+
+- **Robust choices** that perform acceptably across all scenarios, as with minimax regret.
+- **Stochastic programming,** which commits to first-stage decisions (sites, capacity) while letting second-stage decisions (flows, inventory) adapt to each scenario.
+- **Adaptive plans:** decide now only what must be decided now, and set signposts that trigger the next steps, such as "if southern demand grows above X, open the third site".
+
+### Using it in the business
+
+Scenario models earn their keep in recurring decisions: S&OP what-ifs, capacity investment cases, disruption playbooks ("if this port closes, here is the reroute and its cost") and negotiations ("what is a second supplier worth to us?"). The best ones are owned by the planning team and used every month, not commissioned once and left on a shelf.
+
+<Trap>
+
+A detailed model with unvalidated data produces precise-looking answers that are wrong. People tend to trust a sophisticated model's output more than they should, so validation and clear statements of assumptions matter more as models become more complex.
+
+</Trap>
+
+<KeyIdea>
+
+A digital twin is a validated model connected to live data and used for prediction and prescription, not just display. Keep it honest with historical replay and expert review, and handle deep uncertainty with robust and adaptive decisions.
+
+</KeyIdea>
 
 </Level>
 

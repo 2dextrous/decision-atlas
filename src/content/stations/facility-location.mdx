@@ -2,7 +2,7 @@
 title: Facility location models
 line: network
 summary: Center of gravity, p-median, p-center and fixed-charge models, from a quick first guess to a full optimization.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 4, deep: 4 }
 status: draft
 keywords: [facility location, center of gravity, gravity model, p-median, p-center, fixed-charge location, capacitated facility location, MILP, binary variable, network optimization]
 connected: [optimization-basics, greenfield, network-design-decisions, plant-allocation, scenario-modeling]
@@ -10,16 +10,19 @@ sources:
   - text: "Daskin, M. S. (2013). Network and Discrete Location: Models, Algorithms, and Applications (2nd ed.). Wiley."
   - text: "Hakimi, S. L. (1964). Optimum locations of switching centers and the absolute centers and medians of a graph. Operations Research, 12(3), 450–459."
   - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapter on network design models."
+  - text: "Church, R., & ReVelle, C. (1974). The maximal covering location problem. Papers of the Regional Science Association, 32(1), 101–118."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Four models, each answering a slightly different 'where'." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Four models, each answering a slightly different 'where'." next="How it works" nextMinutes={4}>
 
 "Where should the warehouse go?" sounds like one question, but different models answer different versions of it.
 
@@ -46,6 +49,100 @@ Center of gravity narrows the search, p-median minimizes average distance, p-cen
   { term: 'p-median vs p-center', def: 'Minimize total weighted distance, or minimize the maximum distance to any customer.' },
   { term: 'Fixed-charge model', def: 'MILP with binary open/close decisions and flows, minimizing fixed plus variable cost.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={4} teaser="A centre-of-gravity calculation, why it can mislead, and the fixed-charge location model written out in full." next="Deep dive" nextMinutes={4}>
+
+### Centre of gravity, worked
+
+Weight each customer's coordinates by its volume (times freight rate, if rates differ), and average:
+
+$$
+x^{*} = \frac{\sum w_i x_i}{\sum w_i} \qquad y^{*} = \frac{\sum w_i y_i}{\sum w_i}
+$$
+
+<Example title="three customers on a grid (km)">
+
+Customer A at (0, 0) takes 500 units, B at (100, 0) takes 300 and C at (0, 100) takes 200.
+
+- Centre of gravity: $x^{*} = 100 \times 300 / 1000 = 30$, $y^{*} = 100 \times 200 / 1000 = 20$, the point (30, 20).
+- Total weighted distance from there: about 56,956 unit-km.
+- Total weighted distance from A's own location: 300 × 100 + 200 × 100 = 50,000 unit-km, about 12% less.
+
+</Example>
+
+The centre of gravity minimizes the weighted *squared* distances, not the distances themselves. The point that minimizes total weighted distance (the Weber point) is found iteratively, and when one customer carries at least half of the total weight, as A does here, the best spot is at that customer. Use the centre of gravity as a rough starting area, never as the answer.
+
+### The fixed-charge location model
+
+For real decisions, list candidate sites and let an optimizer choose:
+
+- $y_j$ = 1 if site $j$ is opened, 0 otherwise; $f_j$ is its fixed cost and $K_j$ its capacity.
+- $x_{ij}$ = quantity shipped from site $j$ to customer zone $i$, at unit cost $c_{ij}$; $d_i$ is the zone's demand.
+
+$$
+\min \; \sum_j f_j\,y_j + \sum_i \sum_j c_{ij}\,x_{ij}
+$$
+
+subject to: every zone's demand is met, $\sum_j x_{ij} = d_i$; nothing ships from a closed site and open sites stay within capacity, $\sum_i x_{ij} \le K_j\,y_j$; and $y_j \in \lbrace 0, 1 \rbrace$, $x_{ij} \ge 0$.
+
+The $K_j\,y_j$ term is the clever part: a closed site has zero capacity, so the model must pay $f_j$ to use it.
+
+### Choosing between the models
+
+<div class="table-wrap">
+
+| Model | Minimizes | Typical use |
+|---|---|---|
+| Centre of gravity | Weighted squared distance, with no costs | A first look at the map |
+| p-median | Total demand-weighted distance, for $p$ sites | Cost-driven networks |
+| p-center | The worst distance to any customer | Service guarantees, emergency services |
+| Covering | Sites needed so every customer is within a limit | "Everyone within 4 hours" promises |
+| Fixed-charge MILP | Total cost: fixed + flow, with capacities | Real open/close decisions |
+
+</div>
+
+<KeyIdea>
+
+The centre of gravity is a rough starting area that can miss the true best point. Real decisions use the fixed-charge MILP, where binary open/close variables carry fixed costs and switch capacity on or off.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={4} teaser="Multi-echelon models, demand zones and road distances, coverage models, and solving large location problems.">
+
+### More than one echelon
+
+Real networks have plants, central warehouses, regional warehouses and customers. The model adds a layer of flows for each echelon, with flow-balance constraints (what leaves a warehouse equals what arrives, give or take stock changes). It can also choose among capacity options per site (small, medium or large modules, each with its own fixed cost) and enforce **single sourcing**, where each customer zone is served by exactly one warehouse, which customers and operations often prefer.
+
+### Getting the inputs right
+
+- **Demand zones:** thousands of customers are grouped into zones, for example by PIN-code areas, each represented by a weighted centre. Too few zones distort distances; too many slow the model without improving decisions.
+- **Road distances and times:** straight-line distance understates real road distance, and some routes are far slower than distance suggests. Use network distances and transit times.
+- **Freight rates:** rates aren't linear in distance. Full truckloads, part loads and parcels are priced differently, and lanes with good backhaul are cheaper.
+- **Inventory:** safety stock rises with the square root of the number of sites, a non-linear effect that models approximate in steps or add after optimizing flows.
+
+### Service-driven models
+
+When the promise to customers matters more than cost, covering models apply. The **set-covering** model finds the fewest sites so that every customer is within a time or distance limit; the **maximal covering** model (Church and ReVelle, 1974) places a fixed number of sites to cover as much demand as possible. Both are common for emergency services and same-day delivery networks.
+
+### Solving large problems
+
+Mixed-integer solvers, commercial and open-source, handle networks with hundreds of candidate sites and thousands of zones, especially with good formulations. Very large or detailed problems use heuristics, decomposition or a two-step approach: optimize the strategic structure first, then refine flows. Whatever the method, test the answer: if a small change in one assumption flips the recommendation, the decision is not robust yet.
+
+<Trap>
+
+Treating the centre of gravity, or any single optimal point, as the answer ignores everything a map doesn't show: land availability, labour, road access, flood risk, local rules. Optimize over a shortlist of real candidate sites instead.
+
+</Trap>
+
+<KeyIdea>
+
+Real location models span several echelons, use demand zones, road distances and realistic freight rates, and switch to covering models when service is the goal. Solve over real candidate sites and test how sensitive the answer is.
+
+</KeyIdea>
 
 </Level>
 

@@ -2,23 +2,27 @@
 title: Transportation fundamentals
 line: logistics
 summary: Modes, FTL vs LTL vs parcel, and the handful of factors that drive what freight really costs.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 3 }
 status: draft
 keywords: [transportation modes, road, rail, sea, air, FTL, LTL, PTL, parcel, freight cost drivers, backhaul, density, cube, transit time]
 connected: [lane-mode, load-building, transport-planning, carbon-aware-design, intermodal]
 sources:
   - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapter on transportation in a supply chain."
   - text: "Christopher, M. Logistics & Supply Chain Management. Pearson."
+  - text: "Rushton, A., Croucher, P., & Baker, P. (2022). The Handbook of Logistics and Distribution Management (7th ed.). Kogan Page."
+  - text: "Government of India (2022). National Logistics Policy. Ministry of Commerce and Industry."
+  - text: "National Council of Applied Economic Research (2023). Logistics Cost in India: Assessment and Long-term Framework."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Faster costs more, fuller costs less, and empty return trips cost someone." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Faster costs more, fuller costs less, and empty return trips cost someone." next="How it works" nextMinutes={3}>
 
 Transport moves goods between every stage of the supply chain, and it trades speed against cost. The main modes, roughly from cheapest and slowest to fastest and dearest:
 
@@ -48,6 +52,80 @@ Choose modes and shipment sizes on total cost: freight plus the inventory tied u
   { term: 'Backhaul', def: 'The return trip; filling it lowers cost for everyone.' },
   { term: 'Cube out vs weigh out', def: 'A truck fills its volume before its weight limit (light goods), or the reverse (heavy goods).' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="Chargeable weight, the full-truck break-even, what a trip really costs, and why the empty return matters." next="Deep dive" nextMinutes={3}>
+
+### Weight, volume and chargeable weight
+
+Carriers charge for whichever limit a shipment uses up first. For parcels and air freight this is formalized as **volumetric (dimensional) weight**: length × width × height in centimetres, divided by a factor set by the carrier (5,000 is common for courier services). A 60 × 40 × 40 cm box weighing 8 kg has a volumetric weight of 96,000 / 5,000 = 19.2 kg, so it is charged as 19.2 kg. Light, bulky products pay for air.
+
+### Full truck or part load?
+
+A part load is priced per kilogram; a full truck at a fixed price per trip. If part loads cost ₹8 a kg and a 9-tonne truck costs ₹30,000 for the trip, the break-even is 30,000 / 8 = 3,750 kg. Above that weight, hiring the whole truck is cheaper, even if it leaves half empty, and it is usually faster too, with no intermediate stops or handling.
+
+### What a truck trip costs
+
+<div class="table-wrap">
+
+| Cost | Behaves like | Examples |
+|---|---|---|
+| Fixed per vehicle | Paid whether it moves or not | Loan or lease payments, insurance, permits |
+| Per day | Paid for each day in use | Driver's wages and allowances |
+| Per kilometre | Grows with distance | Fuel, tyres, maintenance, tolls |
+| Per stop or wait | Grows with stops and delays | Loading and unloading time, detention |
+
+</div>
+
+Because so much cost is fixed or per day, idle trucks and long waits at docks are expensive, and carriers price that risk into their rates.
+
+### The empty trip home
+
+A carrier who drives Mumbai to Delhi loaded and returns empty has to recover the cost of both legs from the loaded one. Lanes with plenty of return freight (**backhaul**) are cheaper; lanes where trucks usually come back empty are dearer. Shippers who can offer return loads, or combine lanes into round trips, get better rates.
+
+<KeyIdea>
+
+Freight is charged on weight or volume, whichever binds. Full trucks beat part loads above a break-even weight, much of a truck's cost is fixed or per day, and lane balance decides how much of the empty return you pay for.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={3} teaser="Transport economics, India's logistics policy push, the infrastructure changing mode choices, and the traps in comparing freight costs.">
+
+### Three economies of transport
+
+- **Economies of scale:** cost per tonne falls with shipment size (full truck against part load, a train against trucks, a large ship against a small one).
+- **Economies of distance:** rates per kilometre fall with distance, because loading, unloading and paperwork are spread over more kilometres. That is why rail and sea compete best on long hauls.
+- **Economies of density:** a carrier with many shipments in an area can fill vehicles and plan routes more efficiently, which is the basis of parcel networks and milk runs.
+
+### India's logistics push
+
+Logistics costs have long been a competitiveness concern for India. A 2023 study by the National Council of Applied Economic Research estimated them at roughly 8–9% of GDP. Policy responses include:
+
+- **National Logistics Policy (2022)** and **PM Gati Shakti,** a national master plan for coordinated infrastructure planning across ministries.
+- **Dedicated freight corridors:** the Eastern and Western corridors give freight trains their own tracks, with double-stack container trains on the Western corridor.
+- **Digital systems:** GST and the **e-way bill** removed state border checkpoints, and **FASTag** electronic tolling cut waiting at toll plazas.
+- **Multimodal logistics parks,** coastal shipping and inland waterways, to shift heavy flows off roads.
+
+These change the cost and reliability of each mode, so mode choices made a few years ago may no longer be the best ones.
+
+### Choosing partners
+
+Companies rarely run all their own transport. **3PLs** (third-party logistics providers) supply transport and warehousing services; **4PLs** manage the whole logistics network on a company's behalf, coordinating several 3PLs. Freight forwarders arrange international shipments across modes and handle documentation.
+
+<Trap>
+
+Comparing modes on freight rate per tonne or per kilometre alone ignores everything else that changes: handling at transfer points, the road legs at each end, the inventory tied up in a slower or less reliable pipeline, and damage. Compare total landed cost per unit delivered.
+
+</Trap>
+
+<KeyIdea>
+
+Scale, distance and density drive transport costs. India's policy and infrastructure push (corridors, e-way bills, FASTag, multimodal parks) is changing mode economics, so compare modes on total landed cost and revisit old choices.
+
+</KeyIdea>
 
 </Level>
 

@@ -2,23 +2,26 @@
 title: "MRP: from BOM to orders"
 line: supply
 summary: Exploding the master schedule through the bill of materials into the components and raw materials to buy or make, and when.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 4 }
 status: draft
 keywords: [MRP, material requirements planning, bill of materials, BOM explosion, gross requirements, net requirements, lead time offset, lot sizing, planned order, purchase requisition, dependent demand]
 connected: [mps, drp-deployment, inventory-mrp-in-sap, plan-to-produce, procurement-fundamentals]
 sources:
   - text: "Silver, E. A., Pyke, D. F. & Thomas, D. J. (2017). Inventory and Production Management in Supply Chains (4th ed.). CRC Press. Chapter on material requirements planning."
   - text: "Orlicky, J. (1975). Material Requirements Planning. McGraw-Hill."
+  - text: "Ptak, C., & Smith, C. (2016). Demand Driven Material Requirements Planning (DDMRP). Industrial Press."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="If you know what you'll build, you can calculate every part you need." soon>
+<Level n={1} title="The gist" minutes={3} teaser="If you know what you'll build, you can calculate every part you need." next="How it works" nextMinutes={3}>
 
 Once the master schedule says "make 30,000 bottles of shampoo in week 6", every component follows from arithmetic, not forecasting. The **bill of materials (BOM)** is the recipe: one bottle of shampoo needs one bottle, one cap, one label and 500 ml of liquid. **MRP (material requirements planning)** multiplies through:
 
@@ -46,6 +49,97 @@ Forecast the finished product, calculate the components. MRP turns the MPS and t
   { term: 'Dependent demand', def: 'Demand calculated from a higher-level plan rather than forecast on its own.' },
   { term: 'Lead-time offset', def: 'Placing an order earlier by the lead time so it arrives when needed.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="The MRP record for one component worked through, plus low-level codes, pegging and the messages planners act on." next="Deep dive" nextMinutes={4}>
+
+### The MRP record
+
+For each component, MRP lays out the weeks and works through them one at a time: gross requirements from the parents, scheduled receipts, projected balance, net requirements, planned receipts (lot-sized) and planned order releases (offset by lead time).
+
+<Example title="shampoo caps">
+
+The MPS makes 20,000 shampoos in week 4 and 30,000 in week 6, one cap each. Caps: 8,000 in stock, 5,000 arriving in week 3, ordered in multiples of 10,000, lead time 2 weeks.
+
+<div class="table-wrap">
+
+| Week | 1 | 2 | 3 | 4 | 5 | 6 |
+|---|---|---|---|---|---|---|
+| Gross requirements | | | | 20,000 | | 30,000 |
+| Scheduled receipts | | | 5,000 | | | |
+| Projected balance (start 8,000) | 8,000 | 8,000 | 13,000 | 3,000 | 3,000 | 3,000 |
+| Net requirements | | | | 7,000 | | 27,000 |
+| Planned receipts | | | | 10,000 | | 30,000 |
+| Planned order releases | | 10,000 | | 30,000 | | |
+
+</div>
+
+Week 4 needs 20,000 but only 13,000 will be there, so 7,000 is missing, rounded up to 10,000 and ordered in week 2. Week 6 is short by 27,000, rounded to 30,000 and ordered in week 4.
+
+</Example>
+
+### Multi-level explosion
+
+MRP works down the bill of materials level by level. The planned orders for a parent become gross requirements for its components, which may themselves be made from other components. The shampoo liquid, for example, might be made in-house a week before filling, so its planned orders create requirements for surfactant, fragrance and water.
+
+- **Low-level codes:** a component used at several levels of different bills is netted only once, at its lowest level, after all its parents' requirements are known.
+- **Pegging:** each requirement is linked back to the parent orders that caused it, so a planner can see which customer order is affected by a late part.
+
+### Messages planners act on
+
+MRP also checks existing orders against the new plan:
+
+- **Expedite (reschedule in):** an order arrives after it is needed.
+- **De-expedite (reschedule out):** an order arrives earlier than needed.
+- **Cancel:** an order is no longer needed.
+- **Release:** a planned order has reached its release date and should become a real purchase or production order.
+
+<KeyIdea>
+
+MRP nets each component's gross requirements against stock and open orders, rounds to lot sizes, offsets by lead time and passes the result down the bill. Low-level codes, pegging and exception messages make the output usable.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={4} teaser="Why MRP assumes away capacity and variability, how inflated lead times backfire, nervousness, and the demand-driven alternative.">
+
+### Infinite capacity and fixed lead times
+
+Classic MRP assumes every work centre has unlimited capacity and every order takes its planned lead time. Neither is true. MRP II added capacity requirements planning and feedback to close the loop, and advanced planning systems schedule against finite capacity, but the core MRP calculation still offsets by fixed lead times.
+
+### The lead-time trap
+
+Planned lead times are mostly queue time, not working time. When parts arrive late, planners lengthen the planned lead times to "be safe". Orders are then released earlier, more work enters the shop, queues grow, and actual lead times grow too, which leads to even longer planned lead times. Little's law explains it: with the same throughput, more work in process means longer flow times. The fix is the opposite instinct: control what is released and shorten queues.
+
+### Nervousness
+
+Small changes in the master schedule can cause large changes in component plans, especially with lot-sizing rules such as minimum order quantities and period lot sizes, which can flip an order from one week to another. Suppliers see orders appear, disappear and move. Remedies: firm planned orders in the near term, time fences, lot-for-lot sizing on low-cost items, and ignoring small reschedule messages.
+
+### Data is everything
+
+MRP is arithmetic, so its output is exactly as good as its inputs:
+
+- **Inventory accuracy:** if the system thinks 8,000 caps are in stock and only 5,000 are, every plan built on that is wrong. Cycle counting keeps records honest.
+- **Bills of materials:** wrong quantities or outdated components generate wrong orders.
+- **Lead times, lot sizes and safety stocks:** parameters set years ago and never reviewed are a classic source of bad plans.
+
+### Demand-driven MRP
+
+DDMRP (Ptak and Smith) keeps MRP's bill-of-materials logic but places strategic stock buffers at chosen points in the product structure. Buffers are sized from average usage and lead time, and replenished according to how far their stock has fallen, rather than from a forecast exploded through every level. This decouples lead times and dampens nervousness. Classic MRP remains the backbone of most ERP systems; S/4HANA's MRP Live runs the same logic much faster in memory.
+
+<Trap>
+
+When planners stop trusting MRP's suggestions because of bad data, they build their own spreadsheets, and the system's plan and the real plan drift apart. Fix the master data and parameters; don't work around them.
+
+</Trap>
+
+<KeyIdea>
+
+MRP assumes infinite capacity and fixed lead times, so it needs capacity checks, honest lead times and accurate data. Inflating lead times makes them longer in reality, nervousness needs damping, and buffering strategically (as in DDMRP) can decouple the chain.
+
+</KeyIdea>
 
 </Level>
 

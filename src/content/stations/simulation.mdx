@@ -2,23 +2,27 @@
 title: Simulation & Monte Carlo
 line: analytics
 summary: Testing a decision against thousands of possible futures, and how simulation complements optimization.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 3 }
 status: draft
 keywords: [simulation, Monte Carlo, discrete-event simulation, random variables, scenarios, risk, distribution of outcomes, stockout probability, digital twin, what-if]
 connected: [scenario-modeling, safety-stock, scenario-planning, optimization-basics, probabilistic-forecasting]
 sources:
   - text: "Law, A. M. Simulation Modeling and Analysis. McGraw-Hill."
   - text: "Hopp, W. J. & Spearman, M. L. Factory Physics. Waveland Press."
+  - text: "Savage, S. L. (2009). The Flaw of Averages: Why We Underestimate Risk in the Face of Uncertainty. Wiley."
+  - text: "Sterman, J. D. (2000). Business Dynamics: Systems Thinking and Modeling for a Complex World. McGraw-Hill."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Play the future thousands of times and look at the spread of results." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Play the future thousands of times and look at the spread of results." next="How it works" nextMinutes={3}>
 
 Some questions don't have a neat formula. "If demand varies, suppliers are sometimes late and a machine breaks down now and then, how often will we run out?" **Simulation** answers by playing out the system many times on a computer.
 
@@ -46,6 +50,105 @@ Simulation shows the range of outcomes, not just the average. Use optimization t
   { term: 'Discrete-event simulation', def: 'Modelling a system as events over time, such as arrivals, queues and processing.' },
   { term: 'Replication', def: 'One run of a simulation; many replications give a reliable picture.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="A Monte Carlo study of lead-time demand for a lumpy item, the queue at a two-door dock, and the steps of a sound simulation study." next="Deep dive" nextMinutes={3}>
+
+### Monte Carlo for a lumpy item
+
+<Example title="setting a reorder point by simulation">
+
+Daily demand: 0 units on 60% of days, 5 units on 30%, and 20 units on 10%. Lead time: 4, 5 or 6 days, equally likely. What reorder point covers 95% of lead times?
+
+- Simulate 100,000 lead times: draw a lead time, draw each day's demand, add them up.
+- Average lead-time demand: 17.5 units (3.5 a day × 5 days).
+- **95th percentile from the simulation: 45 units.** 99th: 55.
+- The normal approximation, using the same mean and standard deviation, gives 17.5 + 1.645 × 13.6 ≈ 40.
+
+The normal formula would set the reorder point about 5 units too low, because lumpy demand has a long right tail the normal curve doesn't capture.
+
+</Example>
+
+### A dock with two doors
+
+Trucks arrive at random, on average every 30 minutes, and unloading takes 50 minutes on average, also random. With 2 doors, the doors are busy 83% of the time. Queueing formulas for this simple case give:
+
+<div class="table-wrap">
+
+| Doors | Utilization | Chance a truck waits | Average wait |
+|---|---|---|---|
+| 2 | 83% | 76% | about 114 minutes |
+| 3 | 56% | 30% | about 11 minutes |
+
+</div>
+
+A third door cuts the average wait tenfold. Real docks add appointment schedules, different truck types and unloading crews, which formulas can't handle but a discrete-event simulation can, and the simple case is a useful check that the simulation behaves correctly.
+
+### Steps of a sound study
+
+1. **Define the question** and the measures (stockout rate, waiting time, cost).
+2. **Build the model logic** at the level of detail the question needs.
+3. **Fit input distributions** from data, not averages.
+4. **Verify** (the model does what you intended) and **validate** (it reproduces reality).
+5. **Discard the warm-up period** for steady-state questions.
+6. **Run enough replications** and report results with confidence intervals; precision improves with the square root of the number of runs.
+7. **Compare alternatives** using the same random numbers for each, so differences come from the decision, not from luck.
+
+<KeyIdea>
+
+Monte Carlo reveals tails that normal approximations miss, queueing shows how waits explode near full utilization, and a sound study fits real input distributions, validates the model, runs enough replications and compares alternatives fairly.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={3} teaser="Four kinds of simulation, the flaw of averages, comparing alternatives efficiently, simulation-optimization, and why animation isn't validation.">
+
+### Four kinds of simulation
+
+<div class="table-wrap">
+
+| Type | Models | Typical supply chain use |
+|---|---|---|
+| Monte Carlo | Random inputs to a static calculation | Lead-time demand, project risk, financial outcomes |
+| Discrete-event | Entities flowing through processes over time | Warehouses, docks, factories, ports |
+| System dynamics | Stocks, flows and feedback loops at an aggregate level | Bullwhip, capacity investment cycles, policy effects |
+| Agent-based | Many individual decision makers interacting | Consumer adoption, carrier behaviour, disruption spread |
+
+</div>
+
+Forrester's system dynamics (1961) produced one of the earliest explanations of the bullwhip effect, and Sterman's (2000) textbook remains the standard reference for the method.
+
+### The flaw of averages
+
+Plans built on average inputs are wrong on average. Savage's "flaw of averages" (2009) gives many examples: average demand fed into a capacity plan hides the weeks when demand exceeds capacity and sales are lost, so the average outcome is worse than the outcome of the average. Simulation replaces single numbers with distributions and shows the true average and the spread.
+
+### Comparing alternatives efficiently
+
+- **Common random numbers:** run each alternative with the same sequence of random demand, delays and failures, so the comparison isn't blurred by different luck.
+- **Antithetic variates** and other variance-reduction methods reach the same precision with fewer runs.
+- **Enough replications:** report differences between alternatives with confidence intervals, not single runs.
+
+### Simulation-optimization
+
+When there are many possible decisions (reorder points for hundreds of items, numbers of doors and staff), search methods can drive the simulation: try settings, simulate, keep the better ones, repeat. It is slower than pure optimization but handles randomness and complexity that formulas can't.
+
+### Animation is not validation
+
+Watching trucks move on screen builds confidence, sometimes too much. Validation means comparing the model's outputs (throughput, waiting times, stock levels) with real historical performance, and checking extreme cases behave sensibly (zero demand means zero shipments; double the arrivals and queues grow).
+
+<Trap>
+
+Running a simulation a handful of times and reporting the average treats noise as a result. Run enough replications for narrow confidence intervals, and compare alternatives on the same random numbers.
+
+</Trap>
+
+<KeyIdea>
+
+Choose the simulation type for the question, replace averages with distributions to avoid the flaw of averages, compare alternatives with common random numbers and enough replications, and validate against real performance rather than animation.
+
+</KeyIdea>
 
 </Level>
 

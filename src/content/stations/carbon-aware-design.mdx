@@ -2,7 +2,7 @@
 title: Carbon-aware network design
 line: network
 summary: Treating emissions as a cost or a constraint in network decisions, and the trade-offs that come with it.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 4, deep: 4 }
 status: draft
 keywords: [carbon footprint, emissions, Scope 1, Scope 2, Scope 3, GHG Protocol, tonne-km, emission factor, mode shift, carbon price, sustainable network design]
 connected: [sustainable-optimization, network-design-decisions, lane-mode, esg-risk, reverse-logistics]
@@ -10,16 +10,21 @@ sources:
   - text: "World Resources Institute & WBCSD. The Greenhouse Gas Protocol: A Corporate Accounting and Reporting Standard (revised edition)."
   - text: "Smart Freight Centre. Global Logistics Emissions Council (GLEC) Framework for logistics emissions accounting."
   - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapter on sustainability and the supply chain."
+  - text: "World Resources Institute & World Business Council for Sustainable Development (2011). Corporate Value Chain (Scope 3) Accounting and Reporting Standard. GHG Protocol."
+  - text: "Smart Freight Centre. Global Logistics Emissions Council (GLEC) Framework for logistics emissions accounting and reporting."
+  - text: "International Organization for Standardization (2023). ISO 14083: Greenhouse gases — Quantification and reporting of greenhouse gas emissions arising from transport chain operations."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Putting emissions into the network model next to cost and service." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Putting emissions into the network model next to cost and service." next="How it works" nextMinutes={4}>
 
 A network designed only for cost often isn't the lowest-carbon one. Fewer, larger warehouses can mean longer truck journeys; air freight saves days and burns far more fuel than sea or rail. **Carbon-aware design** puts emissions into the same model as cost and service.
 
@@ -49,6 +54,88 @@ Measure emissions by scope, then put carbon into the network model as a price or
   { term: 'Tonne-kilometre', def: 'One tonne moved one kilometre; the activity unit for freight emissions.' },
   { term: 'Mode shift', def: 'Moving freight to lower-emission modes, such as from road to rail or coastal shipping.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={4} teaser="Calculating freight emissions for one lane, a road-versus-rail comparison, and the carbon price at which it pays to switch." next="Deep dive" nextMinutes={4}>
+
+### Freight emissions, step by step
+
+$$
+\text{Emissions} = \text{tonnes} \times \text{km} \times \text{emission factor per tonne-km}
+$$
+
+Emission factors depend on the mode, the vehicle, how full it is and the fuel, so use published defaults (such as those in the GLEC Framework) or your carriers' measured data, and make sure every lane uses the same basis.
+
+<Example title="20 tonnes from Delhi to Mumbai">
+
+Distance about 1,400 km, so 28,000 tonne-km. Using illustrative factors in the typical range, road at 80 g CO₂e per tonne-km and rail at 25 g:
+
+- **By road:** 28,000 × 80 g = 2.24 tonnes CO₂e.
+- **By rail:** 28,000 × 25 g = 0.70 tonnes, plus trucks for about 50 km at each end (2,000 tonne-km at 80 g = 0.16 tonnes): 0.86 tonnes in total.
+- Rail cuts the shipment's emissions by about 62%.
+
+Now suppose rail costs ₹8,000 more per shipment, including the extra handling. The cost of each tonne saved is 8,000 / 1.38 ≈ ₹5,800. With an internal carbon price above that, the model switches the lane to rail; below it, the lane stays on road.
+
+</Example>
+
+That break-even, the cost per tonne avoided, is the **abatement cost** of the option. Ranking every option by its abatement cost gives a **marginal abatement cost curve**: the cheap cuts on the left, the expensive ones on the right.
+
+### Putting carbon in the network model
+
+- **As a price:** add (carbon price × emissions) to the cost objective. Each lane, mode and site is chosen as if carbon were a real cost.
+- **As a cap:** add a constraint that total emissions stay below a limit, and minimize cost under it. Tightening the cap step by step traces the cost–carbon trade-off curve.
+- **As a reported metric only:** the weakest option, but a necessary first step to build the data.
+
+### Levers a network model can choose
+
+Mode shift (road to rail or sea), fuller vehicles and better consolidation, shorter distances through better-placed sites, cleaner energy at warehouses and plants, and electric vehicles for urban deliveries.
+
+<KeyIdea>
+
+Freight emissions are tonne-km times a mode factor. Each option has an abatement cost per tonne avoided, and putting carbon into the network model as a price or a cap shows which cuts are cheap and which are expensive.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={4} teaser="Scope 3 data problems, the standards and rules driving disclosure, network trade-offs that can backfire, and setting credible targets.">
+
+### The Scope 3 data problem
+
+For most companies, the largest emissions sit in Scope 3: purchased goods, outsourced transport, product use and disposal. Measuring them depends on data from suppliers and carriers, often unavailable or inconsistent. Many companies start with **spend-based** estimates (rupees spent times an average factor per rupee), which are easy but flawed: if a supplier raises prices, measured emissions rise even though nothing physical changed. Moving to **activity-based** data (tonne-km, kWh, kg of material) and then to supplier-specific data improves accuracy and makes real improvements visible.
+
+### Standards and rules
+
+- **GHG Protocol:** the corporate and Scope 3 standards define what to count.
+- **ISO 14083 and the GLEC Framework:** methods for calculating emissions from transport chains, including hubs and multiple legs.
+- **Science Based Targets initiative (SBTi):** a widely used route for setting targets aligned with climate goals.
+- **Disclosure rules:** in India, SEBI requires the largest listed companies to publish a Business Responsibility and Sustainability Report (BRSR), with assurance of key indicators phased in for the biggest firms. Exporters to the EU also face its Carbon Border Adjustment Mechanism (CBAM), which puts a carbon cost on imports of goods such as steel, aluminium and cement.
+
+### Trade-offs that can backfire
+
+- **Fewer, larger warehouses** cut building energy and inventory but may lengthen truck journeys.
+- **Faster delivery promises** push towards air freight, part-empty vans and more nodes.
+- **Shifting to rail** can need more inventory to cover longer and less flexible transit times.
+- **Intensity versus total:** emissions per unit can fall while total emissions rise with volume growth. Targets should say which they mean.
+
+A network model with carbon included makes these interactions visible instead of leaving each team to optimize its own piece.
+
+### Credible targets
+
+Base targets on measured baselines, separate quick wins (load factors, mode shift on long lanes, renewable electricity) from structural changes (network redesign, supplier changes), and tie them to the abatement cost curve so the business knows what each extra cut will cost. Report progress with the same method every year, and restate the baseline if the method changes.
+
+<Trap>
+
+Spend-based Scope 3 estimates move with prices, not with physical emissions. A supplier price rise looks like an emissions increase, and switching to a cheaper but dirtier supplier looks like an improvement. Move to activity-based data for the categories that matter most.
+
+</Trap>
+
+<KeyIdea>
+
+Scope 3 needs activity-based data to be meaningful. Standards like the GHG Protocol, ISO 14083 and GLEC set the method, and rules like BRSR and CBAM raise the stakes. Model network trade-offs together, and set targets on measured baselines with known abatement costs.
+
+</KeyIdea>
 
 </Level>
 

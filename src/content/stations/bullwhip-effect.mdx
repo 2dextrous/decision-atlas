@@ -2,23 +2,27 @@
 title: The bullwhip effect
 line: foundations
 summary: Why small wobbles in consumer demand become big swings in orders upstream, its four causes, and the fixes.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 4 }
 status: draft
 keywords: [bullwhip effect, demand amplification, order variability, beer game, order batching, forward buying, shortage gaming, information sharing, VMI, CPFR, EDLP]
 connected: [allocation, demand-sensing-shaping, forecasting-fundamentals, what-is-a-supply-chain, consensus-fva]
 sources:
   - text: "Lee, H. L., Padmanabhan, V. & Whang, S. (1997). The bullwhip effect in supply chains. Sloan Management Review, 38(3), 93–102."
   - text: "Sterman, J. D. (1989). Modeling managerial behavior: Misperceptions of feedback in a dynamic decision making experiment. Management Science, 35(3), 321–339."
+  - text: "Chen, F., Drezner, Z., Ryan, J. K., & Simchi-Levi, D. (2000). Quantifying the bullwhip effect in a simple supply chain: The impact of forecasting, lead times, and information. Management Science, 46(3), 436–443."
+  - text: "Cachon, G. P., Randall, T., & Schmidt, G. M. (2007). In search of the bullwhip effect. Manufacturing & Service Operations Management, 9(4), 457–479."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="A small ripple at the shelf becomes a wave at the factory." soon>
+<Level n={1} title="The gist" minutes={3} teaser="A small ripple at the shelf becomes a wave at the factory." next="How it works" nextMinutes={3}>
 
 Parents buy nappies at a fairly steady rate; babies don't suddenly need twice as many. Yet when Procter & Gamble studied its Pampers business, it found orders from distributors swinging much more than retail sales, and its own orders to suppliers swinging more still. Variability grows as you move upstream, like the crack of a whip. That's the **bullwhip effect**.
 
@@ -44,6 +48,97 @@ Bullwhip comes from each stage reacting to the orders it sees rather than to rea
   { term: 'VMI', def: 'Vendor-managed inventory: the supplier sees the customer’s stock and sales and manages replenishment.' },
   { term: 'CPFR', def: 'Collaborative planning, forecasting and replenishment between trading partners.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="A 10% rise in demand traced into a 40% and then a 160% swing in orders, and the formula that measures the amplification." next="Deep dive" nextMinutes={4}>
+
+### Watching it happen
+
+Each stage uses a simple, common rule: forecast next week's demand as last week's, and keep stock (on hand plus on order) equal to three weeks of that forecast, because the lead time is two weeks plus one week of review.
+
+<Example title="a 10% rise in consumer demand">
+
+Consumer demand is 100 a week, then rises to 110 from week 5 and stays there.
+
+<div class="table-wrap">
+
+| Week | 4 | 5 | 6 | 7 |
+|---|---|---|---|---|
+| Consumer demand | 100 | 110 | 110 | 110 |
+| Retailer's order to the manufacturer | 100 | 140 | 110 | 110 |
+| Manufacturer's order to its supplier | 100 | 260 | 20 | 110 |
+
+</div>
+
+In week 5 the retailer must cover the extra 10 sold *and* raise its target stock from 300 to 330, so it orders 140, a 40% jump. The manufacturer sees orders jump from 100 to 140 and does the same thing: it orders 140 plus an increase in its target from 300 to 420, a total of 260. Next week the retailer's orders drop back to 110, the manufacturer's target falls to 330, and it orders only 20.
+
+</Example>
+
+A permanent 10% change at the shelf has become a 160% spike followed by an 80% collapse two stages upstream, with every stage following a sensible-looking rule.
+
+### Measuring it
+
+The **bullwhip ratio** of a stage compares the variability of the orders it places with the variability of the demand it receives:
+
+$$
+\text{Bullwhip} = \frac{\operatorname{Var}(\text{orders})}{\operatorname{Var}(\text{demand})}
+$$
+
+A ratio above 1 means the stage amplifies variability. For an order-up-to policy using a $p$-period moving-average forecast and a lead time of $L$ periods, Chen and colleagues (2000) showed the ratio is at least:
+
+$$
+1 + \frac{2L}{p} + \frac{2L^2}{p^2}
+$$
+
+With $L$ = 2 and $p$ = 5, that is at least 2.12. Longer lead times and more reactive forecasts (smaller $p$) both increase it.
+
+<KeyIdea>
+
+Each stage's sensible reaction (update the forecast, adjust target stock) amplifies orders upstream. The bullwhip ratio measures the amplification, and it grows with lead time and with how reactive the forecast is.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={4} teaser="Sharing information helps but doesn't cure it, what the beer game reveals about people, the evidence from real industries, and policies that dampen it.">
+
+### Sharing information helps, but not completely
+
+Chen and colleagues also showed what happens across several stages. If each stage forecasts from the orders it receives, the amplifications roughly multiply: with three stages like the one above, the bound is about $2.12^3 \approx 9.5$. If every stage sees real consumer demand, the bound depends on the total lead time instead, about 6.3 here. Sharing demand data cuts the amplification by about a third in this case, but it doesn't remove it, because forecasting and lead times still create it. Shorter lead times and smoother policies are needed too.
+
+### People make it worse
+
+Sterman's (1989) experiments with the "beer game" found that players consistently ignore orders they have already placed but not yet received (the **supply line**). When stock is low they order again and again, then drown in deliveries when everything arrives. Most bullwhip in the game comes from this behaviour, not from the game's structure, which is why policies and systems that account for the supply line help so much.
+
+### What real industries show
+
+Cachon, Randall and Schmidt (2007) looked for the bullwhip effect in US industry data. They found it clearly in many wholesale industries, but less often at retail and in manufacturing, partly because seasonality lets companies smooth production on purpose. The effect is real, but its size depends on the industry, the policies used and how data are measured.
+
+### Policies that dampen it
+
+- **Share point-of-sale data** and plan from consumer demand, through vendor-managed inventory or CPFR.
+- **Shorten lead times** and review periods.
+- **Smooth replenishment:** order-up-to rules that correct only part of each gap per period (proportional rules) reduce variability at a small cost in stock.
+- **Account for the supply line** in every ordering decision.
+- **Stable prices:** everyday low pricing instead of frequent deals that invite forward buying.
+- **Allocate shortages on history,** not on current orders.
+
+### The cost of bullwhip
+
+Amplified orders force upstream stages to hold more stock, keep spare capacity, pay for overtime and expediting, and then idle, costs that ultimately reach the consumer price. Dampening the bullwhip is one of the clearest cases where coordinating across companies pays.
+
+<Trap>
+
+Blaming customers for erratic orders often misses that your own rules (promotions, batch sizes, allocation by order size, reactive forecasts) are creating the swings. Compare the variability of your orders with that of end-consumer demand before looking elsewhere.
+
+</Trap>
+
+<KeyIdea>
+
+Information sharing reduces but doesn't eliminate bullwhip; people's neglect of the supply line amplifies it; its size varies by industry; and smoothing policies, shorter lead times, stable prices and fair allocation dampen it.
+
+</KeyIdea>
 
 </Level>
 

@@ -2,23 +2,26 @@
 title: Contracts & negotiation
 line: sourcing
 summary: Price, volume and flexibility terms that share risk between buyer and supplier, and how to negotiate them.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 4, deep: 3 }
 status: draft
 keywords: [supply contracts, fixed price, cost-plus, index-linked pricing, volume commitment, take-or-pay, quantity flexibility, buyback, revenue sharing, SLA, penalties, BATNA, negotiation]
 connected: [supplier-selection, commodity-hedging, kraljic, make-vs-buy, sourcing-allocation]
 sources:
   - text: "Cachon, G. P. (2003). Supply chain coordination with contracts. In Handbooks in Operations Research and Management Science, Vol. 11, 227–339. Elsevier."
   - text: "Fisher, R., Ury, W. & Patton, B. Getting to Yes: Negotiating Agreement Without Giving In. Penguin."
+  - text: "Fisher, R., & Ury, W. (1981). Getting to Yes: Negotiating Agreement Without Giving In. Houghton Mifflin."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="A contract decides who carries which risk. Price is only one clause." soon>
+<Level n={1} title="The gist" minutes={3} teaser="A contract decides who carries which risk. Price is only one clause." next="How it works" nextMinutes={4}>
 
 A supply contract is a way of deciding who carries which risk. Price matters, but the terms around it, such as volumes, flexibility, penalties and how prices move, often matter more.
 
@@ -49,6 +52,103 @@ Write contracts to share risk sensibly: link prices to indices where costs swing
   { term: 'Take-or-pay', def: 'The buyer pays for a minimum quantity whether or not it takes delivery.' },
   { term: 'BATNA', def: 'Best alternative to a negotiated agreement: your walk-away option.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={4} teaser="Index-linked pricing worked through, flexibility and commitment terms in numbers, and how a buyback can align a retailer with the whole chain." next="Deep dive" nextMinutes={3}>
+
+### Index-linked pricing
+
+Split the price into the part that follows a cost index and the part that doesn't:
+
+$$
+P_t = P_0 \times \left(a\,\frac{I_t}{I_0} + (1 - a)\right)
+$$
+
+where $a$ is the share of cost tied to the index $I$, such as a resin price index.
+
+<Example title="a plastic part">
+
+Base price ₹20, with resin making up 60% of cost ($a$ = 0.6). If the resin index rises 30%:
+
+$P = 20 \times (0.6 \times 1.3 + 0.4) = 20 \times 1.18$, which is ₹23.60: an 18% increase, not 30%, because only the resin share moves.
+
+</Example>
+
+Good index clauses name the exact index, the reference period, how often the price resets and what happens if the index stops being published.
+
+### Flexibility and commitment
+
+- **Quantity flexibility:** with a monthly forecast of 10,000 and ±20% flexibility, the buyer may order between 8,000 and 12,000 a month, and the supplier plans capacity for 12,000.
+- **Take-or-pay:** a commitment of 1 lakh units a year means paying for any shortfall, at full or reduced price, if the buyer takes only 85,000.
+- **Lead-time commitments:** orders within the frozen period can't be changed; beyond it, changes are free within limits.
+
+Each gives one side security and the other side flexibility, so each should be priced.
+
+### Aligning incentives with buyback
+
+A retailer sells at ₹100, buys at ₹60 and can't sell leftovers. Its critical ratio is $(100 - 60)/(100 - 0)$ = 0.40, so it stocks low. For the chain as a whole, with a production cost of ₹20, the ratio is $(100 - 20)/100$ = 0.80.
+
+<Example title="a buyback that coordinates the chain">
+
+- **Buyback at ₹30:** the retailer's overage cost falls to ₹30, so its ratio becomes 40/(40 + 30) = 0.57. Better, but still below 0.80.
+- **Buyback at ₹50:** overage cost ₹10, ratio 40/(40 + 10) = 0.80, exactly the chain's. The retailer now stocks what is best for the whole chain, and the manufacturer earns more from the larger orders.
+
+</Example>
+
+### Negotiating
+
+Know your **BATNA**, the best alternative if there is no deal (another supplier's TCO, making in-house), and estimate the other side's. The range between the two walk-away points is the **zone of possible agreement**. Trade across terms: a longer commitment for a lower price, faster payment for a discount, more flexibility for a higher price.
+
+<KeyIdea>
+
+Link prices to indices for the cost share that really moves, price flexibility and commitment explicitly, and use risk-sharing terms such as buybacks to align each party's incentives with the whole chain's.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={3} teaser="Performance-based and relational contracts, clauses that matter in a crisis, the Indian legal frame, and why winning too hard can lose.">
+
+### Paying for outcomes
+
+- **Performance-based contracts** pay for results instead of activities: aircraft engines paid per flying hour, so the maker earns more when engines run reliably and spends less on spare parts.
+- **Gain-sharing:** savings from supplier ideas are split, so the supplier has a reason to suggest them.
+- **Service levels with incentives and penalties:** OTIF, response times and quality with rewards as well as penalties.
+
+### Relational contracts
+
+For complex, long-term relationships, detailed contracts can't foresee everything. **Relational** or "vested" approaches set shared goals, joint governance and fair ways to share gains and pains, alongside the legal terms. They suit strategic partnerships; transactional contracts suit leverage purchases.
+
+### Clauses that matter in a crisis
+
+The pandemic taught many companies to read the fine print:
+
+- **Force majeure:** what counts, notice requirements, and what happens to obligations.
+- **Allocation:** how a supplier shares scarce output among customers.
+- **Price adjustment:** how and when prices can change if costs jump.
+- **Termination and transition:** how to exit without losing supply, tooling or data.
+- **Intellectual property and tooling ownership,** so you can move production if needed.
+
+### The Indian legal frame
+
+In India, commercial contracts are governed by the Indian Contract Act, 1872, and disputes are often resolved through arbitration under the Arbitration and Conciliation Act, 1996. Procurement teams work with legal on standard terms, but should understand the commercial logic of each clause they negotiate.
+
+### Winning too hard
+
+A negotiation that pushes a supplier below sustainable margins looks like a win until the supplier cuts quality, stops investing, deprioritizes your orders in a shortage, or fails. The best contracts leave both sides better off than their alternatives, which is also what keeps them in force when conditions change.
+
+<Trap>
+
+Penalty clauses without measurement are empty: if nobody tracks OTIF or quality consistently, penalties can't be applied and the supplier knows it. Agree how each measure is calculated, from which data, before signing.
+
+</Trap>
+
+<KeyIdea>
+
+Contracts can pay for outcomes, build long-term relationships and plan for crises through force majeure, allocation and price clauses. Know the legal frame, measure what the contract promises, and aim for terms both sides can sustain.
+
+</KeyIdea>
 
 </Level>
 

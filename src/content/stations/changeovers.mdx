@@ -2,23 +2,26 @@
 title: Changeovers & lot sizing
 line: supply
 summary: Shorter switches between products, and run lengths that balance changeover time against inventory.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 3 }
 status: draft
 keywords: [changeover, setup time, SMED, single-minute exchange of die, internal setup, external setup, lot sizing, campaign length, product wheel, economic production quantity]
 connected: [production-scheduling, oee, eoq, bottlenecks, lean-six-sigma-toc]
 sources:
   - text: "Shingo, S. (1985). A Revolution in Manufacturing: The SMED System. Productivity Press."
   - text: "Silver, E. A., Pyke, D. F. & Thomas, D. J. (2017). Inventory and Production Management in Supply Chains (4th ed.). CRC Press."
+  - text: "King, P. L. (2009). Lean for the Process Industries: Dealing with Complexity. Productivity Press."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Why faster changeovers mean smaller batches, less stock and more flexibility." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Why faster changeovers mean smaller batches, less stock and more flexibility." next="How it works" nextMinutes={3}>
 
 A **changeover** is the time a line stands idle while it switches from one product to the next: cleaning tanks, swapping moulds, changing labels, running test samples. If a changeover takes 90 minutes, nobody wants to do it often, so the plant runs long batches. Long batches mean big piles of stock and a slow response when demand shifts.
 
@@ -45,6 +48,90 @@ Long changeovers force big batches and big inventory. Cut the changeover with SM
   { term: 'Internal vs external setup', def: 'Work that needs the line stopped versus work that can be done while it runs.' },
   { term: 'Product wheel', def: 'A repeating production sequence designed to keep changeovers short.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="How changeover time limits the product wheel, the arithmetic of SMED, and a 90-minute changeover cut to 30." next="Deep dive" nextMinutes={3}>
+
+### Changeovers eat capacity
+
+On a line making several products, time is spent either running or changing over. If running the required volumes uses a fraction $\rho$ of the line's time, only $1 - \rho$ is left for changeovers. A **product wheel** that runs each product once per cycle of length $T$ needs:
+
+$$
+T \ge \frac{\sum s_i}{1 - \rho}
+$$
+
+where $s_i$ are the changeover times in the cycle. Each product's batch must cover demand for one whole cycle, so batch sizes and cycle stock grow in proportion to $T$.
+
+<Example title="three shampoos on one line">
+
+Running the three products takes 80% of the line's time ($\rho$ = 0.8), and each changeover takes 90 minutes.
+
+- Shortest feasible wheel: $3 \times 1.5 / (1 - 0.8) = 22.5$ hours of line time.
+- Cut each changeover to 30 minutes: $3 \times 0.5 / 0.2 = 7.5$ hours.
+
+The wheel turns three times as often, each batch is a third of the size, and cycle stock falls by about two thirds, with the same share of time lost to changeovers.
+
+</Example>
+
+In practice, plan the wheel somewhat longer than the minimum to leave room for breakdowns and demand swings.
+
+### SMED in practice
+
+<div class="table-wrap">
+
+| Element of the 90-minute changeover | Before | After | How |
+|---|---|---|---|
+| Waiting for the next labels and caps | 20 min | 0 | Staged at the line before the stop (now external) |
+| Fetching tools and parts | 15 min | 0 | Changeover cart prepared in advance (external) |
+| Cleaning the filler | 30 min | 20 min | Quick-release parts, two people working in parallel |
+| Adjustments and test runs | 25 min | 10 min | Fixed settings and go/no-go gauges replace trial and error |
+| **Total line stop** | **90 min** | **30 min** | |
+
+</div>
+
+The order matters: first move work outside the stop (often half the gain at almost no cost), then simplify what must stay inside it.
+
+<KeyIdea>
+
+Changeover time sets the shortest product wheel, and with it batch sizes and cycle stock. SMED cuts it by moving work outside the stop and simplifying what remains, so smaller batches no longer cost capacity.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={3} teaser="Sequence-dependent changeovers, where changeovers really cost money, lot sizing under capacity limits, and measuring changeovers honestly.">
+
+### Sequence matters
+
+Many changeovers depend on what ran before. In shampoo or paint, light to dark colours is quick and dark to light needs a full clean; in food, allergen-free products run before those with allergens; in plastics, low-melt materials before high. Finding the best order is like the travelling salesman problem (visit every product once at the lowest total changeover). Product wheels fix a good sequence and repeat it, which also makes the plant predictable for planners and suppliers.
+
+### Where changeovers really cost money
+
+- **At the bottleneck:** a changeover hour is a lost hour of plant output, worth the bottleneck's throughput per hour.
+- **Away from the bottleneck:** a changeover uses spare time and costs little beyond labour and materials. Running smaller batches there is almost free.
+
+So SMED effort should go first to the bottleneck, and batch-size rules should differ between bottleneck and non-bottleneck resources.
+
+### Lot sizing under capacity limits
+
+With several products sharing a line and limited capacity, choosing batch sizes becomes a scheduling problem in its own right. In the research literature it appears as the economic lot scheduling problem, often solved with a common-cycle rule (every product once per cycle) or with cycles that are multiples of a base period, so fast movers run every cycle and slow movers every second or fourth. In process industries, **campaigns** group several batches of similar products to reduce cleaning and validation effort.
+
+### Measuring changeovers honestly
+
+Measure from the last good unit of the old product to the first good unit of the new product **at full speed**. Ramp-up time at reduced speed and the scrap during start-up are part of the changeover, and leaving them out hides much of the loss. Track the changeover time per changeover type, and investigate the long tail rather than the average.
+
+<Trap>
+
+Cutting batch sizes before cutting changeover times only moves the problem: more changeovers at the bottleneck mean less output. Shorten the changeover first, then shrink the batches.
+
+</Trap>
+
+<KeyIdea>
+
+Sequence-dependent changeovers reward a fixed, well-designed product wheel. Focus SMED on the bottleneck, use common cycles or campaigns for lot sizing, and measure changeovers to full-speed good output.
+
+</KeyIdea>
 
 </Level>
 

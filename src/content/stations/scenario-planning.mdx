@@ -2,23 +2,27 @@
 title: Scenario planning
 line: risk
 summary: Planning for several possible futures instead of betting everything on one forecast, and choosing decisions that hold up across them.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 4 }
 status: draft
 keywords: [scenario planning, enterprise scenarios, what-if analysis, robust decisions, uncertainty, sensitivity analysis, contingency plan, trigger points, stress test]
 connected: [scenario-modeling, resilience, sop-ibp, probabilistic-forecasting, simulation]
 sources:
   - text: "Wack, P. (1985). Scenarios: Uncharted waters ahead. Harvard Business Review, 63(5), 72–89."
   - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapter on designing networks under uncertainty."
+  - text: "Schoemaker, P. J. H. (1995). Scenario planning: A tool for strategic thinking. Sloan Management Review, 36(2), 25–40."
+  - text: "Klein, G. (2007). Performing a project premortem. Harvard Business Review, 85(9), 18–19."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Instead of one forecast, a few plausible futures and a plan for each." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Instead of one forecast, a few plausible futures and a plan for each." next="How it works" nextMinutes={3}>
 
 A single forecast invites a single plan, and a single plan breaks when the future turns out differently. **Scenario planning** prepares for several plausible futures instead.
 
@@ -48,6 +52,94 @@ Don't bet the plan on one forecast. Prepare a few plausible futures, prefer deci
   { term: 'Robust decision', def: 'A choice that performs acceptably across many scenarios rather than best in one.' },
   { term: 'Trigger point', def: 'A pre-agreed signal that a scenario is unfolding and a plan should start.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="Building scenarios from critical uncertainties, turning them into numbers, and sorting actions into robust moves, contingencies and signposts." next="Deep dive" nextMinutes={4}>
+
+### From uncertainties to scenarios
+
+1. **List the driving forces** that could shape the next few years: demand, input costs, competitors, regulation, technology, geopolitics.
+2. **Rank them** by impact and uncertainty. High-impact forces that are fairly predictable (for example, population growth) go into every scenario. The two most impactful and most uncertain become the **critical uncertainties**.
+3. **Cross them** in a 2 × 2 grid to get four distinct futures.
+4. **Write a short story for each** and give it a memorable name.
+5. **Quantify:** demand by region, costs, lead times and capacity in each scenario.
+
+<Example title="an FMCG company's next two years">
+
+Critical uncertainties: demand growth (slow or fast) and raw material costs (stable or volatile).
+
+<div class="table-wrap">
+
+| | Stable input costs | Volatile input costs |
+|---|---|---|
+| **Fast demand growth** | "Smooth sailing": capacity is the constraint | "Growing pains": margins squeezed while volumes rise |
+| **Slow demand growth** | "Steady state": cost efficiency wins | "Perfect storm": margins and volumes under pressure |
+
+</div>
+
+</Example>
+
+### Sorting the actions
+
+Run the plan through each scenario, then sort possible actions:
+
+- **Robust moves,** good in all four: qualifying a second supplier for the main raw material, a flexible co-packer contract, reducing changeover times.
+- **Contingent moves,** right only in some: building a new line (good if demand grows fast), long fixed-price contracts (good if costs are volatile).
+- **Signposts:** measurable indicators that show which future is unfolding, with thresholds. For example: three months of orders above plan by 10% triggers the expansion plan; a raw material index up 20% in a quarter triggers the hedging and pricing playbook.
+
+Do the robust moves now, prepare the contingent ones, and watch the signposts.
+
+<KeyIdea>
+
+Build scenarios from the two most critical uncertainties, quantify them, and sort actions into robust moves to make now, contingent moves to prepare, and signposts that tell you when to switch.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={4} teaser="How Shell made scenarios useful, why base-plus-minus isn't scenario planning, pre-mortems and reverse stress tests, and linking scenarios to IBP.">
+
+### What Shell learned
+
+Pierre Wack, who led Shell's scenario work, wrote in 1985 that scenarios are valuable only when they change how managers see the world. Early scenarios that merely listed possible numbers had little effect. Shell's breakthrough came when scenarios described the forces that could break assumptions managers took for granted, such as the stability of oil supply, so leaders recognized the signals when the oil shocks came and acted faster than competitors.
+
+### Base, plus and minus is not scenario planning
+
+Adding 10% and subtracting 10% from a forecast tests sensitivity, which is useful, but it keeps the same story with different volumes. Real scenarios differ in their logic: different customers, costs, competitors or constraints. They should feel uncomfortable, and at least one should challenge the company's favourite assumption.
+
+### Pre-mortems and reverse stress tests
+
+- **Pre-mortem:** imagine it is a year from now and the plan has failed. Each person writes down why. The exercise, described by Klein (2007), brings out risks people hesitate to raise in normal planning.
+- **Reverse stress test:** start from an unacceptable outcome (losing the largest customer, missing a month of supply) and work out which combinations of events would cause it.
+
+Both feed scenarios with the risks that matter most.
+
+### Linking scenarios to planning
+
+- **IBP and S&OP:** scenarios become part of the monthly or quarterly review, with the signposts tracked as standing items.
+- **Capital decisions:** investment cases show performance in each scenario, not one forecast.
+- **Digital twins:** network models quickly quantify each scenario's effect on cost, service and inventory.
+- **Refresh:** scenarios are revisited when signposts move or the world changes.
+
+### Common pitfalls
+
+- Too many scenarios, so none gets attention.
+- Arguing about probabilities instead of preparing responses.
+- Scenarios written by a central team and ignored by the business.
+- No signposts, so nobody knows when to act.
+
+<Trap>
+
+Treating the "most likely" scenario as the plan and the others as decoration defeats the purpose. The value comes from decisions that hold up across scenarios and from responses prepared for the ones you hope won't happen.
+
+</Trap>
+
+<KeyIdea>
+
+Scenarios work when they change how leaders see the future, not when they add a range around a forecast. Use pre-mortems and reverse stress tests to find the risks, track signposts, and build scenarios into IBP and investment decisions.
+
+</KeyIdea>
 
 </Level>
 

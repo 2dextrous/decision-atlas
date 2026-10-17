@@ -2,23 +2,27 @@
 title: Supplier risk & n-tier visibility
 line: sourcing
 summary: Seeing risks beyond your direct suppliers, scoring them, and acting before a sub-supplier you've never heard of stops your line.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 4 }
 status: draft
 keywords: [supplier risk, n-tier visibility, tier 2, supply chain mapping, single point of failure, risk scoring, financial risk, geographic concentration, early warning, resilience]
 connected: [supplier-network, sourcing-allocation, resilience, scenario-planning, esg-risk]
 sources:
   - text: "Choi, T. Y. & Hong, Y. (2002). Unveiling the structure of supply networks: case studies in Honda, Acura, and DaimlerChrysler. Journal of Operations Management, 20(5), 469–493."
   - text: "Sheffi, Y. (2005). The Resilient Enterprise: Overcoming Vulnerability for Competitive Advantage. MIT Press."
+  - text: "Simchi-Levi, D., Schmidt, W., & Wei, Y. (2014). From superstorms to factory fires: Managing unpredictable supply-chain disruptions. Harvard Business Review, 92(1/2), 96–101."
+  - text: "Altman, E. I. (1968). Financial ratios, discriminant analysis and the prediction of corporate bankruptcy. The Journal of Finance, 23(4), 589–609."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Your risk sits two or three tiers down, where you have the least visibility." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Your risk sits two or three tiers down, where you have the least visibility." next="How it works" nextMinutes={3}>
 
 Most companies know their direct suppliers well. Far fewer know who supplies those suppliers, and that's often where disruptions start. In 2021 the global chip shortage halted car assembly lines around the world, though carmakers rarely buy chips directly: the chips sat two or three tiers down, inside modules made by their suppliers.
 
@@ -45,6 +49,99 @@ Risk hides beyond tier 1. Map critical items deeper, look for shared dependencie
   { term: 'Single point of failure', def: 'One supplier, site or route whose loss would stop supply.' },
   { term: 'Risk scoring', def: 'Rating suppliers on financial, geographic, quality and compliance risk to set priorities.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="Time to survive against time to recover, worked for three parts, plus a practical risk-scoring and mapping routine." next="Deep dive" nextMinutes={4}>
+
+### Time to survive and time to recover
+
+For each critical part:
+
+- **Time to survive (TTS):** how long you can keep meeting demand if the supplier stops, using stock on hand, in transit and at alternative sources.
+- **Time to recover (TTR):** how long the supplier, or a replacement, needs to restore full supply.
+
+If TTR is longer than TTS, there is a gap during which sales are lost.
+
+<Example title="three parts, ranked by exposure">
+
+<div class="table-wrap">
+
+| Part | Survive (weeks) | Recover (weeks) | Gap (weeks) | Weekly revenue that depends on it | Revenue at risk |
+|---|---|---|---|---|---|
+| P1: custom controller chip | 3 | 12 | 9 | ₹5 crore | ₹45 crore |
+| P2: steel bracket | 6 | 4 | 0 | ₹5 crore | none |
+| P3: special adhesive | 1 | 3 | 2 | ₹1 crore | ₹2 crore |
+
+</div>
+
+P1 needs attention first: more stock, a qualified second source or a capacity agreement. P2 needs nothing extra despite its high revenue, because recovery is faster than survival.
+
+</Example>
+
+Simchi-Levi, Schmidt and Wei (2014) used this approach with Ford and found that many of the highest exposures sat in low-spend parts, the ones procurement usually watches least.
+
+### A practical risk routine
+
+1. **Segment:** start with parts that are single-sourced, long lead time or critical to high-revenue products.
+2. **Map:** ask tier 1 suppliers for the sites and key sub-suppliers behind those parts; check with bills of materials, trade data and supplier audits.
+3. **Score** likelihood and impact across risk types: financial, operational, geographic, compliance and ESG, cyber.
+4. **Monitor:** alerts for news, weather, financial distress and sanctions at the mapped sites.
+5. **Act and review:** assign owners and actions for the highest scores, and re-run as products and suppliers change.
+
+<KeyIdea>
+
+Rank parts by the gap between time to recover and time to survive, weighted by the revenue at stake. Map critical parts beyond tier 1, score and monitor risks, and give each high exposure an owner and an action.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={4} teaser="Spotting financial distress, mitigation versus contingency, due-diligence laws that require n-tier knowledge, and lessons from the chip shortage.">
+
+### Spotting financial distress early
+
+Supplier bankruptcies rarely come without warning. Signals include late deliveries and quality slips, requests for faster payment or advances, staff turnover, delayed filings and falling credit ratings. Financial models such as Altman's Z-score combine ratios from published accounts into a distress indicator. For private or small suppliers, payment behaviour and operational signals are often the best evidence available.
+
+### Choosing the response
+
+Risk responses cost money in normal times, so match them to the risk:
+
+- **Avoid:** redesign to remove a risky input.
+- **Mitigate in advance:** safety stock, second sources, capacity reservations, supplier development.
+- **Plan contingencies:** pre-agreed backup suppliers, transport reroutes, customer allocation rules.
+- **Accept** small risks that cost more to cover than to bear.
+
+Inventory suits frequent, short disruptions; second sources and contingency plans suit rare, long ones.
+
+### Laws that require n-tier knowledge
+
+Due-diligence rules increasingly make deeper mapping a legal requirement. The US Uyghur Forced Labor Prevention Act presumes that goods made wholly or partly in Xinjiang involve forced labour unless importers prove otherwise, which requires tracing inputs such as cotton and polysilicon. The EU's corporate sustainability due diligence directive and Germany's supply chain act require large companies to identify and address human-rights and environmental risks in their supply chains. For exporters, customers will ask for this evidence.
+
+### Lessons from the chip shortage
+
+When car demand recovered faster than expected in 2021, chip makers had already given capacity to electronics customers. Car makers learned that:
+
+- low-cost parts can be the binding constraint,
+- just-in-time ordering through tier 1 suppliers left them with no visibility of tier 2 and 3 capacity,
+- long-term agreements and direct relationships with critical component makers buy priority,
+- some strategic buffer stock of hard-to-replace parts is cheaper than idle assembly lines.
+
+### Making it stick
+
+Risk registers often become lists nobody acts on. What works: owners and deadlines for each high-risk item, risk reviews inside S&OP and sourcing decisions, and drills that test contingency plans before they are needed.
+
+<Trap>
+
+Focusing risk work on the biggest suppliers by spend misses the cheap, single-sourced parts that can stop production. Rank by exposure (time to recover versus time to survive, times revenue), not by spend.
+
+</Trap>
+
+<KeyIdea>
+
+Watch for financial distress signals, match responses to the type of disruption, expect due-diligence laws to demand n-tier knowledge, and build the chip-shortage lessons into practice: visibility, priority agreements and buffers for hard-to-replace parts.
+
+</KeyIdea>
 
 </Level>
 

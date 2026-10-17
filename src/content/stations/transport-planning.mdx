@@ -2,23 +2,26 @@
 title: Transport planning & TMS
 line: logistics
 summary: Turning orders into shipments, loads and routes, and what a transportation management system does at each step.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 3 }
 status: draft
 keywords: [transport planning, TMS, transportation management system, shipment planning, tendering, dispatch, freight audit, carrier management, load planning, route planning, tracking]
 connected: [load-building, lane-mode, carrier-procurement, vehicle-routing, eta-visibility, drp-deployment]
 sources:
   - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapter on transportation in a supply chain."
   - text: "Rushton, A., Croucher, P. & Baker, P. The Handbook of Logistics and Distribution Management. Kogan Page."
+  - text: "Rushton, A., Croucher, P., & Baker, P. (2022). The Handbook of Logistics and Distribution Management (7th ed.). Kogan Page."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="From a pile of orders to trucks on the road, step by step." soon>
+<Level n={1} title="The gist" minutes={3} teaser="From a pile of orders to trucks on the road, step by step." next="How it works" nextMinutes={3}>
 
 Every day a distribution centre faces a pile of orders, each with a destination, a size and a due date. **Transport planning** turns that pile into trucks on the road at the lowest cost that still meets every delivery promise. It answers, in order:
 
@@ -49,6 +52,85 @@ Plan freight across many orders at once: consolidate, choose modes, assign carri
   { term: 'Tendering', def: 'Offering a load to a carrier, which accepts or rejects it.' },
   { term: 'Accessorial charges', def: 'Extra fees on top of the base rate, such as waiting time, extra stops or special handling.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="A day's orders planned into loads, the tendering waterfall, freight audit, and the measures a transport planner watches." next="Deep dive" nextMinutes={3}>
+
+### Planning a day's orders
+
+<Example title="three orders from a Pune warehouse">
+
+Part loads cost ₹3 a kg to Mumbai and ₹3.50 a kg to Nashik. A 9-tonne truck costs ₹18,000 to Mumbai (plus ₹1,000 for a second stop) and ₹16,000 to Nashik.
+
+- **Mumbai, two customers, 3,000 kg and 4,000 kg:** as part loads, 7,000 × ₹3 = ₹21,000. As one full truck with two stops, ₹19,000. Combine them.
+- **Nashik, 1,500 kg:** a part load costs ₹5,250, far less than a ₹16,000 truck. Ship it as a part load.
+- **Total:** ₹24,250 against ₹26,250 if everything went as part loads. ₹2,000 a day is about ₹7.3 lakh a year from one routine decision.
+
+</Example>
+
+A TMS makes these decisions across hundreds of orders at once: grouping, choosing vehicle sizes, building multi-stop routes and comparing carriers.
+
+### The tendering waterfall
+
+Each planned load is offered to carriers in a set order, the **routing guide**:
+
+1. The primary contracted carrier for the lane, who has a set time to accept.
+2. If they decline or don't respond, the backup carrier.
+3. Then other approved carriers.
+4. Finally the spot market, at whatever the market charges.
+
+Every step down usually costs more, which is why tender acceptance matters as much as the contract rate.
+
+### Freight audit
+
+Every carrier invoice is checked against the agreed rate, the actual weight or volume, and any extra charges (waiting time, extra stops, loading). Charges that weren't agreed or can't be proved are disputed automatically. Even small error rates add up over thousands of invoices.
+
+### Measures
+
+Freight cost per kg or per unit shipped (not per trip), vehicle fill by weight and volume, on-time pickup and delivery, tender acceptance by carrier and lane, empty kilometres, and the share of loads that fell to the spot market.
+
+<KeyIdea>
+
+Plan freight across all of a day's orders: combine where full trucks win, use part loads where they don't, tender through a routing guide, audit every invoice, and measure cost per unit shipped rather than per trip.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={3} teaser="The optimization inside a TMS, controlling waiting time at docks, e-way bills and integration, and shipper collaboration.">
+
+### The optimization inside
+
+A TMS combines several classic problems: **bin packing** (fitting orders into vehicles by weight, volume and pallet positions), **vehicle routing** (sequencing stops within time windows) and **assignment** (choosing carriers within their capacity and contract commitments). Real systems solve them together, with rules such as cut-off times, customer delivery windows and driver hours, and re-plan as new orders arrive through the day.
+
+### Waiting time costs everyone
+
+Trucks that wait hours to load or unload cost carriers money, so carriers charge detention or raise rates for that shipper. Dock appointment scheduling, preparing loads before the truck arrives and fast unloading at customers cut waiting time. Shippers known for short waits and quick payment get better acceptance and rates: being a **shipper of choice** is a commercial advantage.
+
+### Integration and compliance
+
+A TMS needs orders from the ERP, shipment readiness from the warehouse system, rates and capacity from carriers, and tracking data back from the road. In India, consignments above ₹50,000 in value generally need an **e-way bill** generated before movement, so transport planning and tax compliance are linked; many companies generate e-way bills directly from their TMS or ERP.
+
+### Collaboration between shippers
+
+Two companies sending part loads to the same region can share trucks (**horizontal collaboration**), filling vehicles neither could fill alone. It needs trust, shared planning and agreed rules for splitting costs, but it can cut cost and emissions significantly on thin lanes. Logistics providers that run shared networks offer the same benefit without direct collaboration.
+
+### Planning cadence
+
+Strategic decisions (which carriers, which lanes, which modes) are set in annual or seasonal tenders. Tactical decisions (shipping days per region, fleet plans) are reviewed monthly or quarterly. Operational planning happens daily or in waves through the day. Mixing these up, for example renegotiating rates during daily planning, makes all of them worse.
+
+<Trap>
+
+Planning each order in isolation, as soon as it is released, gives up most of the savings. Consolidation needs a planning window, such as a daily cut-off, in which orders can be combined; set it to fit the service promise.
+
+</Trap>
+
+<KeyIdea>
+
+A TMS solves packing, routing and carrier assignment together. Cut waiting time to become a shipper of choice, integrate planning with compliance such as e-way bills, consider sharing trucks on thin lanes, and give consolidation a planning window.
+
+</KeyIdea>
 
 </Level>
 

@@ -2,23 +2,26 @@
 title: Manufacturing footprint & plant roles
 line: network
 summary: Which plants make what, why location factors go beyond wage costs, and the strategic role each plant can play.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 3 }
 status: draft
 keywords: [manufacturing footprint, plant role, Ferdows, offshore, source, server, contributor, outpost, lead factory, location factors, focused factory, capacity]
 connected: [network-design-decisions, plant-allocation, make-vs-buy, tariffs-trade, greenfield]
 sources:
   - text: "Ferdows, K. (1997). Making the most of foreign factories. Harvard Business Review, 75(2), 73–88."
   - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapter on network design: factors influencing decisions."
+  - text: "Skinner, W. (1974). The focused factory. Harvard Business Review, 52(3), 113–121."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Where to make things, and what job each plant should do." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Where to make things, and what job each plant should do." next="How it works" nextMinutes={3}>
 
 A company's **manufacturing footprint** is its set of plants: where they are, how big they are, and what each one makes. Footprint decisions last decades, so they rest on more than today's wage rates:
 
@@ -51,6 +54,101 @@ Choose plant locations on total landed cost, market access, skills and risk, not
   { term: 'Server plant', def: 'A plant that exists to serve a particular regional market.' },
   { term: 'Lead plant', def: 'A plant that develops new products and processes for the whole network.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="Comparing locations on total landed cost, a worked example where higher wages still win, and how plants move up the role ladder." next="Deep dive" nextMinutes={3}>
+
+### Total landed cost, not wages
+
+A footprint comparison adds up every cost of getting a unit to the customer from each candidate location:
+
+- materials, labour, overhead and energy at the plant,
+- freight and insurance to the market,
+- duties and taxes at the border,
+- the carrying cost of stock in a longer pipeline,
+- and, where it matters, an allowance for risk: currency swings, disruption, quality problems.
+
+<Example title="a product for Indian customers">
+
+Two options: a plant in India, or a lower-wage plant in a hypothetical Country X, shipping by sea. Costs per unit:
+
+<div class="table-wrap">
+
+| | India | Country X |
+|---|---|---|
+| Materials | ₹300 | ₹300 |
+| Labour | ₹60 | ₹40 |
+| Overhead and energy | ₹40 | ₹35 |
+| Freight to customers | ₹15 | ₹45 |
+| Import duty (a hypothetical 10% of the ₹375 factory price) | none | ₹37.5 |
+| Pipeline stock: 6 extra weeks at a 25% yearly holding rate | none | ₹12.1 |
+| **Landed cost** | **₹415** | **₹469.6** |
+
+</div>
+
+Country X saves ₹20 of labour and loses far more on freight, duty and pipeline stock. Labour is often a small share of total cost, so wage gaps alone rarely decide a location.
+
+</Example>
+
+### What else goes into the decision
+
+- **Market access:** some markets require or reward local production through tariffs, local-content rules or incentives such as India's production-linked incentive schemes.
+- **Speed:** a nearby plant can respond in days, not weeks, which matters for short-lifecycle or fast-changing products.
+- **Skills and supplier base:** clusters of trained people and component makers lower cost and risk over time.
+- **Risk:** concentration in one country, currency exposure, political and natural hazards.
+
+### Growing a plant's role
+
+In Ferdows's framework, plants can move up from offshore and source roles to contributor and lead roles as they build skills and take on development work. Moving up needs deliberate investment: engineering staff, authority over processes and suppliers, and responsibility for products, not just volume.
+
+<KeyIdea>
+
+Compare locations on total landed cost (materials, labour, overhead, freight, duty and pipeline stock), then weigh market access, speed, skills and risk. Labour is usually a small share, so wages alone rarely decide.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={3} teaser="Focused factories, regional versus global footprints, flexible capacity as a hedge, and the hidden costs of distance.">
+
+### Focus and scale
+
+Skinner's "focused factory" (1974) argued that a plant doing a limited set of things, for one kind of market, outperforms one trying to do everything. Footprints therefore often specialize plants: one by product family, another by process technology, another by market. The cost is reduced flexibility: if one product family's demand collapses, its focused plant has nothing else to make.
+
+### Three footprint patterns
+
+- **Centralized:** one or a few large plants serve the world. Maximum scale and focus, long supply lines and high exposure to a single site.
+- **Regional ("in the region, for the region"):** plants in each major market. Shorter lead times, lower tariffs and freight, local responsiveness; less scale.
+- **Hub and spoke:** central plants make core components, regional plants do final assembly or customization, which combines scale with postponement.
+
+Trade tensions, tariffs and pandemic disruptions pushed many companies towards regional footprints and "China plus one" strategies, adding capacity in other countries, including India, to reduce concentration risk.
+
+### Capacity as an option
+
+Demand, costs and trade rules will change during a plant's life, so flexibility has value:
+
+- **Flexible plants** that can make several product families let the footprint absorb shifts in mix.
+- **Modular capacity,** added in steps as demand appears, avoids betting everything on one forecast.
+- **Partners and contract manufacturers** provide capacity without capital, at the cost of control and margin.
+
+Valuing these options properly means modelling scenarios, not single forecasts.
+
+### Hidden costs of distance
+
+Studies of offshoring decisions often found costs that were missed at the start: travel and supervision, quality problems found late, slower engineering changes, larger safety stocks for long and variable lead times, intellectual-property risk, and the management attention needed to coordinate across time zones. Including these in the comparison, even roughly, changes many decisions.
+
+<Trap>
+
+Moving production for a lower wage rate without counting freight, duties, pipeline stock, quality and coordination costs can raise total cost while appearing to cut it. Insist on a total landed cost comparison with risk included.
+
+</Trap>
+
+<KeyIdea>
+
+Focused plants perform better but flex less; footprints range from centralized to regional to hub and spoke. Treat flexible and modular capacity as options worth paying for, and count the hidden costs of distance before moving production.
+
+</KeyIdea>
 
 </Level>
 

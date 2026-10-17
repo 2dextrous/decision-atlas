@@ -2,23 +2,26 @@
 title: Allocation when supply is short
 line: orders
 summary: "Deciding who gets scarce stock and by which rules: fair share, priority, margin or contract."
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 3 }
 status: draft
 keywords: [allocation, customer allocation, fair share, priority allocation, scarce supply, shortage gaming, rationing, service tiers, contractual commitments, allocation optimization]
 connected: [atp-ctp, drp-deployment, bullwhip-effect, service-level-policy, control-tower]
 sources:
   - text: "Lee, H. L., Padmanabhan, V. & Whang, S. (1997). The bullwhip effect in supply chains. Sloan Management Review, 38(3), 93–102."
   - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson."
+  - text: "Cachon, G. P., & Lariviere, M. A. (1999). Capacity allocation using past sales: When to turn-and-earn. Management Science, 45(5), 685–703."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="When everyone can't have everything, the rule you choose shapes behaviour." soon>
+<Level n={1} title="The gist" minutes={3} teaser="When everyone can't have everything, the rule you choose shapes behaviour." next="How it works" nextMinutes={3}>
 
 Sometimes there simply isn't enough: a raw material shortage, a plant outage or a demand spike. With 5,000 units available and orders for 9,000, someone gets less than they asked for. **Allocation** decides who, using an explicit rule rather than whoever shouts loudest:
 
@@ -43,6 +46,92 @@ Make allocation rules explicit and agree them in advance. Prefer rules based on 
   { term: 'Shortage gaming', def: 'Customers ordering more than they need during shortages to secure a bigger share.' },
   { term: 'Service tier', def: 'A customer group with a defined priority and service level.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="The same shortage allocated four ways, how inflated orders get rewarded, and allocation quotas set in advance." next="Deep dive" nextMinutes={3}>
+
+### One shortage, four rules
+
+<Example title="5,000 units, orders for 9,000">
+
+Customers A, B and C order 3,000, 2,000 and 4,000. Over the last quarter they bought 40%, 35% and 25% of the volume. A has a supply contract.
+
+<div class="table-wrap">
+
+| Rule | A | B | C |
+|---|---|---|---|
+| Fair share of orders (56% each) | 1,667 | 1,111 | 2,222 |
+| Share of past sales (40/35/25%) | 2,000 | 1,750 | 1,250 |
+| Contract first, then fair share | 3,000 | 667 | 1,333 |
+
+</div>
+
+C normally buys a quarter of the volume but ordered 44% of the total this time. Under fair share of orders, C gets 2,222 units; under past sales, 1,250. If C inflated its order expecting rationing, the fair-share rule rewarded it, and next time everyone will inflate.
+
+</Example>
+
+A fourth approach, **economic** allocation, ranks orders by margin or by the penalty for missing them. It maximizes short-term profit but can damage relationships with customers who are less profitable today and important tomorrow.
+
+### Allocation quotas set in advance
+
+Allocation works best as a planned process, not an emergency decision:
+
+1. **Forecast the shortage:** S&OP shows supply below demand for certain products and weeks.
+2. **Set quotas** per customer, channel or region, based on agreed forecasts, history or contracts.
+3. **Load the quotas into order promising,** so each order consumes its group's allocation.
+4. **Release unused quotas** at an agreed point before shipment, so stock isn't stranded.
+5. **Review weekly** as supply and demand change.
+
+<KeyIdea>
+
+The allocation rule decides who gets what and how customers behave next time. Allocating on past sales or agreed forecasts discourages inflated orders, and quotas set in advance and loaded into promising make allocation predictable.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={3} teaser="Allocation as an optimization, turn-and-earn and gaming, contract terms, and communicating a shortage well.">
+
+### Allocation as an optimization
+
+With many products, customers and constraints, allocation can be modelled: maximize margin minus penalties for unmet commitments, subject to supply, minimum service levels for strategic customers, contractual quantities and fairness rules such as no customer below a certain share of its forecast. The model makes trade-offs explicit, and planners can see what each rule costs.
+
+### Turn-and-earn and gaming
+
+Cachon and Lariviere (1999) studied allocation based on past sales, known in the car industry as **turn-and-earn**: dealers that sell more today earn a larger share of scarce models later. It discourages inflated orders and rewards real sales, but it can push retailers to sell harder (with discounts) in slow periods to secure future allocation. Their broader work shows that allocation rules shape the orders customers place: rules that reward order size invite inflation, which feeds the bullwhip effect.
+
+### Contract terms that matter
+
+- **Allocation clauses:** how the supplier will share scarce output among customers.
+- **Firm commitments:** volumes the supplier must deliver regardless, often in return for the buyer's commitment.
+- **Force majeure:** what counts, and how obligations change when it applies.
+- **Price during shortages:** whether prices can rise and how.
+
+Knowing these terms before a shortage avoids disputes during one.
+
+### Communicating a shortage
+
+Customers cope better with a shortage they hear about early and clearly:
+
+- Tell them as soon as the shortage is known, with the expected duration.
+- Explain the rule and apply it consistently.
+- Give each customer their quantity and dates, and update them when anything changes.
+- Offer alternatives: substitutes, other pack sizes, later dates.
+
+Customers who trust the process are less likely to inflate orders, which keeps the demand signal honest.
+
+<Trap>
+
+Deciding allocation case by case, under pressure from whichever sales manager calls loudest, creates inconsistent treatment and teaches customers to escalate and inflate. Agree the rules before the shortage and apply them through the system.
+
+</Trap>
+
+<KeyIdea>
+
+Model allocation when stakes and complexity are high, choose rules that don't reward inflated orders, know the contract terms that govern shortages, and communicate early and consistently.
+
+</KeyIdea>
 
 </Level>
 

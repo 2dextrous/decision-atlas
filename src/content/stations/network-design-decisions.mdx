@@ -2,23 +2,27 @@
 title: What network design decides
 line: network
 summary: Facility roles, locations, capacities and who serves whom, and why the number of facilities trades cost against speed.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 4 }
 status: draft
 keywords: [network design, facility location, capacity allocation, market allocation, facility role, number of facilities, total logistics cost, U-shaped cost curve, responsiveness, efficiency]
 connected: [distribution-designs, facility-location, greenfield, manufacturing-footprint, risk-pooling]
 sources:
   - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapters on designing distribution networks and network design."
   - text: "Ferdows, K. (1997). Making the most of foreign factories. Harvard Business Review, 75(2), 73–88."
+  - text: "Fisher, M. L. (1997). What is the right supply chain for your product? Harvard Business Review, 75(2), 105–116."
+  - text: "Simchi-Levi, D., Kaminsky, P., & Simchi-Levi, E. (2008). Designing and Managing the Supply Chain (3rd ed.). McGraw-Hill."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Four long-term decisions, and the one dial that trades cost against service." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Four long-term decisions, and the one dial that trades cost against service." next="How it works" nextMinutes={3}>
 
 Network design sets the physical skeleton of a supply chain: plants, warehouses and the lanes between them. These are long-term, expensive decisions. A warehouse lease or a new plant locks a company in for years, and it decides most of what transport and inventory will cost afterwards.
 
@@ -49,6 +53,93 @@ Network design decides roles, locations, capacities and allocations. The number 
   { term: 'Total logistics cost', def: 'Inventory + transport + facility and handling costs; U-shaped in the number of facilities.' },
   { term: 'Responsiveness vs efficiency', def: 'The core trade-off: faster service usually costs more.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="The U-shaped cost curve in numbers, why each cost moves the way it does, and how a network study is run." next="Deep dive" nextMinutes={4}>
+
+### Why each cost moves
+
+- **Inventory** grows with the square root of the number of stocking points, the risk-pooling law in reverse.
+- **Facility cost** grows roughly in line with the number of sites: rent, staff, systems.
+- **Outbound transport** falls as sites get closer to customers. For customers spread over an area, the average distance to the nearest site shrinks roughly with $1/\sqrt{N}$.
+- **Inbound transport** rises slowly, because each site receives smaller, less efficient shipments.
+
+<Example title="a stylized network">
+
+Annual costs in ₹ crore, following those shapes: inventory $4\sqrt{N}$, facilities $1.5N$, outbound $30/\sqrt{N}$ and inbound $2 + 0.5N$.
+
+<div class="table-wrap">
+
+| Warehouses | Inventory | Facilities | Outbound | Inbound | Total |
+|---|---|---|---|---|---|
+| 1 | 4.0 | 1.5 | 30.0 | 2.5 | 38.0 |
+| 2 | 5.7 | 3.0 | 21.2 | 3.0 | 32.9 |
+| 3 | 6.9 | 4.5 | 17.3 | 3.5 | **32.2** |
+| 4 | 8.0 | 6.0 | 15.0 | 4.0 | 33.0 |
+| 6 | 9.8 | 9.0 | 12.2 | 5.0 | 36.0 |
+| 8 | 11.3 | 12.0 | 10.6 | 6.0 | 39.9 |
+
+</div>
+
+The total bottoms out at 3 warehouses, but the curve is flat between 2 and 4: the choice there can be made on service, risk or flexibility at little cost.
+
+</Example>
+
+### How a network study runs
+
+1. **Frame the question:** what may change (sites, capacities, flows) and what is fixed.
+2. **Collect data:** demand by location, freight rates by lane and mode, warehouse costs, inventory costs, service targets.
+3. **Build and validate a baseline:** model today's network and check it reproduces actual costs and flows closely. If it can't, nothing it says about the future can be trusted.
+4. **Optimize and run scenarios:** alternative designs, demand futures and cost shocks.
+5. **Recommend:** a design, its cost and service, the risks, and a transition plan.
+
+<KeyIdea>
+
+Inventory and facility costs rise with the number of sites while outbound transport falls, so the total forms a U with a flat bottom. A validated baseline model is what makes the rest of the study credible.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={4} teaser="Fitting the network to the strategy, how GST reshaped Indian networks, building in flexibility, and the classic modelling mistakes.">
+
+### The network follows the strategy
+
+A network can't be cheapest and fastest at once. Fisher's distinction between **efficient** and **responsive** supply chains applies directly: functional products with steady demand and thin margins want few, large, efficient sites; innovative or urgent products want more sites, closer to customers, and more stock. Many companies need both, so they segment the network: a lean backbone for the bulk, plus fast nodes for the products and customers that pay for speed.
+
+### How tax rules shaped networks in India
+
+Before the Goods and Services Tax (GST) in 2017, inter-state sales attracted central sales tax, so companies often kept a warehouse in many states for tax reasons rather than logistics reasons. GST removed most of that incentive, and many firms consolidated into fewer, larger regional hubs placed for transport cost and service. It is a clear example of how a policy change can shift the bottom of the U-curve.
+
+### Building in flexibility
+
+Network decisions last years, while demand and costs change faster. Ways to keep options open:
+
+- **Lease rather than buy,** or use third-party logistics (3PL) warehouses for uncertain regions.
+- **Build in stages:** modular capacity, with land or contract options for expansion.
+- **Design for scenarios,** not one forecast, and prefer designs that stay good across them.
+- **Review regularly:** every few years, or on triggers such as an acquisition, a new channel or a big shift in freight costs.
+
+### Classic modelling mistakes
+
+- **Designing for today's demand** instead of the demand the network will serve for its lifetime.
+- **Using averages:** a network that works on average can fail at the festive peak. Check peak-week capacity.
+- **Straight-line distances:** real roads are longer, and some lanes are much slower than distance suggests.
+- **Cost only:** leaving out service, risk and carbon, then discovering the "optimal" network can't meet delivery promises.
+- **Ignoring the transition:** closing sites costs money (leases, severance, dual running), so the move matters as much as the destination.
+
+<Trap>
+
+A network model that can't reproduce today's costs and flows will produce confident, wrong answers about the future. Validate the baseline before running any scenario, and explain the differences that remain.
+
+</Trap>
+
+<KeyIdea>
+
+Match the network to the strategy (efficient or responsive, often both by segment), watch how policy changes like GST move the optimum, build in flexibility, and avoid modelling mistakes: today's demand, averages, straight lines and ignoring the transition.
+
+</KeyIdea>
 
 </Level>
 

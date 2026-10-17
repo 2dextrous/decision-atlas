@@ -2,23 +2,27 @@
 title: Substitution
 line: orders
 summary: Offering the next-best product when an item is out of stock, without hurting margin, trust or the forecast.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 3 }
 status: draft
 keywords: [substitution, product substitution, stockout, alternative product, downward substitution, customer-driven substitution, demand transfer, lost sales, recommendation]
 connected: [atp-ctp, allocation, demand-sensing-shaping, promotions-cannibalization, service-copilots]
 sources:
   - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson."
   - text: "Silver, E. A., Pyke, D. F. & Thomas, D. J. (2017). Inventory and Production Management in Supply Chains (4th ed.). CRC Press."
+  - text: "Kök, A. G., & Fisher, M. L. (2007). Demand estimation and assortment optimization under substitution: Methodology and application. Operations Research, 55(6), 1001–1021."
+  - text: "Bassok, Y., Anupindi, R., & Akella, R. (1999). Single-period multiproduct inventory models with substitution. Operations Research, 47(4), 632–642."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="A good substitute keeps the sale; a bad one loses the customer." soon>
+<Level n={1} title="The gist" minutes={3} teaser="A good substitute keeps the sale; a bad one loses the customer." next="How it works" nextMinutes={3}>
 
 A customer orders the 500 ml premium shampoo, but it's out of stock. Instead of losing the sale, the company can offer an alternative: the 400 ml premium pack, or two 250 ml packs, or the 500 ml standard version. That's **substitution**.
 
@@ -46,6 +50,82 @@ Substitution turns stockouts into saved sales when the alternative genuinely fit
   { term: 'Downward substitution', def: 'Supplying a higher-grade item in place of a lower-grade one that is out of stock.' },
   { term: 'Demand transfer', def: 'Sales shifting from one product to another because of a stockout or promotion.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="Choosing the best substitute by expected margin, correcting demand history after a stockout, and substitution as pooling." next="Deep dive" nextMinutes={3}>
+
+### Which substitute to offer?
+
+<Example title="the 500 ml premium shampoo is out of stock">
+
+Three options, with the margin each earns and the chance the customer accepts it:
+
+<div class="table-wrap">
+
+| Option | Margin if accepted | Chance of acceptance | Expected margin |
+|---|---|---|---|
+| Upgrade: 650 ml premium at the 500 ml price | ₹50 | 95% | ₹47.50 |
+| Standard 500 ml, refunding the price difference | ₹60 | 60% | ₹36.00 |
+| 400 ml premium at a lower price | ₹70 | 40% | ₹28.00 |
+
+</div>
+
+The upgrade earns the least per unit but the most in expectation, and keeps the customer happy. Acceptance rates come from history: how often customers kept or rejected each kind of substitute.
+
+</Example>
+
+The rules should also say when not to substitute: different specifications for a technical product, allergens in food, a different brand when the customer is loyal to one, or any substitute the customer has opted out of.
+
+### Correcting the demand history
+
+Suppose product A was out of stock for two weeks and product B, which normally sells 1,000 a week, sold 1,150. If the history is left as it is, the next forecast sees A's demand falling and B's rising by 15%. Planners should:
+
+1. **Flag the stockout period** for A, so its zero sales aren't read as zero demand.
+2. **Estimate A's true demand** in those weeks from its normal rate.
+3. **Move the substituted sales** (about 150 a week here) back from B to A in the forecasting history.
+
+### Substitution as pooling
+
+When customers will accept B in place of A, the stock of B partly covers A's uncertainty too. Planned well, this is a form of risk pooling: less total stock is needed for the same service, especially with **one-way (downward) substitution**, where a higher-grade item can always replace a lower-grade one.
+
+<KeyIdea>
+
+Choose substitutes by expected margin, using real acceptance rates, and set clear limits on when not to substitute. Correct demand history after stockouts, and use planned substitution as a form of pooling.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={3} teaser="Modelling how customers substitute, downward substitution in production, online grocery practice, and regulated substitution.">
+
+### Modelling customer choice
+
+How customers substitute when an item is missing can be estimated from sales data. Choice models, such as the multinomial logit, describe the probability that a customer picks each available product. Kök and Fisher (2007) showed how to estimate substitution rates from store data and use them to choose assortments and shelf space. With such a model, planners can predict how much of a stockout's demand moves to other items and how much is lost.
+
+### Downward substitution in production
+
+In some industries a better product can always stand in for a lesser one. Semiconductor makers sort chips by measured speed (binning), and a faster chip can be sold as a slower model if the slower one runs out. Steel and paper mills can supply a higher grade in place of a lower one. Inventory models with downward substitution (studied by Bassok, Anupindi and Akella, 1999) decide how much of each grade to stock, given that the higher grades act as a shared buffer.
+
+### Online grocery practice
+
+Grocery delivery depends on substitution because many items run out between order and picking. Good practice includes letting customers set preferences ("no substitutes", "same brand only"), guiding pickers with ranked suggestions learned from what customers accepted before, showing substitutions clearly at delivery with an easy way to refuse, and feeding refusals back into the suggestions.
+
+### Regulated substitution
+
+Some substitution is controlled by law or contract. Pharmacies can switch a branded medicine for a generic only under the applicable rules; food service may need customer approval for allergen-related changes; industrial customers may require formal approval for any part change. Rules engines must respect these limits.
+
+<Trap>
+
+Ignoring substitution when measuring demand misreads both items: the out-of-stock item looks less popular and the substitute looks more popular than they really are. Correct the history, or the next plan will repeat the stockout and overstock the substitute.
+
+</Trap>
+
+<KeyIdea>
+
+Estimate substitution with choice models, use downward substitution as a shared buffer where grades allow, design online substitution around customer preferences and feedback, respect regulated limits, and always correct demand history for substitution.
+
+</KeyIdea>
 
 </Level>
 

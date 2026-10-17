@@ -2,7 +2,7 @@
 title: Six distribution network designs
 line: network
 summary: From drop-shipping to store pickup, the six ways to store and deliver products, and which one fits which kind of product.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 3 }
 status: draft
 keywords: [distribution network design, drop shipping, in-transit merge, distributor storage, package carrier, last-mile delivery, customer pickup, BOPIS, retail storage, Chopra]
 connected: [network-design-decisions, channel-design, risk-pooling, vehicle-routing, cross-docking]
@@ -12,13 +12,15 @@ sources:
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Two questions, where the stock sits and how it reaches the customer, give six designs." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Two questions, where the stock sits and how it reaches the customer, give six designs." next="How it works" nextMinutes={3}>
 
 Every distribution network answers two questions: **where is the stock held** (manufacturer, distributor or retailer) and **how does it reach the customer** (shipped, delivered to the door, or collected)? Combining the answers gives six classic designs:
 
@@ -46,6 +48,88 @@ Decide where stock sits and how it reaches the customer. Hold slow, expensive it
   { term: 'In-transit merge', def: 'Combining items from different sources into one delivery on the way to the customer.' },
   { term: 'Last-mile delivery', def: 'The final leg to the customer’s door; usually the costliest per unit.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="Comparing the six designs on cost and service, and the inventory arithmetic behind holding slow movers upstream." next="Deep dive" nextMinutes={3}>
+
+### How the designs compare
+
+<div class="table-wrap">
+
+| Design | Inventory | Transport cost | Facility and handling | Response time | Product variety |
+|---|---|---|---|---|---|
+| 1. Drop-ship | Lowest (fully pooled) | High (single parcels over long distances) | Low | Slow | Very high |
+| 2. Drop-ship with in-transit merge | Lowest | Somewhat lower than 1 | Low, but coordination is hard | Slow | Very high |
+| 3. Distributor storage, parcel | Low to medium | Lower than drop-ship | Medium | Medium | High |
+| 4. Distributor storage, last mile | Medium | Highest (door delivery) | Medium to high | Fast | Medium |
+| 5. Customer pickup points | Low to medium | Low (consolidated drops) | Medium (pickup sites) | Medium | High |
+| 6. Retail storage | Highest (stock everywhere) | Lowest per unit | High (stores) | Immediate | Lower |
+
+</div>
+
+The pattern is the same one as risk pooling: the further upstream the stock, the less of it you need, and the more each delivery costs.
+
+<Example title="an expensive camera lens">
+
+A ₹2 lakh lens sells about 2 units a month across 50 stores.
+
+- **In every store (design 6):** each store needs at least 1 unit to be able to sell it: 50 units, ₹1 crore of stock.
+- **Held centrally (design 1 or 3):** about 4 units cover the lead time and a buffer: ₹8 lakh of stock.
+- The 46 units saved are worth ₹92 lakh. At a 25% holding rate that is ₹23 lakh a year, against roughly 24 parcel deliveries a year to customers, a few thousand rupees each at most.
+
+</Example>
+
+For milk the arithmetic flips: it sells every hour, a customer won't wait a day, and a parcel per litre would cost more than the milk.
+
+### Segmenting by product and customer
+
+Most companies run several designs:
+
+- Fast movers: stocked close to customers (designs 4 and 6).
+- Medium movers: regional warehouses shipping parcels (design 3).
+- Slow, expensive or highly customized items: drop-shipped or held centrally (designs 1 and 2).
+- Online orders: home delivery or pickup points (designs 3, 4 and 5).
+
+<KeyIdea>
+
+The six designs trade inventory against transport and speed. Hold slow, expensive items upstream, where pooling saves the most, and put fast, cheap, urgent items close to customers. Run several designs at once, segmented by product.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={3} teaser="Information needs behind each design, last-mile density, Indian channel realities, and returns as a design factor.">
+
+### Information makes upstream designs work
+
+Drop-shipping and in-transit merge depend on information more than buildings: the retailer must see the manufacturer's stock in real time to promise orders, and merge-in-transit needs carriers who can combine shipments from several sources into one delivery on time. Without that visibility, upstream designs produce broken promises and split deliveries. Chopra's (2003) framework, which set out these six designs, stresses that the information infrastructure is part of each design's cost.
+
+### Last-mile density
+
+Door delivery (design 4) is expensive per drop, but its cost falls sharply with density: the more drops per kilometre of route, the cheaper each one becomes. That explains why home delivery works in dense cities long before it works in small towns, and why quick-commerce dark stores, small stockrooms placed inside dense neighbourhoods, can deliver within minutes at a manageable cost. Pickup points and lockers (design 5) are a way to buy density: many customers' parcels go to one drop.
+
+### Indian channel realities
+
+- **General trade:** most consumer goods still reach small kirana stores through distributors who hold stock and deliver small drops on fixed routes (beats). That is a form of distributor storage with last-mile delivery.
+- **Cash and credit:** distributors and retailers expect credit terms, so the distribution design is also a working-capital design.
+- **E-commerce:** cash on delivery and high return rates in some categories add cost to home-delivery designs.
+
+### Returns are part of the design
+
+Upstream designs make returns slower and more expensive: a drop-shipped item may have to travel back to the manufacturer. Store-based designs make returns easy for customers but scatter returned stock across many locations. Categories with high return rates, such as fashion, need the reverse flow designed alongside the forward one.
+
+<Trap>
+
+Choosing one distribution design for the whole range forces either slow movers into expensive stock everywhere or fast movers into slow, costly parcels. Segment products and customers, and give each segment the design that fits it.
+
+</Trap>
+
+<KeyIdea>
+
+Upstream designs need strong information systems, last-mile designs need density, Indian channels add distributor routes and credit, and returns must be designed in. Fit designs to segments rather than forcing one model on everything.
+
+</KeyIdea>
 
 </Level>
 

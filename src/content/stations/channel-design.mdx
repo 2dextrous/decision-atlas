@@ -2,23 +2,27 @@
 title: Channel design & omnichannel
 line: network
 summary: Serving kirana stores, modern trade, e-commerce and direct customers from one network without each channel building its own.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 4 }
 status: draft
 keywords: [channel design, omnichannel, general trade, modern trade, kirana, distributor, e-commerce, D2C, quick commerce, dark store, ship from store, BOPIS, channel conflict]
 connected: [distribution-designs, cost-to-serve, segmentation-strategy, order-to-delivery, postponement]
 sources:
   - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapter on designing distribution networks and applications to online sales."
   - text: "Christopher, M. Logistics & Supply Chain Management. Pearson."
+  - text: "Gallino, S., & Moreno, A. (2014). Integration of online and offline channels in retail: The impact of sharing reliable inventory availability information. Management Science, 60(6), 1434–1451."
+  - text: "Bell, D. R., Gallino, S., & Moreno, A. (2014). How to win in an omnichannel world. MIT Sloan Management Review, 56(1), 45–53."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Each channel orders differently, so each needs a different flow." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Each channel orders differently, so each needs a different flow." next="How it works" nextMinutes={3}>
 
 A channel is the route a product takes to reach the person who buys it. An Indian FMCG brand typically sells through several at once:
 
@@ -43,6 +47,86 @@ Design the network around how each channel orders: pallet loads, small drops, si
   { term: 'Omnichannel', def: 'Shared stock and processes so customers can buy, collect and return through any channel.' },
   { term: 'Dark store', def: 'A small warehouse that only fulfils online orders, close to customers.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="The cost to serve each channel per unit, how shared stock is allocated, and how orders find the right fulfilment node." next="Deep dive" nextMinutes={4}>
+
+### Each channel orders differently
+
+<Example title="cost per unit by channel">
+
+Illustrative handling and freight costs for one shampoo, by how each channel orders.
+
+<div class="table-wrap">
+
+| Channel | Units per order | Handling per order | Freight per order | Cost per unit |
+|---|---|---|---|---|
+| Modern trade warehouse | 1,200 (pallets) | ₹2,000 | ₹6,000 | ₹6.7 |
+| Marketplace fulfilment centre | 600 (cases) | ₹1,200 | ₹3,000 | ₹7.0 |
+| Distributor for general trade | 300 (cases) | ₹900 | ₹1,800 | ₹9.0 |
+| Quick-commerce dark store | 60 (cases and units) | ₹300 | ₹600 | ₹15.0 |
+| Direct to consumer parcel | 2 (units) | ₹40 | ₹70 | ₹55.0 |
+
+</div>
+
+The same product costs eight times more to deliver through one channel than another. Channel profitability depends on these numbers as much as on price.
+
+</Example>
+
+The drivers are order size, picking unit (pallet, case or single item), delivery frequency, packaging, payment terms and the return rate. A channel strategy that ignores them can grow a channel that loses money on every order.
+
+### Sharing stock across channels
+
+- **Separate pools:** each channel has its own stock. Simple and protective, but one channel can run out while another sits on excess.
+- **Shared pool with rules:** one stock serves all channels, with allocation rules that protect key commitments (a retailer with penalty clauses, a marketplace promotion) and release the rest to whoever orders first.
+- **Available-to-promise by channel:** the system shows each channel what it can promise, updated as stock and orders change.
+
+### Choosing where each online order ships from
+
+When stock sits in several places (warehouses, dark stores, shops), a **distributed order management** system chooses the node for each order: the cheapest that can meet the promised time, while avoiding emptying any one location and splitting orders as little as possible.
+
+<KeyIdea>
+
+Cost to serve varies enormously by channel because order sizes and picking units differ. Share stock where possible with allocation rules that protect key commitments, and let order management pick the best node for each online order.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={4} teaser="Channel conflict, distributor economics, quick commerce, ship-from-store, and when shared buildings stop making sense.">
+
+### Channel conflict
+
+Channels compete for customers, for scarce stock and on price. A deep discount on a marketplace undercuts the brand's distributors; a large retailer's promotion soaks up stock the kirana channel needed. Managing conflict is partly commercial (pricing, assortment by channel, channel-specific packs) and partly supply-chain (allocation rules agreed in advance and visible to everyone).
+
+### Distributor economics in general trade
+
+Distributors earn a margin on what they sell, carry stock and credit, and run delivery routes to small stores. For the brand, the distributor network is a way to reach hundreds of thousands of outlets without owning the last mile. The trade-offs to manage: distributor stock levels (too high ties up their cash, too low loses sales), the frequency of visits to each outlet, and the data the brand gets back. Distributor management systems give brands visibility of secondary sales, from distributor to retailer, which is far closer to real demand than primary shipments to distributors.
+
+### Quick commerce
+
+Dark stores hold a few thousand items close to dense neighbourhoods and are replenished frequently, sometimes several times a day, from a mother warehouse. For brands, this means smaller, more frequent orders, tighter delivery windows, and forecasting at very local level. Stock in each dark store is small, so availability depends on the speed and reliability of replenishment rather than on large buffers.
+
+### Ship-from-store and pickup
+
+Using shop stock for online orders pools inventory across channels and cuts delivery distance, but it needs accurate store inventory records (an online order for an item that isn't really on the shelf becomes a cancellation), staff time for picking and packing, and rules about which stock stays for walk-in customers. Research on retailers that showed shoppers real-time store availability online and offered in-store pickup (Gallino and Moreno, 2014) found the channels interact: online information changed where and how customers bought, so channel results can't be judged in isolation.
+
+### Shared or separate buildings?
+
+Sharing a warehouse across channels saves rent and pools stock, but the processes conflict: full-pallet retail orders, case-pick distributor orders and single-item parcels need different storage, picking methods and packing. A common answer is one building with separate zones and processes; a dedicated e-commerce site makes sense once parcel volumes are large enough to justify automation built for single items.
+
+<Trap>
+
+Splitting stock into fixed channel allocations at the start of a season, and never revisiting them, guarantees stockouts in the channel that sells faster and excess in the one that sells slower. Review allocations as real sales arrive.
+
+</Trap>
+
+<KeyIdea>
+
+Manage channel conflict with clear rules, use distributor data to see real demand, plan quick commerce around fast replenishment, make ship-from-store work through accurate store stock, and share buildings only while the processes fit together.
+
+</KeyIdea>
 
 </Level>
 

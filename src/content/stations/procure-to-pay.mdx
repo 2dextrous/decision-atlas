@@ -2,7 +2,7 @@
 title: Procure to pay (MM)
 line: sap
 summary: "From requisition to payment in SAP MM: ME51N to F110, the three-way match, and what each step posts in finance."
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 4 }
 status: draft
 keywords: [procure to pay, SAP MM, purchase requisition, ME51N, RFQ, ME41, purchase order, ME21N, goods receipt, MIGO, movement type 101, invoice verification, MIRO, tolerance, MRBR, F110, GR/IR]
 connected: [procurement-fundamentals, record-to-report, inventory-mrp-in-sap, sap-process-map, supplier-selection]
@@ -13,6 +13,8 @@ sources:
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
@@ -20,7 +22,7 @@ import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 import FromPractice from '../../components/content/FromPractice.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Six steps, the T-codes behind them, and the accounting each one triggers." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Six steps, the T-codes behind them, and the accounting each one triggers." next="How it works" nextMinutes={3}>
 
 Procure to pay in SAP follows the business process step by step, with a transaction (and a Fiori app) for each:
 
@@ -58,6 +60,95 @@ PR → PO → GR (MIGO 101) → invoice (MIRO, three-way match) → payment (F11
   { term: 'Tolerance limits', def: 'Allowed price, quantity and date differences before an invoice is blocked.' },
   { term: 'Movement type 101', def: 'Goods receipt against a purchase order.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="Document types, item categories and approvals behind a PO, the postings by transaction key, and how invoice tolerances block payment." next="Deep dive" nextMinutes={4}>
+
+### What shapes a purchase order
+
+- **Document type:** NB for a standard purchase order, UB for a stock transport order between plants.
+- **Item category:** standard, or special ones such as K (consignment), L (subcontracting), S (third-party) and D (service).
+- **Account assignment:** stock items need none; items for consumption carry one, such as K for a cost center, F for an order or A for an asset, so costs go to the right place.
+- **Release strategy:** approval rules by value, purchasing group or other criteria. Requisitions and orders can be released individually (ME29N for orders) or collectively (ME28).
+- **Sources:** info records supply prices and conditions, source lists restrict the allowed suppliers, and contracts or scheduling agreements set long-term terms.
+
+### The postings, with their keys
+
+<div class="table-wrap">
+
+| Step | Debit | Credit | Account determination key |
+|---|---|---|---|
+| Goods receipt | Inventory | GR/IR clearing | BSX / WRX |
+| Invoice | GR/IR clearing | Supplier | WRX |
+| Price difference (standard price) | Price difference account | | PRD |
+| Payment | Supplier | Bank | |
+
+</div>
+
+<Example title="the Round 2 GR/IR difference">
+
+The PO was for 100 units at 25.50. The first goods receipt brought 80, crediting GR/IR with 80 × 25.50 = 2,040. The invoice for 100 debited GR/IR with 2,550. The account showed a 510 debit, the value of the 20 units invoiced but not yet received, until the second receipt credited the remaining 510.
+
+</Example>
+
+### Tolerances and blocks
+
+Tolerance keys in OMR6 set limits for each kind of variance at invoice verification, such as **PP** (price), **DQ** (quantity) and **DW** (date). An invoice outside a limit posts but is **blocked for payment**. The payment run (F110) skips it until someone releases it with MRBR, either after fixing the cause or after deciding the variance is acceptable. In Global Bike, Round 1's invoice was blocked by the date tolerance and Round 2's by quantity.
+
+Goods can also arrive into **blocked stock** (movement type 103) or quality inspection stock and be released later (105), so receiving and accepting are separate steps when needed.
+
+<KeyIdea>
+
+Document type, item category, account assignment and release strategy shape each PO. Receipts and invoices meet in GR/IR through keys BSX, WRX and PRD, and tolerance keys such as PP, DQ and DW decide which invoices are blocked until released.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={4} teaser="Consignment, subcontracting, third-party and stock transport orders, outline agreements, evaluated receipt settlement, GR/IR clean-up, and common P2P problems.">
+
+### Special procurement processes
+
+- **Consignment:** the supplier's stock sits in your warehouse; you own it only when you withdraw it. Liabilities are settled periodically from withdrawals (MRKO).
+- **Subcontracting:** you send components to a supplier who processes them and returns a finished item. Components move to stock provided to the vendor (movement type 541) and are consumed when the finished item is received.
+- **Third-party (drop-ship):** the supplier ships directly to your customer; often triggered from a sales order.
+- **Stock transport orders:** move stock between your own plants, in one step or two (goods issue into transit, then goods receipt), optionally with deliveries and shipping documents.
+
+### Outline agreements
+
+- **Contracts** (ME31K) fix prices or values over a period; release orders draw against them.
+- **Scheduling agreements** (ME31L) set delivery schedules for repetitive supply, common in automotive and process industries.
+
+With source lists, info records and agreements in place, approved requisitions can be converted to purchase orders automatically (ME59N).
+
+### Evaluated receipt settlement
+
+With **ERS**, the buyer doesn't wait for a supplier invoice: the system creates the invoice from the goods receipt and the agreed price (MRRL). It removes most invoice mismatches and speeds up payment, but it needs accurate prices in the system and suppliers who agree to it.
+
+### Keeping GR/IR clean
+
+At period end, GR/IR balances are analysed and old items investigated: goods received but never invoiced, invoices for goods never received, small differences that can't be traced. Small, explained differences can be cleared with MR11, and balances are reclassified for the balance sheet. Old, unexplained balances are a classic audit finding, so most companies review them monthly.
+
+### Common P2P problems
+
+- A requisition isn't converted: no source of supply, or the source list blocks the supplier.
+- A goods receipt fails: no open quantity, the PO isn't released, or the posting period is closed.
+- An invoice is blocked: variances beyond tolerance, or GR-based invoice verification with the receipt missing.
+- Wrong prices: outdated info records or conditions copied into new orders.
+- Duplicate invoices: the duplicate-invoice check depends on reference numbers being entered consistently.
+
+<Trap>
+
+Releasing blocked invoices in bulk to "clear the queue" defeats the three-way match. Each block points to a mismatch in price, quantity or date; fix the cause or document why the variance is accepted.
+
+</Trap>
+
+<KeyIdea>
+
+Know the special procurement processes (consignment, subcontracting, third-party, stock transport), use outline agreements and automatic PO creation, consider ERS where prices are reliable, review GR/IR monthly, and treat each blocked invoice as a signal, not an obstacle.
+
+</KeyIdea>
 
 </Level>
 

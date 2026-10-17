@@ -2,23 +2,26 @@
 title: What a supply chain is
 line: foundations
 summary: The stages, the three flows that connect them, and the push–pull boundary that splits planning from reacting.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 3 }
 status: draft
 keywords: [supply chain, supply chain management, stages, product flow, information flow, funds flow, push, pull, push-pull boundary, make to stock, make to order, decision phases]
 connected: [strategic-fit, planning-hierarchy, bullwhip-effect, supply-chain-kpis, network-design-decisions]
 sources:
   - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapter 1: understanding the supply chain."
   - text: "Christopher, M. Logistics & Supply Chain Management. Pearson."
+  - text: "Oliver, R. K., & Webber, M. D. (1982). Supply-chain management: Logistics catches up with strategy. Outlook, Booz Allen Hamilton."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Stages, three flows, and the line between planning ahead and reacting to orders." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Stages, three flows, and the line between planning ahead and reacting to orders." next="How it works" nextMinutes={3}>
 
 Think about a bottle of shampoo in a kirana store. Before it got there, a chemical supplier made the surfactants, a packaging supplier moulded the bottle, a factory filled and packed it, a warehouse stored it, a distributor delivered it, and the store put it on the shelf. All of those **stages**, plus the customer who buys it, form a supply chain.
 
@@ -48,6 +51,107 @@ A supply chain is every stage involved in meeting a customer's need, linked by f
   { term: 'Push–pull boundary', def: 'The point where work switches from forecast-driven to order-driven; stock sits just before it.' },
   { term: 'Make to stock vs make to order', def: 'Producing ahead of orders, versus producing only after an order arrives.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="The four cycles of a supply chain, the three kinds of decision, and a shampoo traced from chemical plant to shelf in days." next="Deep dive" nextMinutes={3}>
+
+### Four cycles
+
+A supply chain can be read as a series of cycles, each linking two stages and each starting with an order:
+
+<div class="table-wrap">
+
+| Cycle | Between | Triggered by |
+|---|---|---|
+| Customer order | Customer and retailer | A customer buying or ordering |
+| Replenishment | Retailer and distributor | The retailer's stock running down |
+| Manufacturing | Distributor and manufacturer | Replenishment orders or a forecast |
+| Procurement | Manufacturer and suppliers | The production plan |
+
+</div>
+
+Each cycle has its own steps (the buyer orders, the supplier fulfils and delivers, the buyer receives and pays) and its own people and systems. Problems often appear at the hand-offs between cycles.
+
+### Three kinds of decision
+
+- **Design (years):** where plants and warehouses go, what to make or buy, which modes and partners to use.
+- **Planning (months to a year):** how much to produce where, which markets each site serves, inventory targets, promotions.
+- **Operation (days to weeks):** which order ships today, from where, on which truck; which line runs which product.
+
+Each level sets the limits for the next one down, as the planning hierarchy stop explains.
+
+<Example title="a shampoo's 72 days">
+
+Typical times between a surfactant being made and the shampoo being sold:
+
+<div class="table-wrap">
+
+| Stage | Days |
+|---|---|
+| Transit, chemical supplier to plant | 5 |
+| Raw material stock at the plant | 15 |
+| Production and packing | 2 |
+| Finished goods at the plant | 10 |
+| Transit to the distribution centre | 3 |
+| Stock at the distribution centre | 20 |
+| At the distributor | 7 |
+| On the store shelf | 10 |
+| **Total** | **72** |
+
+</div>
+
+Only about 2 of those 72 days change the product; the rest is moving and waiting. Most of a supply chain's inventory, and much of its cost, sits in that waiting, which is why end-to-end lead time is such a powerful measure.
+
+</Example>
+
+<KeyIdea>
+
+A supply chain runs as linked cycles (order, replenishment, manufacturing, procurement) and is managed through design, planning and operational decisions. Tracing a product end to end shows how much of the lead time is waiting rather than work.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={3} teaser="Where the term came from, the SCOR process model, local versus global optimization, and why supply chains are really networks.">
+
+### Where the idea came from
+
+Logistics, purchasing and production were long managed as separate functions. The term "supply chain management" was popularized in the early 1980s by consultants Keith Oliver and Michael Webber, who argued that the flow from suppliers to customers should be managed as one system, with inventory and service decided across functions rather than within each.
+
+### The SCOR model
+
+The Supply Chain Operations Reference model, maintained by ASCM, gives a standard vocabulary for supply chain processes and metrics. The classic version organized processes as Plan, Source, Make, Deliver, Return and Enable; the newer SCOR Digital Standard uses Orchestrate, Plan, Order, Source, Transform, Fulfill and Return. Companies use it to map their processes, compare performance on common metrics and find gaps.
+
+### Local versus global
+
+Decisions that look good for one stage often hurt the whole:
+
+- Purchasing buys a year's supply to get a discount; the warehouse fills up and part of it becomes obsolete.
+- The plant runs long batches to cut changeover costs; distribution centres hold months of stock.
+- Sales books a big end-of-quarter order with a special discount; production pays overtime and next quarter's orders fall.
+
+Managing the supply chain means making these trade-offs visible and judging them on total cost and service, which usually requires shared measures and incentives across functions.
+
+### Chains are really networks
+
+Real supply chains are networks: many suppliers at each tier, several plants, many channels and customers, with service providers (logistics companies, banks, IT providers) supporting the flows. Decisions at one point ripple through the network, which is why visibility and coordination matter as much as any single function's efficiency.
+
+### New objectives
+
+Cost and service were the classic goals. Resilience (surviving disruptions) and sustainability (emissions, social impact, circularity) have joined them, and many supply chain decisions now trade off all four.
+
+<Trap>
+
+Treating supply chain management as just logistics, or just purchasing, misses its point: coordinating decisions across all stages and functions so the whole performs well, even when one part has to accept a higher local cost.
+
+</Trap>
+
+<KeyIdea>
+
+Supply chain management grew from the idea of managing the flow as one system. SCOR gives a common process language, local optimizations must be judged on total effect, real chains are networks, and resilience and sustainability now sit beside cost and service.
+
+</KeyIdea>
 
 </Level>
 

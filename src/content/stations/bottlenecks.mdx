@@ -2,23 +2,26 @@
 title: Bottlenecks & debottlenecking
 line: supply
 summary: Finding the one constraint that limits the whole system, then lifting it, before spending money anywhere else.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 3 }
 status: draft
 keywords: [bottleneck, constraint, theory of constraints, TOC, five focusing steps, drum-buffer-rope, throughput, capacity, debottlenecking, Little's law]
 connected: [oee, rccp, changeovers, manufacturing-footprint, lean-six-sigma-toc]
 sources:
   - text: "Goldratt, E. M. & Cox, J. (1984). The Goal: A Process of Ongoing Improvement. North River Press."
   - text: "Hopp, W. J. & Spearman, M. L. Factory Physics. Waveland Press."
+  - text: "Hopp, W. J., & Spearman, M. L. (2008). Factory Physics (3rd ed.). McGraw-Hill."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="The slowest step sets the pace for everything, so fix that one first." soon>
+<Level n={1} title="The gist" minutes={3} teaser="The slowest step sets the pace for everything, so fix that one first." next="How it works" nextMinutes={3}>
 
 A process can only go as fast as its slowest step. Picture a factory where each product passes through four stages:
 
@@ -52,6 +55,82 @@ Find the constraint and make it work flat out. Improving anything else first onl
   { term: 'Throughput', def: 'The rate at which the system produces sellable output.' },
   { term: 'Drum-buffer-rope', def: 'TOC scheduling: the bottleneck sets the pace (drum), a buffer protects it, and material release is tied to it (rope).' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="What a bottleneck hour is worth, how to choose the product mix at the constraint, and drum-buffer-rope." next="Deep dive" nextMinutes={3}>
+
+### Finding the constraint on a real floor
+
+- **Load against capacity:** compute each resource's utilization for the plan; the highest is the likely bottleneck.
+- **Where work piles up:** queues of work in process build in front of the constraint, while the stages after it often wait.
+- **Starved and blocked time:** stages downstream of the bottleneck sit idle for lack of work; stages upstream stop because there is nowhere to put their output.
+- **The tell-tale question:** if this machine got one more hour, would the plant ship more?
+
+### What an hour is worth
+
+<Example title="the assembly bottleneck">
+
+Assembly makes 8,000 units a month in 200 hours, 40 units an hour. Each unit earns ₹500 of **throughput** (selling price minus truly variable costs such as materials).
+
+- An hour lost at assembly loses 40 units: ₹20,000 of throughput, gone for good.
+- An hour lost at cutting, which has spare capacity, loses nothing, as long as assembly is never starved.
+- If 5% of assembled units are scrapped later because of defective cut parts, inspecting *before* assembly frees 5% of its time: 400 more good units a month, worth ₹2 lakh.
+
+</Example>
+
+### Choosing the mix at the constraint
+
+When the bottleneck can't make everything demanded, rank products by **throughput per bottleneck minute**, not per unit. Product P earns ₹600 a unit but uses 15 bottleneck minutes (₹40 a minute); product Q earns ₹400 but uses 5 minutes (₹80 a minute). Q should get priority, even though P looks more profitable per unit.
+
+### Drum, buffer, rope
+
+The theory of constraints schedules the whole plant around the bottleneck:
+
+- **Drum:** the bottleneck's schedule sets the pace for everything.
+- **Buffer:** a time buffer of work in front of the bottleneck protects it from upstream hiccups, so it never starves.
+- **Rope:** materials are released into the plant only as fast as the drum consumes them, which stops work piling up everywhere else.
+
+<KeyIdea>
+
+A bottleneck hour is worth the throughput of the whole plant; a non-bottleneck hour is worth little. Prioritize products by throughput per bottleneck minute and schedule the plant with drum, buffer and rope.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={3} teaser="Why balanced lines lose output, moving and policy constraints, batch sizes at and away from the bottleneck, and when the market is the constraint.">
+
+### Balanced lines lose output
+
+It seems ideal to give every stage the same capacity. But stages depend on each other, and each one varies from hour to hour. When a stage has a slow spell, the next one waits; when it has a fast spell, it can't run ahead of the one before. With no spare capacity anywhere, losses accumulate and nothing can catch up. Goldratt illustrated this with a dice game; queueing theory confirms it. Deliberately unbalanced lines, with one clear bottleneck and spare capacity elsewhere, flow better.
+
+### Constraints move and hide
+
+- **Mix-dependent bottlenecks:** one product mix overloads assembly, another overloads painting. The constraint can wander from week to week.
+- **Policy constraints:** often the limit is a rule, not a machine: a one-shift policy, a minimum batch size, a quality release that happens only once a day.
+- **Outside the plant:** a supplier's capacity, a port, warehouse dock doors or a transport fleet can be the real constraint.
+- **The market:** when capacity exceeds demand, the constraint is sales. Making more only builds stock; the right move is to sell more or cut capacity costs.
+
+### Batch sizes at and away from the bottleneck
+
+At the bottleneck, every changeover steals output, so running larger batches there can be worth the extra inventory. Away from the bottleneck, changeovers use spare time, so smaller batches cost little and keep inventory and lead times down. Splitting a production batch into smaller **transfer batches**, moving the first parts on before the whole batch is finished, also cuts lead time without adding changeovers.
+
+### Measuring it right
+
+Local efficiency targets ("keep every machine busy") work against flow: they reward non-bottlenecks for producing work that only queues in front of the constraint. The theory of constraints replaces them with throughput (money coming in through sales), inventory and operating expense, judged for the whole system.
+
+<Trap>
+
+Elevating before exploiting wastes capital. Buying a second machine for the bottleneck before making sure the first never idles, never processes defective parts and never waits for operators often pays for capacity that was already there.
+
+</Trap>
+
+<KeyIdea>
+
+Unbalanced lines with one managed constraint flow better than balanced ones. Constraints move with the mix and are often policies or markets. Run big batches only at the bottleneck, and judge performance on system throughput, not local efficiency.
+
+</KeyIdea>
 
 </Level>
 

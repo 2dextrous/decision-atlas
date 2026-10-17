@@ -2,7 +2,7 @@
 title: Reverse logistics networks
 line: network
 summary: Collecting, inspecting and recovering value from returned and end-of-life goods, and where those facilities should sit.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 4 }
 status: draft
 keywords: [reverse logistics, returns, closed-loop supply chain, disposition, refurbish, remanufacture, recycle, returns centre, grading, circular economy, EPR]
 connected: [returns, network-design-decisions, carbon-aware-design, esg-risk, slow-obsolete]
@@ -12,13 +12,15 @@ sources:
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Goods flowing backwards: collect, check, decide, recover." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Goods flowing backwards: collect, check, decide, recover." next="How it works" nextMinutes={3}>
 
 Most supply chains are designed for goods moving forward. **Reverse logistics** handles everything that comes back: online returns, faulty products under warranty, unsold seasonal stock, packaging and end-of-life products collected for recycling.
 
@@ -45,6 +47,89 @@ Returns lose value with every day of delay. Grade them early, decide quickly whe
   { term: 'Closed-loop supply chain', def: 'Forward and reverse flows designed together to recover value and materials.' },
   { term: 'Extended producer responsibility (EPR)', def: 'Rules making producers responsible for collecting and recycling their products or packaging.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="The disposition decision worked in rupees, why grading early saves freight, and the cost of every week of delay." next="Deep dive" nextMinutes={4}>
+
+### Choosing what happens to each return
+
+For every returned item, compare the net value of each option: what it recovers, minus processing and transport.
+
+<Example title="a returned smartphone">
+
+The phone is opened, works, and has a scratched screen.
+
+<div class="table-wrap">
+
+| Option | Recovers | Costs | Net |
+|---|---|---|---|
+| Refurbish centrally and resell | ₹14,000 | ₹2,500 repair + ₹600 transport | ₹10,900 |
+| Sell as-is to a local liquidator | ₹8,000 | ₹100 handling | ₹7,900 |
+| Harvest parts | ₹5,000 | ₹600 transport + labour | under ₹4,400 |
+| Recycle | ₹300 | Handling | about ₹200 |
+
+</div>
+
+Refurbishing wins by ₹3,000. If the phone had a dead motherboard, the refurbishing cost would jump and selling for parts might win instead.
+
+</Example>
+
+Disposition rules turn this logic into a grading decision tree, so staff at the returns desk can route each item quickly: unopened goes back to stock, minor defects go to refurbishment, major ones to parts or liquidation, and the rest to recycling.
+
+### Grade early, ship less
+
+Inspecting close to the customer (**gatekeeping**) stops worthless items from travelling across the country. If a network receives 10,000 returns a month and 30% are only fit for scrap, grading them locally avoids sending 3,000 items to a central centre: at ₹150 each, ₹4.5 lakh a month of freight saved. Items that need specialist repair still go to the central centre, where scale and skills sit.
+
+### Time is value
+
+Returned electronics and fashion lose resale value every week: new models launch, seasons end, prices fall. A return that waits three weeks for inspection may have lost a meaningful share of its value before anyone decides what to do with it. Measuring **time to disposition**, from the customer handing it back to the item being resold or recycled, and driving it down, often recovers more money than any other change.
+
+<KeyIdea>
+
+Decide each return's route on net recovered value, grade close to the customer so scrap doesn't travel, and treat time to disposition as a key measure, because value decays every week the item waits.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={4} teaser="Closed-loop supply chains, forecasting returns, returns policies, producer-responsibility rules in India, and returns as a value stream.">
+
+### Closed-loop supply chains
+
+A closed-loop supply chain designs forward and reverse flows together. Products are built to be repaired, remanufactured or recycled, and recovered parts and materials go back into production. Guide and Van Wassenhove (2009) describe how the field moved from treating returns as a cost to managing them as a source of value. Remanufacturing, as in printer cartridges, auto parts and industrial equipment, is the clearest case: a used core is restored to like-new condition at a fraction of the cost of new production.
+
+### The uncertainty problem
+
+Planning reverse flows is harder than forward flows because the quantity, quality and timing of returns are all uncertain. Practical approaches:
+
+- **Forecast returns from sales:** returns follow sales with a lag, so a return rate applied to recent sales by week gives a reasonable forecast.
+- **Grade distributions:** track what share of returns ends up in each grade, by product and channel.
+- **Core management:** for remanufacturing, incentives such as deposits or trade-in credits encourage customers to send cores back.
+
+### Returns policies shape the flow
+
+Generous return policies raise sales and returns. Online fashion and electronics see much higher return rates than most store purchases, and some returns are abuse, such as wearing an item once and returning it. Policy levers (return windows, restocking fees, free versus paid returns, instant refunds for trusted customers) change both the volume and the condition of what comes back, so returns policy is a supply-chain decision as well as a marketing one.
+
+### Producer responsibility in India
+
+Extended producer responsibility (EPR) makes producers responsible for collecting or recycling what they put on the market. In India, the E-Waste (Management) Rules, 2022 and the EPR guidelines for plastic packaging under the Plastic Waste Management Rules set targets for producers, importers and brand owners. Meeting them needs collection channels, partners and traceable records, which is reverse logistics by another name.
+
+### A value stream, not a cost centre
+
+Companies that manage returns well treat them as inventory with a value clock running: visible in the same systems as forward stock, with targets for recovery rate and time to disposition, and with insights fed back to product design and quality ("why are these being returned?").
+
+<Trap>
+
+Running returns as an afterthought, handled by whoever has spare time in the forward warehouse, guarantees slow processing and lost value. Give the reverse flow its own process, space, measures and owner.
+
+</Trap>
+
+<KeyIdea>
+
+Closed loops recover value through repair, remanufacturing and recycling. Forecast returns from sales, recognize that policies shape the flow, meet EPR obligations through designed reverse channels, and manage returns as a value stream with its own owner.
+
+</KeyIdea>
 
 </Level>
 

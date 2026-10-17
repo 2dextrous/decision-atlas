@@ -2,7 +2,7 @@
 title: Machine learning in supply chain
 line: analytics
 summary: Where ML genuinely helps, from forecasting and ETAs to anomaly detection and documents, and the traps that make projects fail.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 3 }
 status: draft
 keywords: [machine learning, supervised learning, classification, regression, anomaly detection, predictive maintenance, document extraction, data leakage, model drift, MLOps, explainability]
 connected: [ml-forecasting, eta-visibility, maintenance-planning, ai-agents, ai-plus-optimization]
@@ -10,16 +10,20 @@ sources:
   - text: "Bertsimas, D. & Kallus, N. (2020). From predictive to prescriptive analytics. Management Science, 66(3), 1025–1044."
   - text: "Hyndman, R. J. & Athanasopoulos, G. Forecasting: Principles and Practice (3rd ed.). OTexts."
     url: "https://otexts.com/fpp3/"
+  - text: "James, G., Witten, D., Hastie, T., & Tibshirani, R. (2021). An Introduction to Statistical Learning (2nd ed.). Springer."
+  - text: "Sculley, D., Holt, G., Golovin, D., Davydov, E., Phillips, T., Ebner, D., Chaudhary, V., Young, M., Crespo, J.-F., & Dennison, D. (2015). Hidden technical debt in machine learning systems. Advances in Neural Information Processing Systems, 28."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Good at patterns in lots of data; only as good as that data." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Good at patterns in lots of data; only as good as that data." next="How it works" nextMinutes={3}>
 
 Machine learning finds patterns in historical data and uses them to predict or classify new cases. In supply chains it earns its place where there's plenty of data and a clear prediction to make:
 
@@ -50,6 +54,86 @@ Use ML where there's enough data and a clear prediction to make. Most of the wor
   { term: 'Data leakage', def: 'Using information in training that would not be available at prediction time.' },
   { term: 'Model drift', def: 'A model’s accuracy degrading as real-world patterns change.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="The ML workflow from framing to evaluation, precision and recall for an invoice-duplicate detector, and choosing a threshold in rupees." next="Deep dive" nextMinutes={3}>
+
+### The workflow
+
+1. **Frame the problem:** what exactly is predicted, when, and which decision uses it? "Predict whether an invoice is a duplicate before payment" is a usable frame; "use AI on invoices" is not.
+2. **Assemble data:** features known at prediction time, and labels (past outcomes) that are reliable.
+3. **Split by time:** train on the past, test on later data.
+4. **Start simple:** a rule or a linear or logistic model as the baseline, then try gradient boosting or neural networks if they beat it.
+5. **Evaluate on business terms:** errors translated into money and workload.
+6. **Deploy and monitor:** track accuracy, data drift and the decisions taken.
+
+### Evaluating a classifier
+
+<Example title="catching duplicate supplier invoices">
+
+Out of 10,000 invoices, 50 are actual duplicates. The model flags 80 invoices, of which 40 are real duplicates.
+
+- **Precision** = 40 / 80 = 50%: half of the flags are real.
+- **Recall** = 40 / 50 = 80%: it catches 80% of duplicates.
+- **In money:** reviewing a flag costs about ₹200, so 80 flags cost ₹16,000. Each duplicate caught avoids an average overpayment of ₹50,000, so 40 caught save ₹20 lakh.
+
+At these costs, it is worth lowering the threshold to catch more duplicates even if precision falls, as long as each extra true catch is worth more than the extra reviews.
+
+</Example>
+
+For forecasts and other numbers, use the error measures from the forecast accuracy stop (MAE, RMSE, WMAPE), again judged at the horizon the decision uses.
+
+### Explaining predictions
+
+Planners act on predictions they understand. Tools such as SHAP values show which features pushed a particular prediction up or down: "this order is flagged late mainly because its carrier has been late on this lane and the warehouse is above capacity today." Explanations also reveal when a model relies on something it shouldn't.
+
+<KeyIdea>
+
+Frame the prediction around a decision, split data by time, beat a simple baseline, judge classifiers with precision and recall converted into money, and explain predictions so planners can trust and challenge them.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={3} teaser="Drift and monitoring, feedback loops where predictions change the data, prediction versus causation, and the hidden costs of running ML.">
+
+### Drift and monitoring
+
+Models degrade when the world changes:
+
+- **Data drift:** the inputs change (new products, new customers, a different mix of carriers).
+- **Concept drift:** the relationship changes (a promotion that used to lift sales 30% now lifts them 10%).
+
+Monitoring compares live inputs and errors with what the model saw in training, and triggers retraining or investigation when they diverge. MLOps practice adds version control for data and models, reproducible training and controlled releases.
+
+### Feedback loops
+
+Predictions that drive actions change the data future models learn from. If a late-order model triggers expediting for flagged orders, those orders arrive on time, and a model retrained on the results may conclude the warning signs don't matter. Keeping records of interventions, holding back a small control group, or modelling the effect of the intervention avoids teaching the model the wrong lesson.
+
+### Prediction is not causation
+
+Most ML models predict what will happen given the patterns in past data, not what would happen if you changed something. Knowing that customers who received a discount bought more doesn't tell you the discount caused it if discounts were offered to customers already likely to buy. Questions about the effect of an action need experiments or causal methods, such as uplift modelling for promotions.
+
+### Hidden costs
+
+Sculley and colleagues (2015) described the "hidden technical debt" in ML systems: most of the code and effort sits not in the model but in data collection, feature pipelines, configuration, monitoring and serving infrastructure. A model that is slightly more accurate but needs fragile pipelines may cost more than it saves.
+
+### Where ML fits best
+
+ML pays when data is plentiful and reliable, the prediction is repeated often, errors have a clear cost, and the decision process can absorb the output. Where data is scarce, decisions are rare, or rules capture the logic well, simpler methods often win.
+
+<Trap>
+
+Optimizing a model's accuracy without connecting it to decisions produces impressive metrics and no value. Define how each prediction will be used and measure the business outcome, not just the model score.
+
+</Trap>
+
+<KeyIdea>
+
+Monitor for data and concept drift, watch for feedback loops when predictions trigger actions, use causal methods for "what if" questions, count the full cost of running ML systems, and apply ML where data and repeated decisions make it pay.
+
+</KeyIdea>
 
 </Level>
 

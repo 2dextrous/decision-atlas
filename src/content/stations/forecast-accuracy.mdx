@@ -2,7 +2,7 @@
 title: Forecast accuracy & bias
 line: demand
 summary: MAPE, WMAPE, MASE, bias and tracking signal, what each one really measures and when each one misleads.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 4, deep: 4 }
 status: draft
 keywords: [forecast accuracy, MAE, RMSE, MAPE, WMAPE, WAPE, MASE, bias, tracking signal, backtesting, rolling origin]
 connected: [forecasting-fundamentals, consensus-fva, safety-stock, intermittent-demand, probabilistic-forecasting]
@@ -13,13 +13,15 @@ sources:
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="How far off you are, which way you are off, and why the metric quietly shapes the forecast." soon>
+<Level n={1} title="The gist" minutes={3} teaser="How far off you are, which way you are off, and why the metric quietly shapes the forecast." next="How it works" nextMinutes={4}>
 
 Two different questions hide behind "how good is the forecast?"
 
@@ -51,6 +53,103 @@ Report accuracy and bias together, prefer WMAPE or MASE to plain MAPE, and backt
   { term: 'MASE', def: 'Your mean absolute error ÷ that of a naive forecast; below 1 beats naive.' },
   { term: 'Tracking signal', def: 'Cumulative error ÷ mean absolute deviation; outside about ±4 signals bias.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={4} teaser="Every common measure computed on the same five weeks, plus bias and the tracking signal." next="Deep dive" nextMinutes={4}>
+
+### One example, every measure
+
+Define each week's error as forecast minus actual, so a positive error means over-forecasting.
+
+<Example title="five weeks of one item">
+
+<div class="table-wrap">
+
+| Week | 1 | 2 | 3 | 4 | 5 | Total |
+|---|---|---|---|---|---|---|
+| Actual | 100 | 120 | 90 | 110 | 130 | 550 |
+| Forecast | 110 | 110 | 105 | 100 | 120 | 545 |
+| Error | +10 | −10 | +15 | −10 | −10 | −5 |
+| Absolute error | 10 | 10 | 15 | 10 | 10 | 55 |
+
+</div>
+
+- **Bias (mean error):** −5 / 5 = −1 a week, or −0.9% of demand: almost unbiased.
+- **MAE:** 55 / 5 = 11 units.
+- **RMSE:** $\sqrt{(100 + 100 + 225 + 100 + 100)/5} = \sqrt{125} \approx 11.2$, a little above MAE because the 15-unit miss counts extra.
+- **MAPE:** the average of 10/100, 10/120, 15/90, 10/110 and 10/130, which is 10.4%.
+- **WMAPE:** 55 / 550 = 10.0%.
+- **MASE:** if the naive "same as last week" forecast had an average error of 19 units, MASE = 11 / 19 = 0.58, so this forecast beats naive comfortably.
+- **Tracking signal:** cumulative error ÷ MAE = −5 / 11 = −0.45, well inside ±4.
+
+</Example>
+
+### The formulas
+
+$$
+\text{MAE} = \frac{1}{n}\sum \lvert e_t \rvert \qquad \text{RMSE} = \sqrt{\frac{1}{n}\sum e_t^{2}} \qquad \text{WMAPE} = \frac{\sum \lvert e_t \rvert}{\sum A_t}
+$$
+
+$$
+\text{MAPE} = \frac{1}{n}\sum \frac{\lvert e_t \rvert}{A_t} \qquad \text{MASE} = \frac{\text{MAE}}{\text{MAE of the naive forecast}}
+$$
+
+Strictly, MASE scales by the naive forecast's average error on the training data, which makes it comparable across items and periods.
+
+### Why MAPE leans low
+
+MAPE divides by the actual. Forecast 150 when 100 sell and the error is 50%; forecast 100 when 150 sell and it is 33%, for the same 50-unit miss. A model or a planner judged on MAPE learns that forecasting low is safer, and the supply chain pays for it in stockouts. And a single week with zero sales makes MAPE undefined.
+
+### Bias needs its own number
+
+Accuracy measures ignore direction, so a forecast can look accurate while leaning one way. Track the mean error or the percentage bias, Σ(forecast − actual) ÷ Σ actual, by item group and by whoever adjusts the forecast, and watch the tracking signal for drift.
+
+<KeyIdea>
+
+Report accuracy and bias together. WMAPE and MASE are robust everyday choices, RMSE suits inventory, and MAPE needs a warning about zeros and its lean towards under-forecasting.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={4} teaser="Matching the measure to the decision, why the median can starve your shelves, checking intervals, and how metrics get gamed.">
+
+### Each measure rewards a different forecast
+
+The forecast that minimizes MAE is the **median** of possible outcomes; the one that minimizes RMSE is the **mean**. For symmetric demand they coincide. For skewed demand, which covers most slow movers and anything with occasional spikes, the median sits below the mean, so a model tuned to MAE forecasts low. If replenishment uses that number as the average rate, shelves run short. Choose the measure for the decision: mean-based measures for replenishment volumes, quantile measures for service-driven stock.
+
+### Measure at the level and lag that matter
+
+- **Level:** accuracy at brand level always looks better than at SKU-location level, because errors cancel when you add up. Report the level where stock is decided.
+- **Lag:** use the forecast made one lead time before the period.
+- **Weighting:** a plain average of item MAPEs treats a ₹100 item like a ₹1 crore item. Volume- or value-weighted measures reflect the money at stake.
+
+### Checking prediction intervals
+
+If you publish P10 and P90 forecasts, check them. Over a year, actual demand should land above the P90 in about 10% of periods. If it happens 25% of the time, the intervals are too narrow, and stock set from them will run short. Two properties matter: **calibration** (stated probabilities come true) and **sharpness** (intervals as narrow as calibration allows). Pinball loss scores both.
+
+### How good is good?
+
+There is no universal benchmark. A stable brand forecast monthly can be far more accurate than a fashion item forecast by store and week, and both can be well managed. The meaningful comparisons are against a naive forecast for the same items (MASE, forecast value add) and against your own history over time.
+
+### Metrics get gamed
+
+- **Accuracy = 1 − MAPE** can go negative, so it gets capped at zero, which hides the worst items.
+- Rewarding planners on accuracy alone invites the safe, low number. Reward accuracy and bias together.
+- Excluding "abnormal" periods from the metric is legitimate only if the rule was fixed in advance.
+
+<Trap>
+
+A forecast can show excellent accuracy at the total level while every SKU is wrong in compensating directions. Stock is held per SKU and location, so judge accuracy there too.
+
+</Trap>
+
+<KeyIdea>
+
+Pick the error measure that matches the decision (mean, median or quantile), report it at the stock-holding level and decision lag, check that intervals are calibrated, and design metrics so nobody wins by forecasting low.
+
+</KeyIdea>
 
 </Level>
 

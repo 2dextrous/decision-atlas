@@ -2,23 +2,26 @@
 title: Postponement
 line: inventory
 summary: Holding generic stock and making the final version only when real demand is known.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 3 }
 status: draft
 keywords: [postponement, delayed differentiation, late customization, form postponement, time postponement, place postponement, mass customization, risk pooling, decoupling point]
 connected: [risk-pooling, channel-design, manufacturing-footprint, distribution-designs, strategic-fit]
 sources:
   - text: "Feitzinger, E. & Lee, H. L. (1997). Mass customization at Hewlett-Packard: The power of postponement. Harvard Business Review, 75(1), 116–121."
   - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Section on postponement and aggregation."
+  - text: "Bucklin, L. P. (1965). Postponement, speculation and the structure of distribution channels. Journal of Marketing Research, 2(1), 26–31."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Delay the point where products become different, and forecasting gets easier." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Delay the point where products become different, and forecasting gets easier." next="How it works" nextMinutes={3}>
 
 A paint shop doesn't stock 2,000 ready-mixed colours. It stocks a few white bases and a tinting machine, and mixes the exact shade when you ask for it. That is **postponement**: keep products generic for as long as possible and make the final, specific version only once real demand is known.
 
@@ -45,6 +48,102 @@ Postponement moves the point where products become different as close to the cus
   { term: 'Decoupling point', def: 'Where stock is held and work switches from forecast-driven to order-driven.' },
   { term: 'Form postponement', def: 'Delaying the physical customization: labelling, packaging, assembly or mixing.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="The pooling arithmetic behind postponement, where the decoupling point sits, and when customers must wait." next="Deep dive" nextMinutes={3}>
+
+### The arithmetic of staying generic
+
+Suppose a printer comes in four country versions, each with weekly demand that varies independently with $\sigma$ = 300 units, and the target is $z$ = 1.65.
+
+If each version is finished at the factory, each needs its own buffer. If they share a generic printer, the generic stock faces the combined demand, whose variability is only $\sqrt{4} \times 300 = 600$, not 4 × 300 = 1,200. It is the same square-root effect as pooling warehouses, applied to variants instead of locations.
+
+<Example title="four printer versions">
+
+Shipping from the factory takes 4 weeks and final customization takes 1 week.
+
+<div class="table-wrap">
+
+| Set-up | Buffers needed | Safety stock |
+|---|---|---|
+| Customize at the factory | Each version covers 5 weeks: $4 \times 1.65 \times 300 \times \sqrt{5}$ | 4,427 |
+| Postpone; customers wait 1 week | Generic stock covers 4 weeks: $1.65 \times 600 \times \sqrt{4}$ | 1,980 |
+| Postpone; customers need stock now | Generic 1,980, plus each version covers 1 week: $4 \times 1.65 \times 300$ | 3,960 |
+
+</div>
+
+Postponement cuts safety stock by 55% if customers accept a one-week wait, but only by about 11% if finished stock must still sit on the shelf. The benefit depends on whether the last step can happen after the order arrives.
+
+</Example>
+
+### The decoupling point
+
+The **customer order decoupling point** is where a product stops being made to forecast and starts being made to a specific order. Upstream of it, stock is generic and planned from forecasts; downstream, work is driven by real orders.
+
+<div class="table-wrap">
+
+| Strategy | Decoupling point | Example |
+|---|---|---|
+| Make to stock | Finished goods | Shampoo, packaged food |
+| Postponed or assemble to order | Generic base or modules | Paint tinting, configured laptops |
+| Make to order | Raw materials | Custom furniture |
+| Engineer to order | Design | Industrial machinery |
+
+</div>
+
+Postponement moves the decoupling point as late as the process and the customer's patience allow. The customer's acceptable waiting time is the limit: every step after the decoupling point must fit inside it.
+
+<KeyIdea>
+
+Postponement pools the uncertainty of the variants into one generic stock, cutting buffers by roughly the square root of the number of variants. The full benefit appears only when the final step fits inside the customer's acceptable wait.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={3} teaser="Designing products for postponement, the costs that can wipe out the saving, and when it backfires.">
+
+### Postponement starts on the drawing board
+
+Postponement usually needs the product or the process to change:
+
+- **Modular design:** country- or customer-specific parts become separate modules added at the end (power supplies, plugs, manuals).
+- **Standardization:** one common part replaces several, so variants share more.
+- **Process resequencing:** reorder the steps so the differentiating one comes last. Benetton famously knitted sweaters in undyed wool and dyed them later, instead of knitting dyed yarn, so colours could follow what was actually selling.
+
+### What it costs
+
+- **Higher unit cost at the end:** customizing in a regional warehouse rarely has the scale or automation of the factory.
+- **Investment:** tinting machines, local assembly, trained staff and quality checks in many places.
+- **Redesign cost,** and sometimes a compromise in the product: a universal power supply may cost more than a country-specific one.
+- **A longer wait** for customers if the final step happens after the order.
+- **Tax and duty effects:** moving value-adding steps into another country can change customs duties, which may help or hurt.
+
+### When it backfires
+
+- Variants are few, or their demands move together, so pooling saves little.
+- Customers want instant availability and the final step is slow, so finished stock is still needed.
+- The last step is expensive or hard to do well outside the factory.
+- Volumes per variant are high and steady, so forecasting each one is already easy.
+
+### Related ideas
+
+- **Logistics postponement:** keep finished stock centrally and ship only when a region orders, trading inventory for transport speed.
+- **Speculation:** the opposite strategy, committing early to cut cost (long factory runs, cheap sea freight). Bucklin (1965) framed channel design as a balance between postponement and speculation.
+- **Services:** generic training followed by specialization, or standard software configured per customer, follow the same logic.
+
+<Trap>
+
+Postponement does not always reduce inventory. If customers still expect every variant on the shelf, you hold generic stock *and* finished stock. Model both layers before promising savings.
+
+</Trap>
+
+<KeyIdea>
+
+Postponement is a design decision as much as a planning one. It pays when variants are many and uncertain, the final step is cheap and quick, and customers accept a short wait; otherwise speculation may be the better bet.
+
+</KeyIdea>
 
 </Level>
 

@@ -2,23 +2,26 @@
 title: Cross-docking vs stocking
 line: network
 summary: When goods should flow straight through a hub without being stored, and when holding stock is the better choice.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 4 }
 status: draft
 keywords: [cross-docking, flow-through, stock flow, warehousing, consolidation, deconsolidation, dwell time, inbound, outbound, synchronization]
 connected: [load-building, distribution-designs, warehousing, transport-planning, risk-pooling]
 sources:
   - text: "Stalk, G., Evans, P. & Shulman, L. E. (1992). Competing on capabilities: The new rules of corporate strategy. Harvard Business Review, 70(2), 57–69."
   - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapter on transportation and distribution."
+  - text: "Bartholdi, J. J., & Gue, K. R. (2004). The best shape for a crossdock. Transportation Science, 38(2), 235–244."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Flow straight through, or store first? It depends on volume, predictability and timing." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Flow straight through, or store first? It depends on volume, predictability and timing." next="How it works" nextMinutes={3}>
 
 In a normal warehouse, goods arrive, get put away on racks, wait, then get picked and shipped. That is **stock flow**, and the warehouse holds inventory.
 
@@ -45,6 +48,83 @@ Cross-dock what is high-volume, predictable and well synchronized; store what is
   { term: 'Dwell time', def: 'How long goods stay in a facility before moving on.' },
   { term: 'Consolidation', def: 'Combining shipments from several sources into fuller loads.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="Truck arithmetic for a five-supplier, ten-store network, the information flow behind it, and two types of cross-dock." next="Deep dive" nextMinutes={4}>
+
+### The truck arithmetic
+
+<Example title="five suppliers, ten stores">
+
+Each supplier sends something to every store every week.
+
+- **Direct shipping:** 5 × 10 = 50 part-load shipments. At ₹6,000 each, ₹3,00,000 a week, and each store receives 5 deliveries.
+- **Through a cross-dock:** 5 full inbound trucks (₹15,000 each) and 10 full outbound trucks (₹12,000 each), plus ₹30,000 of handling: ₹2,25,000 a week, and each store receives one mixed truck.
+
+The cross-dock saves ₹75,000 a week (25%) and the stores receive one delivery instead of five. The saving grows with the number of suppliers and stores, because direct links grow as their product while cross-dock links grow as their sum.
+
+</Example>
+
+### The information flow
+
+Cross-docking runs on information that arrives before the goods:
+
+1. Stores' orders are known before suppliers ship.
+2. Suppliers send an **advance shipping notice** (ASN) listing what is on each pallet and where it is going, with labels the dock can scan.
+3. The dock schedules inbound trucks to doors and plans which outbound lane each pallet goes to.
+4. Pallets are scanned on arrival, moved across the dock to the right outbound lane and loaded by route.
+
+If the ASN is wrong or missing, pallets have to be opened, checked and sorted by hand, and the time advantage disappears.
+
+### Two types
+
+- **Pre-distribution:** the supplier picks and labels by store before shipping, so the dock only sorts and moves pallets. Fast, but it needs capable suppliers.
+- **Post-distribution:** the supplier ships bulk, and the cross-dock breaks it down by store. More handling at the dock, but less burden on suppliers.
+
+<KeyIdea>
+
+Cross-docking turns many part-load links into fewer full loads in and out, a saving that grows with network size. It runs on advance information: orders known in advance, accurate ASNs and scheduled dock doors.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={4} teaser="Why cross-docks fail, dock design, parcel hubs as cross-docks, and where the inventory goes.">
+
+### Why cross-docking fails
+
+- **Late or early trucks:** if inbound trucks miss their slots, outbound trucks wait or leave partly empty, and the dock fills with pallets that have nowhere to go.
+- **Bad data:** wrong ASNs, unreadable labels or mixed pallets force manual sorting.
+- **Unstable demand:** if store orders change after suppliers have shipped, pallets end up in the wrong place.
+- **Not enough dock space or doors:** congestion slows everything.
+- **Supplier compliance:** suppliers who can't meet labelling, packing and delivery-window rules turn a flow facility back into a warehouse.
+
+Measure **dwell time** (how long goods stay on the dock) and the share of freight that leaves the same day; rising dwell times are the first sign of trouble.
+
+### Designing the building
+
+A cross-dock is mostly doors and floor space for staging. Long, narrow buildings give many doors with short travel across the dock. Bartholdi and Gue (2004) showed that the best shape depends on size: narrow I-shaped docks suit smaller operations, while larger ones benefit from L, T or X shapes that add doors without making travel distances too long. Assigning busy outbound destinations to doors near the centre also cuts travel.
+
+### Parcel hubs are cross-docks
+
+Courier and e-commerce sortation hubs work the same way at the level of parcels: inbound line-haul trucks are unloaded, parcels sorted by destination on automated sorters, and outbound trucks loaded, all within hours. The same rules apply: accurate labels, tight schedules and enough sorting capacity for the peak.
+
+### Where the inventory goes
+
+Cross-docking doesn't remove the need for inventory; it moves it. Stock that used to sit in the distribution centre now sits at suppliers, in plants or in stores. That works when suppliers can hold stock and replenish reliably, and when store-level forecasts are good. The early success of Walmart's cross-docking, described by Stalk, Evans and Shulman (1992), rested on exactly these capabilities: shared information, frequent replenishment and a dedicated transport fleet.
+
+<Trap>
+
+Cross-docking slow, unpredictable items forces suppliers to ship tiny, frequent quantities or leaves pallets waiting on the dock. Keep cross-docking for high-volume, predictable flows and store the rest.
+
+</Trap>
+
+<KeyIdea>
+
+Cross-docks fail on late trucks, bad data and unstable orders, so watch dwell time. Shape the building around doors and staging space, recognize parcel hubs as the same idea, and remember the inventory moves upstream rather than vanishing.
+
+</KeyIdea>
 
 </Level>
 

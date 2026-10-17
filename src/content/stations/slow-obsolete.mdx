@@ -2,23 +2,26 @@
 title: Slow-moving & obsolete stock
 line: inventory
 summary: Spotting stock that has stopped moving before it loses its value, and choosing the least costly way out.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 4, deep: 4 }
 status: draft
 keywords: [slow-moving inventory, SLOB, excess and obsolete, E&O, inventory ageing, days of cover, write-off, provision, liquidation, end of life]
 connected: [lifecycle-forecasting, intermittent-demand, inventory-segmentation, why-inventory, returns]
 sources:
   - text: "Teunter, R. H., Syntetos, A. A. & Babai, M. Z. (2011). Intermittent demand: Linking forecasting to inventory obsolescence. European Journal of Operational Research, 214(3), 606–615."
   - text: "Silver, E. A., Pyke, D. F. & Thomas, D. J. (2017). Inventory and Production Management in Supply Chains (4th ed.). CRC Press."
+  - text: "IFRS Foundation. IAS 2 Inventories."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="How to find dead stock early and decide what to do with it." soon>
+<Level n={1} title="The gist" minutes={3} teaser="How to find dead stock early and decide what to do with it." next="How it works" nextMinutes={4}>
 
 Every warehouse collects stock that has stopped selling: phone cases for a model nobody buys any more, last season's colours, spare parts for retired machines. Companies often call it **SLOB** (slow-moving and obsolete) or **E&O** (excess and obsolete).
 
@@ -45,6 +48,85 @@ Slow is not the same as dead. Measure ageing and cover, act early, and pick the 
   { term: 'E&O / SLOB', def: 'Excess and obsolete, or slow-moving and obsolete: stock above any sensible future need.' },
   { term: 'Write-down', def: 'Reducing the book value of stock that will not sell at cost; it reduces reported profit.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={4} teaser="Ageing buckets, cover and excess calculations, and the phone-case decision worked through in rupees." next="Deep dive" nextMinutes={4}>
+
+### Measure it the same way every month
+
+1. **Ageing:** days since the item last moved, in buckets such as 0–90, 91–180, 181–365 and over 365 days.
+2. **Cover:** how many months the stock would last, using the *forecast* for coming months where you have one, not just last year's sales.
+3. **Excess:** stock above what you can reasonably use, such as everything beyond 12 months of forecast plus safety stock.
+4. **At risk:** items with a phase-out date, a replacement product or an engineering change, even if they still sell today.
+
+### Decide on the economics, not the original cost
+
+What you paid is gone: it is a sunk cost. The decision compares what each option recovers now with what keeping the stock will cost from here on.
+
+<Example title="5,000 phone cases">
+
+The cases cost ₹150 each and sell 20 a month. Holding cost is 25% of value a year.
+
+- Keep 12 months of demand plus a small buffer, about 260 cases. The excess is 4,740 cases.
+- Holding one case for a year costs 25% of ₹150 = ₹37.50.
+- A liquidator offers ₹30 a case: 4,740 × ₹30 = ₹1,42,200 now.
+- Keeping a case one more year costs more (₹37.50) than selling it today recovers (₹30), and its value will keep falling. Sell the excess now.
+
+</Example>
+
+The same arithmetic ranks the other exits: moving stock to a branch where it still sells, bundling it with a fast seller, returning it under a supplier agreement or reworking it, each net of handling and freight.
+
+### The accounting side
+
+Inventory is carried at the lower of cost and **net realisable value** (NRV): the expected selling price minus the costs of selling. This is the rule in IAS 2 and in India's Ind AS 2. If the excess cases will realistically fetch ₹30, their book value must come down from ₹150 to ₹30, a write-down of 4,740 × ₹120 = ₹5,68,800, which hits this period's profit. Many companies also book a general provision based on ageing, for example a rising percentage of value for stock older than six, twelve and twenty-four months.
+
+<KeyIdea>
+
+Track ageing, forward cover and excess every month. Decide exits on what you can recover now against what holding will cost from here, never on the original price, and expect finance to write stock down to its net realisable value.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={4} teaser="Where dead stock comes from, how to stop it at the source, and the forecasting methods that notice decline.">
+
+### Where dead stock comes from
+
+- **Launch optimism:** first orders sized on hope, before any sales history exists.
+- **Large minimums:** a supplier's minimum order or a long production run covers years of demand for a slow item.
+- **Late phase-outs:** purchasing keeps buying an item that product management has already replaced.
+- **Engineering changes:** a design change makes old parts unusable overnight.
+- **Promotion leftovers** and **returns** that never get sorted back into sellable stock.
+- **Incentives:** buyers rewarded for price discounts on large volumes, or sales teams inflating forecasts to secure supply.
+
+### Prevention beats clearance
+
+- **Phase-in and phase-out plans:** set a run-out date, stop replenishing once stock plus open orders covers expected demand to that date, and coordinate the switch to the replacement.
+- **Smaller first buys** for new or uncertain items, with quick re-orders once demand shows up.
+- **Negotiate minimums,** or pay a little more per unit for smaller lots on slow items; the holding saving often beats the price break.
+- **Postponement and common components,** so less stock is committed to variants that may not sell.
+- **Range reviews** that cut the tail of items selling little while adding complexity.
+
+### Forecasts that notice decline
+
+Standard methods are slow to see a dying product. Simple exponential smoothing keeps forecasting the old level for a while, and Croston's method updates its estimate only when a sale happens, so if sales stop entirely its forecast never falls. The **TSB method** (Teunter, Syntetos and Babai, 2011) updates the *probability* of demand every period instead, so a run of zeros steadily pulls the forecast down. That makes it well suited to items at risk of becoming obsolete.
+
+### Who owns it
+
+Slow and obsolete stock sits between planning, sales, product management and finance, so it often belongs to nobody. Good practice is a monthly review with a named owner, clear authority to dispose, and targets for both prevention (new excess created) and clearance (old excess removed).
+
+<Trap>
+
+A write-down is an accounting entry, not a disposal. The stock still takes space, costs handling and insurance, and keeps ageing. Equally, "it's written off, so keeping it is free" is wrong: holding costs continue until the stock physically leaves.
+
+</Trap>
+
+<KeyIdea>
+
+Dead stock is mostly created upstream by launch optimism, large minimums and late phase-outs. Prevent it with run-out planning and small first buys, use forecasting methods like TSB that see decline, and give clearance a named owner.
+
+</KeyIdea>
 
 </Level>
 

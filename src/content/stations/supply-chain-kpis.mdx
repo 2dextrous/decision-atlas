@@ -2,23 +2,26 @@
 title: Supply chain KPIs
 line: foundations
 summary: The measures interviewers expect you to know, what each one really tells you, and how they pull against each other.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 3 }
 status: draft
 keywords: [supply chain KPIs, OTIF, fill rate, perfect order, inventory turns, days of inventory, forecast accuracy, cash to cash, logistics cost, OEE, SCOR metrics, balanced scorecard]
 connected: [cash-conversion-cycle, service-levels, forecast-accuracy, oee, order-to-delivery, cost-to-serve]
 sources:
   - text: "ASCM (Association for Supply Chain Management). SCOR Digital Standard: performance attributes and metrics."
   - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapter on supply chain performance and drivers."
+  - text: "Kaplan, R. S., & Norton, D. P. (1992). The balanced scorecard: Measures that drive performance. Harvard Business Review, 70(1), 71–79."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Service, cost and cash: one KPI from each, read together." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Service, cost and cash: one KPI from each, read together." next="How it works" nextMinutes={3}>
 
 Supply chain performance is usually judged on three fronts at once: **service** to customers, **cost**, and **cash** tied up. The trouble is that they pull against each other: more stock improves service but costs cash, and fuller trucks cut cost but can slow delivery. That's why KPIs must be read together, never alone.
 
@@ -51,6 +54,92 @@ Read KPIs as a set: service, cost and cash. Any single KPI can be "improved" by 
   { term: 'OTIF', def: 'Share of orders delivered on time and in full.' },
   { term: 'SCOR', def: 'A supply chain reference model with standard processes and performance metrics.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="Linking supply chain KPIs to return on capital, a worked improvement in rupees, and defining KPIs so they mean the same thing everywhere." next="Deep dive" nextMinutes={3}>
+
+### From KPIs to return on capital
+
+Senior leaders judge the business on return on capital employed (ROCE): operating profit divided by the capital tied up. Supply chain performance moves both parts:
+
+- **Profit:** cost of goods sold, logistics cost, obsolescence, expediting, and revenue lost to stockouts.
+- **Capital:** inventory, receivables minus payables, and fixed assets such as plants, warehouses and trucks.
+
+<Example title="a modest improvement">
+
+Revenue ₹500 crore, operating profit ₹50 crore, capital employed ₹250 crore: ROCE is 20%.
+
+- Logistics savings of ₹2 crore lift profit to ₹52 crore.
+- Removing ₹10 crore of excess inventory cuts capital to ₹240 crore, and avoids about ₹1 crore a year of storage and obsolescence cost.
+- ROCE becomes 53 / 240 ≈ 22.1%.
+
+A two-point rise in ROCE from supply chain work alone, without any growth in sales.
+
+</Example>
+
+### Define KPIs precisely
+
+The same name can hide different calculations. A KPI definition should state:
+
+- **Formula and units:** OTIF by order, line or unit?
+- **Reference point:** on time to the customer's requested date or the promised date? At dispatch or at delivery?
+- **Scope:** which customers, products, sites and channels.
+- **Data source** and **timing:** where the data comes from, how often it is calculated, and when.
+- **Owner and target.**
+
+Without this, two sites report the same KPI with different meanings, and comparisons mislead.
+
+### Leading and lagging indicators
+
+**Lagging** indicators (OTIF, inventory turns, cost per unit) report results. **Leading** indicators warn of trouble earlier: forecast bias, projected stock below safety stock, supplier acknowledgement delays, backlog of open orders. A good dashboard pairs each important result with the signals that predict it.
+
+<KeyIdea>
+
+Supply chain KPIs connect to return on capital through profit and capital employed. Define every KPI precisely (formula, reference point, scope, source, owner), and pair lagging results with leading signals.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={3} teaser="Balanced scorecards, Goodhart's law, functional KPIs that fight each other, benchmarking with care, and designing incentives.">
+
+### Balance, not a single number
+
+Kaplan and Norton's balanced scorecard (1992) argued that no single measure can guide an organization; financial results must be read with customer, process and learning measures. For supply chains, the balance is service, cost, cash and, increasingly, resilience and sustainability. SCOR organizes its top-level metrics similarly, across reliability, responsiveness, agility, cost and asset efficiency.
+
+### Goodhart's law
+
+"When a measure becomes a target, it ceases to be a good measure." A forecast accuracy target invites sandbagging; an inventory target at year end invites delayed receipts; an OTIF target measured against promised dates invites late promises. Designing KPIs means anticipating how people will respond to them and pairing measures so that gaming one shows up in another.
+
+### Functional KPIs that fight each other
+
+- **Purchase price variance** rewards buyers for big discounted buys that raise inventory and obsolescence.
+- **Plant efficiency** rewards long runs that build stock and delay other products.
+- **Transport cost per kilometre** rewards cheap carriers who deliver late.
+- **Sales revenue** at quarter end rewards loading the channel with stock.
+
+Each looks sensible locally. Shared end-to-end measures, such as total landed cost, OTIF to the customer and cash conversion, align the functions.
+
+### Benchmarking with care
+
+External benchmarks are useful only when definitions, business models and product mixes are comparable. Inventory turns differ widely between grocery and machinery; OTIF differs by how it is measured. Benchmarks are best used to ask questions ("why are our turns lower than similar companies'?"), not to set targets mechanically.
+
+### Incentives
+
+Bonuses tied to a single supply chain KPI tend to distort decisions. Combinations of team-level and end-to-end measures, with a few individual measures that the person can actually influence, work better, as does reviewing how results were achieved, not just whether targets were hit.
+
+<Trap>
+
+A dashboard with fifty KPIs is a report, not a management tool. Choose a handful of balanced, well-defined measures that drive decisions, and keep the rest for diagnosis.
+
+</Trap>
+
+<KeyIdea>
+
+Balance service, cost, cash, resilience and sustainability; expect Goodhart's law and pair measures to expose gaming; replace conflicting functional KPIs with end-to-end ones; benchmark with care; and design incentives around shared results.
+
+</KeyIdea>
 
 </Level>
 

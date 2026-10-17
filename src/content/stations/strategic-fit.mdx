@@ -2,23 +2,26 @@
 title: Strategy & strategic fit
 line: foundations
 summary: Matching the supply chain to what customers value, efficient for predictable products and responsive for uncertain ones.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 3 }
 status: draft
 keywords: [strategic fit, competitive strategy, implied demand uncertainty, efficiency, responsiveness, Fisher, functional products, innovative products, zone of strategic fit]
 connected: [segmentation-strategy, what-is-a-supply-chain, network-design-decisions, postponement, supply-chain-kpis]
 sources:
   - text: "Fisher, M. L. (1997). What is the right supply chain for your product? Harvard Business Review, 75(2), 105–116."
   - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapter 2: achieving strategic fit."
+  - text: "Lee, H. L. (2002). Aligning supply chain strategies with product uncertainties. California Management Review, 44(3), 105–119."
+  - text: "Ferdows, K., Lewis, M. A., & Machuca, J. A. D. (2004). Rapid-fire fulfillment. Harvard Business Review, 82(11), 104–110."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="The supply chain should be good at what the customer is actually paying for." soon>
+<Level n={1} title="The gist" minutes={3} teaser="The supply chain should be good at what the customer is actually paying for." next="How it works" nextMinutes={3}>
 
 A company's competitive strategy says which customers it serves and what it promises them: lowest price, widest choice, fastest delivery, newest designs. **Strategic fit** means the supply chain is built to deliver that promise, and not something else.
 
@@ -47,6 +50,99 @@ Strategic fit means the supply chain excels at what customers pay for: efficienc
   { term: 'Implied demand uncertainty', def: 'Demand uncertainty the supply chain faces once customer requirements are counted.' },
   { term: 'Efficiency vs responsiveness', def: 'The core supply chain trade-off between low cost and speed or flexibility.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="Estimating implied demand uncertainty, placing a supply chain on the cost–responsiveness frontier, and setting the six drivers to match." next="Deep dive" nextMinutes={3}>
+
+### Step 1: how uncertain is the demand you serve?
+
+**Implied demand uncertainty** is the uncertainty the supply chain faces because of the customer needs it chooses to meet, not just the variability of raw demand. Each customer need pushes it up or down:
+
+<div class="table-wrap">
+
+| Customer need | Raises uncertainty when |
+|---|---|
+| Quantity per order | Order sizes vary widely |
+| Response time | Customers want delivery fast |
+| Variety | Many products, sizes or variants |
+| Service level | Stockouts are not acceptable |
+| Innovation | Products change often |
+| Price | Customers accept higher prices for speed or novelty |
+
+</div>
+
+A cement maker (large, regular orders, a few products, days of lead time accepted) faces low implied uncertainty. A fashion e-commerce business (thousands of new styles, next-day delivery, unpredictable hits) faces very high implied uncertainty.
+
+### Step 2: where does the supply chain sit?
+
+For any given technology, there is a **cost–responsiveness frontier**: the lowest cost at which each level of responsiveness can be achieved. A supply chain can move along it (more responsive at higher cost, or cheaper and slower) or, through improvement, push the frontier outwards.
+
+### Step 3: match them
+
+High implied uncertainty calls for responsiveness; low implied uncertainty calls for efficiency. The match is made through six drivers:
+
+<div class="table-wrap">
+
+| Driver | Efficient setting | Responsive setting |
+|---|---|---|
+| Facilities | Few, large, highly utilized | More, closer to customers, spare capacity |
+| Inventory | Low, turned fast | Buffers of components or finished goods |
+| Transportation | Cheap, slow modes, full loads | Fast modes, frequent deliveries |
+| Information | Accurate plans, cost data | Real-time demand signals, quick re-planning |
+| Sourcing | Lowest total cost suppliers | Flexible, nearby suppliers |
+| Pricing | Everyday low prices | Prices that reflect speed and novelty |
+
+</div>
+
+<KeyIdea>
+
+Estimate implied demand uncertainty from the customer needs you serve, place the supply chain on the cost–responsiveness frontier, and set facilities, inventory, transport, information, sourcing and pricing to match.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={3} teaser="Adding supply uncertainty to the picture, tailored chains for different segments, how fit shifts over the lifecycle, and copying competitors.">
+
+### Supply uncertainty matters too
+
+Lee (2002) added the supply side. Demand can be stable or volatile, and supply can be stable (mature processes, many suppliers) or evolving (new technology, few sources, yield problems). Crossing them gives four strategies:
+
+<div class="table-wrap">
+
+| | Stable demand | Volatile demand |
+|---|---|---|
+| **Stable supply** | Efficient supply chain | Responsive supply chain |
+| **Evolving supply** | Risk-hedging supply chain (pooled stock, shared sources) | Agile supply chain (responsive and risk-hedging) |
+
+</div>
+
+A mature grocery staple fits the efficient box; a new electronic device made with immature technology may need an agile chain.
+
+### Tailored supply chains
+
+Most companies sell products with different uncertainties to customers with different needs, so one supply chain can't fit all of them. **Tailored** (segmented) supply chains give each product and customer group its own model: an efficient backbone for staples and responsive channels for launches, fashion items or urgent orders. The supply chain segmentation stop covers how.
+
+### Fit moves over the lifecycle
+
+At launch, demand is uncertain and supply may be immature, which favours responsiveness. As a product matures, demand stabilizes and competition shifts to price, which favours efficiency. Near the end of life, uncertainty rises again. The supply chain should move with the product, shifting capacity, inventory and modes as the stage changes.
+
+### Copying a competitor
+
+A famous example of fit is the fast-fashion model, in which some retailers produce a large share of their range close to their markets, in small batches, and replenish quickly based on what sells. Ferdows, Lewis and Machuca (2004) described how one such retailer built its whole system around speed. Copying the visible parts (nearby factories, small batches) without the strategy, information flows and decision rhythm behind them rarely works, because fit is a property of the whole system.
+
+<Trap>
+
+Judging a supply chain as "good" or "bad" without reference to the strategy it serves is a mistake. A slow, cheap supply chain is excellent for a discount staple and terrible for a fashion launch. Always ask "fit for what?"
+
+</Trap>
+
+<KeyIdea>
+
+Add supply uncertainty to demand uncertainty to choose between efficient, responsive, risk-hedging and agile designs, tailor supply chains to segments, shift them over the lifecycle, and copy strategy rather than visible features.
+
+</KeyIdea>
 
 </Level>
 

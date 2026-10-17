@@ -2,7 +2,7 @@
 title: Probabilistic forecasting
 line: demand
 summary: Forecasting a range of outcomes and its quantiles instead of a single number, so stock can be set for the risk you choose.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 3 }
 status: draft
 keywords: [probabilistic forecast, quantile forecast, P10, P50, P90, prediction interval, pinball loss, quantile loss, forecast distribution, uncertainty]
 connected: [safety-stock, newsvendor, forecast-accuracy, ml-forecasting, scenario-planning]
@@ -10,16 +10,18 @@ sources:
   - text: "Hyndman, R. J. & Athanasopoulos, G. Forecasting: Principles and Practice (3rd ed.). OTexts. Sections on prediction intervals and distributional forecasts."
     url: "https://otexts.com/fpp3/"
   - text: "Koenker, R. & Bassett, G. (1978). Regression quantiles. Econometrica, 46(1), 33–50."
+  - text: "Gneiting, T., Balabdaoui, F., & Raftery, A. E. (2007). Probabilistic forecasts, calibration and sharpness. Journal of the Royal Statistical Society: Series B, 69(2), 243–268."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="P10, P50 and P90: what they mean and why inventory needs them." soon>
+<Level n={1} title="The gist" minutes={3} teaser="P10, P50 and P90: what they mean and why inventory needs them." next="How it works" nextMinutes={3}>
 
 A normal forecast says "next week's demand will be 10,000 units." That single number hides the part planners care about most: how far off it could be. A **probabilistic forecast** gives the range instead:
 
@@ -46,6 +48,80 @@ A point forecast tells you the middle; inventory decisions live in the tails. Fo
   { term: 'Prediction interval', def: 'A range expected to contain actual demand with a stated probability, such as P10 to P90.' },
   { term: 'Pinball (quantile) loss', def: 'An error measure for quantile forecasts that weights misses on one side more than the other.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="Four ways to produce quantiles, how pinball loss scores them, and why quantiles don't add up." next="Deep dive" nextMinutes={3}>
+
+### Four ways to get the range
+
+1. **Assume a distribution.** Take the point forecast as the mean and the standard deviation of past forecast errors as the spread, then read quantiles from a normal or better-fitting distribution. Simple, but it inherits whatever shape you assumed.
+2. **Use your own past errors.** Collect past percentage errors at the right horizon and apply their quantiles to the current forecast. If past errors ran from −20% at P10 to +30% at P90, a point forecast of 10,000 gives P10 = 8,000 and P90 = 13,000: the skewed range in the gist.
+3. **Train for the quantile.** Quantile regression, or a gradient-boosted model with pinball loss, learns each quantile directly from features.
+4. **Simulate.** Generate many possible demand paths, from a statistical model or by resampling history, and read quantiles from them. This is the most flexible approach, and the only easy one when you need totals over several periods.
+
+### Scoring with pinball loss
+
+For a quantile $\tau$ and forecast $q$:
+
+$$
+L_\tau(y, q) = \begin{cases} \tau\,(y - q) & \text{if } y \ge q \\ (1-\tau)\,(q - y) & \text{if } y \lt q \end{cases}
+$$
+
+For a P90 ($\tau$ = 0.9) of 13,000: if 14,000 sell, the loss is 0.9 × 1,000 = 900; if 12,000 sell, it is 0.1 × 1,000 = 100. Forecasting too low costs nine times as much, which pushes the forecast up to the point where only 10% of outcomes exceed it.
+
+### Quantiles don't add up
+
+Suppose weekly demand averages 10,000 with a P90 of 13,000, roughly normal and independent from week to week, so $\sigma \approx 2{,}340$. What covers four weeks?
+
+- Adding the weekly P90s: 4 × 13,000 = 52,000.
+- The real P90 of the four-week total: $40{,}000 + 1.28 \times 2{,}340 \times \sqrt{4} \approx 46{,}000$.
+
+Adding quantiles assumes every week is bad at once, so here it overstates the need by 6,000 units. Totals across weeks, items or locations need the distribution of the total, which simulated paths or a proper model provide.
+
+<KeyIdea>
+
+Get quantiles from an assumed distribution, past errors, quantile-trained models or simulation; score them with pinball loss; and never add quantiles together. Work out the distribution of the total instead.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={3} teaser="Calibration and sharpness, distributions that fit sales, turning quantiles into decisions, and selling ranges to the business.">
+
+### Two properties of a good probabilistic forecast
+
+- **Calibration:** the stated probabilities come true. Demand should exceed the P90 about 10% of the time and fall below the P10 about 10% of the time. If, over 52 weeks, demand beat the P90 in 15 weeks (29%), the range is too narrow, and stock based on it will run short.
+- **Sharpness:** among calibrated forecasts, narrower is better. "Between 0 and 1 million" is calibrated and useless.
+
+Pinball loss averaged over many quantiles, or the continuous ranked probability score (CRPS), rewards both at once. The M5 uncertainty competition scored entries with a scaled pinball loss across nine quantiles.
+
+### Distributions that fit sales
+
+Sales are counts, never negative and often skewed. A normal distribution can put real probability on negative demand for slow items. Better choices: Poisson for low, steady rates; the negative binomial when the variance exceeds the mean; zero-inflated versions when there are extra zeros; and empirical distributions when there is enough history.
+
+### From quantiles to decisions
+
+- **Replenishment:** set the order-up-to level at the quantile of demand over the lead time plus review period that matches the service target.
+- **One-shot buys:** the newsvendor critical ratio tells you which quantile to stock.
+- **Capacity and S&OP:** plan base capacity around the P50, and decide in advance how much flexibility (overtime, subcontracting) covers the gap to the P90.
+- **Risk conversations:** finance sees the range of revenue and inventory outcomes, not one number that is certain to be wrong.
+
+### Bringing the business along
+
+Most planning processes and systems are built around one number, and people are uncomfortable with ranges. Practical steps: show fan charts rather than tables of quantiles; keep the P50 as the familiar "forecast" while stock uses the right quantile; and explain in money what a higher quantile buys, meaning how much extra stock it needs and how many stockouts it avoids.
+
+<Trap>
+
+Ranges built from in-sample residuals, the errors on data the model was fitted to, are too narrow, because the model has partly memorized that data. Build them from out-of-sample errors at the right horizon.
+
+</Trap>
+
+<KeyIdea>
+
+A good probabilistic forecast is calibrated first and sharp second. Use count distributions that fit sales, read the quantile that matches each decision, and present ranges in money so the business can choose its risk.
+
+</KeyIdea>
 
 </Level>
 

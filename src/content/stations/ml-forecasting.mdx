@@ -2,7 +2,7 @@
 title: ML & global forecasting models
 line: demand
 summary: Gradient boosting, deep learning and foundation models that learn across thousands of series at once, and when they actually win.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 4, deep: 4 }
 status: draft
 keywords: [machine learning forecasting, global model, LightGBM, gradient boosting, features, DeepAR, N-BEATS, TFT, foundation models, M4, M5]
 connected: [exponential-smoothing, forecast-accuracy, probabilistic-forecasting, promotions-cannibalization, ml-in-supply-chain]
@@ -11,16 +11,19 @@ sources:
   - text: "Makridakis, S., Spiliotis, E. & Assimakopoulos, V. (2020). The M4 Competition: 100,000 time series and 61 forecasting methods. International Journal of Forecasting, 36(1), 54–74."
   - text: "Hyndman, R. J. & Athanasopoulos, G. Forecasting: Principles and Practice (3rd ed.). OTexts."
     url: "https://otexts.com/fpp3/"
+  - text: "Salinas, D., Flunkert, V., Gasthaus, J., & Januschowski, T. (2020). DeepAR: Probabilistic forecasting with autoregressive recurrent networks. International Journal of Forecasting, 36(3), 1181–1191."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="From one model per item to one model that learns across all items." soon>
+<Level n={1} title="The gist" minutes={3} teaser="From one model per item to one model that learns across all items." next="How it works" nextMinutes={4}>
 
 Classic methods fit **one model per item**: thousands of SKUs means thousands of small models, each learning only from its own short history. A **global model** flips this. One model learns from all items together, so a new or sparse item can borrow patterns from similar ones.
 
@@ -47,6 +50,95 @@ ML wins when there are many related series and real drivers such as price, promo
   { term: 'Feature engineering', def: 'Turning history, calendar and business drivers into model inputs.' },
   { term: 'Foundation model', def: 'A model pre-trained on very many time series that can forecast new ones with little training.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={4} teaser="How a global model is built: the training table, avoiding leakage, the loss function and honest testing." next="Deep dive" nextMinutes={4}>
+
+### Step 1: turn history into a table
+
+Each row is one item, at one location, in one period. The target is the sales you want to predict; the columns are features known at the moment the forecast is made.
+
+<Example title="a shampoo's training rows">
+
+<div class="table-wrap">
+
+| Week | Sales (target) | Sales 1 week before | Same week last year | Price (₹) | On promotion | Festival week |
+|---|---|---|---|---|---|---|
+| 40 | 1,150 | 980 | 1,020 | 199 | No | No |
+| 41 | 1,890 | 1,150 | 1,060 | 149 | Yes | No |
+| 42 | 1,420 | 1,890 | 1,300 | 199 | No | Yes |
+
+</div>
+
+Stack rows like these for thousands of items, and one model can learn how much a ₹50 price cut lifts sales, how festivals add to the base and how sales dip after a promotion, from every item at once.
+
+</Example>
+
+Typical feature groups: recent sales and rolling averages, the same period last year, calendar effects (day of week, month, festivals, paydays), price and promotion plans, product attributes (category, brand, pack size) and location attributes.
+
+### Step 2: avoid leakage
+
+**Leakage** means letting the model see information it won't have when forecasting for real, which makes test results look far better than reality. The two classic forms:
+
+- **Horizon leakage:** if you forecast four weeks ahead, "sales one week before" isn't known yet for weeks two to four. Either use only lags of at least four weeks, or forecast one week at a time and feed the predictions back in (recursive forecasting).
+- **Future information:** a promotion that happened but wasn't planned when the forecast was made, or a rolling average that includes the week being predicted.
+
+### Step 3: choose what the model minimizes
+
+- Squared error targets the mean, the usual choice for replenishment.
+- For sales counts with many zeros, a **Tweedie** or Poisson loss fits the data better.
+- For a P90 forecast, **quantile (pinball) loss** trains the model to hit that quantile directly.
+
+### Step 4: test it like a forecast
+
+Split by time, never at random: train on the past, test on the future, and roll the cut-off forward several times (**rolling-origin backtesting**). Compare against strong simple baselines, such as seasonal naive and ETS, at the horizon the decision uses, and check bias by segment, not only overall accuracy.
+
+<KeyIdea>
+
+A global ML forecast is a supervised-learning table: one row per item, location and period, features known at forecast time, a loss that matches the decision, and time-based backtests against strong simple baselines.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={4} teaser="Why global models work, what the M5 competition taught, deep learning and foundation models, and what breaks in production.">
+
+### Why one model for many items works
+
+A single item may have only two years of noisy history, but ten thousand items together hold millions of observations of how prices, promotions, seasons and holidays move demand. A global model learns those shared effects once and applies them everywhere, including to new or sparse items. To make items comparable, sales are often scaled per item (for example, divided by each item's average) before training.
+
+### Lessons from the M5 competition
+
+The M5 competition used hierarchical Walmart sales data with prices, promotions and calendar events. The organizers' findings (Makridakis and colleagues, 2022) included:
+
+- Gradient-boosted trees trained across many series dominated the top places.
+- Explanatory variables such as prices and events improved accuracy.
+- Combining several models, trained on different subsets or with different settings, beat single models.
+- Validation that mimicked the real forecasting setup was essential.
+
+### Deep learning and foundation models
+
+Neural approaches such as DeepAR (probabilistic forecasts from a recurrent network), N-BEATS and the Temporal Fusion Transformer also learn across series and can output full distributions. **Foundation models** for time series are pre-trained on very large collections of series and can forecast a new one with little or no training. They are promising for cold starts and quick prototypes, but on rich retail data with known drivers, well-tuned tree models remain hard to beat, so test before switching.
+
+### What breaks in production
+
+- **Trends:** trees predict within the range they have seen, so a fast-growing item gets flattened. Model the change rather than the level, or blend with a method that handles trend.
+- **Stability:** ML forecasts can jump from week to week and make plans nervous. Smooth the output or limit near-term changes.
+- **Explainability:** planners trust what they understand. Feature-importance tools, such as SHAP values, help explain why a forecast moved.
+- **Maintenance:** feature pipelines, retraining, monitoring and data drift take real effort. A model that is slightly more accurate but breaks every month may not be worth it.
+
+<Trap>
+
+A random train/test split on time-series data leaks the future into training: the model has seen next week while being tested on this week. Results look excellent and collapse in production. Always split by time.
+
+</Trap>
+
+<KeyIdea>
+
+Global models win by learning the shared effects of drivers across many items, as M5 showed. Validate like a real forecast, watch extrapolation and stability, explain forecasts to planners, and weigh accuracy gains against the cost of running the system.
+
+</KeyIdea>
 
 </Level>
 

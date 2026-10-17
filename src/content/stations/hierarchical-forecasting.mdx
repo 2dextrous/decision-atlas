@@ -2,7 +2,7 @@
 title: Hierarchical forecasting
 line: demand
 summary: "Making forecasts for SKUs, regions and the total add up: bottom-up, top-down, middle-out and optimal reconciliation."
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 3 }
 status: draft
 keywords: [hierarchical forecasting, reconciliation, coherence, bottom-up, top-down, middle-out, MinT, aggregation, product hierarchy, geography hierarchy]
 connected: [forecasting-fundamentals, consensus-fva, sop-ibp, forecast-accuracy, risk-pooling]
@@ -10,16 +10,18 @@ sources:
   - text: "Hyndman, R. J. & Athanasopoulos, G. Forecasting: Principles and Practice (3rd ed.). OTexts. Chapter on forecasting hierarchical and grouped time series."
     url: "https://otexts.com/fpp3/hierarchical.html"
   - text: "Wickramasuriya, S. L., Athanasopoulos, G. & Hyndman, R. J. (2019). Optimal forecast reconciliation for hierarchical and grouped time series through trace minimization. Journal of the American Statistical Association, 114(526), 804–819."
+  - text: "Athanasopoulos, G., Hyndman, R. J., Kourentzes, N., & Petropoulos, F. (2017). Forecasting with temporal hierarchies. European Journal of Operational Research, 262(1), 60–74."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Different teams need different levels, and the numbers must agree." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Different teams need different levels, and the numbers must agree." next="How it works" nextMinutes={3}>
 
 Different people need the forecast at different levels. A warehouse planner needs SKU by location by week. A regional sales head needs region by month. Finance needs the national total by quarter. If each level is forecast separately, the numbers won't add up: SKUs might sum to 9,500 while the national forecast says 10,000. Forecasts that add up across the hierarchy are called **coherent**.
 
@@ -43,6 +45,89 @@ Every planning level must see numbers that add up. Pick bottom-up, top-down or m
   { term: 'Middle-out', def: 'Forecast at a middle level, then aggregate upwards and disaggregate downwards.' },
   { term: 'MinT reconciliation', def: 'Adjusts forecasts at all levels jointly, weighting by their error structure.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="Bottom-up, top-down and reconciliation worked through on a three-SKU example." next="Deep dive" nextMinutes={3}>
+
+### The example
+
+Three SKUs of a shampoo brand. Forecasting each SKU and the brand total separately gives numbers that don't add up:
+
+<div class="table-wrap">
+
+| | SKU A | SKU B | SKU C | Sum of SKUs | Brand total forecast |
+|---|---|---|---|---|---|
+| Base forecasts | 5,000 | 3,000 | 1,500 | 9,500 | 10,000 |
+
+</div>
+
+**Bottom-up:** keep the SKU forecasts and set the total to 9,500. Simple and detailed, but it ignores the total forecast, which is often the more reliable one.
+
+**Top-down:** keep the total of 10,000 and split it by historical shares. If A, B and C historically sold 50%, 30% and 20%, they become 5,000, 3,000 and 2,000. C jumps from 1,500 to 2,000, losing the information that C has been declining.
+
+Shares can be chosen several ways: the average of historical proportions, the proportion of historical averages, or shares taken from the lower-level forecasts themselves (forecast proportions), which keep recent shifts in the mix.
+
+### Reconciliation
+
+Reconciliation forecasts every level, then adjusts all the forecasts together, as little as possible, until they add up. The simplest version (OLS reconciliation) spreads the gap equally across every node of the hierarchy. Here the gap is 10,000 − 9,500 = 500 across four nodes (three SKUs and the total), so each moves by 125: the SKUs up and the total down.
+
+<div class="table-wrap">
+
+| | SKU A | SKU B | SKU C | Total |
+|---|---|---|---|---|
+| Reconciled | 5,125 | 3,125 | 1,625 | 9,875 |
+
+</div>
+
+The numbers now add up, and every level's information has been used. **MinT** (minimum trace) does the same but weights the adjustments by how reliable each forecast has been: if the brand total has historically been much more accurate, it moves less and the SKUs absorb more of the gap.
+
+### Choosing an approach
+
+- A strong, stable signal at the bottom: bottom-up.
+- A noisy bottom with a stable mix: top-down or middle-out.
+- Data and tools available: reconcile, which often improves accuracy at every level.
+
+<KeyIdea>
+
+Bottom-up keeps detail, top-down keeps the stable total, and reconciliation adjusts all levels together so they add up. OLS spreads the gap evenly; MinT moves the least reliable forecasts most.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={3} teaser="Grouped and temporal hierarchies, why reconciliation helps, problems at scale, and one-number planning.">
+
+### Hierarchies in several directions
+
+Real hierarchies are **grouped**: the same sales add up by product (SKU, brand, category), by geography (store, region, country) and by channel, and every path must agree. **Temporal hierarchies** add time: weekly forecasts should add up to the monthly and quarterly ones. Reconciling across time can improve accuracy too, because annual patterns are clearer in monthly data and short-term shifts are clearer in weekly data.
+
+### Why reconciliation can improve accuracy
+
+Each level sees the data differently: the total is smooth and shows trend and seasonality clearly, while the bottom shows mix shifts and local events. Reconciliation combines these views, much as averaging several forecasts beats picking one. The MinT approach (Wickramasuriya, Athanasopoulos and Hyndman, 2019) chooses the combination that minimizes the total variance of the reconciled forecast errors, given how the base forecast errors vary and move together.
+
+### Practical problems at scale
+
+- **Size:** SKU × store × day can mean millions of bottom-level series, so full reconciliation needs efficient methods or a reduced hierarchy.
+- **Negative forecasts:** adjustments can push small items below zero; constrained methods prevent this.
+- **Intermittent bottoms:** at SKU-store-day level most values are zero, so forecasting higher up and splitting down is often more stable.
+- **Manual changes:** when sales changes a regional total, the system must push that change down consistently. Planning tools do this with disaggregation rules, proportional to forecast, history or another key.
+
+### One number, many views
+
+Reconciled forecasts are the basis of "one number" planning. Finance's revenue view, sales' customer view and supply's SKU-location view all come from the same coherent set, converted into units, value or capacity as needed. Sales and operations planning can then work at family level for volume and at SKU level for mix, without the two drifting apart.
+
+<Trap>
+
+Forcing coherence by hand, for example by dumping the whole gap between the total and the SKUs into one large SKU, makes the numbers add up and the forecast worse. Spread adjustments according to reliability, which is what reconciliation methods do systematically.
+
+</Trap>
+
+<KeyIdea>
+
+Hierarchies run across product, geography, channel and time. Reconciliation combines the strengths of every level, needs care with size, negatives and intermittent series at scale, and is the backbone of one-number planning.
+
+</KeyIdea>
 
 </Level>
 

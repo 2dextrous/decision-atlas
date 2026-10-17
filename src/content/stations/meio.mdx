@@ -2,7 +2,7 @@
 title: Multi-echelon inventory (MEIO)
 line: inventory
 summary: Placing buffers across plant, warehouse and store as one system, instead of letting every site protect itself.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 4, deep: 4 }
 status: draft
 keywords: [MEIO, multi-echelon inventory optimization, echelon, guaranteed service model, stochastic service model, safety stock placement, network inventory, service time]
 connected: [safety-stock, risk-pooling, drp-deployment, service-level-policy, scenario-modeling]
@@ -10,16 +10,19 @@ sources:
   - text: "Clark, A. J. & Scarf, H. (1960). Optimal policies for a multi-echelon inventory problem. Management Science, 6(4), 475–490."
   - text: "Graves, S. C. & Willems, S. P. (2000). Optimizing strategic safety stock placement in supply chains. Manufacturing & Service Operations Management, 2(1), 68–83."
   - text: "Silver, E. A., Pyke, D. F. & Thomas, D. J. (2017). Inventory and Production Management in Supply Chains (4th ed.). CRC Press."
+  - text: "Simpson, K. F. (1958). In-process inventories. Operations Research, 6(6), 863–873."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Why buffering every stage separately double-counts, and what MEIO does instead." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Why buffering every stage separately double-counts, and what MEIO does instead." next="How it works" nextMinutes={4}>
 
 Most products pass through several stages, or **echelons**, before a customer buys them: plant, central warehouse, regional warehouse, store. If each stage sizes its safety stock on its own, every stage protects itself against the same uncertainty. The result is buffers stacked on buffers.
 
@@ -45,6 +48,97 @@ Single-site safety stock asks "how much here?" MEIO asks "where in the network s
   { term: 'Service time', def: 'The delivery time one stage promises the next; longer promised times let downstream stages hold less.' },
   { term: 'Guaranteed-service model', def: 'A classic MEIO approach that sets each stage’s promised service time and sizes buffers to meet it.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={4} teaser="The building blocks of a multi-echelon model, and a worked example where the answer flips." next="Deep dive" nextMinutes={4}>
+
+### Each stage quotes a service time
+
+The approach most used in practice, the **guaranteed-service model**, treats every stage as a promise. Each stage quotes the next stage a service time: how long an order will take to ship. A stage then needs safety stock only for its **net replenishment time**:
+
+$$
+\text{Net time} = \text{inbound service time} + \text{processing or transit time} - \text{outbound service time}
+$$
+
+$$
+SS = z\,\sigma\sqrt{\text{Net time}}
+$$
+
+If a stage promises its customer the full time it takes to be resupplied, its net time is zero and it holds no buffer; it simply passes orders through. If it promises immediate shipment, it must cover its whole replenishment time. The optimizer chooses these internal promises to minimize total holding cost while keeping the external promise to customers.
+
+<Example title="central and regional warehouses">
+
+A central warehouse (CDC) is resupplied by the plant in 9 days. Regional warehouses (RDCs) are 2 days from the CDC and must ship to customers immediately. Each region's daily demand has $\sigma$ = 100 units, $z$ = 1.65, and holding a unit costs 1.0 at the CDC and 1.2 in a region.
+
+**One region:**
+
+- A, the CDC promises immediate shipment: CDC buffer $1.65 \times 100 \times \sqrt{9}$ = 495, plus an RDC buffer for 2 days of 233. Total 728 units, cost 775.
+- B, the CDC passes orders through (it promises 9 days): the RDC covers 9 + 2 = 11 days, 547 units, cost 657. **B wins:** one buffer over 11 days beats two separate buffers, because $\sqrt{11} \lt \sqrt{9} + \sqrt{2}$.
+
+**Three independent regions:**
+
+- A: the CDC pools all three ($\sigma = 100\sqrt{3}$) with a buffer of 857, plus 3 × 233 in the regions. Total 1,557 units, cost 1,697.
+- B: each region covers 11 days on its own, 3 × 547 = 1,642 units, cost 1,970. **A wins:** pooling three regions at the cheaper central site now outweighs the extra layer.
+
+</Example>
+
+So "where should stock sit?" has no general answer. It depends on lead times, how many locations each stage pools, and how holding cost rises along the chain, which is why the decision needs a model.
+
+### What a MEIO model needs
+
+- The network: stages, links, lead times and their variability.
+- Demand and forecast error where customers order.
+- Holding cost at each stage, which usually rises as value is added and goods move closer to customers.
+- Service promises to external customers, by segment.
+
+<KeyIdea>
+
+In the guaranteed-service view, each stage's buffer covers only its net replenishment time, set by the service times stages quote each other. Choosing those internal promises well removes duplicate buffers and puts stock where pooling and cost favour it.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={4} teaser="Two families of models, internal service targets that look too low, and why local KPIs fight the optimum.">
+
+### Two families of models
+
+- **Stochastic-service models** (Clark and Scarf, 1960, and the METRIC model for military spare parts) let stockouts upstream delay the stages below and compute the resulting waits. They are exact for some network shapes but hard to scale.
+- **Guaranteed-service models** (Simpson, 1958; Graves and Willems, 2000) assume each stage always meets its quoted service time, covering extreme demand by expediting or overtime. They scale to large networks and handle assembly structures, which is why most planning software uses them or a blend of both.
+
+### Internal service can be lower than external service
+
+A counterintuitive result: an upstream warehouse serving the company's own regional warehouses often should *not* run at 98% fill rate, even if customers get 98%. Its customers carry their own buffers, so an occasional delay upstream is absorbed downstream. Holding 98% at every stage is exactly the stacked-buffer problem MEIO removes. Internal targets are an output of the optimization, not an input.
+
+### Where buffers tend to end up
+
+Typical patterns, which the model confirms or overturns for each network:
+
+- At **pooling points**, where many downstream locations or products draw on one stock.
+- Just before **customization**, where a generic item becomes many variants.
+- At **long or unreliable lead times**, to protect the rest of the chain from them.
+- Close to customers only where the promised delivery time is shorter than the time to resupply.
+
+### Making it work in a real company
+
+The mathematics is the easy part. The harder problems are data (lead-time variability is rarely measured well), incentives and execution:
+
+- **Local KPIs:** if each warehouse manager is judged on their own fill rate, the central site will resist a lower internal target. Measure service where the customer feels it.
+- **Policy, not just numbers:** replenishment rules must actually use the MEIO targets, or planners will override them.
+- **Re-run regularly:** demand, lead times and the network change, and so do the right buffer positions.
+
+<Trap>
+
+Applying the single-site safety-stock formula at every stage with the customer's service target, and calling the result "multi-echelon", only double-counts. Each stage's real lead time includes delays caused by the stage above, so the buffers have to be set together.
+
+</Trap>
+
+<KeyIdea>
+
+MEIO models come in stochastic-service and guaranteed-service flavours, and both set buffers jointly across stages. Expect lower internal service targets, stock at pooling and decoupling points, and resistance from local KPIs that must be redesigned for the plan to stick.
+
+</KeyIdea>
 
 </Level>
 

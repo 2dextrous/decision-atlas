@@ -2,23 +2,27 @@
 title: Inventory segmentation (ABC-XYZ)
 line: inventory
 summary: Sorting items by value and predictability so each group gets a policy that fits, instead of one blanket rule.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 4 }
 status: draft
 keywords: [ABC analysis, XYZ analysis, ABC-XYZ, Pareto, 80/20, coefficient of variation, CV, segmentation, service level by segment]
 connected: [safety-stock, service-levels, demand-patterns, segmentation-strategy, service-level-policy, slow-obsolete]
 sources:
   - text: "Silver, E. A., Pyke, D. F. & Thomas, D. J. (2017). Inventory and Production Management in Supply Chains (4th ed.). CRC Press. Chapter on frameworks for inventory management."
   - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson."
+  - text: "Teunter, R. H., Babai, M. Z., & Syntetos, A. A. (2010). ABC classification: Service levels and inventory costs. Production and Operations Management, 19(3), 343–352."
+  - text: "Syntetos, A. A., Boylan, J. E., & Croston, J. D. (2005). On the categorization of demand patterns. Journal of the Operational Research Society, 56(5), 495–503."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Two quick classifications that decide where your attention and safety stock go." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Two quick classifications that decide where your attention and safety stock go." next="How it works" nextMinutes={3}>
 
 A real café stocks hundreds of things: beans, milk, cups, syrups, napkins, a rare single-origin coffee. Nobody can tune every item by hand, and they don't all deserve the same care. Running out of milk is a disaster; running out of cinnamon is a shrug. Segmentation sorts items into groups so each group gets a sensible policy.
 
@@ -44,6 +48,100 @@ ABC tells you how much a mistake costs; XYZ tells you how likely you are to make
   { term: 'Coefficient of variation', def: 'Standard deviation ÷ mean: variability relative to the average.' },
   { term: 'Policy by segment', def: 'Different review frequency, service target and forecasting effort for each ABC-XYZ cell.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="Building the ABC-XYZ grid step by step, with a ten-item example and a policy for each cell." next="Deep dive" nextMinutes={4}>
+
+### Step 1: ABC by annual value
+
+1. For each item, compute annual value = annual usage × unit cost.
+2. Sort from highest to lowest and compute the cumulative share of total value.
+3. Draw the lines. A common split is A up to about 80% of value, B up to about 95%, and C for the rest. The cut-offs are a choice, not a law.
+
+### Step 2: XYZ by predictability
+
+For each item, compute the coefficient of variation of demand over a sensible time bucket, usually weeks or months: $CV = \sigma / \mu$. Then group: X below 0.5, Y from 0.5 to 1, Z above 1.
+
+<Example title="a café supplier's ten items">
+
+<div class="table-wrap">
+
+| Item | Annual value (₹ lakh) | Cumulative | ABC | CV | XYZ |
+|---|---|---|---|---|---|
+| House espresso beans | 45 | 45% | A | 0.3 | X |
+| Milk | 25 | 70% | A | 0.2 | X |
+| Seasonal single-origin beans | 10 | 80% | A | 1.3 | Z |
+| Paper cups | 7 | 87% | B | 0.25 | X |
+| Flavoured syrups | 5 | 92% | B | 0.7 | Y |
+| Festive gift boxes | 3 | 95% | B | 1.8 | Z |
+| Napkins | 2 | 97% | C | 0.3 | X |
+| Tea bags | 1.5 | 98.5% | C | 0.6 | Y |
+| Spare grinder burrs | 1 | 99.5% | C | 1.5 | Z |
+| Branded mugs | 0.5 | 100% | C | 2.2 | Z |
+
+</div>
+
+Three items, 30% of the range, carry 80% of the value. The seasonal beans are the AZ item: valuable and hard to predict.
+
+</Example>
+
+### Step 3: a policy for each cell
+
+<div class="table-wrap">
+
+| | X (steady) | Y (variable) | Z (erratic) |
+|---|---|---|---|
+| **A** | Frequent review, statistical forecast, lean buffers | Planner attention, collaborative forecasts | Make or buy to order where possible; close customer contact; careful buffers |
+| **B** | Automated replenishment, periodic review | Automated, with exception alerts | Check buffers against margin; consider central stock |
+| **C** | Large, infrequent orders; generous buffer | Simple min-max rules | Stock only if critical; otherwise to order or delist |
+
+</div>
+
+The grid decides more than safety stock. It sets the forecasting method, how often each item is reviewed, who looks at it, and whether it should be stocked at all.
+
+<KeyIdea>
+
+Rank by value for ABC, measure variability with CV for XYZ, cross the two and attach a policy to each cell: forecasting method, review frequency, service target and whether to stock at all.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={4} teaser="Why cheap items may deserve the highest service, better ways to measure variability, and other ways to classify.">
+
+### The service-target paradox
+
+A common rule gives A items the highest service targets because they matter most. Cost logic often says the opposite. Each extra point of service on an A item needs expensive safety stock, while a C item can be pushed to 99.5% for very little. Customers count missing napkins as a failed order too. So a sensible policy often sets **higher targets for cheap items** and slightly lower, tightly managed targets for expensive ones, reaching the same overall fill rate with less money. Research on ABC and service levels (Teunter, Babai and Syntetos, 2010) found that ranking items by a cost criterion that includes shortage cost and order size, instead of by value alone, lowers total inventory cost.
+
+### Measure variability properly
+
+- **Use forecast error, not raw demand.** Ice cream has a high CV because of its summer peak, yet a seasonal forecast predicts it well. The CV of forecast error (RMSE divided by mean demand) measures how *surprising* an item is, which is what buffers protect against.
+- **Mind the time bucket.** Weekly demand always looks more variable than monthly demand. Use the bucket that matches your review period and lead time.
+- **Intermittent items need two measures.** For items with many zero periods, the Syntetos–Boylan scheme uses the average interval between demands (ADI) and the squared CV of the non-zero demand sizes ($CV^2$), with cut-offs at 1.32 and 0.49. That sorts items into smooth, erratic, intermittent and lumpy, each with a suitable forecasting method.
+
+### Other ways to classify
+
+- **VED** (vital, essential, desirable) ranks by criticality. It is used for spare parts and hospital supplies, where a cheap part can stop a production line.
+- **FSN** (fast, slow, non-moving) ranks by movement, which helps find dead stock.
+- **Lifecycle stage:** launch, growth, maturity and phase-out items need different forecasting and buying rules.
+- **Margin or customer:** ABC on profit or on strategic customers instead of on cost.
+
+### Keep it alive
+
+Re-run the classification regularly (quarterly is common), but add a tolerance band so items near a boundary don't flip classes every quarter and send planners chasing changes. Then check the result with common sense: a C item that is the only part keeping a key customer's line running is really an A.
+
+<Trap>
+
+ABC by units instead of value, or by revenue while ignoring margin, sorts items by the wrong yardstick. And a high CV on a seasonal item doesn't make it unpredictable: check the forecast error before calling it a Z.
+
+</Trap>
+
+<KeyIdea>
+
+Segmentation is a way to set policies, not an end in itself. Consider higher service for cheap items, measure variability with forecast error, use ADI and CV² for intermittent items, and keep the classes stable enough to act on.
+
+</KeyIdea>
 
 </Level>
 

@@ -2,23 +2,28 @@
 title: Regulatory compliance
 line: risk
 summary: The industry rules a supply chain must follow, from food safety and drug storage to labelling and dangerous goods, built into the process rather than checked at the end.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 4 }
 status: draft
 keywords: [regulatory compliance, food safety, FSSAI, good distribution practice, GDP, cold chain, legal metrology, labelling, dangerous goods, traceability, serialization, batch recall, audit trail]
 connected: [tariffs-trade, esg-risk, warehousing, lifecycle-forecasting, returns]
 sources:
   - text: "World Health Organization. Good storage and distribution practices for medical products (WHO Technical Report Series)."
   - text: "Food Safety and Standards Authority of India (FSSAI). Food Safety and Standards Act, 2006, and related regulations."
+  - text: "World Health Organization (2020). Good storage and distribution practices for medical products. WHO Technical Report Series, No. 1025, Annex 7."
+  - text: "Government of India. Legal Metrology (Packaged Commodities) Rules, 2011."
+  - text: "Food Safety and Standards Authority of India. Food Safety and Standards (Food Recall Procedure) Regulations, 2017."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Rules that change how you store, move, label and trace products." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Rules that change how you store, move, label and trace products." next="How it works" nextMinutes={3}>
 
 Some supply chain rules aren't about cost at all; they're the law. They change how products are stored, moved, labelled and traced, and breaking them can mean recalls, fines or a shut warehouse. A few common families:
 
@@ -41,6 +46,90 @@ Regulations shape how products are stored, moved, labelled and traced. Build the
   { term: 'Cold chain', def: 'A temperature-controlled supply chain for perishables and medicines.' },
   { term: 'FEFO', def: 'First-expiry, first-out: picking the stock that expires soonest first.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="How batch traceability works, a targeted recall against a blanket one in rupees, and cold-chain and labelling controls built into the process." next="Deep dive" nextMinutes={4}>
+
+### One step up, one step down
+
+Batch traceability rests on recording, at every movement, which batch went where:
+
+- **One step back:** which supplier lots of each raw material went into each production batch.
+- **One step forward:** which customers and locations received each batch.
+
+Barcodes following GS1 standards carry the product code (GTIN), batch number and expiry date, so scanning at receiving, production, putaway, picking and dispatch builds the chain automatically.
+
+<Example title="a contaminated raw material lot">
+
+A supplier reports a problem with raw material lot RM-77.
+
+- **With batch traceability:** the system shows RM-77 went into batches B121 to B124, which shipped to three warehouses and 180 retailers: about 4,200 cases, located within two hours. At ₹150 per case to recall, the cost is about ₹6.3 lakh.
+- **Without it:** the company can't tell which packs contain RM-77 and must recall all 60,000 cases of the product nationwide: about ₹90 lakh, plus far more lost sales and reputation.
+
+</Example>
+
+**Mock recalls** test the system regularly: pick a batch and measure how long it takes to find every unit, and how much was found.
+
+### Cold chain controls
+
+- **Temperature mapping** of warehouse areas and vehicles, to know where the hot and cold spots are.
+- **Data loggers** with every shipment, read at receipt.
+- **Excursion handling:** when temperatures go out of range, quarantine the stock and decide, using the product's stability data, whether it can be released.
+- **Qualified equipment and trained staff,** with procedures documented and audited, as good distribution practice requires.
+
+### Labels and dangerous goods
+
+- **Packaged goods labels** in India must carry the declarations required by the Legal Metrology (Packaged Commodities) Rules, 2011, such as net quantity, maximum retail price and the manufacturer's details. Label templates should be checked against the rules before printing.
+- **Dangerous goods** are classified (UN numbers and hazard classes) and shipped under the rules for each mode: IATA regulations for air and the IMDG Code for sea.
+
+<KeyIdea>
+
+Trace every batch one step back and one step forward with scanned standard barcodes, test it with mock recalls, run cold chains with mapping, loggers and excursion rules, and check labels and dangerous-goods handling against the regulations before shipping.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={4} teaser="Running compliance as a system, keeping up with changing rules, validated software in regulated industries, and compliance as market access.">
+
+### Compliance as a system
+
+Mature companies manage compliance like any other process:
+
+- **Obligations register:** every rule that applies, by product, market and site, with an owner.
+- **Controls:** how each obligation is met in daily work (system checks, procedures, records).
+- **Monitoring:** internal audits and key indicators, such as mock-recall times and temperature excursions.
+- **Corrective and preventive actions (CAPA):** problems found are fixed at the root and checked later.
+- **Training:** people who handle regulated goods know what the rules require and why.
+
+### Keeping up with changing rules
+
+Rules change often: new labelling requirements, revised manufacturing standards, new producer-responsibility targets, export serialization requirements. Someone must watch regulators' announcements (FSSAI, CDSCO, the Legal Metrology department, CPCB, DGFT and customs authorities in India, plus regulators in export markets), assess the impact and plan changes, with lead times for packaging and systems.
+
+### Validated systems in regulated industries
+
+In pharmaceuticals and medical devices, computerized systems that affect product quality (warehouse management, temperature monitoring, serialization) must be **validated**: shown to work as intended, with controlled changes and secure, auditable electronic records. Industry guidance such as GAMP 5, and rules for electronic records in export markets such as the US, shape how these systems are selected, configured and changed.
+
+### Compliance as market access
+
+Compliance is often the price of entry: export markets require serialization, retailers require food safety certification, and large customers audit their suppliers' processes. Companies that build compliance into their processes reach new markets faster and recover faster from incidents, which turns a cost centre into a capability.
+
+### Recalls in practice
+
+A recall plan defines who decides, how regulators and customers are informed, how stock is retrieved and quarantined, how products are disposed of, and how the root cause is found. In India, food businesses must follow FSSAI's food recall procedure regulations. Practising the plan through mock recalls is what makes it work under pressure.
+
+<Trap>
+
+Checking compliance only at the end, with a final inspection before shipping, finds problems late and misses those that leave no visible trace, such as a temperature excursion in transit. Build compliance into each step and record the evidence as the work happens.
+
+</Trap>
+
+<KeyIdea>
+
+Run compliance as a system of obligations, controls, monitoring and corrective action; track changing rules; validate the software regulated work depends on; and treat compliance and fast recalls as capabilities that open markets.
+
+</KeyIdea>
 
 </Level>
 

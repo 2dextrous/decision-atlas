@@ -2,7 +2,7 @@
 title: Promotions, cannibalization & halo
 line: demand
 summary: Estimating how much extra a promotion sells, the dip that follows, and what it does to related products.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 4 }
 status: draft
 keywords: [promotional forecasting, baseline, uplift, lift, post-promotion dip, forward buying, pantry loading, cannibalization, halo effect, trade promotion]
 connected: [ml-forecasting, demand-sensing-shaping, consensus-fva, lifecycle-forecasting, cost-to-serve]
@@ -10,16 +10,20 @@ sources:
   - text: "Hyndman, R. J. & Athanasopoulos, G. Forecasting: Principles and Practice (3rd ed.). OTexts. Chapters on regression and dynamic regression with predictors."
     url: "https://otexts.com/fpp3/"
   - text: "Makridakis, S., Spiliotis, E. & Assimakopoulos, V. (2022). M5 accuracy competition: Results, findings, and conclusions. International Journal of Forecasting, 38(4), 1346–1364."
+  - text: "van Heerde, H. J., Leeflang, P. S. H., & Wittink, D. R. (2004). Decomposing the sales promotion bump with store data. Marketing Science, 23(3), 317–334."
+  - text: "Blattberg, R. C., & Neslin, S. A. (1990). Sales Promotion: Concepts, Methods, and Strategies. Prentice Hall."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Baseline plus lift, minus the dip, and the effect on everything else on the shelf." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Baseline plus lift, minus the dip, and the effect on everything else on the shelf." next="How it works" nextMinutes={3}>
 
 A "buy one, get one free" on a 500 ml shampoo can double its sales for two weeks. Forecasting that well means separating two pieces:
 
@@ -47,6 +51,89 @@ Model the baseline and the promotional lift separately, then account for the dip
   { term: 'Cannibalization', def: 'Sales the promoted item takes from your own other products.' },
   { term: 'Halo effect', def: 'Extra sales of related products caused by a promotion.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="Separating baseline from lift, measuring the dip, cannibalization and halo, and checking whether the promotion paid." next="Deep dive" nextMinutes={4}>
+
+### Step by step
+
+1. **Flag promotional periods** in the history, with their mechanics: discount depth, display, advertising, multibuy.
+2. **Estimate the baseline,** what would have sold without the promotion, usually from nearby non-promoted weeks or a model fitted on them.
+3. **Measure lift:** sales during the promotion minus the baseline, often expressed as a percentage, by type of promotion.
+4. **Measure the after-effects:** the dip after the promotion, cannibalization of related items and halo on complementary ones.
+5. **Model the drivers:** relate lift to discount depth, display and advertising, so a future promotion can be forecast from its plan.
+
+<Example title="a 25% discount on shampoo for two weeks">
+
+Baseline: 1,000 units a week at ₹300, costing ₹180, so a normal margin of ₹120 a unit. During the promotion the price is ₹225 and the margin ₹45.
+
+- Promotion weeks: 2,100 and 1,900 units, 4,000 against a baseline of 2,000. Lift: 2,000 units, or +100%.
+- Post-promotion dip: the next two weeks sell 800 and 900, 300 below baseline.
+- Cannibalization: the 200 ml pack loses 270 units (₹50 margin each) and a sister brand loses 150 (₹100 margin each).
+- Halo: conditioner sells 200 extra units (₹80 margin each).
+
+Margin compared with no promotion:
+
+- Promotion weeks: 4,000 × ₹45 = ₹1,80,000, against ₹2,40,000 at baseline: −₹60,000.
+- Dip: −₹36,000. Cannibalization: −₹13,500 and −₹15,000. Halo: +₹16,000.
+- **Net: −₹1,08,500.**
+
+Sales doubled, and the promotion still lost money, before counting any supplier funding or new customers it attracted.
+
+</Example>
+
+### What the forecast needs
+
+- Forecast the **baseline** from clean history, and add **planned uplift** for each upcoming promotion from its mechanics.
+- Forecast the **dip** and the **cannibalization** on the items they affect, so the supply plan doesn't overstock them.
+- Keep the promotion calendar in the planning system with its mechanics, not just its dates.
+
+<KeyIdea>
+
+Separate baseline from lift, then net out the dip and cannibalization and add the halo. Forecast each piece from the promotion's plan, and judge success on the net effect, not on the spike.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={4} teaser="Price elasticity, promotion fatigue, retailer forward buying, and why measuring lift from shipments misleads.">
+
+### Price elasticity
+
+**Price elasticity** is the percentage change in quantity divided by the percentage change in price. In the example, a 25% price cut doubled sales: an elasticity of about +100% ÷ −25% = −4. That is very high, and typical of temporary discounts, because shoppers switch brands and stock up. Permanent price changes usually show much smaller elasticities, because stockpiling and switching settle down. Models often regress log sales on log price, so the coefficient is the elasticity directly.
+
+### Lift isn't constant
+
+- **Fatigue and reference prices:** the more often an item is promoted, the less each promotion lifts it, as shoppers learn to wait for the deal and the discounted price becomes the price they expect.
+- **Mechanics interact:** a discount with an in-store display and an advert can lift far more than the three effects added separately.
+- **Timing:** promotions in festival weeks or around paydays behave differently from ordinary weeks.
+
+So lift should be modelled on its drivers and recent history, not copied from the last event.
+
+### Where the extra sales come from
+
+Research that decomposed promotional bumps in store data (van Heerde, Leeflang and Wittink, 2004) splits the extra sales into brand switching, buying more or earlier (stockpiling) and genuine growth of the category. Only the last is new demand for the category; the rest is borrowed from competitors, from your own future weeks or from your other products.
+
+### Trade promotions and the bullwhip
+
+Discounts offered to retailers, rather than to shoppers, invite **forward buying**: retailers stock up at the deal price and sell at normal prices later, sometimes reselling elsewhere (**diversion**). Shipments spike and collapse while consumer demand barely moves, one of the classic causes of the bullwhip effect. Everyday low pricing (EDLP) was partly a response: steadier prices give steadier orders.
+
+### Supply-side consequences
+
+Promotions need stock in place before day one (filling store shelves and displays), special packs that become dead stock if over-ordered, and a plan for the dip, when production should slow rather than keep running at the peak rate.
+
+<Trap>
+
+Measuring lift from shipments to retailers instead of consumer sales (POS) mixes in forward buying and inflates the lift the next promotion is planned on. Use point-of-sale data wherever you can get it.
+
+</Trap>
+
+<KeyIdea>
+
+Temporary discounts show high elasticities that fade with frequency. Much of the bump is switching and stockpiling, trade deals cause forward buying and bullwhip, and lift should be measured on consumer sales, not shipments.
+
+</KeyIdea>
 
 </Level>
 

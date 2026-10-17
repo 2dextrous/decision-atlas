@@ -2,23 +2,27 @@
 title: Why inventory exists
 line: inventory
 summary: Cycle, safety, pipeline and anticipation stock, and what each one costs you to hold.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 4, deep: 5 }
 status: draft
 keywords: [cycle stock, safety stock, pipeline stock, in-transit inventory, anticipation stock, seasonal stock, decoupling stock, holding cost, carrying cost, working capital]
 connected: [eoq, safety-stock, cash-conversion-cycle, slow-obsolete, supply-chain-kpis]
 sources:
   - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapters on cycle inventory and safety inventory."
   - text: "Silver, E. A., Pyke, D. F. & Thomas, D. J. (2017). Inventory and Production Management in Supply Chains (4th ed.). CRC Press."
+  - text: "Little, J. D. C. (1961). A proof for the queuing formula L = λW. Operations Research, 9(3), 383–387."
+  - text: "Hopp, W. J., & Spearman, M. L. (2008). Factory Physics (3rd ed.). McGraw-Hill."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="The four reasons companies hold stock, with everyday examples." soon>
+<Level n={1} title="The gist" minutes={3} teaser="The four reasons companies hold stock, with everyday examples." next="How it works" nextMinutes={4}>
 
 Inventory is stock you hold today so that tomorrow's need can be met straight away. Companies hold it because supply and demand never move in step: suppliers ship in batches, factories run long batches, and customers buy in small, unpredictable amounts. Stock is the buffer that lets each stage run at its own pace.
 
@@ -42,6 +46,103 @@ Every unit of inventory should have a reason: batching, uncertainty, transit or 
   { term: 'Pipeline stock', def: 'Stock in transit or in process. Average pipeline = flow per day × days in the pipeline.' },
   { term: 'Holding (carrying) cost', def: 'The yearly cost of keeping one unit in stock: capital, storage, insurance, damage and obsolescence.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={4} teaser="How to size each kind of stock, how to measure the total, and what holding it really costs." next="Deep dive" nextMinutes={5}>
+
+### Sizing each kind of stock
+
+Each of the four reasons has its own simple formula, which is why naming the reason is the first step to managing it.
+
+<div class="table-wrap">
+
+| Kind | Rough size | What drives it |
+|---|---|---|
+| Cycle stock | $Q/2$, half the order quantity | Batch size |
+| Safety stock | $z\,\sigma\sqrt{L}$ | Uncertainty and the service target |
+| Pipeline stock | $d \times L$, demand rate times transit time | Lead time |
+| Anticipation stock | Demand above capacity, built in advance | Seasonality and capacity limits |
+
+</div>
+
+Pipeline stock is an example of **Little's law**, one of the most useful relationships in operations: average inventory = throughput × average time in the system. It holds for a warehouse, a factory or a ship. It also means the only ways to cut pipeline stock are to sell less (rarely the plan) or to shorten the time goods spend in the pipe.
+
+<Example title="building stock before summer">
+
+A fan maker can build 25,000 fans a month. Demand is 10,000 a month from January to March, then 40,000 a month from April to June.
+
+- April to June needs 120,000 fans, but the plant can build only 75,000 in those months.
+- The 45,000 gap must be built in advance. Running at full capacity from January to March adds 25,000 − 10,000 = 15,000 fans a month to stock: exactly 45,000 by the end of March.
+- That stock is sold down through the summer. It exists only because capacity is flat and demand is not.
+
+</Example>
+
+### Measuring the total: turns and days
+
+Inventory is usually tracked with two linked numbers:
+
+$$
+\text{Turns} = \frac{\text{Cost of goods sold per year}}{\text{Average inventory value}} \qquad \text{Days of inventory} = \frac{365}{\text{Turns}}
+$$
+
+A distributor with cost of goods sold of ₹120 crore a year and average inventory of ₹20 crore turns its stock 6 times a year, about 61 days of inventory. Value both at cost, not at selling price, or the ratio is inflated.
+
+### What holding stock costs
+
+The yearly holding cost is usually expressed as a percentage of inventory value. It is built from several parts: the cost of the capital tied up, storage and handling, insurance and taxes, and losses from damage, theft and obsolescence. At 25%, the distributor above spends about ₹5 crore a year just to keep its ₹20 crore of stock. That number is what every inventory decision is weighed against.
+
+<KeyIdea>
+
+Each kind of stock has its own driver: batch size, uncertainty, lead time or a capacity limit. Turns and days of inventory measure the total, and the holding rate turns it into money.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={5} teaser="Where to cut when the CFO asks, why stock hides problems, and moving the trade-off curve instead of sliding along it.">
+
+### Answering "cut inventory by 20%"
+
+An across-the-board cut is the worst answer, because it treats all stock as if it existed for the same reason. Break the total into its four kinds plus excess, then attack each driver:
+
+<div class="table-wrap">
+
+| Kind of stock | Lever that reduces it | Watch out for |
+|---|---|---|
+| Cycle stock | Smaller, more frequent orders; cheaper set-ups and ordering | More orders, trucks and changeovers |
+| Safety stock | Better forecasts, more reliable suppliers, shorter lead times, service targets by segment | Cutting buffers on volatile items destroys service |
+| Pipeline stock | Faster modes, nearer suppliers, shorter internal flow times | Faster freight usually costs more |
+| Anticipation stock | More flexible capacity, smoother promotions | Overtime and extra shifts cost money |
+| Excess and obsolete | Stop buying, sell off, write down | A one-off profit hit |
+
+</div>
+
+The quickest win is usually excess and obsolete stock, which has no reason to exist at all. The most durable wins come from shrinking the drivers themselves: lead times and forecast error.
+
+### Moving the curve, not sliding along it
+
+For a given set of lead times, forecast errors and batch sizes, there is a trade-off curve between inventory and service. You can slide along it, accepting worse service for less stock or the reverse. That is a choice, not an improvement. Real improvement shifts the whole curve, so the same service needs less stock; halving lead-time variability or forecast error does exactly that. When someone proposes an inventory cut, ask which of the two they mean.
+
+### Stock hides problems
+
+Lean thinking compares inventory to the water level in a river: high water hides the rocks. A plant with plenty of buffer never notices that one machine breaks down every week or that one supplier is always late. Lowering stock deliberately, a little at a time, exposes those problems so they can be fixed. Lowering it suddenly, without fixing anything, runs the boat onto the rocks.
+
+### Where stock sits matters as much as how much
+
+The same rupee of inventory is more or less useful depending on where it sits. Raw materials are cheaper to hold and can become many products, but they are slow to turn into a sale. Finished goods near customers sell instantly, but only as one product in one place. The point where a product stops being made to forecast and starts being made for a specific order is the **customer order decoupling point**. Make-to-stock, assemble-to-order and make-to-order businesses differ mainly in where that point sits.
+
+<Trap>
+
+Comparing turns across companies misleads easily. A grocer turning stock 20 times a year and a machinery maker turning it 3 times may both be well run. Compare within the same industry and business model, and check that both figures use the same basis: cost not price, average not year-end inventory.
+
+</Trap>
+
+<KeyIdea>
+
+Cut inventory by attacking the reason each unit exists, not by a flat percentage. Sliding along the service–inventory curve is a trade-off; shrinking lead times, variability and batch sizes moves the curve, which is the real improvement.
+
+</KeyIdea>
 
 </Level>
 

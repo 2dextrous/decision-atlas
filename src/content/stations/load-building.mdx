@@ -2,23 +2,26 @@
 title: Load building & consolidation
 line: logistics
 summary: Filling each truck as fully as weight, volume and loading rules allow, and combining small shipments into fewer, fuller ones.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 3 }
 status: draft
 keywords: [load building, load planning, consolidation, vehicle utilization, weight limit, cube, pallet, multi-stop, bin packing, shipment frequency]
 connected: [transport-fundamentals, transport-planning, vehicle-routing, cross-docking, eoq]
 sources:
   - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapter on transportation: aggregation and consolidation."
   - text: "Rushton, A., Croucher, P. & Baker, P. The Handbook of Logistics and Distribution Management. Kogan Page."
+  - text: "Rushton, A., Croucher, P., & Baker, P. (2022). The Handbook of Logistics and Distribution Management (7th ed.). Kogan Page."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Fuller trucks, fewer trips, without breaking delivery promises." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Fuller trucks, fewer trips, without breaking delivery promises." next="How it works" nextMinutes={3}>
 
 A truck costs roughly the same to run whether it's full or half empty, so empty space is wasted money. Two related ideas tackle it.
 
@@ -43,6 +46,89 @@ Build loads that use both the weight and volume limits, and consolidate across c
   { term: 'Milk run', def: 'One vehicle collecting from or delivering to several locations on a planned loop.' },
   { term: 'Temporal consolidation', def: 'Holding shipments briefly to combine them into fuller loads.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="Mixing heavy and light products to fill both limits, loading for multiple stops, and the cost of waiting for a full truck." next="Deep dive" nextMinutes={3}>
+
+### Filling both limits
+
+<Example title="detergent and tissue on one truck">
+
+A truck carries 10 tonnes on 20 pallet positions. A detergent pallet weighs 800 kg; a tissue pallet weighs 150 kg.
+
+- **Only detergent:** the weight limit stops it at 12 pallets (9,600 kg), with 8 positions empty.
+- **Only tissue:** 20 pallets fill every position but weigh just 3,000 kg, 30% of the weight limit.
+- **Mixed, 10 of each:** 20 positions and 9,500 kg, both limits nearly full. One truck carries what would otherwise need almost two.
+
+</Example>
+
+Good load building also respects stacking rules (no heavy pallets on fragile ones), product compatibility (food away from chemicals) and axle-load limits, which depend on where the weight sits, not just the total.
+
+### Loading for multiple stops
+
+On a multi-drop route, goods for the last stop go in first, so each stop's goods are at the doors when the truck arrives. Loading out of sequence means unloading and reloading at stops, which wastes time and damages goods.
+
+### Consolidating over time
+
+<Example title="a region that orders 4 pallets a day">
+
+Part loads cost ₹2,000 a pallet: ₹40,000 a week for 20 pallets. A full truck of 20 pallets costs ₹16,000 a trip.
+
+- **Ship daily as part loads:** ₹40,000 a week, no waiting.
+- **Ship twice a week as full-ish trucks:** ₹32,000, saving ₹8,000; orders wait 0.8 days on average.
+- **Ship once a week:** ₹16,000, saving ₹24,000; orders wait 2 days on average.
+
+</Example>
+
+The right choice depends on what customers were promised and what a day of waiting costs in stock and service. Fixed shipping days per region make the trade-off visible and predictable for customers.
+
+<KeyIdea>
+
+Mix dense and bulky products to use both weight and space, load in reverse stop order, and consolidate over time only as far as the service promise allows, with fixed shipping days making the trade-off explicit.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={3} teaser="Measuring fill honestly, packaging that changes the answer, order rules that build full loads, and planning tools.">
+
+### Measure fill honestly
+
+A truck can be full by one measure and nearly empty by another. Track weight, volume and pallet positions together, and treat a load as full when any one of them reaches its limit. Reporting only weight makes bulky products look badly loaded; reporting only volume hides heavy loads under the weight limit.
+
+### Packaging changes the answer
+
+Product and carton design decide how well loads fill:
+
+- Cartons sized to fit the pallet footprint exactly, without overhang or gaps.
+- Pallet heights that use the truck's internal height, often by double-stacking lighter pallets.
+- Removing air from packaging (concentrated detergents, flat-packed furniture) puts more product in the same space.
+
+Small changes in carton dimensions can add several cases per pallet and pallets per truck, cutting freight per unit for the life of the product.
+
+### Order rules that build full loads
+
+- **Minimum order quantities** or delivery charges for small orders encourage customers to order in fuller units.
+- **Order multiples** in full layers or pallets reduce mixed, partly filled pallets.
+- **Delivery schedules agreed with customers,** such as Tuesdays and Fridays for a region, concentrate volume.
+- **Vendor-managed inventory** lets the supplier decide quantities and fill trucks, within agreed stock limits at the customer.
+
+### Planning tools
+
+Load-planning software solves a three-dimensional packing problem with real constraints (weights, stacking, orientation, sequence) and shows a loading plan to warehouse staff. In a TMS, load building is combined with routing and carrier choice, because the best load depends on which stops share a vehicle.
+
+<Trap>
+
+Consolidating to save freight while breaking delivery promises moves cost rather than saving it: missed windows bring penalties, lost sales and extra safety stock at customers. Consolidate within the service promise, not instead of it.
+
+</Trap>
+
+<KeyIdea>
+
+Track weight, volume and positions together, design packaging for the load, use order rules and delivery schedules to create full loads, and plan loads together with routes and carriers.
+
+</KeyIdea>
 
 </Level>
 

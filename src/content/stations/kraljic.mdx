@@ -2,23 +2,27 @@
 title: Kraljic matrix & category strategy
 line: sourcing
 summary: Sorting what you buy by profit impact and supply risk, so each category gets the right buying strategy.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 3 }
 status: draft
 keywords: [Kraljic matrix, category management, strategic items, leverage items, bottleneck items, non-critical items, supply risk, profit impact, spend analysis, portfolio purchasing]
 connected: [procurement-fundamentals, supplier-selection, sourcing-allocation, supplier-risk, inventory-segmentation]
 sources:
   - text: "Kraljic, P. (1983). Purchasing must become supply management. Harvard Business Review, 61(5), 109–117."
   - text: "Van Weele, A. J. Purchasing and Supply Chain Management. Cengage Learning."
+  - text: "Gelderman, C. J., & van Weele, A. J. (2005). Purchasing portfolio models: A critique and update. Journal of Supply Chain Management, 41(3), 19–28."
+  - text: "Steele, P. T., & Court, B. H. (1996). Profitable Purchasing Strategies: A Manager's Guide for Improving Organizational Competitiveness through the Skills of Purchasing. McGraw-Hill."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Two questions, how much it matters and how risky it is to get, give four strategies." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Two questions, how much it matters and how risky it is to get, give four strategies." next="How it works" nextMinutes={3}>
 
 Not everything a company buys deserves the same treatment. Peter Kraljic's 1983 matrix sorts purchases on two questions:
 
@@ -45,6 +49,108 @@ Match the buying strategy to the category: compete leverage items, partner on st
   { term: 'Leverage item', def: 'High spend, many suppliers: use buying power through competition.' },
   { term: 'Bottleneck item', def: 'Low spend but hard to source: protect continuity first.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="Scoring categories on both axes step by step, a worked portfolio for a consumer-goods company, and tactics for each quadrant." next="Deep dive" nextMinutes={3}>
+
+### Scoring the two axes
+
+**Profit impact** combines measures such as:
+
+- annual spend and its share of product cost,
+- the category's effect on product quality or differentiation,
+- how much a price change would move margins.
+
+**Supply risk** combines:
+
+- the number of qualified suppliers and how concentrated the market is,
+- the time and cost to switch,
+- availability of substitutes,
+- lead times, and geographic or political exposure.
+
+Score each on a common scale (say 1 to 10), with written definitions so different buyers score the same way.
+
+<Example title="a consumer-goods company's categories">
+
+<div class="table-wrap">
+
+| Category | Profit impact | Supply risk | Quadrant |
+|---|---|---|---|
+| Laminated packaging film | 8 | 3 | Leverage |
+| Outbound road freight | 7 | 4 | Leverage |
+| Patented active ingredient | 8 | 8 | Strategic |
+| Special filler-machine bearing | 2 | 8 | Bottleneck |
+| Office supplies | 1 | 1 | Non-critical |
+
+</div>
+
+</Example>
+
+### Tactics by quadrant
+
+<div class="table-wrap">
+
+| Quadrant | Goal | Tactics |
+|---|---|---|
+| Leverage | Lowest total cost | Tenders and auctions, volume consolidation, shorter contracts, index-linked prices |
+| Strategic | Secure supply and joint value | Long-term agreements, joint planning, shared forecasts, co-development, executive relationships |
+| Bottleneck | Continuity | Safety stock, alternative suppliers, standardizing the specification, long-term supply agreements |
+| Non-critical | Low process cost | Catalogues, purchasing cards, bundling under one supplier, automation |
+
+</div>
+
+### Who has the power?
+
+Kraljic's method also asks about the balance of power inside each quadrant. A strategic category where you are a big customer to the supplier is different from one where you are a small account. With buyer power, you can **exploit** it (push price and terms); when it is balanced, you **balance** it (partner); with supplier power, you **diversify** (develop alternatives, redesign).
+
+<KeyIdea>
+
+Score categories on profit impact and supply risk with written definitions, place them in quadrants, apply the matching tactics, and check the balance of power before choosing how hard to push.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={3} teaser="Moving categories between quadrants, how suppliers see you, when the matrix oversimplifies, and how the 2021 chip shortage reshuffled it.">
+
+### Moving a category, not just managing it
+
+The best category strategies change the category's position:
+
+- **Bottleneck to non-critical:** replace a special part with a standard one available from many suppliers.
+- **Strategic to leverage:** develop or qualify new suppliers, or redesign to remove a proprietary input.
+- **Leverage to strategic,** deliberately: concentrate volume with a partner in exchange for innovation or priority capacity.
+
+### How suppliers see you
+
+The supplier's view matters as much as yours. **Supplier preferencing** models (described by Steele and Court) classify customers by the account's value to the supplier and how attractive it is to serve. A supplier treats a large, attractive customer as core and protects it; a small, difficult account may be exploited or quietly dropped when capacity is short. A buyer that is "strategic" to its supplier but a nuisance account in return should expect weaker priority in a shortage.
+
+### When the matrix oversimplifies
+
+Gelderman and van Weele (2005) review common criticisms:
+
+- Two dimensions hide many factors, and the scoring can be subjective.
+- Categories contain items with very different risks.
+- Interdependence between buyer and supplier, and long-term relationships, aren't captured well.
+
+The matrix is a starting point for a conversation, not a calculation that decides strategy on its own.
+
+### Positions change with the market
+
+In 2021, semiconductors for cars looked like leverage or non-critical items for many buyers: cheap per unit, bought through tier 1 suppliers. The shortage turned them into bottleneck or strategic items overnight, and car makers that had treated them transactionally lost production. Re-assessing supply risk regularly, especially for low-spend inputs with concentrated supply, is part of the method.
+
+<Trap>
+
+Placing categories by spend alone puts every cheap item in the low-impact half and hides bottlenecks. A ₹500 part from a single source can stop a ₹50 lakh production line; supply risk must be assessed separately from spend.
+
+</Trap>
+
+<KeyIdea>
+
+Use the matrix to move categories as well as manage them, consider how attractive you are to each supplier, treat the scoring as a conversation starter, and reassess supply risk regularly, because markets reshuffle quadrants.
+
+</KeyIdea>
 
 </Level>
 

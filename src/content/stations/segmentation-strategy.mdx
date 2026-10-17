@@ -2,23 +2,26 @@
 title: Supply chain segmentation
 line: risk
 summary: Running different supply chains for different products and customers, instead of one model that fits none of them well.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 3 }
 status: draft
 keywords: [supply chain segmentation, Fisher, functional products, innovative products, efficient supply chain, responsive supply chain, lean, agile, leagile, strategic fit, service model]
 connected: [strategic-fit, inventory-segmentation, service-level-policy, cost-to-serve, channel-design]
 sources:
   - text: "Fisher, M. L. (1997). What is the right supply chain for your product? Harvard Business Review, 75(2), 105–116."
   - text: "Christopher, M. & Towill, D. (2001). An integrated model for the design of agile supply chains. International Journal of Physical Distribution & Logistics Management, 31(4), 235–246."
+  - text: "Gattorna, J. (2010). Dynamic Supply Chains: Delivering Value through People (2nd ed.). FT Prentice Hall."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="One size fits none: different products need different supply chains." soon>
+<Level n={1} title="The gist" minutes={3} teaser="One size fits none: different products need different supply chains." next="How it works" nextMinutes={3}>
 
 Most companies run one supply chain for everything: the same planning rules, inventory targets and delivery promises for a staple detergent and for a limited-edition festive gift pack. It fits neither well. The detergent needs low cost; the gift pack needs speed and flexibility.
 
@@ -49,6 +52,96 @@ Match each product and customer group to a supply chain model: efficient for pre
   { term: 'Efficient vs responsive', def: 'Supply chains built for low cost versus built for speed and flexibility.' },
   { term: 'Leagile', def: 'Lean for the stable base volume, agile for the volatile remainder.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="Segmenting a 500-SKU portfolio by volume and variability, and the policies that change for each segment." next="Deep dive" nextMinutes={3}>
+
+### Segmenting a portfolio
+
+<Example title="a consumer-goods company with 500 SKUs">
+
+Classified by volume (high or low) and demand variability (low or high):
+
+<div class="table-wrap">
+
+| Segment | SKUs | Share of volume | Supply chain model |
+|---|---|---|---|
+| High volume, low variability | 80 | 70% | Lean flow |
+| High volume, high variability | 40 | 15% | Base plus surge |
+| Low volume, low variability | 180 | 10% | Periodic batch |
+| Low volume, high variability | 200 | 5% | Make to order or central stock |
+
+</div>
+
+Sixteen per cent of SKUs carry 70% of volume, and 40% of SKUs carry only 5%. One set of rules can't serve both well.
+
+</Example>
+
+### What changes by segment
+
+<div class="table-wrap">
+
+| Policy | Lean flow | Base plus surge | Periodic batch | Make to order or central |
+|---|---|---|---|---|
+| Planning | Make to stock, level schedule | Base level plus flexible capacity | Make to stock in campaigns | Make to order, or stock in one place |
+| Safety stock | Low (predictable) | Higher, plus postponement | Moderate | None locally, or pooled centrally |
+| Production | Dedicated, high-speed lines | Flexible lines or co-packers | Shared lines, longer cycles | Flexible, small batches |
+| Transport | Full trucks, cheapest modes | Mix of slow base and fast top-up | Consolidated | Parcels or express when needed |
+| Service promise | Next-day from stock | Short lead times | Standard lead times | Quoted lead times |
+
+</div>
+
+### Fisher's test
+
+Fisher's question is whether the supply chain matches the product: an **efficient** chain for functional products, a **responsive** one for innovative products. The two classic mismatches are costly in opposite ways. An innovative product in an efficient chain runs out and then gets marked down; a functional product in a responsive chain pays for speed nobody needs.
+
+<KeyIdea>
+
+Segment products by volume and variability (and customers by service needs), give each segment its own planning, inventory, production, transport and service rules, and check that each product's supply chain matches its nature.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={3} teaser="Lean, agile and leagile, segmenting by customer behaviour, making segments real in systems and KPIs, and the right number of segments.">
+
+### Lean, agile and leagile
+
+Christopher and Towill (2001) argued that lean and agile are complementary. Lean suits predictable, high-volume flows, where eliminating waste lowers cost. Agile suits volatile demand, where speed and flexibility matter more than utilization. **Leagile** designs combine them, typically lean upstream of a decoupling point and agile downstream, or lean for the base volume and agile for the surge.
+
+### Segmenting by customer behaviour
+
+Products are only half the picture. Gattorna (2010) proposed aligning supply chains with how customers buy, for example customers who want low cost and consistent supply, customers who want fast response, customers who want innovative solutions, and customers in crisis who want anything that works now. Combining product and customer views gives segments that match both what is sold and how it is bought.
+
+### Making segments real
+
+A segmentation that lives only in a presentation changes nothing. It becomes real when:
+
+- **Systems** hold different parameters by segment: planning strategies, safety-stock methods, lot sizes, transport rules.
+- **KPIs** differ: cost per unit for lean segments, responsiveness and availability for agile ones.
+- **Organization** gives each segment an owner who manages it end to end.
+- **Migration rules** move products between segments as they grow, mature or decline.
+
+### How many segments?
+
+Each segment adds complexity in systems, processes and people. Most companies end up with three to six. Too few and the segments don't fit; too many and nobody can run them consistently. Start with the biggest differences in volume, variability and customer needs.
+
+### Linking to cost-to-serve
+
+Segments should also differ in what they cost and what they earn. Cost-to-serve analysis shows whether customers in a high-service segment pay for it, through price, volume or strategic value, and supports terms that match the service each segment receives.
+
+<Trap>
+
+Defining segments without changing the processes behind them (same planning rules, same KPIs, same lines) produces a slide, not a strategy. Change parameters, measures and ownership, or the segments stay theoretical.
+
+</Trap>
+
+<KeyIdea>
+
+Combine lean and agile where each fits, add customer behaviour to product segments, make segments real in systems, KPIs and ownership, and keep their number small enough to run.
+
+</KeyIdea>
 
 </Level>
 

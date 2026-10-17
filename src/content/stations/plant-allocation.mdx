@@ -2,23 +2,26 @@
 title: Multi-plant allocation
 line: supply
 summary: Deciding which plant should make how much of each product, given different costs, capacities and distances to customers.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 4 }
 status: draft
 keywords: [multi-plant allocation, production allocation, sourcing, linear programming, landed cost, capacity constraint, transportation cost, plant loading, network optimization]
 connected: [optimization-basics, manufacturing-footprint, rccp, sop-ibp, facility-location]
 sources:
   - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapters on network design and aggregate planning."
   - text: "Hillier, F. S. & Lieberman, G. J. Introduction to Operations Research. McGraw-Hill. Chapter on the transportation problem."
+  - text: "Hillier, F. S., & Lieberman, G. J. (2021). Introduction to Operations Research (11th ed.). McGraw-Hill."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="The cheapest plant isn't always the right one once freight and capacity count." soon>
+<Level n={1} title="The gist" minutes={3} teaser="The cheapest plant isn't always the right one once freight and capacity count." next="How it works" nextMinutes={3}>
 
 A company with several plants making similar products has to decide each month who makes what. The cheapest plant per unit isn't automatically the answer, because freight, duties, capacity and changeovers all count.
 
@@ -44,6 +47,80 @@ Allocate on landed cost, not production cost: making plus moving plus duties, wi
   { term: 'Capacity constraint', def: 'The limit on how much each plant can make in the period.' },
   { term: 'Transportation problem', def: 'The classic LP that assigns supply from sources to demand points at minimum cost.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="The allocation written as a linear program, solved when capacity is tight, and what shadow prices tell you." next="Deep dive" nextMinutes={4}>
+
+### Writing it as a linear program
+
+- **Decision:** $x_{ij}$, how many units plant $i$ sends to market $j$.
+- **Objective:** minimize total landed cost, $\sum (c_i + t_{ij})\,x_{ij}$, where $c_i$ is the plant's variable production cost and $t_{ij}$ the freight and duties to market $j$.
+- **Constraints:** each market's demand is met, $\sum_i x_{ij} \ge D_j$; each plant stays within capacity, $\sum_j x_{ij} \le K_i$; and quantities are never negative.
+
+Spreadsheet solvers handle small cases; planning systems and optimization solvers handle thousands of products, plants and markets.
+
+<Example title="the shampoo plants when capacity is tight">
+
+Landed costs per unit: Plant A to North ₹44, A to South ₹54, Plant B to North ₹58, B to South ₹46. Capacities: A 60,000, B 50,000.
+
+Now North needs 70,000 and South 40,000: 110,000 in total, exactly the combined capacity.
+
+- A can't cover the whole North, so the cheapest plan is: A sends 60,000 North, B sends 10,000 North and 40,000 South.
+- Total cost: 60,000 × ₹44 + 10,000 × ₹58 + 40,000 × ₹46 = ₹50.6 lakh.
+- Any other split costs more. Sending 10,000 from A to the South and 20,000 from B to the North, for example, costs ₹52.8 lakh.
+
+</Example>
+
+### Shadow prices: what more capacity is worth
+
+The solver also reports a **shadow price** for each constraint: how much the total cost would fall if that constraint were relaxed by one unit. Here, one more unit of capacity at Plant A would replace a unit B sends North at ₹58 with one from A at ₹44, so A's capacity is worth ₹14 a unit. If overtime at A costs less than ₹14 a unit extra, it pays. That turns a cost model into a capacity-investment argument.
+
+<KeyIdea>
+
+Plant allocation is a linear program: minimize landed cost subject to demand and capacity. When capacity binds, the optimum changes, and shadow prices show exactly what extra capacity at each plant is worth.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={4} teaser="Fixed costs and minimum runs, which costs belong in the model, multi-period plans, and the constraints that aren't about cost.">
+
+### When the model needs integers
+
+Real allocation decisions include yes-or-no choices: whether to run a line this month (with a fixed cost), whether a product's run meets its minimum batch, whether a market must be served by a single plant. These turn the linear program into a mixed-integer program. Solvers handle them well at planning scale, but solution times grow, so models are kept as simple as the decision allows.
+
+### Which costs belong in the model
+
+Use the costs that actually change with the decision. For a monthly allocation, that is variable production cost (materials, energy, variable labour), freight, duties and taxes. A plant's "standard cost" often includes fixed overheads such as depreciation, management salaries and rent, which don't change with this month's volume. Allocating on full standard cost can send volume away from a plant that is actually cheaper at the margin. Fixed costs matter in longer-term decisions, such as closing a line or a plant, which belong to network design.
+
+### Adding time
+
+A multi-period model plans several months together: build stock at a plant with spare capacity in quiet months to cover a peak, weighed against holding cost. This links plant allocation with the level-versus-chase decision in S&OP, and the same solver can answer both.
+
+### Constraints that aren't about cost
+
+- **Regulatory approvals:** in pharmaceuticals and food, a plant may be approved only for certain markets or products.
+- **Service:** some customers need short delivery times only a nearby plant can meet.
+- **Risk:** keeping a second plant qualified and producing at a minimum level protects supply if the main plant fails.
+- **Taxes and duties:** cross-border flows can change the landed cost sharply, and rules change.
+- **Carbon:** some companies add emissions limits or an internal carbon price to the objective.
+
+### Making the answer usable
+
+Planners need to trust the model. Show the landed cost per lane, the binding constraints and their shadow prices, and how the plan changes under different demand scenarios. A model that only outputs numbers, without the reasons, tends to be overridden.
+
+<Trap>
+
+Allocating on full standard cost, including fixed overheads that don't change with volume, gives the wrong answer for short-term decisions. Use variable costs plus freight and duties, and leave fixed costs to the network-design decisions where they really change.
+
+</Trap>
+
+<KeyIdea>
+
+Real allocation adds integer decisions, multiple periods and non-cost constraints such as approvals, service and risk. Model only the costs the decision changes, and explain the result through landed costs, binding constraints and shadow prices.
+
+</KeyIdea>
 
 </Level>
 

@@ -2,23 +2,27 @@
 title: The newsvendor model
 line: inventory
 summary: How much to stock when you get one shot and leftovers lose their value.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 4, deep: 4 }
 status: draft
 keywords: [newsvendor, newsboy problem, critical ratio, overage cost, underage cost, salvage value, single-period inventory, perishable, overbooking]
 connected: [service-levels, probabilistic-forecasting, safety-stock, lifecycle-forecasting, promotions-cannibalization]
 sources:
   - text: "Cachon, G. & Terwiesch, C. Matching Supply with Demand: An Introduction to Operations Management. McGraw-Hill. Chapter on the newsvendor model."
   - text: "Silver, E. A., Pyke, D. F. & Thomas, D. J. (2017). Inventory and Production Management in Supply Chains (4th ed.). CRC Press."
+  - text: "Schweitzer, M. E., & Cachon, G. P. (2000). Decision bias in the newsvendor problem with a known demand distribution: Experimental evidence. Management Science, 46(3), 404–420."
+  - text: "Cachon, G. P., & Lariviere, M. A. (2005). Supply chain coordination with revenue-sharing contracts: Strengths and limitations. Management Science, 51(1), 30–44."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Balancing the cost of a missed sale against the cost of a leftover." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Balancing the cost of a missed sale against the cost of a leftover." next="How it works" nextMinutes={4}>
 
 Some decisions get one shot. A café bakes croissants each morning, and whatever is left at night is nearly worthless. A clothing brand orders a winter collection once. A sweet shop stocks up for Diwali. You must choose a quantity before you know the demand, and you can be wrong in two directions:
 
@@ -46,6 +50,102 @@ When a missed sale costs more than a leftover, stock deliberately above average 
   { term: 'Underage cost (Cu)', def: 'Profit lost on each unit of demand you could not serve.' },
   { term: 'Critical ratio', def: 'Cu ÷ (Cu + Co): the service level, or demand percentile, to stock up to.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={4} teaser="Why the critical ratio is the answer, how to apply it to real data, and what each choice earns." next="Deep dive" nextMinutes={4}>
+
+### The marginal argument
+
+Think about the last croissant you might bake. If demand turns out higher than your quantity $q$, that croissant earns its margin $C_u$. If demand is lower, it is wasted and costs $C_o$. Bake it if the expected gain beats the expected loss:
+
+$$
+P(D > q)\,C_u \;\ge\; P(D \le q)\,C_o
+$$
+
+Keep adding croissants until the two sides balance, which happens where:
+
+$$
+F(q^{*}) = P(D \le q^{*}) = \frac{C_u}{C_u + C_o}
+$$
+
+So the critical ratio is the probability of *not* running out that you should aim for. For normal demand, $q^{*} = \mu + z\,\sigma$, with $z$ read from the normal table at the critical ratio.
+
+<Example title="the café's croissants">
+
+- $C_u$ = ₹60 and $C_o$ = ₹30, so the critical ratio is 0.667 and $z = 0.43$.
+- $q^{*} = 80 + 0.43 \times 20 = 88.6$, so bake 89.
+
+Expected results per day, with demand normal (mean 80, standard deviation 20):
+
+<div class="table-wrap">
+
+| Bake | Expected sales | Expected leftovers | Expected profit |
+|---|---|---|---|
+| 80 | 72.0 | 8.0 | ₹4,082 |
+| 89 | 75.7 | 13.3 | ₹4,145 |
+| 100 | 78.3 | 21.7 | ₹4,050 |
+| 110 | 79.4 | 30.6 | ₹3,847 |
+
+</div>
+
+Baking 89 earns about ₹63 a day more than baking the average, roughly ₹23,000 a year from one decision rule.
+
+</Example>
+
+### When demand isn't normal
+
+With real data you rarely need the normal curve. Sort past demand (or the scenarios of a probabilistic forecast) and pick the smallest quantity whose cumulative share reaches the critical ratio. With 30 days of history and a ratio of 0.67, sort the days from lowest to highest demand and stock the 20th value. For slow sellers, a Poisson or empirical distribution is more honest than a normal one.
+
+### Getting the costs right
+
+- **Underage** $C_u$: the margin lost per unit short, plus any goodwill or penalty. If customers switch to another of your products, the true loss is smaller.
+- **Overage** $C_o$: what you paid minus whatever you recover (salvage, markdown price or return credit), plus disposal cost.
+- Use marginal costs only. Rent and salaries are paid whatever you bake.
+
+<KeyIdea>
+
+Stock up to the quantile of demand given by $C_u / (C_u + C_o)$. Read it from a normal curve, a fitted distribution or plain history, and get the two costs right, because they drive everything.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={4} teaser="Censored sales, the pull-to-centre bias, supply contracts, and the many places newsvendor logic hides.">
+
+### Sales are not demand
+
+When the café sells out at 2 p.m., the till records 89 croissants, not the 110 people who wanted one. Sales data is **censored** at the stock level. Plan from raw sales and you underestimate demand, bake less, sell out earlier, record even lower "demand" and spiral down. The fixes: record stockout times, estimate lost demand from the sales rate before the stockout, or use statistical methods built for censored data.
+
+### People order too close to the average
+
+In experiments, people facing newsvendor problems consistently order between the average demand and the optimal quantity: too little when the margin is high, too much when it is low. This **pull-to-centre** effect (Schweitzer and Cachon, 2000) persists even with experience, which is a strong argument for computing the quantity instead of trusting gut feel.
+
+### Contracts: who carries the leftover risk?
+
+In a supply chain, the retailer orders and carries the leftovers, while the manufacturer earns on every unit ordered. The retailer's critical ratio uses its own margin, which is thinner than the chain's total margin, so it orders less than would be best for the chain as a whole. This is **double marginalization**. Contracts fix it by sharing the risk:
+
+- **Buy-back:** the manufacturer takes back unsold units at a partial refund, lowering the retailer's $C_o$. Common in publishing.
+- **Revenue sharing:** the retailer pays a low wholesale price and shares its revenue. Video rental chains used this with film studios in the late 1990s.
+- **Options and quantity flexibility:** the retailer reserves capacity and adjusts the final quantity later.
+
+Each one raises the retailer's critical ratio towards the chain's, so more is stocked and total profit grows.
+
+### Where else it appears
+
+The same logic sets airline overbooking (an empty seat is perishable), hotel room blocks, fashion and seasonal buys, capacity reservations, and the "last-time buy" of spare parts before a component is discontinued. It even sets service targets: in a periodic-review system with backorder cost $b$ and holding cost $h$ per period, the best cycle service level is $b/(b+h)$.
+
+<Trap>
+
+The critical ratio is a *probability*, not a quantity. A ratio of 0.67 does not mean "stock 67% more" or "stock 67% of demand". It means stock the 67th percentile of demand.
+
+</Trap>
+
+<KeyIdea>
+
+Newsvendor thinking applies wherever a quantity is fixed before demand is known. Correct for censored sales, trust the formula over gut feel, and use contracts to share leftover risk so the whole chain stocks the right amount.
+
+</KeyIdea>
 
 </Level>
 

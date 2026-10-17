@@ -2,7 +2,7 @@
 title: Demand sensing & shaping
 line: demand
 summary: Reading the latest short-term signals to correct the near-term forecast, and using price and promotion to steer demand toward supply.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 4 }
 status: draft
 keywords: [demand sensing, demand shaping, POS data, short-term forecast, signals, weather, price elasticity, promotion, substitution, revenue management]
 connected: [promotions-cannibalization, control-tower, substitution, ml-forecasting, allocation]
@@ -10,16 +10,19 @@ sources:
   - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapters on demand forecasting and on pricing and revenue management."
   - text: "Hyndman, R. J. & Athanasopoulos, G. Forecasting: Principles and Practice (3rd ed.). OTexts."
     url: "https://otexts.com/fpp3/"
+  - text: "Williams, B. D., & Waller, M. A. (2010). Creating order forecasts: Point-of-sale or order history? Journal of Business Logistics, 31(2), 231–251."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Sensing detects what's changing now; shaping changes what customers do." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Sensing detects what's changing now; shaping changes what customers do." next="How it works" nextMinutes={3}>
 
 These two sound alike but do opposite jobs.
 
@@ -45,6 +48,87 @@ Demand sensing detects changes in demand early. Demand shaping deliberately chan
   { term: 'Price elasticity', def: 'How much demand changes in percentage terms when price changes by 1%.' },
   { term: 'Short-term horizon', def: 'The next few days to weeks, where sensing adds the most accuracy.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="How a sensing model corrects the near-term forecast, and how shaping levers are sized with elasticity." next="Deep dive" nextMinutes={4}>
+
+### How demand sensing works
+
+1. **Start from the baseline forecast** produced by the regular process.
+2. **Collect fast signals** for each item and location: daily point-of-sale data, open customer orders, customer stock levels, shipments, weather forecasts, local events, and online search or traffic.
+3. **Learn the patterns** that link those signals to the forecast error of the next few days or weeks, usually with a regression or machine-learning model that weights recent days most.
+4. **Adjust the near-term forecast,** often one to four weeks ahead, and pass the change to deployment, replenishment and transport.
+5. **Measure the value:** compare the sensed forecast with the baseline at short lags. If it isn't more accurate, it isn't helping.
+
+<Example title="a sports drink in a heatwave">
+
+The baseline forecast for next week is 25,000 units in one region. Then:
+
+- Store sales over the last three days run 18% above forecast.
+- Retailer warehouse stock has fallen to 4 days of cover against a normal 7.
+- The weather service predicts temperatures 3°C above normal next week.
+
+A sensing model that has learned how such signals relate to forecast errors might lift next week to about 27,500 units, and deployment sends the extra 2,500 to that region before shelves empty. The factory's monthly plan doesn't change unless the signal persists.
+
+</Example>
+
+These numbers are illustrative: the size of a real adjustment comes from how well the signals predicted errors in the past.
+
+### How demand shaping is sized
+
+Shaping uses measured customer responses, such as price elasticity, to move demand:
+
+- An overstocked item sells 10,000 units a week. With a price elasticity of −2, a 10% discount lifts sales by about 20%, to 12,000 a week, clearing 2,000 extra units a week. Whether that pays depends on the margin given up against the holding and obsolescence cost avoided.
+- When an item is short, recommending an available substitute online, or nudging customers to another delivery slot, moves demand to where supply is.
+
+Every lever has a cost, so shaping decisions need sales, finance and supply in the same conversation.
+
+<KeyIdea>
+
+Demand sensing learns how fast signals predict near-term forecast errors and adjusts the next few weeks. Shaping uses measured responses such as elasticity to move demand towards available supply, at a cost that must be weighed.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={4} teaser="Why sensing works only up close, the data it needs, overreaction risks, and shaping without training customers to wait.">
+
+### Why sensing helps only in the short term
+
+Recent signals carry information about the next few days that a monthly statistical forecast doesn't have: a heatwave, a competitor's stockout, a viral post. That information fades fast. A spike in this week's store sales says a lot about next week and little about next quarter. So sensing improves accuracy most at the shortest lags, and it should feed decisions with short lead times, such as deployment, picking, transport and short production runs, not long-range capacity plans.
+
+### The data it needs
+
+- **Downstream data:** retailer sales and stock data, shared through portals or collaborative arrangements such as CPFR (collaborative planning, forecasting and replenishment).
+- **Low latency:** a signal that arrives a week late is history, not sensing.
+- **Clean mapping:** the retailer's item codes, stores and calendar must map to the supplier's products and locations.
+
+Research comparing retailer-order forecasts built from point-of-sale data with those built from order history (Williams and Waller, 2010) found that POS data often improves them, but not in every case, which is why sensing should be tested by product group and horizon rather than assumed to help everywhere.
+
+### Overreaction and double counting
+
+- **Chasing noise:** a sensing model that reacts to every blip creates nervous plans and extra transport. Use thresholds and act only on changes that matter.
+- **Double counting:** if planners also adjust for the heatwave they read about, the forecast moves twice. Agree who adjusts what, and when.
+- **Feedback loops:** shaping changes demand, and sensing then sees the result as a signal. Record shaping actions so models don't learn from your own interventions.
+
+### Shaping with care
+
+- **Training customers to wait:** frequent discounts teach customers to buy only on deals, which lowers the baseline and raises volatility.
+- **Brand and fairness:** prices that change too often, or that seem to exploit a shortage, damage trust and in some markets attract regulators.
+- **Bullwhip:** promotions to clear stock create spikes and dips upstream. Shaping should smooth demand, not add swings.
+
+<Trap>
+
+Demand sensing is sometimes bought to fix a weak core forecast. It can't: if master data, history cleaning and the monthly process are poor, sensing only corrects a bad forecast a little faster. Fix the base first, then sense.
+
+</Trap>
+
+<KeyIdea>
+
+Sensing pays at short lags, with fast, clean downstream data and controls against overreaction. Shaping should steer demand towards supply without teaching customers to wait or adding bullwhip.
+
+</KeyIdea>
 
 </Level>
 

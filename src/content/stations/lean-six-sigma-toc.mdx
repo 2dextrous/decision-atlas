@@ -2,7 +2,7 @@
 title: Lean, Six Sigma & TOC
 line: foundations
 summary: Three improvement approaches, removing waste, variation and constraints, and when each one fits.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 4, deep: 4 }
 status: draft
 keywords: [lean, Toyota Production System, seven wastes, TIMWOOD, JIT, kanban, kaizen, Six Sigma, DMAIC, DPMO, theory of constraints, continuous improvement]
 connected: [bottlenecks, changeovers, oee, why-inventory, statistics-toolkit]
@@ -10,16 +10,20 @@ sources:
   - text: "Ohno, T. (1988). Toyota Production System: Beyond Large-Scale Production. Productivity Press."
   - text: "Womack, J. P. & Jones, D. T. (1996). Lean Thinking. Simon & Schuster."
   - text: "Goldratt, E. M. & Cox, J. (1984). The Goal: A Process of Ongoing Improvement. North River Press."
+  - text: "Womack, J. P., Jones, D. T., & Roos, D. (1990). The Machine That Changed the World. Rawson Associates."
+  - text: "Pyzdek, T., & Keller, P. A. (2018). The Six Sigma Handbook (5th ed.). McGraw-Hill."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Waste, variation and constraints: three ways to make operations better." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Waste, variation and constraints: three ways to make operations better." next="How it works" nextMinutes={4}>
 
 Most operations improvement draws on three approaches. They overlap, but each starts from a different question.
 
@@ -48,6 +52,97 @@ Lean removes waste, Six Sigma reduces variation, and TOC focuses effort on the c
   { term: 'DMAIC', def: 'Six Sigma’s project cycle: define, measure, analyse, improve, control.' },
   { term: 'Kanban', def: 'A signal, often a card or bin, that pulls replenishment only when material is used.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={4} teaser="Value stream mapping and process cycle efficiency, sizing kanbans, and measuring process capability with Cp and Cpk." next="Deep dive" nextMinutes={4}>
+
+### Value stream mapping
+
+A **value stream map** follows one product from order to delivery, recording each step's processing time, waiting time, inventory and information flow. The key ratio is **process cycle efficiency**: value-added time divided by total lead time.
+
+<Example title="an industrial pump order">
+
+From order to shipment takes 15 days. The steps that actually change the product (machining, assembly, testing) take about 4 hours. Process cycle efficiency is 4 hours out of 360, about 1.1%. The other 99% is waiting: for approval, for materials, for a machine, for the next batch. Lean starts by attacking those waits.
+
+</Example>
+
+### Sizing a kanban loop
+
+A kanban loop circulates a fixed number of containers between a supplying process and a using one; a container is refilled only after it is emptied. The number of kanbans is:
+
+$$
+N = \frac{D \times L \times (1 + \alpha)}{C}
+$$
+
+where $D$ is demand per day, $L$ the replenishment time in days, $\alpha$ a safety factor and $C$ the container size. With 400 parts a day, half a day to replenish, a 10% safety factor and containers of 50: $400 \times 0.5 \times 1.1 / 50 = 4.4$, so 5 kanbans. Fewer kanbans means less inventory and quicker exposure of problems.
+
+### Process capability
+
+Six Sigma asks whether a process can stay within its specification limits. For a bottle that must contain 500 ml ± 6 ml (so between 494 and 506), with a process mean of 501 ml and a standard deviation of 1.5 ml:
+
+$$
+C_p = \frac{USL - LSL}{6\sigma} = \frac{12}{9} \approx 1.33 \qquad C_{pk} = \frac{\min(USL - \mu,\; \mu - LSL)}{3\sigma} = \frac{5}{4.5} \approx 1.11
+$$
+
+$C_p$ says the spread would fit comfortably if the process were centred; $C_{pk}$ is lower because the mean has drifted towards the upper limit. Re-centring to 500 ml raises $C_{pk}$ to 1.33 without reducing variation at all.
+
+### DMAIC tools
+
+- **Define:** project charter, SIPOC (suppliers, inputs, process, outputs, customers).
+- **Measure:** data collection, measurement system checks, baseline capability.
+- **Analyse:** Pareto charts, cause-and-effect (fishbone) diagrams, regression.
+- **Improve:** designed experiments, piloting solutions.
+- **Control:** control charts, standard work, response plans.
+
+<KeyIdea>
+
+Value stream maps expose how little of the lead time adds value; kanban loops are sized from demand, replenishment time, safety and container size; and Cp and Cpk show whether a process fits its specification, separating spread from centring.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={4} teaser="Where the three came from, how they go wrong, applying lean to supply chains after recent disruptions, and building an improvement culture.">
+
+### Origins
+
+- **Lean** grew out of the Toyota Production System, developed by Taiichi Ohno and colleagues from the 1950s, and was named and popularized in the West by Womack, Jones and Roos's study of the car industry in 1990.
+- **Six Sigma** was developed at Motorola in the mid-1980s and spread widely through companies such as General Electric in the 1990s. The often-quoted 3.4 defects per million opportunities assumes the process mean can drift by 1.5 standard deviations over time.
+- **The theory of constraints** came from Eliyahu Goldratt's work, popularized by his 1984 novel *The Goal*.
+
+### How they go wrong
+
+- **Lean as headcount cutting:** when "lean" means layoffs, people stop suggesting improvements. Toyota's approach rests on respect for people and on improvement by those doing the work.
+- **Six Sigma bureaucracy:** belt certifications and project counts become the goal, while savings are claimed but never reach the profit and loss account.
+- **Tools without thinking:** copying kanban boards or 5S labels without understanding flow and problem-solving produces visual change and little else.
+
+### Lean supply chains after recent disruptions
+
+Just-in-time supply with minimal buffers works when supply is reliable and lead times are short. Long, global supply lines with volatile lead times need deliberately placed buffers. The pandemic and the chip shortage showed the cost of applying JIT logic to distant, fragile supply. The lesson isn't to abandon lean, but to place buffers where variability and recovery times demand them, which is itself lean thinking about the real system.
+
+### Building an improvement culture
+
+- **Go and see (gemba):** managers understand problems where the work happens.
+- **PDCA:** plan, do, check, act, repeated in small cycles.
+- **Standard work:** the current best way, written down, as the baseline for improvement.
+- **Statistical process control:** control charts separate common-cause variation (the system) from special causes (events to investigate), so people don't react to noise.
+
+### Combining them
+
+A common sequence: use the theory of constraints to choose where to work (the constraint), lean to remove waste there, and Six Sigma to reduce variation and hold the gains. Each covers gaps in the others: lean without data can miss root causes, Six Sigma without flow can optimize the wrong step, and the theory of constraints without improvement tools can find the bottleneck but not fix it.
+
+<Trap>
+
+Applying just-in-time to long, unreliable supply lines without buffers turns small delays into line stoppages. Lean means matching buffers to real variability, not removing every buffer.
+
+</Trap>
+
+<KeyIdea>
+
+Lean, Six Sigma and the theory of constraints come from Toyota, Motorola and Goldratt. Avoid using them as headcount cuts, bureaucracy or copied tools, place buffers where supply is long and variable, and build a culture of go-and-see, PDCA, standard work and control charts.
+
+</KeyIdea>
 
 </Level>
 

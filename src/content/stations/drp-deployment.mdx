@@ -2,23 +2,26 @@
 title: Replenishment & deployment (DRP)
 line: inventory
 summary: When each warehouse should be refilled and by how much, and where available stock goes when there isn't enough.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 4, deep: 4 }
 status: draft
 keywords: [DRP, distribution requirements planning, deployment, fair share, net requirements, planned orders, scheduled receipts, replenishment, push and pull]
 connected: [mrp, meio, allocation, safety-stock, transport-planning]
 sources:
   - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson."
   - text: "Silver, E. A., Pyke, D. F. & Thomas, D. J. (2017). Inventory and Production Management in Supply Chains (4th ed.). CRC Press."
+  - text: "Lee, H. L., Padmanabhan, V., & Whang, S. (1997). Information distortion in a supply chain: The bullwhip effect. Management Science, 43(4), 546–558."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="MRP for warehouses, and what to do when supply runs short." soon>
+<Level n={1} title="The gist" minutes={3} teaser="MRP for warehouses, and what to do when supply runs short." next="How it works" nextMinutes={4}>
 
 **DRP (distribution requirements planning)** is MRP for the distribution network. For each warehouse and each item, week by week, it works out what is needed:
 
@@ -43,6 +46,99 @@ DRP asks when and how much each warehouse needs. Deployment asks where today's l
   { term: 'Scheduled receipt', def: 'An order already placed and on its way, counted as future supply.' },
   { term: 'Fair share', def: 'A deployment rule that gives each location the same percentage of its requirement when supply is short.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={4} teaser="The DRP record worked week by week, and a deployment rule that equalizes days of cover." next="Deep dive" nextMinutes={4}>
+
+### The DRP record
+
+For each item at each warehouse, DRP keeps a weekly table:
+
+- **Gross requirements:** forecast plus confirmed customer orders.
+- **Scheduled receipts:** shipments already on the way.
+- **Projected balance:** last week's balance plus receipts minus requirements.
+- **Planned receipts:** shipments needed to keep the balance above safety stock, rounded to the shipping lot.
+- **Planned orders:** the same shipments moved earlier by the transit time. These become demand on the supplying warehouse or plant.
+
+<Example title="the Pune warehouse">
+
+Forecast 400 a week, safety stock 300, 900 on hand, 500 units already in transit for week 2, shipments in full truckloads of 1,000, and 1 week in transit.
+
+<div class="table-wrap">
+
+| Week | 1 | 2 | 3 | 4 | 5 | 6 |
+|---|---|---|---|---|---|---|
+| Gross requirements | 400 | 400 | 400 | 400 | 400 | 400 |
+| Scheduled receipts | | 500 | | | | |
+| Planned receipts | | | 1,000 | | | 1,000 |
+| Projected balance | 500 | 600 | 1,200 | 800 | 400 | 1,000 |
+| Planned orders (ship from plant) | | 1,000 | | | 1,000 | |
+
+</div>
+
+In week 3 the balance would fall to 200, below the safety stock of 300, so a truckload must arrive that week, which means it leaves the plant in week 2. The same happens in week 6.
+
+</Example>
+
+Add up the planned orders of every warehouse and you get the time-phased demand on the plant: the input to its master production schedule.
+
+### Deployment: sharing out what you have
+
+When the plant can't supply everything, deployment decides who gets what. Two common fair-share rules:
+
+- **In proportion to requests,** as in the gist: everyone gets the same percentage of what they asked for.
+- **Equal days of cover,** usually better: allocate so every warehouse ends up with the same number of days of demand in stock.
+
+With 50,000 units to share: Mumbai has 5,000 on hand and sells 1,000 a day, Pune has 6,000 and sells 500 a day, and Delhi has 2,000 and sells 1,500 a day. Total stock after shipping is 63,000 against demand of 3,000 a day, so each can have 21 days of cover. Ship 16,000 to Mumbai, 4,500 to Pune and 29,500 to Delhi. Each warehouse would now run out at the same time, which is the fairest outcome while more supply is on its way.
+
+<KeyIdea>
+
+DRP nets forecasts against stock and shipments at each location, rounds and offsets the result, and passes planned orders upstream. Deployment then shares limited supply, ideally to equal days of cover rather than in proportion to requests.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={4} teaser="Push versus pull, nervous plans, shortage gaming, and optimizing deployment against cost and service.">
+
+### Push, pull and in between
+
+- **Pull:** each warehouse calculates its own needs and orders from upstream, as DRP does. Simple and local, but each site sees only its own picture.
+- **Push:** a central planner decides what each warehouse gets, based on the whole network. Better when supply is scarce or production comes in large batches that must be spread out.
+- Most companies use pull to plan and push to deploy: DRP drives production, and deployment allocates what was actually produced.
+
+### Nervousness and stability
+
+Because DRP plans cascade upstream, a small forecast change at one warehouse can ripple into changes at the plant and its suppliers. Planners damp this with **firm or frozen periods** in the near term, lot sizes that absorb small changes, and by acting only on changes above a threshold. Without these, the plant is asked to reshuffle its schedule every week in response to noise.
+
+### Shortage gaming
+
+If warehouses learn that scarce stock is shared in proportion to requests, they inflate their requests. Allocation then rewards whoever exaggerates most, and when supply recovers the inflated orders vanish, leaving excess. This **rationing game** is one of the four classic causes of the bullwhip effect. The defence is to allocate on actual demand, sales history or days of cover instead of requests, and to share the true supply position openly.
+
+### Optimized deployment
+
+Deployment can be set up as a small optimization: choose shipments from plants to warehouses to minimize expected lost sales plus transport cost, within available supply, truck capacities and each site's target stock. Useful refinements:
+
+- **Customer priorities:** serve strategic customers or contractual commitments first.
+- **Expected supply:** if a big batch lands next week, ship less now and save transport.
+- **Lateral moves:** sometimes moving stock between warehouses beats waiting for the plant.
+
+### Who runs DRP
+
+Retailers often let suppliers run replenishment for their warehouses under **vendor-managed inventory** (VMI) or continuous replenishment. The supplier sees the customer's stock and sales and plans the shipments, which removes a layer of ordering and often reduces the bullwhip effect.
+
+<Trap>
+
+Allocating by requests looks fair but invites inflated orders. Allocate on demand evidence and stock positions, and never ignore stock already on hand or in transit when deciding who needs more.
+
+</Trap>
+
+<KeyIdea>
+
+Plan with DRP pull, deploy with network-wide push when supply is short, keep plans stable with firm periods and thresholds, and allocate on demand evidence so locations can't game the rules.
+
+</KeyIdea>
 
 </Level>
 

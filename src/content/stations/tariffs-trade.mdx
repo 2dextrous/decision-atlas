@@ -2,23 +2,26 @@
 title: Tariffs, trade & compliance
 line: risk
 summary: How duties and trade rules change the best sourcing and network choices, and the compliance basics every importer and exporter needs.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 4 }
 status: draft
 keywords: [tariffs, customs duty, HS code, classification, rules of origin, free trade agreement, landed cost, trade compliance, export controls, sanctions, China plus one, duty drawback]
 connected: [supplier-network, manufacturing-footprint, incoterms, scenario-planning, regulatory-compliance]
 sources:
   - text: "World Customs Organization. The Harmonized Commodity Description and Coding System (HS)."
   - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapter on designing global supply chain networks."
+  - text: "Central Board of Indirect Taxes and Customs, Government of India. Customs Manual."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="A change in duty can move the cheapest supplier and the best plant overnight." soon>
+<Level n={1} title="The gist" minutes={3} teaser="A change in duty can move the cheapest supplier and the best plant overnight." next="How it works" nextMinutes={3}>
 
 A tariff is a tax on goods crossing a border, and it lands directly in **landed cost**. If a component costs ₹100 from Country A and ₹110 from Country B, a 15% duty on Country A's goods flips the answer: ₹115 against ₹110. Tariffs can change quickly with politics, so they're both a cost and a risk.
 
@@ -46,6 +49,85 @@ Duties belong in landed cost and in network scenarios. Classify correctly, prove
   { term: 'Rules of origin', def: 'Criteria that decide which country a product legally comes from.' },
   { term: 'Duty drawback', def: 'A refund of import duty on inputs used in goods that are later exported.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="How customs duty is calculated on an import into India, why GST on imports is usually creditable, and the schemes that reduce duty legally." next="Deep dive" nextMinutes={4}>
+
+### Duty on an import, step by step
+
+<Example title="a component with a landed value of ₹1,000">
+
+Suppose the assessable value (cost, insurance and freight) is ₹1,000, basic customs duty is 10%, and the item attracts 18% integrated GST.
+
+- **Basic customs duty (BCD):** 10% of ₹1,000 = ₹100.
+- **Social welfare surcharge:** 10% of the BCD = ₹10.
+- **IGST:** 18% of (₹1,000 + ₹100 + ₹10) = ₹199.80.
+- **Total paid at the border:** ₹309.80.
+
+For a GST-registered business using the component in taxable supplies, the ₹199.80 of IGST is usually available as input tax credit, so the real cost of the duty is about ₹110, or 11% of the value. Cash is still tied up until the credit is used.
+
+</Example>
+
+Rates differ by HS code and change with budgets and notifications, so the exact rates must come from the current tariff.
+
+### What free trade agreements change
+
+If the component qualifies as originating in a country with a free trade agreement, BCD may be reduced or zero, saving the ₹110 in the example. To qualify, it must meet that agreement's **rules of origin**, often a minimum share of regional value content combined with a change in tariff classification, and the importer must hold a valid certificate of origin and be able to prove it.
+
+### Schemes that reduce duty legally
+
+- **Duty drawback:** refunds duty paid on inputs used in exported goods.
+- **RoDTEP:** remission of embedded duties and taxes on exported products.
+- **Advance Authorisation:** duty-free import of inputs used to make exports.
+- **Special economic zones and export-oriented units:** duty-free operations for export production.
+- **Customs bonded warehouses:** store imported goods and pay duty only when they are cleared for the domestic market.
+
+### Planning with duties
+
+Duties belong in every landed-cost comparison and network model. Testing scenarios ("what if BCD on this category rises by 10 points?" or "what if an FTA gives this source zero duty?") shows which decisions are sensitive to trade policy.
+
+<KeyIdea>
+
+Customs duty in India builds up from BCD, surcharge and IGST, with IGST usually creditable. FTAs cut duty only when rules of origin are met and proved, export schemes and bonded warehouses reduce duty legally, and duty scenarios belong in sourcing and network models.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={4} teaser="Trade volatility, export controls and sanctions, anti-dumping duties, trusted-trader status, and the line between tariff engineering and evasion.">
+
+### Trade policy is volatile
+
+Tariffs can change within months as governments respond to trade disputes, domestic industry pressure or security concerns. The tariff rounds between the US and China from 2018, and broader US tariff changes since, reshaped sourcing decisions worldwide. Companies respond with scenarios, diversified sources ("China plus one"), contract clauses that share duty changes, and the ability to move production between countries.
+
+### Export controls and sanctions
+
+Some goods and technologies need licences to export because they could have military uses (dual-use items). India controls these through its SCOMET list, and other countries have their own regimes. Sanctions prohibit dealings with certain countries, companies or people. Screening customers, suppliers and shipments against denied-party lists is a standard compliance step, and violations carry severe penalties.
+
+### Anti-dumping and safeguard duties
+
+When imports are priced unfairly low or surge suddenly and harm domestic industry, governments can impose extra duties after an investigation. In India, the Directorate General of Trade Remedies (DGTR) recommends anti-dumping, countervailing and safeguard measures. These duties can be large and specific to a country or even a producer, so they must be checked in sourcing decisions.
+
+### Trusted-trader status
+
+Customs authorities offer faster clearance and fewer inspections to companies with proven compliance and secure supply chains. India's **Authorised Economic Operator** (AEO) programme is an example, and mutual recognition agreements extend benefits in partner countries. Gaining it requires strong internal controls, which also reduce compliance risk.
+
+### Tariff engineering versus evasion
+
+Designing a product legitimately so it falls under a different classification with lower duty (tariff engineering) is lawful when the product genuinely meets the new classification. Misdeclaring the classification, value or origin of the same product to pay less is evasion, with penalties, seizures and reputational damage. Origin fraud, such as routing goods through a third country with minimal processing, is a particular enforcement focus.
+
+<Trap>
+
+Assuming a free trade agreement applies because goods ship from a partner country is a common and costly error. Origin depends on where value was added and how the product was transformed, and the importer must prove it. Unsupported claims lead to back duty, interest and penalties.
+
+</Trap>
+
+<KeyIdea>
+
+Treat tariffs as a volatile risk to model and share contractually, screen for export controls and sanctions, check anti-dumping duties, consider trusted-trader status, and stay on the right side of the line between legitimate tariff engineering and evasion.
+
+</KeyIdea>
 
 </Level>
 

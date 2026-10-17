@@ -2,7 +2,7 @@
 title: "Service levels: CSL vs fill rate"
 line: inventory
 summary: Two different meanings of “95% service”, and why the difference changes how much stock you need.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 4, deep: 4 }
 status: draft
 keywords: [cycle service level, CSL, fill rate, OTIF, perfect order, stockout, backorder, lost sales, service level target]
 connected: [safety-stock, service-level-policy, supply-chain-kpis, inventory-segmentation, newsvendor]
@@ -12,13 +12,15 @@ sources:
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Counting stockout events versus counting units served." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Counting stockout events versus counting units served." next="How it works" nextMinutes={4}>
 
 "We run at 95% service" sounds precise, but it can mean two very different things.
 
@@ -42,6 +44,111 @@ Before sizing a buffer, ask "95% of what?" Cycle service level counts stockout e
   { term: 'Fill rate', def: 'Fraction of demand (units, lines or orders) met directly from stock.' },
   { term: 'OTIF', def: 'Share of orders delivered on time and in full; a strict, customer-facing measure.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={4} teaser="How z sets cycle service, how the loss function turns it into a fill rate, and the café's numbers." next="Deep dive" nextMinutes={4}>
+
+### Cycle service level comes straight from z
+
+If demand over the lead time is roughly normal with standard deviation $\sigma_L$, a reorder point with safety stock $SS = z\,\sigma_L$ gives:
+
+$$
+CSL = \Phi(z)
+$$
+
+where $\Phi$ is the standard normal distribution. That is all the z-table does: $z = 1.645$ gives 95% and $z = 2.33$ gives 99%.
+
+### Fill rate needs the size of the shortfalls
+
+Fill rate depends on *how much* you are short when you run out, not just *whether* you run out. The expected shortage per cycle is:
+
+$$
+ESC = \sigma_L \, G(z), \qquad G(z) = \varphi(z) - z\,\big(1 - \Phi(z)\big)
+$$
+
+$G(z)$ is the **standard normal loss function**, and $\varphi$ is the normal density. Each cycle brings one order of $Q$ units, so with backorders:
+
+$$
+\text{Fill rate} = 1 - \frac{ESC}{Q}
+$$
+
+Order size matters: the same shortfall is a smaller share of a large order.
+
+<Example title="the café">
+
+- $\sigma_L = 1.5 \times \sqrt{5} = 3.35$ kg and the order size $Q$ = 77.5 kg.
+- At $z = 1.645$: $G = 0.0209$, so $ESC$ = 0.07 kg a cycle. Fill rate is 99.9% while cycle service level is 95%.
+- With **no safety stock** at all ($z = 0$): $G = 0.399$ and $ESC$ = 1.34 kg. Fill rate is still 98.3%, even though the café runs out in half of all cycles.
+- To target a 99% fill rate instead: $ESC$ = 0.775 kg, so $G(z) = 0.231$ and $z \approx 0.40$. Safety stock is about 1.3 kg, and cycle service level is only about 65%.
+
+</Example>
+
+Same café, very different numbers. A target written as "95%" means nothing until you know which measure it is.
+
+### From a target to a buffer
+
+1. Agree which measure the business cares about. Customers feel fill rate; planning systems often set cycle service.
+2. For a cycle service target, read $z$ from the normal table.
+3. For a fill-rate target, compute $G(z) = (1 - \text{target}) \times Q / \sigma_L$ and solve for $z$ with a loss-function table or a spreadsheet.
+4. Set $SS = z\,\sigma_L$, then check the result against what actually happened in past cycles.
+
+<KeyIdea>
+
+Cycle service level is $\Phi(z)$. Fill rate is $1 - \sigma_L G(z)/Q$, so it also depends on order size. Large orders make high fill rates cheap, which is why the two numbers can sit far apart.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={4} teaser="Lost sales versus backorders, order-level measures like OTIF, and setting targets from costs instead of habit.">
+
+### Backorders or lost sales?
+
+The fill-rate formula assumes customers wait for the next delivery (backorders). In retail, a customer facing an empty shelf usually buys something else or leaves, so the sale is lost. Lost sales change the maths slightly, because stock never goes negative, and change the economics a lot: a backorder costs some goodwill and expediting, while a lost sale costs the whole margin and sometimes the customer.
+
+### Units, lines, orders and OTIF
+
+The same warehouse can report several "service levels":
+
+<div class="table-wrap">
+
+| Measure | Counts as success when | Typical use |
+|---|---|---|
+| Unit fill rate | Each unit ships from stock | Inventory planning |
+| Line fill rate | Each order line ships complete | Warehouse and customer service |
+| Order fill rate | Every line on the order ships complete | Customer experience |
+| OTIF | The whole order arrives complete and on time | Retailer scorecards and penalties |
+
+</div>
+
+Order-level measures are much stricter. If each line is filled 98% of the time, independently, an order with 10 lines is complete only $0.98^{10} \approx 82\%$ of the time. Large retailers score suppliers on OTIF and often charge penalties for misses, so a supplier proud of 98% line fill can still fail its customer's scorecard.
+
+### Setting the target from costs
+
+Targets are often set by habit: 95% for everything. A cost-based target is better. If each unit short costs $p$ (lost margin, expediting, goodwill) and holding costs $H$ per unit per year, the best cycle service level in a (Q, R) system is approximately:
+
+$$
+CSL^{*} \approx 1 - \frac{H\,Q}{p\,D}
+$$
+
+For the café, with a shortage cost of ₹600 a kg: $1 - (200 \times 77.5)/(600 \times 1200) \approx 97.8\%$. A costlier shortage pushes the target up; a cheaper shortage or a larger order pushes it down. Even when shortage costs are fuzzy, the formula makes the trade-off explicit instead of habitual.
+
+### Averages hide failures
+
+A 98% average fill rate across 10,000 items can include a top customer's key item failing every week. Report service by segment and by customer, and look at the spread, not just the average. Also watch for **censored demand**: when customers stop ordering items that are often out of stock, or sales staff don't enter orders they know can't be filled, the measured service looks better than the real one.
+
+<Trap>
+
+Don't read a fill-rate target off the z-table. Setting $z = 1.645$ because the target says "95% fill rate" usually overstocks badly. For the café, a 95% fill rate needs no safety stock at all, since even zero buffer delivers 98.3%.
+
+</Trap>
+
+<KeyIdea>
+
+Agree on the measure first (units, lines, orders or OTIF), know whether shortages are backordered or lost, and set targets from the cost of being short against the cost of holding. Then report by segment, not just on average.
+
+</KeyIdea>
 
 </Level>
 

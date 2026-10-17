@@ -2,23 +2,26 @@
 title: Risk pooling & centralization
 line: inventory
 summary: Why combining stock points shrinks the total buffer, and what you give up in return.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 3 }
 status: draft
 keywords: [risk pooling, square-root law, centralization, aggregation, inventory pooling, transshipment, virtual pooling, correlation, Eppen]
 connected: [safety-stock, meio, postponement, distribution-designs, network-design-decisions]
 sources:
   - text: "Eppen, G. D. (1979). Effects of centralization on expected costs in a multi-location newsboy problem. Management Science, 25(5), 498–501."
   - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Section on aggregation and safety inventory."
+  - text: "Jordan, W. C., & Graves, S. C. (1995). Principles on the benefits of manufacturing process flexibility. Management Science, 41(4), 577–594."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="One shared buffer beats four separate ones, as long as demand doesn't move together." soon>
+<Level n={1} title="The gist" minutes={3} teaser="One shared buffer beats four separate ones, as long as demand doesn't move together." next="How it works" nextMinutes={3}>
 
 Imagine a shampoo brand with four regional warehouses, in Mumbai, Pune, Delhi and Chennai. Each one holds safety stock against its own uncertain demand, say 500 units each, 2,000 in total.
 
@@ -44,6 +47,93 @@ Pooling works because independent surprises cancel out. The more locations you c
   { term: 'Correlation', def: 'How much demands move together; high positive correlation kills the pooling benefit.' },
   { term: 'Virtual pooling', def: 'Keeping stock in several places but sharing it, for example through transshipment between sites.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="The square-root law derived, what correlation does to it, and the numbers for the shampoo network." next="Deep dive" nextMinutes={3}>
+
+### Why surprises cancel
+
+Let each of $n$ regions have weekly demand with standard deviation $\sigma$, independent of the others. Variances add, so combined demand has:
+
+$$
+\sigma_{\text{pooled}} = \sqrt{n}\,\sigma \quad \text{instead of} \quad n\,\sigma
+$$
+
+Safety stock is proportional to the standard deviation, so pooling $n$ equal, independent locations cuts total safety stock by a factor of $\sqrt{n}$.
+
+### Correlation shrinks the benefit
+
+If demands move together, with correlation $\rho$ between every pair of regions:
+
+$$
+\sigma_{\text{pooled}} = \sigma\sqrt{n + n(n-1)\,\rho}
+$$
+
+At $\rho = 0$ this is $\sqrt{n}\,\sigma$. At $\rho = 1$ it is $n\,\sigma$, and pooling saves nothing. Negative correlation, where one region gains what another loses (customers moving between nearby stores, say), makes pooling even more powerful.
+
+<Example title="the shampoo network">
+
+Four regions each hold 500 units of safety stock, 2,000 in total.
+
+<div class="table-wrap">
+
+| Demand between regions | Pooled safety stock | Saving |
+|---|---|---|
+| Independent ($\rho = 0$) | $500 \times \sqrt{4}$ = 1,000 | 50% |
+| Partly linked ($\rho = 0.5$) | $500 \times \sqrt{4 + 12 \times 0.5}$ ≈ 1,581 | 21% |
+| Moving together ($\rho = 1$) | $500 \times 4$ = 2,000 | None |
+
+</div>
+
+</Example>
+
+### Using it for network changes
+
+The same logic gives the **square-root law** of network design: total safety stock scales with the square root of the number of stocking points. Going from 10 warehouses to 5 multiplies safety stock by $\sqrt{5/10} \approx 0.71$, a cut of about 29%, if demand is similar and independent across them. Cycle stock falls too when each site orders its own EOQ, because EOQ also grows with the square root of demand.
+
+For unequal regions, use the general rule: add the variances (and covariances), take the square root, and compare it with the sum of the separate buffers.
+
+<KeyIdea>
+
+Pooled safety stock grows with the square root of the number of locations when demand is independent. Correlation erodes the saving, so measure how regional demands move together before promising the full square-root benefit.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={3} teaser="Which items to centralize, other forms of pooling, and why one giant warehouse is rarely the answer.">
+
+### Centralize the right items, not the whole range
+
+Pooling saves the most where uncertainty is high relative to volume: slow movers, expensive parts and erratic items, where each region's buffer is large compared with its sales. For fast, steady movers the uncertainty is already small relative to demand, and the extra transport cost and delivery time of a central site usually outweigh the saving. Many companies therefore run a **hybrid**: fast movers stocked in every region, slow and expensive items held centrally and shipped on demand. Spare-parts networks are the classic case.
+
+### Pooling without moving warehouses
+
+- **Product pooling:** design products to share components, so one common part replaces several specific ones.
+- **Postponement:** keep stock generic and customize late, pooling the uncertainty of the variants.
+- **Virtual pooling:** keep stock in separate places but share it, through transfers between stores or ship-from-store for online orders. This needs real-time visibility of stock everywhere.
+- **Capacity pooling:** make plants able to produce several products. Jordan and Graves (1995) showed that limited flexibility, arranged as a closed chain linking products and plants, captures most of the benefit of full flexibility.
+
+### The costs on the other side
+
+A central warehouse is further from most customers, so outbound transport per unit usually rises (smaller shipments over longer distances) and delivery takes longer. Inbound transport often falls, since full truckloads go to one site. The right number of warehouses balances inventory, inbound and outbound freight, facility costs and delivery time, which is the job of network design.
+
+### The same effect in time
+
+Safety stock scales with $\sqrt{L}$ for the same reason pooled demand scales with $\sqrt{n}$: independent days partly cancel, just as independent regions do. That is why halving a lead time cuts the buffer by only about 29%, not 50%.
+
+<Trap>
+
+The square-root law is a best case. It assumes equal regions, independent demand, the same lead times and the same service target. With uneven regions or correlated demand the saving is smaller, so model the real demand data instead of quoting $\sqrt{n}$.
+
+</Trap>
+
+<KeyIdea>
+
+Pooling is a family of tools: central stock, shared components, late customization, shared visibility and flexible capacity. Use it where uncertainty is large relative to volume, and weigh the inventory saving against transport cost and delivery speed.
+
+</KeyIdea>
 
 </Level>
 

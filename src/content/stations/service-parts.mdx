@@ -2,23 +2,26 @@
 title: Service parts planning
 line: orders
 summary: Stocking spare parts when demand is sparse and lumpy but every stockout can stop a customer's machine.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 4 }
 status: draft
 keywords: [service parts, spare parts, aftermarket, intermittent demand, installed base, criticality, multi-echelon, field stock, downtime cost, last-time buy]
 connected: [intermittent-demand, meio, demand-patterns, slow-obsolete, service-level-policy]
 sources:
   - text: "Cohen, M. A., Agrawal, N. & Agrawal, V. (2006). Winning in the aftermarket. Harvard Business Review, 84(5), 129–138."
   - text: "Syntetos, A. A., Boylan, J. E. & Croston, J. D. (2005). On the categorization of demand patterns. Journal of the Operational Research Society, 56(5), 495–503."
+  - text: "Sherbrooke, C. C. (1968). METRIC: A multi-echelon technique for recoverable item control. Operations Research, 16(1), 122–141."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Tens of thousands of slow parts, each one able to stop a machine." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Tens of thousands of slow parts, each one able to stop a machine." next="How it works" nextMinutes={3}>
 
 A company selling tractors, lifts, aircraft engines or medical scanners also has to supply spare parts for years after the sale. Service parts look like an inventory problem from a nightmare:
 
@@ -48,6 +51,99 @@ Plan spare parts from the installed base and part criticality, with intermittent
   { term: 'Criticality', def: 'How badly a missing part affects the customer, such as a machine down or just cosmetic.' },
   { term: 'Last-time buy', def: 'A final purchase of a part before its production ends, sized for all remaining demand.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="Forecasting from the installed base, why central stock needs fewer parts than field stock, and sizing a last-time buy." next="Deep dive" nextMinutes={4}>
+
+### Forecasting from the installed base
+
+<Example title="a lift controller board">
+
+2,000 lifts in service. Failure rates rise with age:
+
+<div class="table-wrap">
+
+| Age group | Lifts | Failures per lift per year | Expected demand |
+|---|---|---|---|
+| Under 3 years | 800 | 0.02 | 16 |
+| 3 to 6 years | 700 | 0.05 | 35 |
+| Over 6 years | 500 | 0.10 | 50 |
+| **Total** | **2,000** | | **101 a year** |
+
+</div>
+
+As the fleet ages, demand will rise even if no lifts are added, which a forecast based only on past part sales would miss.
+
+</Example>
+
+### Central or field stock?
+
+Demand for this board is low and random, so a Poisson distribution describes it better than a normal one. With a one-month replenishment lead time and a 95% availability target:
+
+- **One central warehouse:** average demand over the lead time is about 8.4 boards; covering 95% of months takes about 13 boards.
+- **Five regional stocks,** each facing a fifth of the demand (about 1.7 boards a month): each needs 4 boards for 95%, so 20 in total.
+
+Pooling saves 7 boards, but a lift waiting for a board from the central warehouse stays down longer. For critical parts the answer is often a mix: a small field stock for the fastest-needed items and a central pool for the rest.
+
+### Service levels by criticality
+
+<div class="table-wrap">
+
+| Criticality | Example | Target |
+|---|---|---|
+| Machine down, safety risk | Lift brake part | Very high availability, stock near customers |
+| Machine down, no safety risk | Controller board | High availability, regional or fast central supply |
+| Degraded performance | Fan, sensor | Moderate, central stock |
+| Cosmetic | Panel trim | Low, order on demand |
+
+</div>
+
+### Sizing a last-time buy
+
+When a supplier announces the end of a part, one final order must cover all future needs. If demand is 101 a year now and expected to fall 15% a year over the 8 years of remaining support, expected future demand is about 101 × 0.85 + 101 × 0.85² + … over 8 years ≈ 416 boards. Adding a buffer for uncertainty, often 10–20%, gives roughly 460–500. Too few means stranded customers; too many means scrap at the end.
+
+<KeyIdea>
+
+Forecast spare parts from the installed base and its age, use count distributions such as Poisson, weigh central pooling against field response time, set availability by criticality, and size last-time buys on the declining demand curve plus a buffer.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={4} teaser="Repairable parts and METRIC, optimizing system availability per rupee, uptime contracts, predictive signals, and new supply options.">
+
+### Repairable parts and multi-echelon models
+
+Many expensive parts (engine modules, circuit boards) are **repairable**: a failed unit goes to a repair shop and back into stock. The question becomes how many spares to hold at each base and depot, given repair times and transport. Sherbrooke's METRIC model (1968), developed for US Air Force spare parts, set out the multi-echelon approach still used today: depots and bases are planned together, and the expected number of machines waiting for parts is the key measure.
+
+### Optimize availability, not part fill rates
+
+Customers care whether their machine runs, not whether each part number hit 95%. Availability-based planning asks: for a given budget, which mix of spares maximizes machine uptime? A **marginal analysis** answers it: repeatedly add the spare that gives the largest reduction in expected downtime per rupee, until the budget runs out. Cheap parts that often stop machines get stocked deep; expensive parts that rarely fail are pooled centrally.
+
+### Uptime contracts
+
+Many manufacturers sell service as a guarantee: a contracted uptime (say, 98%) or response time, sometimes paid per hour of use. These **performance-based** contracts shift the risk of downtime to the manufacturer, which then has strong reasons to plan spares, technicians and preventive maintenance well. Cohen, Agrawal and Agrawal (2006) describe how leading companies treat the aftermarket as a business, with service levels designed by customer segment.
+
+### Predictive signals
+
+Machines with sensors report hours run, temperatures, vibration and error codes. That data supports better forecasts (which parts are likely to fail soon, where) and better maintenance (replacing a part before it fails, at a planned visit). It also feeds the installed-base forecast with real usage instead of assumptions.
+
+### New supply options
+
+For old products whose parts are no longer made, alternatives to the last-time buy include repair and refurbishment of returned parts, redesigned replacement parts, and, for some plastic and metal components, additive manufacturing (3D printing) on demand, which can avoid holding decades of stock.
+
+<Trap>
+
+Running service parts with finished-goods methods (forecasts from past sales, the same fill-rate target for every part) produces too much stock of cheap parts and too little of critical ones. Plan from the installed base, criticality and machine availability.
+
+</Trap>
+
+<KeyIdea>
+
+Plan repairable parts with multi-echelon models like METRIC, optimize machine availability per rupee rather than part fill rates, use uptime contracts and sensor data to align incentives and forecasts, and consider repair or on-demand manufacturing for end-of-life parts.
+
+</KeyIdea>
 
 </Level>
 

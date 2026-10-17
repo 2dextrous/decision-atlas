@@ -2,7 +2,7 @@
 title: Exponential smoothing & ETS
 line: demand
 summary: SES, Holt, damped trend and Holt-Winters, all built on one idea, plus the ETS family that ties them together.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 4 }
 status: draft
 keywords: [exponential smoothing, SES, alpha, Holt, damped trend, Holt-Winters, additive seasonality, multiplicative seasonality, ETS, AICc]
 connected: [forecasting-fundamentals, demand-patterns, forecast-accuracy, ml-forecasting, intermittent-demand]
@@ -10,16 +10,19 @@ sources:
   - text: "Hyndman, R. J. & Athanasopoulos, G. Forecasting: Principles and Practice (3rd ed.). OTexts. Chapter on exponential smoothing."
     url: "https://otexts.com/fpp3/expsmooth.html"
   - text: "Gardner, E. S. & McKenzie, E. (1985). Forecasting trends in time series. Management Science, 31(10), 1237–1246."
+  - text: "Hyndman, R. J., Koehler, A. B., Snyder, R. D., & Grose, S. (2002). A state space framework for automatic forecasting using exponential smoothing methods. International Journal of Forecasting, 18(3), 439–454."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="One update rule, extended with trend and seasonality." soon>
+<Level n={1} title="The gist" minutes={3} teaser="One update rule, extended with trend and seasonality." next="How it works" nextMinutes={3}>
 
 Exponential smoothing is the workhorse of supply chain forecasting because it is fast, needs little data and runs well across thousands of items. Every version rests on one idea:
 
@@ -47,6 +50,107 @@ The family grows by adding pieces:
   { term: 'Damped trend', def: 'A trend that flattens out with the horizon instead of growing for ever.' },
   { term: 'Multiplicative seasonality', def: 'Seasonal swings proportional to the level; they widen as sales grow.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="The equations behind simple, Holt and Holt-Winters smoothing, a worked example, and damping in numbers." next="Deep dive" nextMinutes={4}>
+
+### Simple exponential smoothing
+
+The level $\ell$ is updated after each new observation $y_t$:
+
+$$
+\ell_t = \ell_{t-1} + \alpha\,(y_t - \ell_{t-1}) = \alpha\,y_t + (1-\alpha)\,\ell_{t-1}
+$$
+
+The forecast for every future period is the latest level. Unrolling the formula shows where the name comes from: past observations get weights $\alpha$, $\alpha(1-\alpha)$, $\alpha(1-\alpha)^2$ and so on, shrinking exponentially with age.
+
+<Example title="the cold coffee, α = 0.3">
+
+Start with a level of 120, the first week's sales.
+
+<div class="table-wrap">
+
+| Week | Forecast | Actual | Error | New level |
+|---|---|---|---|---|
+| 2 | 120.0 | 135 | +15.0 | 124.5 |
+| 3 | 124.5 | 128 | +3.5 | 125.6 |
+| 4 | 125.6 | 140 | +14.5 | 129.9 |
+| 5 | 129.9 | 150 | +20.1 | 135.9 |
+
+</div>
+
+Every error is positive. Sales keep beating the forecast because they are rising and simple smoothing has no trend term. Errors that keep the same sign are the signal to add one.
+
+</Example>
+
+### Adding trend: Holt's method
+
+Holt adds a slope $b$, smoothed with a second constant $\beta$:
+
+$$
+\ell_t = \alpha\,y_t + (1-\alpha)(\ell_{t-1} + b_{t-1}) \qquad b_t = \beta\,(\ell_t - \ell_{t-1}) + (1-\beta)\,b_{t-1}
+$$
+
+The forecast $h$ periods ahead is $\ell_t + h\,b_t$, a straight line.
+
+### Damping the trend
+
+A damped trend multiplies the slope by $\phi$ (just below 1) for each step ahead, so the forecast becomes $\ell_t + (\phi + \phi^2 + \dots + \phi^h)\,b_t$. With a level of 100, a trend of 10 a month and $\phi = 0.9$, the forecast 12 months ahead is about 165 instead of 220, and it can never exceed $100 + 10 \times 0.9/0.1 = 190$.
+
+### Adding seasonality: Holt-Winters
+
+A third equation keeps a seasonal index for each period of the cycle (12 for monthly data), smoothed with $\gamma$. In the multiplicative form the forecast is $(\ell_t + h\,b_t) \times s$, where $s$ is the index of the season being forecast: 1.3 means 30% above a normal month. In the additive form the seasonal amount is added instead.
+
+<KeyIdea>
+
+Each component (level, trend, season) is a running estimate corrected by a share of the latest error. Persistent errors of one sign mean a missing component, and damping keeps long-range trends realistic.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={4} teaser="The ETS framework, how parameters are chosen, links to ARIMA, and the practical traps across thousands of items.">
+
+### ETS: from recipes to statistical models
+
+Exponential smoothing began as a set of practical recipes. The **ETS** framework recasts each one as a statistical model defined by three choices: the Error (additive or multiplicative), the Trend (none, additive or additive damped) and the Seasonality (none, additive or multiplicative). Each combination has a likelihood, which brings three benefits:
+
+- **Estimated parameters:** $\alpha$, $\beta$, $\gamma$, $\phi$ and the starting values are chosen by maximum likelihood instead of by hand.
+- **Model selection:** software fits the candidates and picks one with an information criterion (such as AICc) that rewards fit but penalizes complexity.
+- **Prediction intervals:** the model gives a forecast distribution, not just a number, which is what safety stock and probabilistic planning need.
+
+### Reading the parameters
+
+- $\alpha$ close to 1: the series behaves almost like a random walk, and the forecast is close to "same as last period".
+- $\alpha$ close to 0: a very stable level, with recent noise mostly ignored.
+- $\beta$ close to 0: a steady trend; larger values let the slope change quickly.
+- A tiny $\gamma$ means the seasonal shape barely changes from year to year.
+
+Simple smoothing is equivalent to an ARIMA(0,1,1) model and Holt's linear method to ARIMA(0,2,2), so the two families overlap more than their names suggest.
+
+### Why damped trend is a robust default
+
+The damped trend method, introduced by Gardner and McKenzie in 1985, has been one of the most reliable performers on business data in forecasting competitions. Real trends rarely continue for ever, and a damped forecast hedges between "the trend continues" and "it stops".
+
+### Running it across thousands of items
+
+- **Short histories:** with less than two full seasons of data, seasonal models are unreliable. Borrow the seasonal shape from the product family.
+- **Promotions and stockouts:** ETS has no inputs for drivers, so clean them out of the history to forecast the baseline, and add promotional uplift separately.
+- **Breaks:** after a structural change, re-initialize or shorten the history; otherwise the model takes many periods to forget the old level.
+- **Weekly data:** a year has about 52.18 weeks, which classic Holt-Winters can't represent exactly. Models with Fourier terms handle long or non-integer seasons better.
+
+<Trap>
+
+Multiplicative seasonality breaks down when the data contains zeros or values close to zero, because the indices become huge or undefined. For slow-moving items, use additive models or the intermittent-demand methods instead.
+
+</Trap>
+
+<KeyIdea>
+
+ETS turns exponential smoothing into proper statistical models with estimated parameters, automatic selection and prediction intervals. Damped trend is a safe default; clean promotions and stockouts from the history, and handle zeros and short histories with care.
+
+</KeyIdea>
 
 </Level>
 

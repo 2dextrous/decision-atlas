@@ -2,23 +2,27 @@
 title: Cash conversion cycle
 line: foundations
 summary: "How long cash stays tied up in operations: DIO + DSO − DPO, and the supply chain levers behind each part."
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 3 }
 status: draft
 keywords: [cash conversion cycle, CCC, cash to cash, DIO, DSO, DPO, working capital, days inventory outstanding, days sales outstanding, days payable outstanding, negative CCC]
 connected: [supply-chain-kpis, why-inventory, procurement-fundamentals, order-to-delivery, record-to-report]
 sources:
   - text: "Farris, M. T. & Hutchison, P. D. (2002). Cash-to-cash: the new supply chain management metric. International Journal of Physical Distribution & Logistics Management, 32(4), 288–298."
   - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson."
+  - text: "Richards, V. D., & Laughlin, E. J. (1980). A cash conversion cycle approach to liquidity analysis. Financial Management, 9(1), 32–38."
+  - text: "Hofmann, E., & Kotzab, H. (2010). A supply chain-oriented approach of working capital management. Journal of Business Logistics, 31(2), 305–330."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Days of stock, plus days to get paid, minus days before you pay." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Days of stock, plus days to get paid, minus days before you pay." next="How it works" nextMinutes={3}>
 
 The **cash conversion cycle (CCC)** measures how many days a company's own cash is tied up in running the business, from paying for materials to collecting from customers:
 
@@ -53,6 +57,89 @@ CCC = DIO + DSO − DPO. Break it into its parts and improve each one through th
   { term: 'DSO', def: 'Receivables ÷ revenue × 365: days customers take to pay.' },
   { term: 'DPO', def: 'Payables ÷ cost of goods sold × 365: days the company takes to pay suppliers.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="Calculating DIO, DSO and DPO from a company's accounts, and what ten fewer days of inventory are worth in cash." next="Deep dive" nextMinutes={3}>
+
+### From the accounts to the days
+
+$$
+DIO = \frac{\text{Inventory}}{\text{COGS}} \times 365 \qquad DSO = \frac{\text{Receivables}}{\text{Revenue}} \times 365 \qquad DPO = \frac{\text{Payables}}{\text{COGS}} \times 365
+$$
+
+Inventory and payables are compared with the cost of goods sold, because both are recorded at cost; receivables are compared with revenue, because customers owe the selling price.
+
+<Example title="a consumer-goods company">
+
+Revenue ₹500 crore, cost of goods sold ₹350 crore. On the balance sheet: inventory ₹57.5 crore, receivables ₹41.1 crore, payables ₹43.2 crore.
+
+- **DIO** = 57.5 / 350 × 365 ≈ 60 days.
+- **DSO** = 41.1 / 500 × 365 ≈ 30 days.
+- **DPO** = 43.2 / 350 × 365 ≈ 45 days.
+- **CCC** = 60 + 30 − 45 = **45 days.**
+
+Cutting inventory by 10 days of cost of goods sold releases 350 / 365 × 10 ≈ ₹9.6 crore of cash, once. At a 10% cost of capital, that is worth nearly ₹1 crore a year.
+
+</Example>
+
+### Where each part comes from
+
+<div class="table-wrap">
+
+| Component | Main levers |
+|---|---|
+| DIO | Forecast accuracy, safety stock policy, lead times, batch sizes, network design, clearing slow and obsolete stock |
+| DSO | Fast and accurate invoicing, proof of delivery, resolving disputes quickly, credit terms and collections |
+| DPO | Payment terms, payment run timing, supply chain finance |
+
+</div>
+
+Supply chain work touches all three: inventory decisions, the order-to-cash process that triggers invoicing, and the procure-to-pay process that sets payments.
+
+<KeyIdea>
+
+DIO and DPO use cost of goods sold, DSO uses revenue, and CCC = DIO + DSO − DPO. Each day of inventory removed releases a day of cost of goods sold in cash, and each component has its own supply chain levers.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={3} teaser="Year-end window dressing, negative cycles as a business model, supplier finance disclosure, MSME limits, and CCC in value creation.">
+
+### Measurement traps
+
+- **Year-end balances:** inventory and payables on 31 March can be managed (delaying purchases, holding payments) to make the ratios look better. Averages over the year, or monthly figures, are harder to dress up.
+- **Seasonal businesses:** a single date can be misleading if stock builds before a festive season.
+- **Different definitions:** some calculate DPO on purchases rather than cost of goods sold; comparisons need the same basis.
+
+### Negative cycles as a business model
+
+Some retailers and online platforms collect cash from customers immediately, turn inventory quickly and pay suppliers on normal terms, so the cycle is negative: suppliers effectively finance the business, and growth generates cash instead of consuming it. Dell's build-to-order model in the 1990s, collecting payment before building the computer, became a classic example. Achieving this depends on bargaining power and fast inventory turns, not on stretching suppliers until they suffer.
+
+### Supplier finance and disclosure
+
+When buyers lengthen payment terms and suppliers are paid early by a bank through reverse factoring, the buyer's DPO rises while suppliers still get their cash. Because this can make working capital look better than it is, accounting standards now require disclosure of supplier finance arrangements (amendments to IAS 7 and IFRS 7 issued in 2023), so investors can see their effect.
+
+### Limits on stretching suppliers
+
+In India, payments to registered micro and small enterprises must be made within 45 days, and late payments also affect tax deductions. Supplier health matters too: suppliers squeezed for cash raise prices, cut quality or fail. DPO improvements should come from fair terms and efficient processes, not from paying late.
+
+### CCC and value
+
+Working capital is part of the capital a business employs. Reducing it raises return on capital and free cash flow, which is why investors and boards watch the cash conversion cycle closely, and why supply chain improvements that cut inventory without hurting service are valued highly.
+
+<Trap>
+
+Improving the cycle by cutting inventory until stockouts start, or by paying suppliers late, makes the number better and the business worse. Pair CCC targets with service and supplier-health measures.
+
+</Trap>
+
+<KeyIdea>
+
+Measure CCC on averages with consistent definitions, see negative cycles as the result of power and speed, expect supplier finance to be disclosed, respect MSME payment limits, and improve working capital in ways that protect service and suppliers.
+
+</KeyIdea>
 
 </Level>
 

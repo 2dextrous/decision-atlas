@@ -2,23 +2,26 @@
 title: Sustainable optimization
 line: risk
 summary: Trading off cost, service and emissions in one model, and showing leadership the frontier of options instead of a single answer.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 3 }
 status: draft
 keywords: [sustainable optimization, multi-objective optimization, Pareto frontier, trade-off curve, carbon price, emissions cap, epsilon constraint, cost service carbon, green supply chain]
 connected: [carbon-aware-design, optimization-basics, esg-risk, network-design-decisions, lane-mode]
 sources:
   - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapter on sustainability and the supply chain."
   - text: "Ehrgott, M. (2005). Multicriteria Optimization (2nd ed.). Springer."
+  - text: "Dekker, R., Bloemhof, J., & Mallidis, I. (2012). Operations research for green logistics: An overview of aspects, issues, contributions and challenges. European Journal of Operational Research, 219(3), 671–679."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Cost, service and carbon in one model, and a curve of options instead of one answer." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Cost, service and carbon in one model, and a curve of options instead of one answer." next="How it works" nextMinutes={3}>
 
 Most optimization models chase one goal: lowest cost. **Sustainable optimization** adds emissions alongside cost and service, and accepts that you can't usually minimize all three at once. Cheaper often means fuller trucks and fewer sites (good for carbon too), but faster often means air freight and more stock near customers (bad for carbon).
 
@@ -50,6 +53,96 @@ Put carbon into the model as a price or a cap, solve across the range, and show 
   { term: 'Pareto frontier', def: 'The set of plans where no goal can improve without another getting worse.' },
   { term: 'Epsilon-constraint method', def: 'Optimizing one goal while capping the others at chosen levels.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="Adding carbon to a model as a price or a cap, reading the marginal cost of each step on the frontier, and choosing a plan with an internal carbon price." next="Deep dive" nextMinutes={3}>
+
+### Two ways to add carbon
+
+**As a price (weighted objective):**
+
+$$
+\min \; \text{Cost} + \lambda \times \text{Emissions}
+$$
+
+where $\lambda$ is a carbon price in rupees per tonne. Raising $\lambda$ moves the solution towards lower emissions.
+
+**As a cap (epsilon-constraint):**
+
+$$
+\min \; \text{Cost} \quad \text{subject to} \quad \text{Emissions} \le \varepsilon
+$$
+
+Solving for a range of caps $\varepsilon$ traces the frontier point by point.
+
+### Reading the frontier
+
+<Example title="the gist's four plans">
+
+<div class="table-wrap">
+
+| Step | Extra cost | Emissions cut | Cost per tonne avoided |
+|---|---|---|---|
+| Lowest cost → −15% | ₹1 crore | 7,500 t | about ₹1,333 |
+| −15% → −30% | ₹3 crore | 7,500 t | ₹4,000 |
+| −30% → −45% | ₹8 crore | 7,500 t | about ₹10,667 |
+
+</div>
+
+Each step costs more per tonne than the last: the **marginal abatement cost** rises. If the company uses an internal carbon price of ₹5,000 a tonne, the −30% plan is the right choice: the step to −30% costs less than ₹5,000 a tonne, while the step to −45% costs more than twice that.
+
+</Example>
+
+### What the model needs
+
+- Emission factors for every lane, mode and vehicle type, and energy use at every site.
+- The levers the model can choose: modes, consolidation, site locations, energy sources, packaging.
+- Cost and service data consistent with the emission data, so trade-offs are real.
+
+<KeyIdea>
+
+Add carbon as a price or as a cap, solve across a range, and read the cost per tonne of each step along the frontier. Compare it with an internal carbon price to choose a plan on explicit economics.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={3} teaser="Pareto optimality, why weighted sums can miss solutions, the shadow price of a cap, service and social goals, and avoiding intensity traps.">
+
+### Pareto optimality
+
+A plan is **Pareto optimal** if no other plan is better on one objective without being worse on another. Plans that are worse on every objective than some other plan are **dominated** and can be dropped. Decision makers should only ever choose among Pareto-optimal plans; the frontier shows them all.
+
+### Why weighted sums can miss plans
+
+Minimizing cost plus a weighted carbon term finds only the frontier points on its **convex hull**. In mixed-integer network models, the frontier often has dents: good compromise plans that no single weight will select. The epsilon-constraint method, solving with a cap on emissions, finds those too, which is why it is preferred for discrete network decisions.
+
+### The shadow price of a cap
+
+When emissions are capped, the solver also reports the cap's **shadow price**: how much total cost would fall if the cap were loosened by one tonne. That is the marginal abatement cost at that point, an implied carbon price. Comparing it with the company's internal carbon price, or with expected regulatory prices, shows whether a target is cheap or expensive at the margin.
+
+### Beyond carbon
+
+- **Service** is often the third objective: faster delivery usually means more emissions and cost. A three-way frontier, or a service constraint, keeps the trade-off visible.
+- **Social goals** (local sourcing, jobs in a region, supplier diversity) are harder to quantify but can enter as constraints or weighted scores.
+- **Uncertainty:** emission factors carry uncertainty too; test whether the chosen plan stays good if factors are 20% higher or lower.
+
+### Intensity versus absolute emissions
+
+A plan can cut emissions per unit while total emissions rise with growth. Targets aligned with climate science are usually absolute, so models should report both, and leadership should know which one a target refers to.
+
+<Trap>
+
+Choosing weights for cost and carbon without showing the trade-off curve hides the decision inside the model. Present the frontier and the cost per tonne of each step, and let leaders choose the point knowingly.
+
+</Trap>
+
+<KeyIdea>
+
+Choose among Pareto-optimal plans only, use epsilon-constraints to find compromise plans weighted sums miss, read the cap's shadow price as the implied carbon price, add service and social goals explicitly, and report absolute emissions alongside intensity.
+
+</KeyIdea>
 
 </Level>
 

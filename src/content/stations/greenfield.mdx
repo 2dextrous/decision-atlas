@@ -2,7 +2,7 @@
 title: Greenfield studies
 line: network
 summary: Designing a network from a blank map, step by step, and how that differs from redesigning the one you already have.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 3 }
 status: draft
 keywords: [greenfield, brownfield, network study, candidate sites, demand map, scenarios, sensitivity analysis, network optimization, location factors]
 connected: [facility-location, network-design-decisions, scenario-modeling, manufacturing-footprint, carbon-aware-design]
@@ -12,13 +12,15 @@ sources:
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Six steps from a demand map to a recommended network." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Six steps from a demand map to a recommended network." next="How it works" nextMinutes={3}>
 
 A **greenfield** study designs the network as if nothing existed yet: no plants or warehouses you must keep. A **brownfield** study starts from today's network and asks what to keep, close, move or add. Greenfield answers are useful even for companies with networks, because they show the ideal shape and how far the current one is from it.
 
@@ -44,6 +46,107 @@ Greenfield design starts from a blank map: demand, scenarios, candidate sites, c
   { term: 'Candidate site', def: 'A feasible location the optimization model may choose to open.' },
   { term: 'Sensitivity analysis', def: 'Testing how the recommended design changes when key inputs change.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="A small greenfield model solved four ways, showing what each extra warehouse buys in cost and coverage." next="Deep dive" nextMinutes={3}>
+
+### A toy model with real structure
+
+The FMCG example from the gist: annual demand of 10 lakh units, split North 2.5 lakh, West 3.5 lakh, South 2.5 lakh and East 1.5 lakh. One plant near Pune. Candidate warehouses in Delhi, Mumbai, Bengaluru and Kolkata, with approximate road distances between them.
+
+Assumptions:
+
+- Outbound: ₹3 a unit for local delivery plus ₹0.01 per unit per km from the warehouse.
+- Inbound from the plant: ₹0.004 per unit per km (full truckloads are cheaper).
+- Fixed cost: ₹1.2 crore a year per warehouse.
+- Inventory: ₹0.8 crore × $\sqrt{N}$ for $N$ warehouses.
+
+<Example title="best network for each number of warehouses">
+
+Every combination was evaluated; the table shows the cheapest for each count, with costs in ₹ crore a year.
+
+<div class="table-wrap">
+
+| Warehouses | Best sites | Outbound | Inbound | Fixed | Inventory | Total | Demand within 1,000 km |
+|---|---|---|---|---|---|---|---|
+| 1 | Mumbai | 1.19 | 0.06 | 1.20 | 0.80 | **3.25** | 60% |
+| 2 | Delhi, Mumbai | 0.77 | 0.27 | 2.40 | 1.13 | 4.57 | 85% |
+| 3 | Delhi, Mumbai, Kolkata | 0.55 | 0.29 | 3.60 | 1.39 | 5.83 | 100% |
+| 4 | All four | 0.30 | 0.36 | 4.80 | 1.60 | 7.06 | 100% |
+
+</div>
+
+On cost alone, one warehouse in Mumbai wins. But only 60% of demand is within 1,000 km. If the business promises fast delivery to at least 85% of demand, the answer becomes Delhi plus Mumbai, for ₹1.32 crore more a year; covering everyone costs ₹2.58 crore more.
+
+</Example>
+
+That is the real output of a greenfield study: not one answer, but the price of each level of service, so leadership can choose knowingly.
+
+### What a full study adds
+
+- Many more candidate sites, demand zones and products.
+- Capacity limits and options per site.
+- Freight rates by lane and shipment size, and transit times instead of distances.
+- Several demand scenarios, with the design evaluated across all of them.
+
+<KeyIdea>
+
+A greenfield model evaluates designs on total cost and service together. Its most useful output is the cost of each service level, which turns a technical result into a business decision.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={3} teaser="Designing for uncertain futures, the qualitative factors models miss, and turning an ideal design into a real transition.">
+
+### Robust designs, not just optimal ones
+
+The design that wins the base case may lose badly if demand shifts or costs rise. Common ways to choose under uncertainty:
+
+- **Expected cost:** weight each scenario by its probability and pick the lowest average.
+- **Minimax regret:** for each design, find its worst shortfall against the best possible design in any scenario, and pick the design whose worst regret is smallest.
+- **Stochastic optimization:** choose sites now (first stage), and let flows adjust in each scenario (second stage), minimizing expected total cost.
+
+The scenario modelling stop works through a regret table.
+
+### What the model doesn't see
+
+Shortlisting candidate sites and checking the final choice needs on-the-ground factors:
+
+- land availability, title and zoning; flood and earthquake risk,
+- labour availability, skills and wage trends,
+- road, rail and port access; reliable power,
+- state incentives, permits and local regulations,
+- proximity to key customers and to suppliers' sites.
+
+Many studies score these factors with weights and combine the scores with the model's cost results.
+
+### From ideal to real
+
+Most companies aren't truly greenfield, so the ideal design becomes a target, and the real work is the path to it:
+
+- **Phasing:** which sites to open, close or resize first, often timed with lease expiries.
+- **Transition costs:** dual running, severance, moving stock and equipment, temporary service dips.
+- **Quick wins:** sometimes changing flows (which warehouse serves which zone) captures much of the saving without any new site.
+
+### Data pitfalls
+
+- Demand by **bill-to** address (where invoices go) instead of **ship-to** address (where goods go) puts demand in the wrong places.
+- Freight rates from contracts can differ from what is actually paid; use invoice data where possible.
+- Growth assumptions by region matter more than any detail of the base year.
+
+<Trap>
+
+Running the study once, on the base case, and presenting a single optimal map hides how fragile it may be. Present the trade-off curves and scenario results, and show how much the recommendation depends on the key assumptions.
+
+</Trap>
+
+<KeyIdea>
+
+Choose designs that hold up across scenarios, score the factors models miss, plan the transition from today's network, and get demand and freight data right, especially ship-to locations and real paid rates.
+
+</KeyIdea>
 
 </Level>
 

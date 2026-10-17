@@ -2,7 +2,7 @@
 title: ETA prediction & shipment visibility
 line: logistics
 summary: Knowing where shipments are and when they will really arrive, and using that to act before customers notice a delay.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 3 }
 status: draft
 keywords: [ETA prediction, shipment visibility, GPS, telematics, track and trace, milestones, machine learning, exception management, control tower, proactive alerts]
 connected: [order-visibility, control-tower, ml-in-supply-chain, transport-planning, service-copilots]
@@ -10,16 +10,19 @@ sources:
   - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapter on information technology in a supply chain."
   - text: "Hyndman, R. J. & Athanasopoulos, G. Forecasting: Principles and Practice (3rd ed.). OTexts."
     url: "https://otexts.com/fpp3/"
+  - text: "Government of India. Digital Personal Data Protection Act, 2023."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="From 'it left on Monday' to 'it will arrive at 4 pm, and here's why it might not'." soon>
+<Level n={1} title="The gist" minutes={3} teaser="From 'it left on Monday' to 'it will arrive at 4 pm, and here's why it might not'." next="How it works" nextMinutes={3}>
 
 Once a shipment leaves, two questions matter: **where is it now**, and **when will it really arrive**?
 
@@ -47,6 +50,91 @@ Visibility shows where shipments are; ETA prediction shows when they'll really a
   { term: 'Milestone', def: 'A recorded event in a shipment’s journey, such as picked up, departed hub or delivered.' },
   { term: 'Predicted ETA', def: 'An arrival estimate from a model using route history and live conditions, ideally with a range.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="How an ETA model adds what the map misses, the data that feeds it, and measuring whether ETAs are any good." next="Deep dive" nextMinutes={3}>
+
+### From naive to predicted ETA
+
+<Example title="a truck 300 km from its destination at 8 am">
+
+- **Naive ETA:** 300 km at the current 45 km/h is 6.7 hours, arriving about 2:40 pm.
+- **Historical speed:** trucks on this corridor at this time of day average 38 km/h, so 7.9 hours: about 3:55 pm.
+- **Rest stop:** drivers on this route usually take a 30-minute break: about 4:25 pm.
+- **Destination rules:** the city restricts heavy trucks until 9 pm, so the truck can't reach the warehouse before then: about 9:15 pm.
+
+The planned 2:40 pm arrival was never possible. A model that knows the corridor, the driver patterns and the city's rules tells the warehouse in the morning, so it can schedule its dock and its labour for the evening.
+
+</Example>
+
+### What the model learns from
+
+- **Trip history:** past trips on the same lane, with actual arrival times.
+- **Live position and speed** from GPS devices, telematics or driver apps.
+- **Patterns by time:** traffic by hour and day, festivals, weather.
+- **Waiting times:** typical delays at toll plazas, checkpoints, hubs and customer docks.
+- **Rules and constraints:** city entry restrictions, driver hours, delivery appointments.
+
+Models such as gradient boosting learn how these combine, and quantile versions give a range (likely by 9:15 pm, almost certainly by 10 pm) instead of one time.
+
+### Is the ETA any good?
+
+- **Accuracy:** the share of arrivals within, say, an hour of the ETA, measured at fixed points before arrival (24 hours out, 4 hours out).
+- **Bias:** do trucks arrive consistently later than predicted?
+- **Calibration:** if the model says "90% sure by 10 pm", does that come true about 90% of the time?
+
+### Acting on it
+
+Predicted delays should trigger actions automatically or through a planner: rescheduling dock slots, informing customers with a new time, re-sequencing warehouse work, or sending stock from elsewhere for urgent orders.
+
+<KeyIdea>
+
+A predicted ETA adds what the map misses: real corridor speeds, breaks, waits and rules. Learn from trip history, give ranges, measure accuracy and calibration at fixed points, and connect delay predictions to actions.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={3} teaser="Data gaps and consent, the yard and the dock, ocean visibility, control towers, and proving the value of visibility.">
+
+### Data gaps and consent
+
+Visibility is only as good as its data. GPS devices fail or get switched off, phone-based tracking depends on the driver's handset and network, and carriers share data unevenly. Combining sources (devices, apps, toll and e-way bill records through government platforms such as ULIP, carrier updates) fills gaps. Tracking drivers' phones needs informed consent, and India's Digital Personal Data Protection Act, 2023 sets duties for handling such personal data.
+
+### The yard and the dock
+
+Many delays happen in the last few hundred metres: waiting at the gate, in the yard and at the dock. Visibility that stops at "arrived at customer" misses the hours spent waiting to unload, which drive detention charges and carrier dissatisfaction. Yard and dock scheduling systems, with appointment data, close that gap.
+
+### Ocean visibility
+
+For containers at sea, ship positions come from the automatic identification system (AIS) that vessels broadcast. Combining these with port congestion data, schedule changes and transshipment plans gives better arrival predictions than the shipping line's schedule. Cancelled sailings, port congestion and transshipment delays are common sources of surprise.
+
+### From visibility to a control tower
+
+A **control tower** combines visibility across shipments, orders and stock with rules and people who act on exceptions. The progression is the same as for any analytics: see what is happening, understand why, predict what will happen, and recommend or take action. Most of the value is in the last steps.
+
+### Proving the value
+
+Visibility projects should be judged on outcomes, such as:
+
+- fewer customer calls asking "where is my order?",
+- lower detention and demurrage charges,
+- better dock productivity from accurate arrival times,
+- fewer stockouts from late shipments caught in time,
+- lower safety stock where lead times became more predictable.
+
+<Trap>
+
+A visibility dashboard that nobody acts on is a cost, not a capability. Define in advance which exceptions trigger which actions, who owns them, and how the result will be measured.
+
+</Trap>
+
+<KeyIdea>
+
+Fill data gaps by combining sources and handle driver data with consent. Extend visibility to the yard, dock and ocean, build it into a control tower that acts on exceptions, and measure value in outcomes such as lower detention and fewer stockouts.
+
+</KeyIdea>
 
 </Level>
 

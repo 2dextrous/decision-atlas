@@ -2,7 +2,7 @@
 title: End-to-end process map
 line: sap
 summary: One customer order traced across SD, PP, MM, WM and FI/CO, with every hand-off between modules, plus the interactive map built from my Global Bike practice.
-minutes: { gist: 4 }
+minutes: { gist: 4, how: 3, deep: 3 }
 status: draft
 keywords: [SAP process map, end to end, integration, module hand-offs, order to cash, procure to pay, plan to produce, record to report, warehouse, Global Bike]
 connected: [order-to-cash, procure-to-pay, plan-to-produce, warehouse-in-sap, record-to-report]
@@ -13,13 +13,14 @@ sources:
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={4} teaser="Fourteen stops, five modules, and what each one hands to the next." soon>
+<Level n={1} title="The gist" minutes={4} teaser="Fourteen stops, five modules, and what each one hands to the next." next="How it works" nextMinutes={3}>
 
 Each SAP module makes sense on its own, but interviews love the hand-offs: what one module passes to the next. Here is one customer order followed all the way through:
 
@@ -57,6 +58,99 @@ SAP's value is in the hand-offs: a sales order creates demand for planning, plan
   { term: 'Document flow', def: 'The chain of linked documents from order to payment that lets you trace any transaction.' },
   { term: 'Stock vs money impact', def: 'What a step does to quantities, and what it posts in the books; good answers mention both.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="The documents and tables each hand-off creates, how to trace one order through them, and what typically breaks at each integration point." next="Deep dive" nextMinutes={3}>
+
+### The document trail
+
+<div class="table-wrap">
+
+| Step | Document | Main tables |
+|---|---|---|
+| Sales order | Sales document | VBAK, VBAP |
+| MRP | Planned orders, purchase requisitions | PLAF, EBAN |
+| Purchase order | Purchasing document | EKKO, EKPO |
+| Goods receipt, goods issue | Material document | MATDOC (S/4HANA) |
+| Any posting with value | Accounting document | BKPF, ACDOCA |
+| Supplier invoice | Invoice document | RBKP, RSEG |
+| Production | Production order | AUFK, AFKO, AFPO |
+| Delivery | Outbound delivery | LIKP, LIPS |
+| Billing | Billing document | VBRK, VBRP |
+| Links between SD documents | Document flow | VBFA |
+
+</div>
+
+### Tracing one order
+
+From the sales order (VA03), the **document flow** shows the delivery, goods issue and invoice with their numbers and statuses. From the purchase order (ME23N), the **purchase order history** shows every goods receipt and invoice against it. Each material and invoice document links to its accounting document. Following these links answers most "what happened to this order?" questions without guesswork.
+
+In the Global Bike exercises, document numbers follow typical number ranges: purchase orders starting 45 (4500000546), goods receipts 50 (5000000985), supplier invoices 51 (5105600427) and payments 15 (1500000157). Recognizing a document type from its number is a small skill interviewers notice.
+
+### What breaks at each hand-off
+
+<div class="table-wrap">
+
+| Hand-off | Typical failure | Where to look |
+|---|---|---|
+| SD to PP | Sales order creates no requirement | Schedule line category (CN instead of CP), planning strategy |
+| PP to MM | No requisition for a shortage | Procurement type, MRP type, planning file, lead times |
+| MM to supplier | PO not sent | Release strategy, output settings |
+| MM to FI | Goods receipt fails on accounts | OBYC for the valuation class and key |
+| MM to WM | Stock stuck in the GR area | Transfer requirement or order not created or confirmed |
+| SD to WM | No picking task | Delivery not relevant for picking, warehouse assignment |
+| SD to FI | Invoice not in accounting | VKOA revenue account determination |
+
+</div>
+
+<KeyIdea>
+
+Each hand-off creates documents stored in known tables and linked through document flow and PO history. Trace orders through those links, and when integration breaks, check the setting that governs that specific hand-off.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={3} teaser="How large companies automate the flow, EDI messages, bank statements and payments, process mining on SAP data, and measuring the end-to-end flow.">
+
+### How much is automatic in large companies
+
+- **Planning:** MRP runs nightly; planners work on exceptions, not on every material.
+- **Purchasing:** approved requisitions with a valid source become purchase orders automatically (ME59N), and orders go to suppliers electronically.
+- **Receiving and invoicing:** suppliers send advance shipping notices; invoices arrive electronically or are created by ERS; most match automatically.
+- **Payments and receipts:** payment runs pay due invoices; electronic bank statements clear customer payments and supplier payments automatically.
+- **Sales:** customer orders arrive by EDI or portal, are priced and checked automatically, and flow to delivery and billing with few touches.
+
+People handle the exceptions: blocks, shortages, disputes and changes.
+
+### EDI messages
+
+Electronic messages connect SAP with partners. Common ones: **ORDERS** (purchase order), **ORDRSP** (order confirmation), **DESADV** (dispatch advice or advance shipping notice) and **INVOIC** (invoice). In SAP they are exchanged as IDocs, which can be monitored and reprocessed when a message fails.
+
+### Bank statements
+
+Electronic bank statements are imported daily and matched to open items using rules (reference numbers, amounts, customer IDs). Well-tuned matching clears most customer payments automatically and leaves only exceptions for the receivables team.
+
+### Process mining on SAP data
+
+Because every step leaves a document with a timestamp, SAP data is well suited to **process mining**: reconstructing how orders actually flow, including rework loops (price changes after order creation, repeated credit blocks, invoice blocks) and variants nobody designed. The most common use is to find the few deviations that cause most delays and manual work.
+
+### Measuring the end-to-end flow
+
+End-to-end measures come straight from document timestamps: order-to-delivery cycle time from the sales order to goods issue; procure-to-pay cycle time from requisition to payment; the share of invoices matched automatically; the share of orders processed without manual touches. Tracking them shows whether integration and automation are actually working.
+
+<Trap>
+
+Describing SAP integration only as "modules talking to each other" misses what interviewers want: the specific documents created, the settings that control each hand-off and how you would trace a problem. Be concrete about documents, tables and settings.
+
+</Trap>
+
+<KeyIdea>
+
+In large companies the flow runs mostly automatically, from MRP and automatic POs to EDI messages, ERS and bank statement matching, with people handling exceptions. Process mining and timestamp-based measures show how well the end-to-end flow really works.
+
+</KeyIdea>
 
 </Level>
 

@@ -2,23 +2,26 @@
 title: Lane & mode optimization
 line: logistics
 summary: Choosing the best mode and carrier mix for each origin–destination lane, counting transit time and reliability as well as freight.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 3 }
 status: draft
 keywords: [lane, lane optimization, mode selection, carrier mix, transit time, service level, freight rate, pipeline inventory, intermodal, rail vs road]
 connected: [transport-fundamentals, carrier-procurement, intermodal, carbon-aware-design, transport-planning]
 sources:
   - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapter on transportation in a supply chain."
   - text: "Christopher, M. Logistics & Supply Chain Management. Pearson."
+  - text: "Allon, G., & Van Mieghem, J. A. (2010). Global dual sourcing: Tailored base-surge allocation to near- and offshore production. Management Science, 56(1), 110–124."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Every origin–destination pair gets its own best answer." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Every origin–destination pair gets its own best answer." next="How it works" nextMinutes={3}>
 
 A **lane** is an origin–destination pair: Mumbai plant to Delhi warehouse, Pune plant to Bengaluru warehouse. Companies run hundreds of lanes, and each one can be served by different modes and carriers at different prices, speeds and reliability.
 
@@ -45,6 +48,93 @@ Choose mode and carrier lane by lane on total cost: freight plus the inventory t
   { term: 'Mode selection', def: 'Choosing road, rail, sea, air or a combination for a flow.' },
   { term: 'Transit-time reliability', def: 'How consistent transit times are; variability drives safety stock.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="The Mumbai–Delhi choice worked through with pipeline stock and safety stock, for a cheap product and an expensive one." next="Deep dive" nextMinutes={3}>
+
+### Total cost per trip
+
+For each option, add freight to the inventory cost the option creates:
+
+- **Pipeline stock:** each extra day in transit holds the shipment's value for a day. Cost per trip = value × holding rate × extra days / 365.
+- **Safety stock:** a less reliable mode needs a larger buffer at the destination, roughly $z \times d \times \sigma_L$ when lead-time variability dominates.
+
+<Example title="rail or road, two products">
+
+The Delhi warehouse receives half a truckload a day (182.5 trips a year), holding cost is 25% a year and $z$ = 1.65. Rail is ₹18,000 cheaper per trip than road carrier A, but takes 2 days longer, and its transit time varies more ($\sigma_L$ of 1 day against 0.3 days).
+
+- Extra safety stock for rail: $1.65 \times 0.5 \times (1.0 - 0.3) \approx 0.58$ truckloads.
+
+<div class="table-wrap">
+
+| Per trip | Detergent, ₹5 lakh a truckload | Smartphones, ₹2 crore a truckload |
+|---|---|---|
+| Freight saved by rail | ₹18,000 | ₹18,000 |
+| Extra pipeline stock (2 days) | ₹685 | ₹27,397 |
+| Extra safety stock (spread over trips) | ₹396 | ₹15,822 |
+| **Net effect of choosing rail** | **saves ₹16,900** | **costs ₹25,200** |
+
+</div>
+
+Same lane, same trucks and trains, opposite answers: rail for detergent, road for phones.
+
+</Example>
+
+### Split lanes
+
+Many lanes are best served by two modes at once: the predictable base volume goes by the cheap, slow mode, and the variable or urgent part by the fast one. The slow mode's flow is planned well ahead; the fast mode absorbs surprises. This is the transport version of a base-and-surge strategy.
+
+### Volume and service decide the rest
+
+- **High, steady volume:** dedicated trucks, rail contracts or round trips.
+- **Thin or irregular volume:** part loads, shared networks or combining with nearby lanes.
+- **Tight service windows:** the fastest reliable option for that share of volume.
+
+<KeyIdea>
+
+Choose mode by lane on freight plus the pipeline and safety stock each option creates. Cheap, bulky products favour slow, cheap modes; valuable ones favour fast, reliable ones, and split lanes combine both.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={3} teaser="Reliability versus speed, base and surge in theory, peaks and capacity risk, and data that makes lane decisions honest.">
+
+### Reliability can matter more than speed
+
+Safety stock depends on the variability of lead time as much as on its length. A mode that takes 4 days, give or take a few hours, can need less buffer than one that averages 2 days but sometimes takes 5. Measure the distribution of transit times by lane and carrier, not just the average promised by the contract.
+
+### Base and surge
+
+Research on dual sourcing, such as Allon and Van Mieghem's "tailored base-surge" policy (2010), shows a simple structure works well: a slow, cheap source supplies a constant base rate, and a fast, expensive source responds to fluctuations. Applied to transport, the slow mode carries a steady flow sized below average demand, and the fast mode tops up when stock runs low. It captures most of the cost saving of the slow mode while keeping the responsiveness of the fast one.
+
+### Peaks and capacity risk
+
+In festive seasons and harvest periods, road capacity tightens and spot rates jump. Rail and long-term contracts can provide capacity when the spot market can't. Lane strategies should be tested against peak conditions: will contracted carriers actually accept loads, and what does the fallback cost?
+
+### Carbon and policy
+
+Mode choice is also the biggest lever for transport emissions, since rail and sea emit much less per tonne-kilometre than road and air. Dedicated freight corridors and better rail terminals are making rail more competitive in India, so lanes that were road-only a few years ago deserve a second look.
+
+### Data that makes it honest
+
+- Transit time distributions by lane, mode and carrier, from tracking data.
+- Full cost per mode, including drayage, terminal handling and damage.
+- Inventory value and holding rate by product.
+- Volume patterns by lane, including seasonality.
+
+<Trap>
+
+Planning on contract transit times instead of measured ones hides the variability that drives safety stock. A mode that is "2 days" on paper and 2 to 5 days in practice needs the buffer of a 5-day mode.
+
+</Trap>
+
+<KeyIdea>
+
+Reliability matters as much as speed, base-and-surge splits capture most of the savings of slow modes, peak capacity needs planning, and lane decisions must use measured transit times and full costs.
+
+</KeyIdea>
 
 </Level>
 

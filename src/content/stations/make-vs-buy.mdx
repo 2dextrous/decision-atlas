@@ -2,23 +2,27 @@
 title: Make vs buy & contract manufacturing
 line: sourcing
 summary: When to make something yourself, when to outsource it, and how to plan volume and capacity with co-packers.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 3 }
 status: draft
 keywords: [make or buy, outsourcing, insourcing, contract manufacturing, co-packing, co-manufacturing, core competence, capacity reservation, intellectual property, total cost]
 connected: [rccp, contracts, manufacturing-footprint, sop-ibp, supplier-selection]
 sources:
   - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapter on sourcing decisions in a supply chain."
   - text: "Van Weele, A. J. Purchasing and Supply Chain Management. Cengage Learning."
+  - text: "Williamson, O. E. (1985). The Economic Institutions of Capitalism. Free Press."
+  - text: "Prahalad, C. K., & Hamel, G. (1990). The core competence of the corporation. Harvard Business Review, 68(3), 79–91."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Keep what makes you different, outsource what others do better, and book partner capacity early." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Keep what makes you different, outsource what others do better, and book partner capacity early." next="How it works" nextMinutes={3}>
 
 Every company decides what to make itself and what to buy. The usual reasons to **make** something in-house are that it's core to your advantage (a secret formula, a key technology), that quality or intellectual property needs tight control, or that you have spare capacity. The usual reasons to **buy** are that a specialist does it cheaper or better, that you'd rather not tie up capital in plants, or that demand is too uncertain to justify your own capacity.
 
@@ -44,6 +48,84 @@ Make what gives you an advantage or needs tight control; buy what partners do be
   { term: 'Core competence', def: 'A capability that gives a company its competitive advantage and is hard to copy.' },
   { term: 'Capacity reservation', def: 'Paying in advance to guarantee a partner’s production capacity.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="Relevant costs only, a sachet-line decision with its break-even volume, and pricing co-packer capacity." next="Deep dive" nextMinutes={3}>
+
+### Count only the costs that change
+
+A make-or-buy comparison should include only **relevant costs**: those that differ between the options.
+
+- **Make:** variable production cost, plus the fixed costs that exist only if you make (new equipment, extra staff), plus the opportunity cost of capacity that could make something else.
+- **Buy:** the supplier's price, plus freight, quality checks, supplier management and any tooling you pay for.
+- Leave out costs that stay the same either way, such as the plant manager's salary or existing building depreciation.
+
+<Example title="shampoo sachets">
+
+A company needs 1 crore sachets a year.
+
+- **Make:** materials and variable conversion ₹1.20 a sachet; a new sachet line costs ₹2 crore, spread over 5 years (₹40 lakh a year), plus ₹20 lakh a year of extra staff. Fixed: ₹60 lakh a year, or ₹0.60 a sachet. Total ₹1.80.
+- **Buy:** a co-packer charges ₹1.65, plus ₹0.05 freight and ₹0.03 for quality oversight: ₹1.73.
+
+At 1 crore sachets, buying is cheaper. The make cost falls as volume grows, because the fixed cost is spread wider. Break-even is where $1.20 + 60\text{ lakh}/V = 1.73$, so $V \approx 1.13$ crore sachets. If volume is expected to grow well beyond that, the decision may flip.
+
+</Example>
+
+### Strategic factors, scored alongside cost
+
+- Is it core to our advantage (formula, technology, brand experience)?
+- Do we need tight control of quality, intellectual property or speed?
+- How uncertain is demand? Outsourcing avoids investing in capacity that may sit idle.
+- How many capable suppliers exist? Depending on one partner moves power to them.
+
+### Reserving co-packer capacity
+
+Good co-packers fill up before peak seasons. Companies often pay a reservation fee for guaranteed slots, which works like an option: pay a small amount now for the right to produce later. If a ₹5 lakh fee secures 20 lakh units of festive capacity that would otherwise be unavailable, the decision compares the fee with the margin at risk if the extra volume can't be made.
+
+<KeyIdea>
+
+Compare make and buy on relevant costs only, find the break-even volume, and weigh strategic factors alongside cost. Treat co-packer capacity reservations as options priced against the margin at risk.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={3} teaser="Transaction-cost and core-competence views, the risks of hollowing out, managing contract manufacturers well, and when to bring work back.">
+
+### Two classic lenses
+
+- **Transaction cost economics** (Williamson): buying from the market works best for standard, frequent transactions. When an activity needs **specific investments** (special tooling, dedicated know-how), faces high uncertainty, or is hard to specify and monitor, the cost of contracting rises, and making in-house or a close partnership becomes more attractive.
+- **Core competence** (Prahalad and Hamel, 1990): keep and invest in the capabilities that create your advantage and are hard for others to copy; outsource activities that aren't.
+
+### The risk of hollowing out
+
+Outsourcing manufacturing can gradually remove the engineering and process knowledge a company needs to design good products, judge suppliers and bring work back if needed. Boeing's 787 programme, which outsourced the design and building of major sections to partners, suffered long delays when integration problems surfaced. The lesson is not "never outsource" but "keep the knowledge needed to specify, integrate and evaluate what you outsource."
+
+### Managing contract manufacturers well
+
+- **Technology transfer** with complete specifications, trials and sign-off.
+- **Quality agreements** stating who tests what, release responsibilities and audit rights.
+- **Plan them in S&OP:** share forecasts and reserve capacity like your own plants.
+- **Open-book costing** where volumes are large, so price changes are explained by cost changes.
+- **Consigned materials:** buy key materials yourself, using your scale, and supply them to the manufacturer.
+- **Protect intellectual property** through contracts, split processes or keeping critical steps in-house.
+
+### When to bring work back
+
+Insourcing or reshoring becomes worth reviewing when volumes grow past the break-even, when quality or delivery problems persist, when the activity becomes strategic, or when the supply base becomes too concentrated or risky.
+
+<Trap>
+
+Loading "make" with allocated overheads that don't change with the decision makes buying look cheaper than it is, and outsourcing to escape internal inefficiency often just moves the inefficiency into a contract while capability leaks away.
+
+</Trap>
+
+<KeyIdea>
+
+Specific investments, uncertainty and core capabilities favour making; standard, easily specified work favours buying. Keep the knowledge to integrate what you outsource, manage contract manufacturers as part of planning, and revisit the decision as volumes and risks change.
+
+</KeyIdea>
 
 </Level>
 

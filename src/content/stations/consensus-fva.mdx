@@ -2,7 +2,7 @@
 title: Consensus forecasting & FVA
 line: demand
 summary: Letting sales, marketing and planner judgment into the forecast only where it actually makes the forecast better.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 3 }
 status: draft
 keywords: [consensus forecast, forecast value add, FVA, judgmental adjustment, overrides, forecast bias, sandbagging, S&OP, demand review, CPFR]
 connected: [forecast-accuracy, sop-ibp, forecasting-fundamentals, hierarchical-forecasting, lifecycle-forecasting]
@@ -13,13 +13,15 @@ sources:
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Measure each step of the forecasting process and keep only the ones that help." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Measure each step of the forecasting process and keep only the ones that help." next="How it works" nextMinutes={3}>
 
 Most companies don't ship the statistical forecast untouched. Sales adds customer intelligence, marketing adds promotions, planners make overrides, and a monthly meeting agrees one **consensus forecast**. Human input can add real information that the data doesn't have, such as a big new customer or a competitor's stockout. It can also add bias: sales teams may lowball to beat their targets, or inflate numbers to secure stock.
 
@@ -45,6 +47,97 @@ Every touch on the forecast should make it better, and FVA measures whether it d
   { term: 'Consensus forecast', def: 'The single demand plan agreed across sales, marketing, finance and supply.' },
   { term: 'Override', def: 'A manual change to the statistical forecast; worth keeping only if it improves accuracy.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="Building an FVA ladder with real numbers, reading it, and running the monthly demand review." next="Deep dive" nextMinutes={3}>
+
+### The FVA ladder
+
+Measure every step of the forecasting process on the same items, periods and lag, with the same error measure:
+
+<Example title="one quarter of a consumer-goods range">
+
+<div class="table-wrap">
+
+| Step | WMAPE | Bias | Value added vs previous step |
+|---|---|---|---|
+| Naive forecast | 40% | 0% | (baseline) |
+| Statistical forecast | 30% | +1% | +10 points |
+| Planner overrides | 33% | +6% | −3 points |
+| Final consensus | 31% | +4% | +2 points (still −1 against statistical) |
+
+</div>
+
+Reading it:
+
+- The statistical model earns its keep: 10 points better than doing nothing clever.
+- Planner overrides make the forecast *worse* and add a 6% upward bias, costing accuracy and building excess stock.
+- The consensus meeting recovers some ground but still ends below the plain statistical forecast.
+
+</Example>
+
+### What to do with the result
+
+- Break FVA down by item segment, contributor and type of adjustment. Overrides may help on promoted items and hurt on stable ones.
+- Require a reason code for every override (promotion, new customer, competitor event and so on), so value can be measured by reason.
+- Set thresholds: let small, stable items run untouched, and focus judgment on large or uncertain ones.
+- Share the findings every month; people improve when they see their own numbers.
+
+### The monthly demand review
+
+A typical cycle: close the month's data, run the statistical forecast, review exceptions (large errors, bias, big changes), collect sales and marketing input with reasons, hold the consensus meeting to agree one unconstrained demand plan, and hand it to supply planning and S&OP. FVA measurement runs across the whole cycle.
+
+<KeyIdea>
+
+Measure each step against the one before, on the same items and lag, for both accuracy and bias. Keep the steps that add value, target judgment where it helps, and drop touches that only add work or bias.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={3} teaser="What research says about judgmental adjustments, where bias comes from, and how to design a consensus process that adds value.">
+
+### What research says about adjustments
+
+A large study of more than 60,000 forecasts at four supply-chain companies (Fildes, Goodwin, Lawrence and Nikolopoulos, 2009) found patterns most companies will recognize:
+
+- **Large** adjustments tended to improve accuracy; **small** ones mostly added noise.
+- **Downward** adjustments were more often helpful; **upward** ones were frequently over-optimistic.
+- Adjustments worked best when based on specific information the model couldn't have, such as a known promotion or a lost customer.
+
+So judgment is valuable, but it should be rare, large and justified.
+
+### Where bias comes from
+
+- **Incentives:** sales teams measured against quota may forecast low to beat it, or high to secure scarce stock.
+- **Optimism:** new products, favourite customers and planned campaigns attract hopeful numbers.
+- **Anchoring and recency:** last month's number or the latest big order weighs too heavily.
+- **Hierarchy:** in a meeting, the most senior opinion can override the evidence.
+
+### Designing a process that adds value
+
+- **Separate forecast, target and plan.** The demand review produces an unconstrained forecast; targets and constrained supply plans are separate numbers, discussed openly.
+- **Structure the input.** Ask for specific information, such as customer plans, events and price moves, rather than "your number", and translate it into adjustments.
+- **Make value visible.** Publish FVA and bias by contributor regularly, without blame, so people learn where they help.
+- **Use statistics by default.** Let the model forecast most items untouched, and spend meeting time on exceptions and big decisions.
+- **Record decisions.** Note what was changed and why, so later reviews can check whether the reasoning held.
+
+### Is a meeting needed at all?
+
+For stable items, often not: an automated forecast with exception alerts can be better and cheaper. The consensus meeting earns its place on the few items and events where people know something material, and as the moment the business commits to one demand number it will plan against.
+
+<Trap>
+
+Measuring only the final forecast hides which step helps and which hurts. Without a ladder, a process can spend hundreds of hours a month making the forecast worse, and nobody notices.
+
+</Trap>
+
+<KeyIdea>
+
+Judgment helps when it is rare, large and based on specific information; small and upward adjustments often hurt. Design the process to collect evidence, separate forecasts from targets, and show every contributor their value added and bias.
+
+</KeyIdea>
 
 </Level>
 

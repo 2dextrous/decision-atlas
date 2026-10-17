@@ -2,23 +2,26 @@
 title: Cost-to-serve
 line: risk
 summary: What each customer, channel or order really costs once logistics and service are counted, and what to do about the unprofitable ones.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 3 }
 status: draft
 keywords: [cost to serve, CTS, customer profitability, activity-based costing, time-driven ABC, order profile, minimum order quantity, delivery frequency, channel profitability, pricing]
 connected: [segmentation-strategy, channel-design, load-building, service-level-policy, supply-chain-kpis]
 sources:
   - text: "Braithwaite, A. & Samakh, E. (1998). The cost-to-serve method. The International Journal of Logistics Management, 9(1), 69–84."
   - text: "Kaplan, R. S. & Anderson, S. R. (2004). Time-driven activity-based costing. Harvard Business Review, 82(11), 131–138."
+  - text: "Kaplan, R. S., & Narayanan, V. G. (2001). Measuring and managing customer profitability. Journal of Cost Management, 15(5), 5–15."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Two customers with the same revenue can have very different profits." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Two customers with the same revenue can have very different profits." next="How it works" nextMinutes={3}>
 
 Two distributors each buy ₹10 lakh of shampoo a month at the same price. On paper they're equally valuable. But:
 
@@ -47,6 +50,85 @@ Revenue doesn't equal profit. Cost-to-serve traces logistics and service costs t
   { term: 'Activity-based costing', def: 'Assigning costs according to the activities each customer or product actually causes.' },
   { term: 'Order profile', def: 'How a customer orders: size, frequency, mix and service extras.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="Time-driven activity-based costing step by step, and the two distributors worked through to profit." next="Deep dive" nextMinutes={3}>
+
+### Time-driven activity-based costing
+
+1. **Cost of capacity:** for each department, total cost per month divided by its practical capacity in minutes. A customer service team costing ₹6 lakh a month with 1,500 productive hours costs about ₹6.67 a minute.
+2. **Time per activity:** how long each activity takes, with extra time for variations (an order with special labels takes 25 minutes instead of 10).
+3. **Count the activities** each customer causes: orders, lines, deliveries, special requests, returns.
+4. **Multiply and add,** together with directly traceable costs such as freight and the financing cost of payment terms.
+
+<Example title="two distributors, ₹10 lakh of sales each per month">
+
+Gross margin is 15%, or ₹1,50,000 a month for each.
+
+<div class="table-wrap">
+
+| Cost per month | Distributor A | Distributor B |
+|---|---|---|
+| Order handling | 1 order × 10 min: ₹67 | 40 orders × 25 min: ₹6,667 |
+| Picking | 1 full-truck pick: ₹3,000 | 40 mixed picks × ₹600: ₹24,000 |
+| Transport | 1 full truck: ₹18,000 | 40 small drops × ₹1,500 + 10 rush deliveries × ₹2,000: ₹80,000 |
+| Special labels and packing | none | 40 × ₹500: ₹20,000 |
+| Financing payment terms (12% a year) | 30 days: ₹9,863 | 90 days: ₹29,589 |
+| **Cost to serve** | **₹30,930** | **₹1,60,256** |
+| **Profit after cost to serve** | **₹1,19,070** | **−₹10,256** |
+
+</div>
+
+Same sales and same price, but B loses money every month.
+
+</Example>
+
+### What the numbers suggest
+
+For B: a minimum order size or a small-order charge, fixed delivery days, a charge for special labels and rush deliveries, payment terms closer to A's, or serving B through a distributor or an online ordering channel with lower handling costs. Each changes B's costs or price to match the service it uses.
+
+<KeyIdea>
+
+Time-driven ABC costs each activity by its time and the capacity cost rate, then adds traceable costs such as freight and payment-term financing. Customers with identical sales can differ hugely in profit, which points to specific changes in terms and service.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={3} teaser="The customer profitability whale curve, why spreading costs by revenue misleads, service menus, and keeping the analysis alive.">
+
+### The whale curve
+
+Plotting cumulative profit against customers ranked from most to least profitable often produces a **whale curve**: profit climbs above 100% of the total with the best customers, then falls back as the least profitable customers erode it. Kaplan and Narayanan (2001) describe how such curves show that a minority of customers generates more than all the profit while others destroy part of it. The shape points to where action pays: improving the tail, not just growing the head.
+
+### Why spreading costs by revenue misleads
+
+Allocating logistics and service costs in proportion to sales (sometimes called "peanut-butter costing", spread evenly) makes every customer look equally profitable per rupee of sales. It hides the cost of small orders, rush deliveries, special packaging, returns and long payment terms, and it subsidizes demanding customers at the expense of efficient ones. Activity-based costing replaces assumptions with drivers.
+
+### Service menus
+
+Instead of one service for everyone, companies offer **service menus**: standard service at the base price, with extras (more frequent deliveries, rush orders, special labels, longer payment terms) priced separately or available only above certain volumes. Customers then choose the service they value enough to pay for, and demand for costly services falls to where it is worth it.
+
+### Strategic customers who lose money
+
+Some unprofitable customers are worth keeping: a flagship retailer that builds the brand, a growing channel, a customer whose volume fills a plant. The analysis doesn't decide for you; it shows the cost of the decision. The usual path is to reduce their cost to serve through collaboration (better forecasts, fuller orders, vendor-managed inventory) before changing terms.
+
+### Keeping it alive
+
+A one-off study fades quickly. Building cost-to-serve into regular reporting by customer, channel and product (refreshed quarterly, linked to account plans and pricing reviews) keeps decisions grounded in current costs.
+
+<Trap>
+
+Using cost-to-serve only to drop customers wastes most of its value. The bigger gains usually come from changing how customers are served (order patterns, delivery schedules, terms and channels) so that costs fall while the business is kept.
+
+</Trap>
+
+<KeyIdea>
+
+Customer profitability usually follows a whale curve. Replace revenue-based cost allocation with activity drivers, offer service menus priced by cost, treat strategic loss-makers deliberately, and build cost-to-serve into regular reporting.
+
+</KeyIdea>
 
 </Level>
 

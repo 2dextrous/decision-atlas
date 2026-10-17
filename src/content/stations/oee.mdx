@@ -2,7 +2,7 @@
 title: OEE & line performance
 line: supply
 summary: Availability × performance × quality, the losses each one hides, and how to read the number honestly.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 3 }
 status: draft
 keywords: [OEE, overall equipment effectiveness, availability, performance, quality, six big losses, TPM, utilization, efficiency, cycle time]
 connected: [bottlenecks, maintenance-planning, changeovers, supply-chain-kpis, lean-six-sigma-toc]
@@ -12,13 +12,15 @@ sources:
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="One number that shows how much of a line's time turns into good output." soon>
+<Level n={1} title="The gist" minutes={3} teaser="One number that shows how much of a line's time turns into good output." next="How it works" nextMinutes={3}>
 
 **OEE (overall equipment effectiveness)** asks a simple question: of the time a line was scheduled to run, how much turned into good product at full speed? It multiplies three factors:
 
@@ -49,6 +51,103 @@ OEE turns lost time, lost speed and lost quality into one number. Improve the fa
   { term: 'Performance', def: 'Actual output ÷ output at ideal speed during run time; lost to small stops and slow running.' },
   { term: 'Quality', def: 'Good units ÷ total units; lost to scrap and rework.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="The time model behind OEE, the shift's losses in minutes, the six big losses and TEEP." next="Deep dive" nextMinutes={3}>
+
+### OEE as a time model
+
+OEE is easiest to understand as time slipping away in stages:
+
+- **Planned production time:** the time the line was scheduled to run.
+- **Run time:** planned time minus stops (breakdowns, changeovers). Availability = run time ÷ planned time.
+- **Net run time:** the time the actual output would take at the ideal rate. Performance = net run time ÷ run time.
+- **Fully productive time:** the time the *good* output would take at the ideal rate. Quality = good units ÷ total units.
+
+OEE = fully productive time ÷ planned production time, which is the same as multiplying the three factors.
+
+<Example title="the filling line's shift in minutes">
+
+Planned 480 minutes, ideal rate one bottle every 0.6 minutes.
+
+<div class="table-wrap">
+
+| Stage | Minutes | Loss |
+|---|---|---|
+| Planned production time | 480 | |
+| Run time | 432 | 48 min of breakdown and changeover |
+| Net run time (648 bottles × 0.6) | 388.8 | 43.2 min of small stops and slow running |
+| Fully productive time (616 good × 0.6) | 369.6 | 19.2 min making bad bottles |
+| **OEE** | **77%** | 369.6 ÷ 480 |
+
+</div>
+
+Seen as minutes, the losses can be compared directly: breakdowns and changeovers cost the most here, then speed losses, then quality.
+
+</Example>
+
+### The six big losses
+
+<div class="table-wrap">
+
+| Factor | Losses |
+|---|---|
+| Availability | Breakdowns; set-ups and adjustments |
+| Performance | Small stops and idling; reduced speed |
+| Quality | Start-up rejects; production rejects and rework |
+
+</div>
+
+### OEE, utilization and TEEP
+
+OEE measures how well the *planned* time is used. **TEEP** (total effective equipment performance) also counts the time the line wasn't planned to run: TEEP = OEE × (planned time ÷ calendar time). If the line runs two shifts out of three, TEEP = 77% × 16/24 ≈ 51%. TEEP shows how much hidden capacity exists before buying new equipment: often a third shift or weekend work before new capital.
+
+<KeyIdea>
+
+OEE is fully productive time divided by planned time: availability, performance and quality losses expressed in one currency, minutes. The six big losses tell you where they come from, and TEEP adds the time the line was never planned to run.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={3} teaser="Choosing the ideal rate, how OEE gets inflated, where to use it, and the right improvement sequence.">
+
+### The ideal rate decides everything
+
+Performance compares actual output with an **ideal cycle time**. Choose it badly and OEE means nothing:
+
+- Use the equipment's true best rate (design speed or the best demonstrated rate), not a slow "standard" rate. With a padded standard, performance can exceed 100% while real losses stay hidden.
+- Use the same rule across lines and keep it stable, or trends become meaningless.
+
+### How OEE gets inflated
+
+- **Excluding stops from planned time:** if changeovers, cleaning or meetings are counted as "unplanned time", availability rises without any improvement.
+- **Counting reworked units as good:** quality looks better while rework consumes capacity.
+- **Manual data:** short stops of a minute or two are rarely written down, so performance losses vanish. Automatic counting on the line usually reveals far more small stops than anyone recorded.
+
+### Where to use it
+
+OEE matters most at the bottleneck, where every lost minute is lost plant output. Pushing OEE up on non-bottleneck machines may only produce more work in process. Comparing OEE between plants or companies is risky because definitions differ; a line's own trend, with a fixed definition, is far more useful. The often-quoted world-class figure of about 85% traces back to Nakajima's work on TPM, built from roughly 90% availability, 95% performance and 99.9% quality.
+
+### The improvement sequence
+
+1. Measure losses reliably, ideally automatically.
+2. Attack the largest loss on the bottleneck first: often changeovers (SMED) or breakdowns (maintenance).
+3. Standardize the fix, then move to the next loss.
+4. Involve operators: autonomous maintenance and quick problem-solving at the line fix many small stops.
+
+<Trap>
+
+An OEE target without a fixed definition invites gaming. Agree the ideal rate, what counts as planned time and what counts as good before setting targets, and audit the data source.
+
+</Trap>
+
+<KeyIdea>
+
+OEE is only as honest as its ideal rate and its definition of planned time. Use it mainly at the bottleneck, track trends rather than cross-plant comparisons, and attack the largest measured loss first.
+
+</KeyIdea>
 
 </Level>
 

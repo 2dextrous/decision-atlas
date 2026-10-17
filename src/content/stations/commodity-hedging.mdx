@@ -2,23 +2,26 @@
 title: Commodity price risk & hedging
 line: sourcing
 summary: Locking in input prices to limit cost swings, with contracts, forwards and futures, and why hedging is about stability, not winning.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 4 }
 status: draft
 keywords: [commodity risk, price risk, hedging, forward contract, futures, MCX, index-linked contract, fixed-price contract, cost volatility, natural hedge]
 connected: [contracts, kraljic, scenario-planning, tariffs-trade, cost-to-serve]
 sources:
   - text: "Hull, J. C. Options, Futures, and Other Derivatives. Pearson."
   - text: "Sodhi, M. S. & Tang, C. S. (2012). Managing Supply Chain Risk. Springer."
+  - text: "Hull, J. C. (2022). Options, Futures, and Other Derivatives (11th ed.). Pearson."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Trade some upside for certainty, so a price spike can't wreck the plan." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Trade some upside for certainty, so a price spike can't wreck the plan." next="How it works" nextMinutes={3}>
 
 Many products depend on raw materials whose prices swing: palm oil for soaps and snacks, crude-linked plastics for packaging, steel and aluminium for appliances, copper for cables. If palm oil jumps 30% in a quarter, a soap maker's margin can disappear before prices to customers can be raised.
 
@@ -44,6 +47,102 @@ Hedging buys certainty, not profit. Lock in part of your exposure on a rolling b
   { term: 'Futures contract', def: 'A standardized forward traded on an exchange, settled daily.' },
   { term: 'Natural hedge', def: 'Matching costs and revenues in the same currency or commodity so moves offset.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="A palm-oil hedge with futures worked through for prices up and down, options as insurance, and a layered hedging programme." next="Deep dive" nextMinutes={4}>
+
+### A futures hedge in numbers
+
+<Example title="1,000 tonnes of palm oil in three months">
+
+Today's futures price is ₹90,000 a tonne. The soap maker hedges 60%: it buys futures for 600 tonnes. In three months it buys the physical oil at the market price and closes the futures position.
+
+<div class="table-wrap">
+
+| | Price rises to ₹1,10,000 | Price falls to ₹75,000 |
+|---|---|---|
+| Physical purchase compared with today | ₹2 crore more | ₹1.5 crore less |
+| Futures result | ₹1.2 crore gain | ₹90 lakh loss |
+| Net change | ₹80 lakh more | ₹60 lakh less |
+| Effective price per tonne | ₹98,000 | ₹84,000 |
+
+</div>
+
+Unhedged, the price could land anywhere from ₹75,000 to ₹1,10,000. Hedged at 60%, the range narrows to ₹84,000–₹98,000. The hedge loses money when prices fall, which is exactly what it should do.
+
+</Example>
+
+### Options: insurance with a premium
+
+A call option gives the right, not the obligation, to buy at a set price. Suppose a strike of ₹95,000 with a ₹3,000 premium:
+
+- If the price rises to ₹1,10,000, the company effectively pays ₹95,000 + ₹3,000 = ₹98,000.
+- If it falls to ₹75,000, it lets the option lapse and pays ₹75,000 + ₹3,000 = ₹78,000.
+
+The option caps the price but keeps most of the benefit of a fall, at the cost of the premium, like insurance.
+
+### A layered programme
+
+Rather than hedging everything at once, many companies hedge in layers: for example 70% of next quarter's needs, 50% of the quarter after and 30% of the third, topping up each month. Price changes then flow into costs gradually, which gives time to adjust selling prices, and no single decision bets on the market's timing.
+
+### Practical details
+
+- **Basis risk:** the futures contract's grade and delivery location rarely match what you actually buy, so the hedge isn't perfect.
+- **Margin calls:** futures are marked to market daily; a hedge that will pay off later can demand cash now.
+- **Exchanges:** in India, MCX lists metals and energy and NCDEX lists agricultural commodities, both regulated by SEBI; international exchanges list contracts such as crude palm oil futures in Malaysia.
+
+<KeyIdea>
+
+Futures lock in a price on the hedged share and narrow the range of outcomes; options cap the price for a premium while keeping the upside. Layered hedging smooths costs over time, and basis risk and margin calls must be planned for.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={4} teaser="Hedge accounting, governance that prevents speculation, competitors' positions, currency links and physical alternatives to financial hedges.">
+
+### Hedge accounting
+
+Futures and options are marked to market, so without special treatment their gains and losses hit profit each quarter, while the purchases they protect show up later. **Hedge accounting** under Ind AS 109 (which follows IFRS 9) lets companies match the hedge's result with the hedged purchase, provided the hedge relationship is documented and shown to be effective. Without it, a sound hedge can make reported earnings more volatile, not less.
+
+### Governance prevents speculation
+
+A hedging policy approved by the board typically sets:
+
+- which commodities and currencies may be hedged, and which instruments are allowed,
+- maximum and minimum hedge ratios by time horizon,
+- who can trade, with separation between the people who trade, confirm and account,
+- limits on positions and losses, and regular reporting.
+
+Hedging more than the real exposure, or trading on a view of where prices are going, is speculation. Well-known corporate derivatives disasters, such as Metallgesellschaft's oil hedging losses in the early 1990s, are reminders that cash needs for margin calls and the funding of a hedge matter as much as its economic logic.
+
+### Your competitors' positions matter
+
+If competitors don't hedge and prices fall, they can cut selling prices while you are locked into higher costs. If they do hedge and you don't, a price spike hurts only you. Some companies therefore hedge roughly in line with industry practice, or prefer contracts that pass index changes through to customers, so their margins move with the market rather than against it.
+
+### Currency is part of the exposure
+
+Many commodities are priced in US dollars. An Indian buyer of palm oil or copper is exposed to both the commodity price and the rupee–dollar rate, and the two can move together or offset each other. Hedging programmes usually treat the combined rupee cost as the exposure.
+
+### Physical alternatives
+
+- **Formulation flexibility:** recipes that can switch between oils, resins or metals when relative prices change.
+- **Supplier contracts:** fixed or capped prices, or index links with collars that limit moves in either direction.
+- **Stock building** when prices are favourable, within storage and shelf-life limits.
+- **Pass-through pricing** to customers, where the market accepts it.
+
+<Trap>
+
+Judging a hedge by whether it made money confuses hedging with betting. A hedge that loses on the derivatives while the physical purchase got cheaper did its job: it delivered the planned cost. Judge hedges by whether costs stayed within the planned range.
+
+</Trap>
+
+<KeyIdea>
+
+Use hedge accounting so reported results reflect the economics, enforce a policy that forbids speculation, consider competitors' exposure and currency together, and combine financial hedges with physical levers such as flexible formulations and index-linked contracts.
+
+</KeyIdea>
 
 </Level>
 

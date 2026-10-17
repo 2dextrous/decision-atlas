@@ -2,7 +2,7 @@
 title: Order to cash (SD)
 line: sap
 summary: "From customer order to payment in SAP SD: VA01 to F-28, the pricing logic in between, and what each step posts in finance."
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 4, deep: 4 }
 status: draft
 keywords: [order to cash, SAP SD, sales area, inquiry, quotation, sales order, VA01, pricing, condition technique, availability check, credit check, outbound delivery, VL01N, post goods issue, movement type 601, billing, VF01, incoming payment, F-28, document flow]
 connected: [order-to-delivery, atp-ctp, record-to-report, sap-process-map, warehouse-in-sap]
@@ -13,6 +13,8 @@ sources:
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
@@ -20,7 +22,7 @@ import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 import FromPractice from '../../components/content/FromPractice.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="The sell-side mirror of procure to pay, step by step in SAP." soon>
+<Level n={1} title="The gist" minutes={3} teaser="The sell-side mirror of procure to pay, step by step in SAP." next="How it works" nextMinutes={4}>
 
 Order to cash in SAP SD mirrors procure to pay from the seller's side. In fact, your customer's purchase order becomes your sales order:
 
@@ -57,6 +59,96 @@ Order to cash: sales order (VA01) → delivery (VL01N) → pick → post goods i
   { term: 'Condition technique', def: 'SAP pricing logic: condition types in a pricing procedure, filled from condition records.' },
   { term: 'Post goods issue (PGI)', def: 'The step that reduces stock, transfers ownership and posts cost of goods sold.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={4} teaser="The configuration behind a sales order (document types, item and schedule line categories), pricing procedure determination, and a discount calculated two ways." next="Deep dive" nextMinutes={4}>
+
+### What a sales order is made of
+
+- **Sales document type:** such as OR (standard order), QT (quotation), IN (inquiry), RE (returns), CR (credit memo request).
+- **Item category:** determined from the document type and the material's item category group, such as TAN (standard), TANN (free of charge) or TAS (third-party). It controls pricing, delivery and billing relevance.
+- **Schedule line category:** such as CP, which passes requirements to MRP, or CN, which doesn't. It decides whether an order creates demand for planning.
+- **Copy control:** rules for creating one document from another (quotation to order, order to delivery, delivery to invoice).
+
+### Pricing procedure determination
+
+The pricing procedure for an order is found from three keys: the **sales area**, the **document pricing procedure** (from the document type) and the **customer pricing procedure** (from the customer master). This determination is configured in OVKK. Each condition type in the procedure, for example the base price (PR00 in ECC, PPR0 in S/4HANA), material and customer discounts (K004, K007), percentage discounts (RA00, RA01) and freight (KF00), has an **access sequence** that searches condition records from the most specific to the most general.
+
+<Example title="the same 5% discount, from net or from gross">
+
+Gross price 1,000; an absolute discount of 50 earlier in the procedure leaves 950. A 5% discount then gives:
+
+- **RA00 (percentage from net):** 5% of 950 = 47.50.
+- **RA01 (percentage from gross):** 5% of 1,000 = 50.00.
+
+The difference is 2.50 a unit, or 12.50 on five units. Choosing the condition type decides which base the percentage applies to, which is how an invoice can change by a small amount that looks like a rounding error but isn't.
+
+</Example>
+
+### Checks at order entry
+
+- **Availability (ATP):** controlled by the material's checking group and the checking rule for the transaction.
+- **Credit:** in S/4HANA, SAP Credit Management checks the order against the customer's credit limit and blocks it if needed; blocked orders are released by credit management.
+- **Incompleteness:** the incompletion log lists missing data, such as a missing purchase order number or delivery date, that blocks follow-on steps.
+
+### Revenue postings
+
+Billing posts revenue to accounts found by **revenue account determination** (VKOA), using keys such as ERL for revenue and ERS for sales deductions, combined with the customer's and material's account assignment groups.
+
+<KeyIdea>
+
+Document type, item category and schedule line category decide how an order behaves; OVKK finds the pricing procedure, access sequences find condition records, and the choice of condition type (such as RA00 or RA01) changes the result. ATP, credit and incompletion checks guard the order, and VKOA sends revenue to the right accounts.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={4} teaser="Special sales processes, advanced ATP and product allocation, rebates in S/4HANA, the key tables behind document flow, and troubleshooting stuck orders.">
+
+### Special sales processes
+
+- **Consignment:** stock at the customer's site remains yours until used: fill-up (KB), issue (KE), pick-up (KA) and returns (KR).
+- **Third-party orders:** item category TAS creates a purchase requisition so the supplier ships directly to the customer.
+- **Returns and credit memos:** a returns order (RE) brings goods back; credit memo requests (CR) and debit memo requests (DR) correct invoices.
+- **Cash sales (BV) and rush orders (SO):** delivery and billing happen immediately or the same day.
+- **Intercompany sales:** one company code sells while another delivers, with internal billing between them.
+
+### Advanced ATP and product allocation
+
+S/4HANA's **advanced ATP** adds:
+
+- **Product allocation:** quotas by customer, region or channel, consumed by orders.
+- **Alternative-based confirmation:** checking other plants or substitute products.
+- **Backorder processing:** re-confirming open orders by priority when supply changes, with rules such as "win", "gain", "redistribute" and "fill" for different customer groups.
+
+### Rebates in S/4HANA
+
+Classic SD rebate agreements are replaced in S/4HANA by **condition contracts** in settlement management, which handle accruals and settlement of rebates and other incentives.
+
+### The tables behind the flow
+
+Orders are stored in VBAK and VBAP (header and items), deliveries in LIKP and LIPS, billing documents in VBRK and VBRP, and the links between them in VBFA, the document flow. Knowing them helps when building reports or tracing what happened to an order.
+
+### Troubleshooting stuck orders
+
+- **Order won't save or is incomplete:** check the incompletion log.
+- **Order blocked:** credit block, delivery block or a missing approval.
+- **No delivery created:** no stock confirmed by ATP, a delivery block, a wrong shipping point or route, or the delivery date not yet due.
+- **No billing:** billing block, delivery not goods-issued, or the item isn't billing-relevant.
+- **Invoice not in accounting:** revenue account determination failed; fix VKOA and release the billing document to accounting (VFX3).
+
+<Trap>
+
+Answering "the invoice didn't post to finance" with "the system has a bug" misses the usual cause: missing account determination for that combination of account key and account assignment groups. Check VKOA before anything else.
+
+</Trap>
+
+<KeyIdea>
+
+Know the special processes (consignment, third-party, returns, cash and rush orders, intercompany), use advanced ATP for allocation and backorder processing, expect condition contracts for rebates in S/4HANA, know the order tables and VBFA, and troubleshoot stuck orders step by step from incompletion to accounting release.
+
+</KeyIdea>
 
 </Level>
 

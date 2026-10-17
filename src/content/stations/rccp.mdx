@@ -2,23 +2,27 @@
 title: Rough-cut capacity check
 line: supply
 summary: Testing whether the production plan fits the bottleneck resources before anyone commits to it.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 3 }
 status: draft
 keywords: [RCCP, rough-cut capacity planning, capacity requirements planning, CRP, bottleneck, capacity gap, load profile, critical resource, feasibility]
 connected: [mps, bottlenecks, sop-ibp, workforce-planning, make-vs-buy]
 sources:
   - text: "Silver, E. A., Pyke, D. F. & Thomas, D. J. (2017). Inventory and Production Management in Supply Chains (4th ed.). CRC Press."
   - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson."
+  - text: "Hopp, W. J., & Spearman, M. L. (2008). Factory Physics (3rd ed.). McGraw-Hill."
+  - text: "Kingman, J. F. C. (1961). The single server queue in heavy traffic. Mathematical Proceedings of the Cambridge Philosophical Society, 57(4), 902–904."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="A quick feasibility test against the few resources that really limit output." soon>
+<Level n={1} title="The gist" minutes={3} teaser="A quick feasibility test against the few resources that really limit output." next="How it works" nextMinutes={3}>
 
 A plan can look fine on paper and still be impossible on the shop floor. **Rough-cut capacity planning (RCCP)** is the quick check that catches this early. It doesn't look at every machine; it looks at the few **critical resources**, the bottleneck lines, scarce skills or a key supplier, and asks whether the plan fits.
 
@@ -44,6 +48,98 @@ Check the plan against the bottleneck before committing. RCCP flags infeasible p
   { term: 'Capacity gap', def: 'Planned load minus available capacity on a critical resource.' },
   { term: 'CRP', def: 'Capacity requirements planning: detailed load checking for every work centre after MRP.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="Bills of capacity, a weekly load profile against the bottleneck, and how RCCP differs from detailed capacity planning." next="Deep dive" nextMinutes={3}>
+
+### Bills of capacity
+
+RCCP needs, for each product family, the time it takes on each critical resource: a **bill of capacity** (or resource profile). Multiply the plan by those times and compare the load with the capacity available.
+
+<Example title="the filling line">
+
+Every 1,000 units need 5 hours on the filling line, including an average share of changeovers. The line runs one 8-hour shift on 25 days a month: 200 hours, or 50 hours a week, enough for 10,000 units a week.
+
+<div class="table-wrap">
+
+| Week | 1 | 2 | 3 | 4 | Month |
+|---|---|---|---|---|---|
+| Plan (units) | 12,000 | 14,000 | 12,000 | 12,000 | 50,000 |
+| Load (hours) | 60 | 70 | 60 | 60 | 250 |
+| Available (hours) | 50 | 50 | 50 | 50 | 200 |
+| Gap (hours) | −10 | −20 | −10 | −10 | −50 |
+
+</div>
+
+The month is 50 hours short: 10,000 units, with the worst week second. Options: Saturday overtime, a second shift on some days, moving volume to a co-packer, building ahead in the previous month if it had spare hours, or changing the plan.
+
+</Example>
+
+Three common methods, in rising accuracy: overall factors (total hours split across resources by historical shares), bills of capacity (hours per unit by resource, as above) and resource profiles (bills of capacity spread over the lead time, so load lands in the right week).
+
+### RCCP versus CRP
+
+<div class="table-wrap">
+
+| | RCCP | CRP |
+|---|---|---|
+| Runs on | Master production schedule | MRP planned and released orders |
+| Uses | Bills of capacity | Detailed routings |
+| Resources | Critical ones only | Every work centre |
+| When | Before releasing the MPS | Closer to execution |
+| Purpose | Is the plan feasible on the bottlenecks? | Is each work centre's load feasible week by week? |
+
+</div>
+
+<KeyIdea>
+
+RCCP multiplies the plan by hours per unit on each critical resource and compares the load with available hours, week by week. It flags gaps early; CRP later checks every work centre against the detailed orders.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={3} teaser="Demonstrated versus nameplate capacity, why 100% utilization is a trap, and choosing which resources to watch.">
+
+### Which capacity number?
+
+- **Nameplate (design) capacity:** what the equipment could do under ideal conditions.
+- **Effective capacity:** after planned stops such as changeovers, maintenance and breaks.
+- **Demonstrated capacity:** what the line has actually produced over recent weeks.
+
+Plans built on nameplate capacity are systematically infeasible. Demonstrated capacity, adjusted for any real improvements, is the honest basis for RCCP.
+
+### Why planning to 100% is a trap
+
+Queueing theory explains why a resource loaded close to 100% creates long waits. In Kingman's approximation, waiting time grows with $u/(1-u)$, where $u$ is utilization. At 80% that factor is 4; at 90% it is 9; at 95% it is 19. Pushing a bottleneck from 90% to 95% roughly doubles the queue in front of it, and with it the lead time and the work in process. That is why sensible plans leave some headroom on the bottleneck, especially when arrivals and processing times vary.
+
+### Choosing critical resources
+
+Critical resources are those that limit output or are hard to expand quickly:
+
+- bottleneck machines or lines,
+- scarce skills, such as certified welders or quality approvers,
+- key suppliers with limited capacity,
+- storage space, cold rooms or dock doors in peak season.
+
+Keep the list short (a handful per plant) and review it when the product mix changes, because a mix shift can move the bottleneck.
+
+### Capacity decisions are trade-offs
+
+RCCP finds the gap; closing it is an economic choice. Overtime costs a premium, subcontracting costs margin and control, building ahead costs inventory, and changing the plan costs sales or service. These options usually go to the supply review in S&OP with their costs, where they are compared and decided.
+
+<Trap>
+
+Treating RCCP as a one-off check before the plan is released misses its main value: run every planning cycle, it shows capacity problems months ahead, while cheap options such as building ahead or arranging a co-packer are still open.
+
+</Trap>
+
+<KeyIdea>
+
+Use demonstrated capacity, leave headroom because queues explode near 100% utilization, watch a short list of truly critical resources, and send gaps to S&OP as costed options early enough to matter.
+
+</KeyIdea>
 
 </Level>
 

@@ -2,23 +2,26 @@
 title: Returns management
 line: orders
 summary: Handling customer returns quickly and cheaply, deciding what happens to each item, and preventing returns in the first place.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 3 }
 status: draft
 keywords: [returns management, RMA, return authorization, return reasons, refund, disposition, grading, returns fraud, return rate, reverse logistics, e-commerce returns]
 connected: [reverse-logistics, order-to-delivery, slow-obsolete, service-copilots, cost-to-serve]
 sources:
   - text: "Rogers, D. S. & Tibben-Lembke, R. S. (1999). Going Backwards: Reverse Logistics Trends and Practices. Reverse Logistics Executive Council."
   - text: "Guide, V. D. R. & Van Wassenhove, L. N. (2009). The evolution of closed-loop supply chain research. Operations Research, 57(1), 10–18."
+  - text: "Government of India (2020). Consumer Protection (E-Commerce) Rules, 2020. Ministry of Consumer Affairs, Food and Public Distribution."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Make returns easy for customers, cheap for the business, and rarer over time." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Make returns easy for customers, cheap for the business, and rarer over time." next="How it works" nextMinutes={3}>
 
 Returns are part of selling, especially online, where customers can't touch or try products first. Fashion e-commerce sees far higher return rates than stores. Each return costs money twice: the reverse shipping and handling, and the value lost if the item can't be resold at full price.
 
@@ -44,6 +47,83 @@ Make returns easy and fast for customers, decide each item's fate quickly to kee
   { term: 'Disposition', def: 'The decision on what happens to a returned item.' },
   { term: 'Return reason code', def: 'The recorded reason for a return, used to spot and fix root causes.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="What a return really costs, reading return reasons, and the policy levers that change the flow." next="Deep dive" nextMinutes={3}>
+
+### The full cost of a return
+
+<Example title="a fashion e-commerce business">
+
+1,000 orders at an average of ₹1,500, so ₹15 lakh of sales. 25% of orders are returned. Each return costs:
+
+- reverse pickup ₹80,
+- inspection and handling ₹40,
+- refund processing ₹10,
+- lost value, because many items can't be resold at full price: about 15% of ₹1,500 = ₹225.
+
+That is ₹355 per return; 250 returns cost ₹88,750, about 5.9% of sales, before counting the outbound shipping already paid on those orders.
+
+</Example>
+
+### Reading return reasons
+
+A typical breakdown might look like this: size or fit 45%, not as described 20%, changed mind 15%, damaged in transit 10%, other 10%. Each points to a different fix:
+
+- **Size and fit:** better size charts, fit recommendations from customer data, reviews that mention fit.
+- **Not as described:** accurate photos, colours and specifications.
+- **Damaged:** packaging and handling fixes, by route and carrier.
+- **Changed mind:** policy design, since some of these returns are a cost of selling online.
+
+### Policy levers
+
+- **Return window:** shorter windows reduce late returns and value loss, but can reduce sales.
+- **Free or paid returns:** a small fee cuts returns, especially "changed mind" ones, at some cost to conversion.
+- **Exchange first:** offering an exchange or store credit before a refund keeps revenue in the business.
+- **Instant refunds for trusted customers,** with checks for those with unusual return patterns.
+
+<KeyIdea>
+
+A return costs pickup, handling and refunds, plus the value lost on resale. Return reasons point to specific fixes in sizing, product information and packaging, and policy levers change both the volume and the cost of returns.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={3} teaser="Return fraud and its controls, refunds without returns, India's e-commerce rules, liquidation, and returns in true product profitability.">
+
+### Abuse and fraud
+
+Some returns are not honest: clothes worn once and returned (**wardrobing**), empty-box or wrong-item returns, and returns of items bought elsewhere. Controls include serial-number or tag checks, photos at pickup, scoring customers by their return history, and inspection before refund for high-risk cases. The aim is to stop abuse without making honest returns harder, since easy returns help sell.
+
+### Refunds without returns
+
+For low-value items, collecting and processing a return can cost more than the item is worth on resale. Many retailers then refund without asking for the item back (a **returnless refund**), sometimes asking the customer to donate or dispose of it. The rule should come from the economics: compare the recovery value with the return cost, by category, and watch for abuse.
+
+### Rules in India
+
+The Consumer Protection (E-Commerce) Rules, 2020 require e-commerce entities to display return, refund, exchange and warranty policies clearly, and set duties for marketplaces and sellers. Returns policies must be stated plainly and applied as published; policy design happens within those rules.
+
+### Liquidation and secondary channels
+
+Items that can't be sold as new need fast routes to value: factory outlets, open-box listings, refurbished sales, liquidators and recyclers. Agreeing these channels in advance, with clear grades and prices, avoids returned stock piling up while it loses value.
+
+### Returns in true profitability
+
+A product with high sales and high returns can earn less than one with modest sales and few returns. Measure profit after returns by product, brand, seller and customer: net sales, return costs and value lost. That changes decisions about which products to promote, which suppliers to keep and which customers to reward.
+
+<Trap>
+
+Offering free, unlimited returns without measuring their effect on net margin can quietly make a growing business unprofitable. Track profit after returns, and design the policy with the numbers in view.
+
+</Trap>
+
+<KeyIdea>
+
+Control return abuse without punishing honest customers, use returnless refunds where economics justify them, follow India's e-commerce rules on clear policies, route returns quickly to the best secondary channel, and judge products and customers on profit after returns.
+
+</KeyIdea>
 
 </Level>
 

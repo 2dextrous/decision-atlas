@@ -2,23 +2,27 @@
 title: Workforce planning & shifts
 line: supply
 summary: How many people, with which skills, on which shifts, so labour capacity follows demand without constant hiring and firing.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 4 }
 status: draft
 keywords: [workforce planning, labour planning, staffing, shift scheduling, chase strategy, level strategy, overtime, temporary labour, cross-training, labour productivity]
 connected: [sop-ibp, rccp, warehousing, production-scheduling, planning-hierarchy]
 sources:
   - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapter on aggregate planning."
   - text: "Hopp, W. J. & Spearman, M. L. Factory Physics. Waveland Press."
+  - text: "Wright, T. P. (1936). Factors affecting the cost of airplanes. Journal of the Aeronautical Sciences, 3(4), 122–128."
+  - text: "Jordan, W. C., & Graves, S. C. (1995). Principles on the benefits of manufacturing process flexibility. Management Science, 41(4), 577–594."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Matching people and skills to demand, from the yearly headcount plan to tomorrow's roster." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Matching people and skills to demand, from the yearly headcount plan to tomorrow's roster." next="How it works" nextMinutes={3}>
 
 Machines set a ceiling on capacity, but people often decide whether you reach it. Workforce planning works at two levels.
 
@@ -45,6 +49,86 @@ Plan the size of the team for the season, and plan the roster for the week. A fl
   { term: 'Cross-training', def: 'Training people for several roles so capacity can move to where it is needed.' },
   { term: 'Labour productivity', def: 'Output per labour hour, such as picks per hour or units per shift.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="Turning volume into headcount, planning a sale peak with core staff, overtime and temps, and allowing for absence." next="Deep dive" nextMinutes={4}>
+
+### From volume to headcount
+
+$$
+\text{People needed} = \frac{\text{workload (units)}}{\text{units per person-hour} \times \text{hours per shift} \times \text{productive share}}
+$$
+
+The productive share allows for breaks, meetings, travel and waiting, which typically take a noticeable part of every shift.
+
+<Example title="a warehouse sale">
+
+Normal volume: 30,000 units picked a day. A trained picker averages 100 units an hour, and 85% of an 8-hour shift is productive, so each picker handles 680 units a day.
+
+- Normal days: 30,000 / 680 = 44.1, so 45 pickers.
+- Sale days: volume triples to 90,000, which would need 133 trained pickers.
+- The plan: the 45 core pickers work 10-hour days (850 units each, 38,250 in total). Temporary staff, who manage about 70 units an hour in their first week (476 a day), cover the remaining 51,750: about 109 temps.
+- Absence: if 8% of rostered people are absent on a typical day, 45 needed means about 49 on the roster.
+
+</Example>
+
+### Rostering: covering hours with shifts
+
+Demand for people varies by hour: a warehouse might need 15 pickers in the morning and 40 in the evening during a sale. Rostering chooses how many people start each shift pattern so every hour is covered at the lowest cost, while respecting rules on maximum hours, rest days and breaks. Small cases fit in a spreadsheet; larger ones are solved as optimization problems by workforce scheduling tools.
+
+### Measuring productivity
+
+Track units per labour hour by activity (receiving, putaway, picking, packing), against engineered standards based on time studies where possible. The measure shows whether the plan is realistic, which areas need training or layout changes, and how quickly new staff are learning.
+
+<KeyIdea>
+
+Headcount comes from workload, productivity per hour and the productive share of each shift, plus an allowance for absence. Peaks are covered by a mix of core overtime and temporary staff, rostered hour by hour.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={4} teaser="Learning curves, cross-training chains, labour rules and fatigue, and why pure chase strategies cost more than they seem.">
+
+### Learning curves
+
+New workers start slowly and improve with repetition. A classic description is the **learning curve**: each time cumulative output doubles, the time per unit falls to a fixed percentage of what it was, such as 80% (first observed in aircraft production by Wright in 1936). For planning, this means temporary staff hired in the peak week deliver much less than trained staff; hiring a week early for training often pays for itself.
+
+### Cross-training chains
+
+Training everyone on every station is expensive. Research on flexibility (the same idea as Jordan and Graves's chains for plants and products) shows that a little cross-training, arranged as a chain, captures most of the benefit: if each person can work two stations and the skills link all stations in a loop, capacity can flow to wherever the bottleneck is today. A **skills matrix** showing who can do what, and at what level, makes this visible to supervisors.
+
+### Labour rules, fatigue and safety
+
+Local labour laws limit daily and weekly working hours, set rest periods and require higher pay for overtime. Beyond compliance, long shifts raise error and accident rates, so a plan that relies on weeks of 12-hour days is fragile. Peak plans should check legal limits, overtime cost and fatigue together.
+
+### Why pure chase costs more than it seems
+
+Hiring and releasing staff with every swing in demand looks efficient on paper, but it carries hidden costs:
+
+- recruitment and training for every peak,
+- low productivity and more errors while new staff learn,
+- losing experienced people who don't want unstable work,
+- reputation as an employer, which makes the next peak harder to staff.
+
+That is why most companies run a stable core team and flex around it with overtime, temporary staff, cross-training and some pre-built stock.
+
+### Planning across the year
+
+Workforce plans connect to S&OP: the agreed volumes and inventory build decide the hours needed month by month, and the workforce plan in turn limits what supply can promise. Holidays, festivals and harvest seasons affect both demand and staff availability.
+
+<Trap>
+
+Planning headcount at 100% productivity, with no allowance for breaks, learning, absence or attrition, guarantees that the peak will be understaffed. Build each of those allowances in explicitly.
+
+</Trap>
+
+<KeyIdea>
+
+New staff follow a learning curve, cross-training chains give cheap flexibility, and labour rules and fatigue cap overtime. A stable core plus planned flexibility usually beats pure chase once hidden costs are counted.
+
+</KeyIdea>
 
 </Level>
 

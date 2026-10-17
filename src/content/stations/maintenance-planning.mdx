@@ -2,23 +2,27 @@
 title: Maintenance planning
 line: supply
 summary: Choosing between fixing things when they break, servicing on a schedule, and acting on condition data, and timing stops around production.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 4 }
 status: draft
 keywords: [maintenance planning, reactive maintenance, preventive maintenance, predictive maintenance, condition-based maintenance, TPM, MTBF, MTTR, availability, downtime]
 connected: [oee, production-scheduling, bottlenecks, workforce-planning, ml-in-supply-chain]
 sources:
   - text: "Nakajima, S. (1988). Introduction to TPM: Total Productive Maintenance. Productivity Press."
   - text: "Hopp, W. J. & Spearman, M. L. Factory Physics. Waveland Press."
+  - text: "Nowlan, F. S., & Heap, H. F. (1978). Reliability-Centered Maintenance. United Airlines, for the US Department of Defense."
+  - text: "Moubray, J. (1997). Reliability-Centred Maintenance (2nd ed.). Industrial Press."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Planned stops that prevent unplanned ones, and how to time them." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Planned stops that prevent unplanned ones, and how to time them." next="How it works" nextMinutes={3}>
 
 Machines wear out. The question is whether you stop them on your terms or theirs. There are four broad approaches:
 
@@ -47,6 +51,98 @@ Planned stops are cheaper than unplanned ones. Match the maintenance approach to
   { term: 'MTTR', def: 'Mean time to repair: average time to get a failed machine running again.' },
   { term: 'Predictive maintenance', def: 'Maintenance triggered by condition data, such as vibration or temperature, rather than a calendar.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="Availability arithmetic, why faster repairs can beat fewer failures, and how planned work flows through a maintenance system." next="Deep dive" nextMinutes={4}>
+
+### Availability, worked through
+
+$$
+A = \frac{\text{MTBF}}{\text{MTBF} + \text{MTTR}}
+$$
+
+<Example title="the machine that fails every 190 hours">
+
+With MTBF = 190 hours and MTTR = 10 hours, availability is 190 / 200 = 95%. Two ways to improve it:
+
+- **Fail less often:** raise MTBF by 50%, to 285 hours. Availability = 285 / 295 = 96.6%.
+- **Repair faster:** halve MTTR to 5 hours, with a ready spare-parts kit, clear repair instructions and trained technicians. Availability = 190 / 195 = 97.4%.
+
+Halving repair time beats a 50% gain in reliability here, and it is often cheaper. Repair time includes waiting for the technician, the diagnosis, the spare part and the restart, and the waits are usually the biggest part.
+
+</Example>
+
+### Choosing the approach for each machine
+
+<div class="table-wrap">
+
+| Situation | Sensible approach |
+|---|---|
+| Cheap to fail, easy to repair, not a bottleneck | Run to failure |
+| Wear that tracks usage, such as filters, belts and lubricants | Preventive, at fixed intervals |
+| Failures give warning signs, such as vibration, heat or noise | Predictive, condition-based |
+| Critical machine with costly failures | Predictive plus redundancy or critical spares |
+
+</div>
+
+### How planned work flows
+
+1. **Notification:** an operator, an inspection or a sensor reports a problem or a due task.
+2. **Planning:** the planner defines the job, the parts, tools, permits and skills needed, and how long it takes.
+3. **Scheduling:** the job gets a slot agreed with production, ideally during a changeover or a low-demand shift.
+4. **Execution and closing:** technicians do the work and record what failed and why.
+5. **Analysis:** failure records feed improvements and adjust maintenance intervals.
+
+ERP systems, including SAP's plant maintenance module, manage this flow with maintenance plans, notifications and work orders.
+
+### Measures that matter
+
+Planned work as a share of all maintenance work, schedule compliance, backlog in weeks of work, MTBF and MTTR for critical assets, and maintenance cost compared with the value of the equipment.
+
+<KeyIdea>
+
+Availability depends on both how often a machine fails and how long it stays down, and cutting repair time is often the cheaper lever. Match the maintenance approach to each machine's criticality and failure pattern, and plan work so it fits around production.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={4} teaser="What reliability-centred maintenance found, the P-F interval, predictive maintenance in practice, and how maintenance can cause failures.">
+
+### Most failures aren't about age
+
+Reliability-centred maintenance (RCM) grew out of airline studies in the 1960s and 1970s, summarized by Nowlan and Heap (1978). A key finding was that most failure modes of complex equipment were not related to age: the chance of failure didn't rise steadily with time. For those failure modes, replacing parts on a fixed schedule doesn't prevent failures and can even add early-life failures to freshly installed parts. That shifted maintenance towards condition monitoring and towards asking, for each failure mode, which task actually reduces its risk.
+
+### The P-F interval
+
+Many failures announce themselves. The point when a developing failure first becomes detectable (P, potential failure) comes some time before the equipment stops working (F, functional failure). If vibration analysis can detect a bearing defect about six weeks before it seizes, inspecting every three weeks catches it with time to plan the repair. The rule: inspect more often than the P-F interval, and plan the fix inside it.
+
+### Predictive maintenance in practice
+
+Sensors measure vibration, temperature, current, pressure or oil condition, and models flag patterns that typically come before failures. It works best where failures have a measurable signature, data is available over enough failures to learn from, and the cost of a surprise failure is high. Pitfalls: too many false alarms (technicians stop trusting them), too few historical failures to train on, and alerts that arrive without a process to plan and schedule the response.
+
+### Maintenance and the supply chain
+
+- **Spare parts:** critical spares are classic intermittent-demand items, so stocking them is a service-level decision weighed against downtime cost.
+- **Shutdowns:** planned plant shutdowns need stock built ahead, customers informed and contractors booked, and are managed like projects with a critical path.
+- **Bottleneck first:** protect the constraint with the best maintenance, spares and response times, since its downtime is the plant's downtime.
+
+### Criticality comes first
+
+Before choosing tasks, rank equipment by what a failure would cost (safety, environment, output, quality, repair cost) and how likely it is. Failure mode and effects analysis (FMEA) does this systematically. High-criticality assets get predictive monitoring and spares; low-criticality ones may simply run to failure.
+
+<Trap>
+
+More maintenance isn't always better. Intrusive preventive work, such as opening, adjusting and replacing parts that were fine, can introduce errors and early-life failures. Every task should prevent a specific failure mode more cheaply than the failure itself.
+
+</Trap>
+
+<KeyIdea>
+
+Many failures aren't age-related, so fixed-interval replacement often doesn't help. Inspect inside the P-F interval, use predictive maintenance where failures have signatures and stakes are high, and rank assets by criticality before choosing tasks.
+
+</KeyIdea>
 
 </Level>
 

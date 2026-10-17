@@ -2,23 +2,26 @@
 title: Service level policy
 line: risk
 summary: Setting service targets by segment, based on what a stockout really costs, instead of one blanket number for everything.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 3, deep: 3 }
 status: draft
 keywords: [service level policy, service targets, differentiated service, stockout cost, inventory service trade-off, efficient frontier, customer tiers, ABC-XYZ, fill rate, CSL]
 connected: [service-levels, safety-stock, inventory-segmentation, segmentation-strategy, cost-to-serve]
 sources:
   - text: "Silver, E. A., Pyke, D. F. & Thomas, D. J. (2017). Inventory and Production Management in Supply Chains (4th ed.). CRC Press."
   - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapter on determining the optimal level of product availability."
+  - text: "Teunter, R. H., Babai, M. Z., & Syntetos, A. A. (2010). ABC classification: Service levels and inventory costs. Production and Operations Management, 19(3), 343–352."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="98% for everything is either too much or too little almost everywhere." soon>
+<Level n={1} title="The gist" minutes={3} teaser="98% for everything is either too much or too little almost everywhere." next="How it works" nextMinutes={3}>
 
 "We target 98% service on everything" sounds ambitious and simple. In practice it overstocks items where a stockout barely matters and may still under-protect items where a stockout is a disaster. A **service level policy** sets targets deliberately, by segment.
 
@@ -43,6 +46,93 @@ Set service targets by segment from the cost of a stockout versus the cost of st
   { term: 'Stockout cost', def: 'What a shortage really costs: lost margin, penalties, a stopped line or lost customers.' },
   { term: 'Efficient frontier', def: 'The best service achievable for each level of inventory investment.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={3} teaser="Why differentiated targets give the same service for less money, a two-item example, and turning targets into a documented policy." next="Deep dive" nextMinutes={3}>
+
+### Same average service, less inventory
+
+<Example title="an expensive item and a cheap one">
+
+Two items with identical demand and identical uncertainty over the lead time ($\sigma_L$ = 100 units). Item A costs ₹1,000; item C costs ₹50. Safety stock = $z \times \sigma_L$.
+
+<div class="table-wrap">
+
+| Policy | A target | C target | Safety stock value |
+|---|---|---|---|
+| Uniform | 97% | 97% | ₹1,88,079 + ₹9,404 = ₹1,97,483 |
+| Differentiated | 95% | 99% | ₹1,64,485 + ₹11,632 = ₹1,76,117 |
+
+</div>
+
+Both policies average 97% cycle service across the two items, but the differentiated one costs ₹21,366 (11%) less, because extra service is cheap on the cheap item and expensive on the expensive one.
+
+</Example>
+
+Across thousands of items, this logic is applied with an optimization: maximize the overall service measure for a given inventory budget, or minimize inventory for a target, by adding safety stock wherever it buys the most service per rupee.
+
+### The efficient frontier
+
+Solving that problem for different budgets traces the **efficient frontier**: the best service achievable for each level of inventory. Today's position is usually below the frontier, so the first step is often to reach the frontier (same service, less stock, or more service, same stock) before deciding where on it to sit.
+
+### Writing the policy
+
+A practical service policy states:
+
+- the measure (cycle service, fill rate or OTIF) for each segment,
+- targets by product class and customer tier, for example 98% for A items to key accounts, 95% for regular items, 90% for slow C items unless they are critical,
+- exceptions: critical items, contractual commitments, launches,
+- who owns the targets and how often they are reviewed.
+
+<KeyIdea>
+
+Differentiated targets reach the same overall service with less stock, because extra service costs much less on cheap items. Optimize across items, move towards the efficient frontier, and document targets, measures and owners in a policy.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={3} teaser="Estimating the cost of a stockout, choosing the measure for each segment, dynamic targets, and the governance that keeps the policy honest.">
+
+### What does a stockout cost?
+
+Cost-based targets need an estimate of the cost of being short, which differs by situation:
+
+- **Customer waits (backorder):** expediting, a discount or penalty, some goodwill.
+- **Customer buys a substitute from you:** little lost margin, possibly a gain or loss in mix.
+- **Customer buys elsewhere this time:** the lost margin on that sale.
+- **Customer leaves for good:** the lifetime value of the relationship.
+- **Contract penalties:** OTIF fines or service credits.
+
+Data on substitution and repeat purchase after stockouts, plus contract terms, turns these into numbers. Even rough estimates show that some items deserve much higher targets than others. With a stockout cost per unit and a holding cost, the newsvendor logic gives a target directly: the critical ratio.
+
+### Choose the measure for each segment
+
+- **Cycle service level** for items replenished in regular cycles where any stockout matters.
+- **Fill rate** for items where the share of demand served matters more than the number of stockout events.
+- **OTIF** for customers who measure complete, on-time orders.
+- **Availability** (machines running) for service parts.
+
+### Targets that move
+
+Targets can change with the season (higher before the festive peak for key items), with the lifecycle (higher at launch to build the brand, lower during phase-out) and with supply conditions (temporarily lower when supply is constrained, with allocation rules).
+
+### Governance
+
+Service targets are a joint decision: sales knows customer needs, finance knows the cost of inventory, supply chain knows what each target requires. A policy signed off by all three, reviewed periodically and tracked by segment, prevents both "99% on everything" and quiet cuts to service that sales discovers later.
+
+<Trap>
+
+A target without its cost, such as "99% on every SKU", is a wish. Show the inventory each target requires and the stockout cost it avoids, so the decision is made with both in view.
+
+</Trap>
+
+<KeyIdea>
+
+Estimate stockout costs from what customers actually do, pick the measure that fits each segment, let targets move with season, lifecycle and supply, and set them jointly with sales and finance.
+
+</KeyIdea>
 
 </Level>
 

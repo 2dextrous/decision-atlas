@@ -9,6 +9,7 @@ import { levelMap } from '../lib/levels';
 const entries = await getCollection('stations');
 const levels = levelMap(entries);
 const built = new Set(levels.keys());
+const anyPlanned = [...stations.keys()].some((slug) => !built.has(slug));
 const stopCount = stations.size;
 const lineCount = lines.length;
 const continueIndex = JSON.stringify(
@@ -72,7 +73,7 @@ const continueIndex = JSON.stringify(
       </div>
       <ul class="legend" aria-label="Legend">
         <li><span class="dot" style="--c: var(--ink-2)" aria-hidden="true"></span>Ready to read</li>
-        <li><span class="dot is-planned" aria-hidden="true"></span>Being written</li>
+        {anyPlanned && <li><span class="dot is-planned" aria-hidden="true"></span>Being written</li>}
         <li><span class="dot is-interchange" aria-hidden="true"></span>Interchange: on two lines</li>
         <li><span class="meter" data-levels="3" style="--c: var(--ink-2)" aria-hidden="true"><i></i><i></i><i></i></span>Levels available</li>
       </ul>

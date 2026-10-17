@@ -2,7 +2,7 @@
 title: "How much to order: EOQ"
 line: inventory
 summary: Balancing the cost of ordering against the cost of holding stock to find the order size with the lowest total cost.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 4, deep: 5 }
 status: draft
 keywords: [EOQ, economic order quantity, ordering cost, setup cost, holding cost, cycle stock, lot size, Harris formula, quantity discount, POQ]
 connected: [why-inventory, safety-stock, changeovers, inventory-segmentation, load-building]
@@ -10,16 +10,19 @@ sources:
   - text: "Harris, F. W. (1913). How many parts to make at once. Factory, The Magazine of Management, 10(2), 135–136."
   - text: "Silver, E. A., Pyke, D. F. & Thomas, D. J. (2017). Inventory and Production Management in Supply Chains (4th ed.). CRC Press."
   - text: "Chopra, S. & Meindl, P. Supply Chain Management: Strategy, Planning, and Operation. Pearson. Chapter on cycle inventory."
+  - text: "Wagner, H. M., & Whitin, T. M. (1958). Dynamic version of the economic lot size model. Management Science, 5(1), 89–96."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Two opposing costs, one sweet spot, and why being roughly right is enough." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Two opposing costs, one sweet spot, and why being roughly right is enough." next="How it works" nextMinutes={4}>
 
 Every time you place an order, it costs something fixed: paperwork, calls, a delivery run, receiving and checking. Every unit you keep in stock costs something too: cash tied up, storage, spoilage. Order rarely in big batches and you save on ordering but pay to hold a mountain of stock. Order often in small batches and you hold little but pay the ordering cost again and again.
 
@@ -46,6 +49,115 @@ EOQ answers *how much* to order, not *when*. And because the cost curve is flat 
   { term: 'Holding cost', def: 'The cost of keeping one unit in stock for a year.' },
   { term: 'Square-root rule', def: 'EOQ grows with the square root of demand: four times the demand means twice the order size.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={4} teaser="Where the formula comes from, the café worked through, and just how flat the cost curve is." next="Deep dive" nextMinutes={5}>
+
+### Two costs pulling in opposite directions
+
+With annual demand $D$, order size $Q$, cost per order $S$ and holding cost $H$ per unit per year:
+
+- You place $D/Q$ orders a year, so the yearly **ordering cost** is $\frac{D}{Q}S$.
+- Stock falls from $Q$ to zero and back again, so on average you hold $Q/2$, and the yearly **holding cost** is $\frac{Q}{2}H$.
+
+$$
+TC(Q) = \frac{D}{Q}\,S + \frac{Q}{2}\,H
+$$
+
+The first term falls as $Q$ grows; the second rises. Setting the slope of $TC$ to zero gives the minimum:
+
+$$
+Q^{*} = \sqrt{\frac{2DS}{H}}
+$$
+
+At $Q^{*}$ the two costs are exactly equal, a handy check on any calculation. The purchase price does not appear, because you buy $D$ units a year whatever the order size (until discounts enter, in the deep dive). Holding cost is usually set as a rate times the unit cost: $H = i \times C$.
+
+<Example title="the café">
+
+- $D$ = 1,200 kg a year, $S$ = ₹500 an order, $H$ = ₹200 per kg per year.
+- $Q^{*} = \sqrt{2 \times 1200 \times 500 / 200} = \sqrt{6000} \approx 77.5$ kg.
+- Orders a year: 1,200 / 77.5 ≈ 15.5, so one order about every 24 days.
+- Ordering cost ≈ ₹7,746 and holding cost ≈ ₹7,746, a total of about ₹15,492 a year.
+- Ordering 100 kg instead: ordering cost ₹6,000, holding cost ₹10,000, total ₹16,000. That is 29% more stock per order for only 3.3% more cost.
+
+</Example>
+
+### Why it is so forgiving
+
+How much you lose depends only on how far you are from $Q^{*}$:
+
+$$
+\frac{TC(Q)}{TC(Q^{*})} = \frac{1}{2}\left(\frac{Q}{Q^{*}} + \frac{Q^{*}}{Q}\right)
+$$
+
+Ordering half or double the EOQ raises cost by 25%, but ordering 20% too much or too little costs under 3% extra. So round to cases, pallets or truckloads freely. The square root also means EOQ responds slowly to its inputs: if demand quadruples, the EOQ only doubles, and you order twice as often.
+
+### How much, and when
+
+EOQ answers *how much*. The reorder point, $ROP = d\,L + SS$, answers *when*. Together they form the classic **(Q, R) policy**: whenever the inventory position falls to $R$, order $Q$.
+
+<KeyIdea>
+
+Total cost is ordering cost plus holding cost, and the EOQ sits where the two are equal. Because the curve is flat near the bottom, rounding to practical sizes costs little and errors in the inputs matter less than you might fear.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={5} teaser="Quantity discounts, finite production rates, time-varying demand, and what lean does to the formula.">
+
+### When the supplier offers a discount
+
+Suppose the bean supplier charges ₹800 a kg, or ₹780 a kg for orders of 100 kg or more, and the café's holding rate is 25% of the price a year. EOQ alone can't settle this, because the purchase cost now depends on $Q$. The method:
+
+1. Compute the EOQ at each price.
+2. If that EOQ falls below the price's minimum, raise it to the minimum.
+3. Compare total cost *including* the purchase cost, $D \times C$, and pick the lowest.
+
+<div class="table-wrap">
+
+| | ₹800 a kg | ₹780 a kg (100 kg or more) |
+|---|---|---|
+| Holding cost $H$ | ₹200 | ₹195 |
+| EOQ | 77.5 kg | 78.4 kg, below the minimum, so 100 kg |
+| Ordering + holding | ₹15,492 | ₹6,000 + ₹9,750 = ₹15,750 |
+| Purchase cost | ₹9,60,000 | ₹9,36,000 |
+| Total a year | ₹9,75,492 | ₹9,51,750 |
+
+</div>
+
+The larger order costs ₹258 more to order and hold, but the discount saves ₹24,000 on purchases, so it wins by about ₹23,700 a year. Discounts often swamp the EOQ trade-off, which is why buyers must judge them on total cost, not unit price.
+
+### Making instead of buying
+
+When a plant makes the batch itself, stock builds up gradually while production runs at rate $P$ and demand uses it at rate $D$. Peak stock is lower than $Q$, which gives the **economic production quantity**:
+
+$$
+Q^{*} = \sqrt{\frac{2DS}{H\,(1 - D/P)}}
+$$
+
+Here $S$ is the set-up cost of a production run. The faster production is relative to demand, the closer this gets to the plain EOQ.
+
+### Demand that changes from week to week
+
+EOQ assumes steady demand. MRP systems face lumpy, time-phased requirements, such as 0, 120, 0, 40 and 300 units in the coming weeks. For these, planners use **lot-sizing rules**: lot-for-lot (order exactly each period's need), fixed period (cover, say, two weeks at a time), or heuristics such as Silver–Meal and least unit cost that balance set-up and holding cost period by period. The Wagner–Whitin algorithm finds the true optimum by dynamic programming. ERP systems, including SAP, offer a menu of these procedures in the material master.
+
+### What lean does to the formula
+
+EOQ takes the ordering or set-up cost $S$ as given. Lean manufacturing attacks $S$ itself, with quick changeovers (SMED), simpler ordering and standard containers. Because $Q^{*}$ grows with $\sqrt{S}$, cutting set-up cost by 75% halves the batch size, the cycle stock and the total ordering-plus-holding cost. The two schools agree more than they argue: lean changes the inputs, and the formula follows.
+
+<Trap>
+
+Most EOQ mistakes are in the inputs, not the formula. $S$ should include only costs that really change with the number of orders (not fixed salaries or rent), and $H$ must include the cost of capital, not just warehouse space. The square root softens errors: doubling $S$ by mistake moves the EOQ by 41% but raises total cost by only about 6%.
+
+</Trap>
+
+<KeyIdea>
+
+Real ordering decisions add discounts, production rates, lumpy demand and constraints. The EOQ logic still applies (balance fixed costs against holding costs), but the answer comes from comparing total cost, and the best long-term move is often to shrink $S$ itself.
+
+</KeyIdea>
 
 </Level>
 

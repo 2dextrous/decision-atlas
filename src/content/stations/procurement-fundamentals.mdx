@@ -2,23 +2,27 @@
 title: Procurement fundamentals
 line: sourcing
 summary: From need to payment, the source-to-pay and procure-to-pay cycles, and the controls that keep buying honest.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 4, deep: 4 }
 status: draft
 keywords: [procurement, source to pay, S2P, procure to pay, P2P, purchase requisition, purchase order, goods receipt, three-way match, maverick spend, tail spend, segregation of duties]
 connected: [kraljic, supplier-selection, procure-to-pay, cash-conversion-cycle, contracts]
 sources:
   - text: "Monczka, R. M., Handfield, R. B., Giunipero, L. C. & Patterson, J. L. Purchasing and Supply Chain Management. Cengage Learning."
   - text: "Van Weele, A. J. Purchasing and Supply Chain Management. Cengage Learning."
+  - text: "Monczka, R. M., Handfield, R. B., Giunipero, L. C., & Patterson, J. L. (2021). Purchasing and Supply Chain Management (7th ed.). Cengage."
+  - text: "Government of India. Micro, Small and Medium Enterprises Development (MSMED) Act, 2006."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Strategic sourcing first, then the transaction cycle and its checks." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Strategic sourcing first, then the transaction cycle and its checks." next="How it works" nextMinutes={4}>
 
 Procurement buys everything a company doesn't make: components, packaging, freight, IT, even office supplies. For many manufacturers that's well over half of total cost, which is why a few percent saved in buying can matter more than a big sales push.
 
@@ -48,6 +52,96 @@ S2P decides who to buy from and on what terms; P2P executes each purchase. The t
   { term: 'Maverick spend', def: 'Purchases made outside approved suppliers or contracts.' },
   { term: 'Tail spend', def: 'Many small, unmanaged purchases that add up to a meaningful share of spend.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={4} teaser="Spend analysis, a three-way match with tolerances worked through, payment terms as working capital, and the KPIs procurement lives by." next="Deep dive" nextMinutes={4}>
+
+### Spend analysis: knowing what you buy
+
+Every category strategy starts with a **spend cube**: who buys what, from whom, for how much.
+
+1. **Collect** purchase orders, invoices and payments from every system and business unit.
+2. **Clean** supplier names, so "ABC Packaging Pvt Ltd" and "A.B.C. Packaging" count as one supplier.
+3. **Classify** each line into categories, often using a standard taxonomy such as UNSPSC.
+4. **Analyse:** the Pareto of spend by category and supplier, the number of suppliers per category, prices paid for the same item, and spend outside contracts.
+
+The result shows where money is concentrated, where volumes can be pooled, and where the same item is bought at different prices.
+
+### The three-way match in practice
+
+<Example title="an invoice that doesn't match">
+
+- **Purchase order:** 1,000 units at ₹50 = ₹50,000.
+- **Goods receipt:** 980 units received.
+- **Invoice:** 1,000 units at ₹52 = ₹52,000.
+
+Two variances: quantity (billed 1,000, received 980) and price (₹52 against ₹50, 4%). If the price tolerance is 2%, the invoice is blocked for payment. Once resolved, the company pays for what it ordered and received: 980 × ₹50 = ₹49,000, unless the supplier sends the missing 20 units or the price change was agreed.
+
+</Example>
+
+Tolerances let small, legitimate differences such as rounding pass automatically; anything above them waits for a person to check.
+
+### Payment terms are working capital
+
+Days payable outstanding (DPO) measures how long a company takes to pay its suppliers. A company buying ₹120 crore a year that moves from 30-day to 60-day terms keeps about ₹120 crore × 30/365 ≈ ₹9.9 crore of cash, once. The same money comes out of suppliers' cash, so stretching terms on small suppliers can push them into trouble, and in India, payments to registered micro and small enterprises are legally limited to 45 days.
+
+### Measures that matter
+
+- **Spend under management:** the share of spend covered by contracts and category strategies.
+- **Contract compliance:** the share bought through agreed contracts (the rest is maverick spend).
+- **Savings,** split into real price reductions and cost avoidance, and checked against the budget.
+- **First-time match rate** and **purchase-order cycle time.**
+- **Supplier OTIF** and quality.
+
+<KeyIdea>
+
+Procurement runs on a clean spend cube, a three-way match with sensible tolerances, payment terms managed as working capital, and a few measures that track contract use, savings and supplier performance.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={4} teaser="From purchasing to supply management, savings that never reach profit, MSME payment rules, supply chain finance and digital procurement.">
+
+### From purchasing to supply management
+
+Kraljic's 1983 article was titled "Purchasing must become supply management", and the shift it called for is still under way: from processing orders and squeezing prices to managing supply markets, risks and relationships. Modern procurement teams work by **category**, with category managers who own the strategy for a group of purchases across the company, from market analysis to contracts and supplier performance.
+
+### Savings that never reach profit
+
+Procurement often reports savings that finance can't find. Common reasons:
+
+- **Volume:** a 5% lower price on a part whose volume doubled still means higher spend.
+- **Specification creep:** the cheaper item gets upgraded later.
+- **Leakage:** buyers keep using old suppliers or off-contract purchases, so the negotiated price never applies.
+- **Cost avoidance counted as savings:** holding a price when the supplier wanted a 10% rise avoided cost, but the budget didn't fall.
+
+Good practice agrees with finance how savings are calculated, tracks them against budgets, and separates reductions from avoidance.
+
+### Paying small suppliers on time in India
+
+Under the MSMED Act, 2006, buyers must pay registered micro and small enterprises within the agreed period, and no later than 45 days, with interest due on late payments. From the 2023–24 financial year, section 43B(h) of the Income Tax Act adds a tax consequence: if such a payment is made late, the buyer can deduct the expense only in the year it is actually paid. Stretching payment terms on these suppliers is therefore a compliance problem as well as a relationship one.
+
+### Supply chain finance
+
+Instead of squeezing suppliers' cash, some buyers help them get paid early through **reverse factoring**: a bank or platform pays the supplier soon after the invoice is approved, at a discount based on the buyer's stronger credit, and the buyer pays the bank on the original due date. In India, the RBI-regulated TReDS platforms let MSMEs discount invoices from large buyers this way.
+
+### Digital procurement
+
+E-sourcing platforms run tenders and auctions; catalogues and guided buying steer employees to contracted items; automated P2P matches invoices and routes exceptions; and AI tools classify spend and extract contract terms. The gains come from compliance and speed, but only if master data (suppliers, materials, prices) is clean.
+
+<Trap>
+
+Stretching payment terms looks like free cash, but if suppliers fund it by raising prices, cutting quality or failing, the company pays more in the end. In India, paying registered micro and small enterprises later than 45 days also breaks the MSMED Act and can push the tax deduction into a later year.
+
+</Trap>
+
+<KeyIdea>
+
+Procurement has become supply management organized by category. Make savings real by agreeing their measurement with finance, pay small suppliers within MSME limits, use supply chain finance instead of squeezing them, and digitize on clean master data.
+
+</KeyIdea>
 
 </Level>
 

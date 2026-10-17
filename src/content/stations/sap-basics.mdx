@@ -2,7 +2,7 @@
 title: SAP & S/4HANA basics
 line: sap
 summary: What an ERP does, how SAP is organized into modules and organizational units, and what changed with S/4HANA.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 4, deep: 4 }
 status: draft
 keywords: [SAP, ERP, S/4HANA, ECC, HANA, Fiori, T-code, organizational structure, company code, plant, storage location, purchasing organization, sales area, master data, Business Partner, ACDOCA, MATDOC]
 connected: [procure-to-pay, order-to-cash, plan-to-produce, record-to-report, sap-process-map]
@@ -13,6 +13,7 @@ sources:
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
@@ -20,7 +21,7 @@ import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 import FromPractice from '../../components/content/FromPractice.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="One system, one database, every department working on the same records." soon>
+<Level n={1} title="The gist" minutes={3} teaser="One system, one database, every department working on the same records." next="How it works" nextMinutes={4}>
 
 An **ERP (enterprise resource planning)** system runs a company's core processes on one shared database: buying, making, storing, selling and accounting. When a warehouse worker posts a goods receipt, stock goes up *and* the accounting entry is made at the same moment, because it's one system. SAP is the most widely used ERP among large companies.
 
@@ -55,6 +56,97 @@ An ERP is one database shared by every department, so each business event update
   { term: 'Master data vs transactional data', def: 'Stable records such as materials and partners, versus events such as orders and receipts.' },
   { term: 'Universal Journal (ACDOCA)', def: 'The single S/4HANA table holding all finance and controlling postings.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={4} teaser="The organizational levels every transaction uses, how the material master is organized by those levels, and the three kinds of data in an SAP system." next="Deep dive" nextMinutes={4}>
+
+### Organizational levels
+
+<div class="table-wrap">
+
+| Level | What it represents | Global Bike example |
+|---|---|---|
+| Client | The whole system for one group of companies | The training client |
+| Company code | A legal entity with its own books | US00 |
+| Plant | A factory, warehouse or site | MI00 Miami, DL00 Dallas, SD00 San Diego |
+| Storage location | A place where stock is kept within a plant | TG00 trading goods |
+| Purchasing organization | The unit that negotiates with suppliers | US00 |
+| Sales area | Sales organization + distribution channel + division | UE00 / WH / BI |
+| Shipping point | Where deliveries are processed | MI00 |
+| Warehouse number | A warehouse managed at bin level | 100 (San Diego) |
+
+</div>
+
+Every transaction is posted against these levels. A purchase order belongs to a purchasing organization and delivers to a plant and storage location; a sales order belongs to a sales area and ships from a shipping point. If a level is missing or wrongly assigned, transactions fail.
+
+### Master data is organized by the same levels
+
+The **material master** is split into views, each maintained at a different level:
+
+- **Basic data:** description, unit of measure, weight. Same for the whole client.
+- **Purchasing, MRP, work scheduling, storage:** per plant (MRP type, lot size, lead times, purchasing group).
+- **Accounting and costing:** per valuation area, usually the plant (price control, price, valuation class).
+- **Sales:** per sales organization and distribution channel (delivering plant, item category group).
+
+That is why a material can exist and still be unusable in a particular plant or sales area: the views for that level haven't been created. The **Business Partner** works the same way, with roles for customer and supplier and data per company code, purchasing organization or sales area.
+
+### Three kinds of data
+
+- **Configuration (customizing):** the system's rules, set up in the implementation guide (transaction SPRO), such as document types, account determination and tolerance limits. Changed rarely, by consultants or key users.
+- **Master data:** long-lived records such as materials, business partners, prices, bills of materials and routings.
+- **Transactional data:** the documents created every day: orders, deliveries, goods movements, invoices.
+
+Every business event creates a numbered **document** (a purchase order, a material document, an accounting document), and documents link to each other, which is how SAP builds an audit trail from order to payment.
+
+<KeyIdea>
+
+Transactions run on organizational levels from client to storage location, master data is maintained per level, and configuration sets the rules. Most "it won't let me post" problems come from a missing level, a missing view or a configuration gap.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={4} teaser="What S/4HANA changed under the hood, ECC's end of support, migration approaches, the clean-core idea, and how SAP projects run.">
+
+### What S/4HANA changed under the hood
+
+- **In-memory, columnar database:** HANA keeps data in memory, so reports and planning runs read live transactional data instead of separate aggregate tables.
+- **Simplified tables:** goods movements land in **MATDOC** instead of the older header and item tables (MKPF and MSEG), and financial and controlling postings meet in the **Universal Journal, ACDOCA**.
+- **Business Partner** replaces separate customer and vendor masters, synchronized through customer-vendor integration.
+- **Material ledger** is always active for inventory valuation, supporting parallel currencies.
+- **Fiori** apps provide role-based screens and embedded analytics, alongside classic transactions.
+- **New engines:** MRP Live for faster planning, advanced ATP for order promising, embedded EWM and PP/DS.
+
+### The end of ECC
+
+SAP's mainstream maintenance for ECC 6.0 runs to the end of 2027, with optional extended maintenance to 2030. That deadline drives a wave of S/4HANA projects, and with them demand for people who understand both the business processes and the new system.
+
+### Getting there: three approaches
+
+- **Greenfield (new implementation):** design processes afresh on S/4HANA and migrate only master data and open items. Most change, most opportunity to simplify.
+- **Brownfield (system conversion):** convert the existing ECC system, keeping history and customizations. Faster, but carries old complexity forward.
+- **Selective data transition:** a middle path, moving chosen data and processes into a new system.
+
+### Clean core
+
+SAP's guidance is to keep the core system close to standard and build extensions outside it, on its Business Technology Platform, using released interfaces. Heavy modifications make upgrades expensive and slow; a clean core makes it easier to adopt new releases.
+
+### How SAP projects run
+
+Projects typically follow SAP Activate: discover, prepare, explore, realize, deploy and run. In **fit-to-standard** workshops, the team shows standard processes to the business and records only the gaps that truly need something different. Roles include functional consultants for each area (MM, SD, PP, FI/CO, EWM), technical developers, Basis administrators, and key users from the business who test, train colleagues and own processes after go-live.
+
+<Trap>
+
+Customizing SAP to copy every habit of the old system recreates the old problems in a more expensive form. Challenge each gap: is the difference a real competitive need, or just how things were done?
+
+</Trap>
+
+<KeyIdea>
+
+S/4HANA simplifies tables (MATDOC, ACDOCA), makes Business Partner and the material ledger standard, and adds Fiori and new engines. ECC support ends in 2027 (2030 extended), migrations are greenfield, brownfield or selective, and projects aim for a clean core through fit-to-standard design.
+
+</KeyIdea>
 
 </Level>
 

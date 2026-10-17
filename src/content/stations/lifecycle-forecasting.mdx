@@ -2,7 +2,7 @@
 title: New products & phase-outs
 line: demand
 summary: Forecasting launches with no sales history, and running old products down without dead stock or lost sales.
-minutes: { gist: 3 }
+minutes: { gist: 3, how: 4, deep: 3 }
 status: draft
 keywords: [new product introduction, NPI forecasting, analog forecasting, launch curve, Bass diffusion, product lifecycle, end of life, phase-out, phase-in, cannibalization]
 connected: [slow-obsolete, promotions-cannibalization, probabilistic-forecasting, scenario-planning, consensus-fva]
@@ -10,16 +10,20 @@ sources:
   - text: "Bass, F. M. (1969). A new product growth for model consumer durables. Management Science, 15(5), 215–227."
   - text: "Hyndman, R. J. & Athanasopoulos, G. Forecasting: Principles and Practice (3rd ed.). OTexts. Section on judgmental forecasting."
     url: "https://otexts.com/fpp3/"
+  - text: "Fisher, M., & Raman, A. (1996). Reducing the cost of demand uncertainty through accurate response to early sales. Operations Research, 44(1), 87–99."
+  - text: "Billington, C., Lee, H. L., & Tang, C. S. (1998). Successful strategies for product rollovers. Sloan Management Review, 39(3), 23–30."
 ---
 
 import Level from '../../components/content/Level.astro';
+import Trap from '../../components/content/Trap.astro';
+import Example from '../../components/content/Example.astro';
 import KeyIdea from '../../components/content/KeyIdea.astro';
 import Terms from '../../components/content/Terms.astro';
 import SayIt from '../../components/content/SayIt.astro';
 import Q from '../../components/content/Q.astro';
 import InterviewKit from '../../components/content/InterviewKit.astro';
 
-<Level n={1} title="The gist" minutes={3} teaser="Borrowing history from similar products, then switching over cleanly at the end of life." soon>
+<Level n={1} title="The gist" minutes={3} teaser="Borrowing history from similar products, then switching over cleanly at the end of life." next="How it works" nextMinutes={4}>
 
 A new product has no sales history, so time-series methods have nothing to work with. Planners build the forecast from other evidence instead:
 
@@ -49,6 +53,93 @@ No history? Borrow it from analogs, adjust for what's different, plan in scenari
   { term: 'Launch (ramp-up) curve', def: 'The typical shape of early sales: introduction, growth, then maturity.' },
   { term: 'Phase-in / phase-out', def: 'Planning the switch from an old item to its replacement, including demand transfer.' },
 ]} />
+
+</Level>
+
+<Level n={2} title="How it works" minutes={4} teaser="Building a launch forecast from analogs, rescaling it from early sales, the Bass model, and run-out planning." next="Deep dive" nextMinutes={3}>
+
+### Analog forecasting step by step
+
+1. **Choose analogs:** past launches with a similar category, price tier, channels and season.
+2. **Align and normalize:** line them up by weeks since launch and express sales per store (or as a share of their first 12 weeks), so launches of different sizes can be compared.
+3. **Build the curve:** average the normalized analog curves.
+4. **Scale it:** multiply by the new product's distribution (stores or reach), and adjust for price, marketing support and brand strength.
+5. **Add scenarios:** for example, the expected curve plus versions 30% lower and 30% higher.
+
+<Example title="a new drink flavour">
+
+An earlier flavour sold 2,000, 3,500, 5,000, 6,000 and 6,000 units in its first five weeks, in 1,000 stores. The new flavour launches in 1,500 stores with similar support, so the base forecast is 1.5 times the analog: 3,000, 5,250, 7,500, 9,000 and 9,000.
+
+After three weeks, actual sales are 2,400, 4,000 and 5,500: 11,900 against a forecast of 15,750, running about 24% low. Rescaling the rest of the curve by that ratio gives about 6,800 a week from week 4, and the supply plan for later weeks comes down to match.
+
+</Example>
+
+Weighting matters: one week of data is noisy, so blend the analog curve with the actuals, giving the actuals more weight as the weeks pass.
+
+### The Bass diffusion model
+
+For products people adopt once, such as durables and technology, the **Bass model** describes how adoption spreads. New adopters in a period are:
+
+$$
+n_t = \left(p + q\,\frac{N_{t-1}}{m}\right)\left(m - N_{t-1}\right)
+$$
+
+Here $m$ is the market potential, $N_{t-1}$ the adopters so far, $p$ the innovation coefficient (people who adopt on their own) and $q$ the imitation coefficient (people who follow others). Sales peak at about $t^{*} = \ln(q/p)/(p+q)$. With $p$ = 0.03 and $q$ = 0.38, close to averages reported across many published studies, the peak comes after about 6 periods. With no history of its own, a product borrows $p$ and $q$ from similar categories.
+
+### Run-out planning at end of life
+
+For the product being replaced:
+
+1. Agree the switch date with marketing and sales.
+2. Forecast the remaining demand to that date, which usually declines once the replacement is announced.
+3. Stop ordering components and materials once stock plus open orders cover that demand, allowing for their lead times.
+4. Plan the last production run and decide what happens to leftovers: rework, sell-off or scrap.
+
+<KeyIdea>
+
+Launch forecasts come from normalized, scaled analogs plus scenarios, rescaled quickly as real sales arrive. The Bass model frames adoption-driven products, and end of life needs a run-out plan that stops buying in time.
+
+</KeyIdea>
+
+</Level>
+
+<Level n={3} title="Deep dive" minutes={3} teaser="Sell-in versus sell-through, learning fast from early sales, managing product transitions, and flexible launch supply.">
+
+### Sell-in is not demand
+
+At launch, the first shipments fill the pipeline: every store, distributor and warehouse needs opening stock. Those **sell-in** volumes can equal several weeks of consumer demand, and they happen once. A forecast built on early shipments, rather than on **sell-through** to consumers, overestimates ongoing demand, and the expected second wave of orders never comes. Track consumer sales or distributor sell-out from day one.
+
+### Learning fast from early sales
+
+For short-lifecycle products, early sales predict the season remarkably well. In fashion retail, Fisher and Raman (1996) showed that producing part of the season's volume first, observing early sales and then committing the rest (**quick response**) sharply reduces the cost of demand uncertainty. The same idea applies to any launch: commit part of the volume up front, keep capacity or supplier flexibility for the rest, and reforecast every week.
+
+### Managing product transitions
+
+When a new model replaces an old one, the switch can be:
+
+- a **solo roll**, a hard cutover on one date: simple, but risky if the new model is late or the old one has leftovers, or
+- a **dual roll**, where both are sold for a while: safer, but it needs more stock and creates cannibalization to forecast.
+
+Billington, Lee and Tang (1998) describe how the right choice depends on how risky the new product's launch is and how different the two products are. Planning systems support transitions by linking the old item to its successor, so the new one inherits demand history (scaled as needed) while the old one's forecast phases out along a profile.
+
+### Supply strategy for launches
+
+- Smaller first production runs with fast replenishment.
+- Postponement, so generic stock can become whichever variant sells.
+- A separate launch buffer, released as the curve becomes clear.
+- Pre-agreed decision points: dates and sales thresholds for scaling up, holding or cutting the plan.
+
+<Trap>
+
+Treating the launch forecast as one number and committing the whole season's supply against it turns forecast uncertainty into stockouts or dead stock. Plan in scenarios and keep part of the commitment flexible until real sales arrive.
+
+</Trap>
+
+<KeyIdea>
+
+Separate one-off pipeline fill from real consumer demand, learn quickly from early sell-through, choose solo or dual rolls deliberately, and keep launch supply flexible until the curve is clear.
+
+</KeyIdea>
 
 </Level>
 
