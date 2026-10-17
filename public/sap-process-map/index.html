@@ -5,7 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>SAP process map · Decision Atlas</title>
 <meta name="description" content="An interactive map of SAP's core processes, MM, PP, WM, SD and FI/CO, traced end to end with real Global Bike document numbers.">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Overpass:wght@400;600;800&family=Overpass+Mono:wght@500&display=swap" rel="stylesheet">
@@ -39,6 +41,8 @@ button{font:inherit;color:inherit}
 /* Header */
 .backlink{display:inline-block;margin-bottom:10px;color:var(--muted);font-weight:600;font-size:14px;text-decoration:none}
 .backlink:hover{color:var(--ink);text-decoration:underline}
+.sep{display:inline-block;width:3px;height:3px;margin:0 0.5em;border-radius:50%;background:currentColor;opacity:0.6;vertical-align:middle}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
 .top{max-width:1240px;margin:0 auto;padding:28px 20px 8px;display:grid;grid-template-columns:1fr minmax(260px,380px);gap:20px 32px;align-items:end}
 .top h1{margin:0;font-weight:800;font-size:clamp(28px,4vw,42px);line-height:1.05;letter-spacing:-0.02em}
 .top p{margin:8px 0 0;color:var(--muted);max-width:62ch}
@@ -139,7 +143,7 @@ button{font:inherit;color:inherit}
 <body>
 <header class="top">
   <div>
-    <a class="backlink" href="/sap/">← Decision Atlas · SAP in practice</a>
+    <a class="backlink" href="/sap/">← Decision Atlas<span class="sep"><span class="sr-only">, </span></span>SAP in practice</a>
     <h1>SAP process map</h1>
     <p>Follow a requirement as it becomes a purchase, a product, a shipment and a payment, and see exactly where each module hands work to the next.</p>
   </div>

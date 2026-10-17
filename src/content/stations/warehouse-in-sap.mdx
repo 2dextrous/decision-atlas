@@ -1,0 +1,84 @@
+---
+title: Warehouse (WM / EWM)
+line: sap
+summary: How SAP knows which bin holds what, and the transfer orders that move goods from dock to bin to truck.
+minutes: { gist: 3 }
+status: draft
+keywords: [SAP WM, SAP EWM, warehouse number, storage type, storage bin, quant, transfer requirement, transfer order, LT04, LT03, LT12, warehouse task, putaway strategy, picking strategy, stock transport order, physical inventory]
+connected: [warehousing, procure-to-pay, order-to-cash, sap-process-map, sap-basics]
+sources:
+  - text: "Magal, S. R. & Word, J. (2012). Integrated Business Processes with ERP Systems. Wiley. Chapter on warehouse management."
+  - text: "SAP Help Portal. SAP Extended Warehouse Management documentation."
+    url: "https://help.sap.com/"
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+import FromPractice from '../../components/content/FromPractice.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="Inventory management knows how much; warehouse management knows exactly where." soon>
+
+Inventory management in MM knows *how much* stock sits in a plant and storage location. Warehouse management knows *exactly where*: which bin, on which rack, in which zone. SAP models a warehouse as a hierarchy: a **warehouse number** contains **storage types** (shelving, pallet racking, a goods receipt area), which contain **storage bins**. Each bin holds **quants**, quantities of a material.
+
+Classic WM moves goods with two documents:
+
+- A **transfer requirement** is the to-do: "these goods need to move." It's created automatically, for example by a goods receipt.
+- A **transfer order** is the instruction: "move 50 units from the goods receipt area to bin STBN-1-077." Putaway and picking strategies, such as fixed bin, next empty bin or FIFO, propose the bins.
+
+The main flows:
+
+| Flow | Steps | T-codes |
+|---|---|---|
+| Inbound | Goods receipt (MIGO) puts stock in an interim GR area → transfer requirement → putaway transfer order → confirm | MIGO, LB10, LT04, LT12 |
+| Outbound | Outbound delivery → picking transfer order → confirm pick → post goods issue (601) | VL01N, LT03, LT12, VL02N |
+| Internal | Stock moves between bins, stock transport between plants, physical inventory counts | LT10, ME21N (UB), LX16, LI11N, LI20 |
+
+Confirmation is the key moment: until a transfer order is confirmed, usually by scanning, the system doesn't trust that goods are in the new bin.
+
+**EWM (Extended Warehouse Management)** is SAP's more powerful successor, now standard in S/4HANA. The ideas carry over with new names: warehouse requests instead of transfer requirements, **warehouse tasks** instead of transfer orders, plus features like slotting, wave management and labour management.
+
+<FromPractice>
+
+In the Global Bike warehouse exercises, warehouse number **100** belongs to the San Diego plant, with bins such as **STBN-1-077**. In one exercise I saw an on-order stock of 10 units in San Diego that came from a **stock transport order** (type UB) from the Dallas plant: goods issued in Dallas move into transit and are received and put away in San Diego.
+
+</FromPractice>
+
+<KeyIdea>
+
+WM adds the "where" to inventory: warehouse, storage type, bin and quant. Transfer requirements say what needs moving, transfer orders say exactly how, and confirmation makes it real. EWM keeps the logic with warehouse tasks.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Storage bin', def: 'The smallest addressable location in a warehouse, such as a shelf position.' },
+  { term: 'Transfer order', def: 'WM instruction to move a quantity from one bin to another; EWM calls it a warehouse task.' },
+  { term: 'Quant', def: 'A quantity of one material, with the same characteristics, in one bin.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+SAP WM manages stock at bin level: warehouse number, storage types, storage bins and quants. Goods receipts create transfer requirements, which become putaway transfer orders that are confirmed when goods reach the bin; outbound deliveries create picking transfer orders, and goods issue with movement type 601 follows the confirmed pick. EWM, standard in S/4HANA, uses warehouse requests and warehouse tasks and adds slotting, waves and labour management.
+
+</SayIt>
+
+<Q q="What is the difference between a transfer requirement and a transfer order?">
+
+A transfer requirement is the request: it records that goods need to move, for example after a goods receipt. A transfer order is the executable instruction that says which quantity moves from which bin to which bin, proposed by putaway or picking strategies and confirmed when the move is done.
+
+</Q>
+
+<Q q="Stock shows in MMBE but the warehouse can't find it in any bin. What might be wrong?">
+
+The goods may still be in an interim storage type, such as the goods receipt area, because the putaway transfer order was never created or confirmed. Inventory management and warehouse management stock can also differ if differences were cleared in one but not the other.
+
+</Q>
+
+</InterviewKit>

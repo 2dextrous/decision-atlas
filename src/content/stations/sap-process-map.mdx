@@ -1,0 +1,83 @@
+---
+title: End-to-end process map
+line: sap
+summary: One customer order traced across SD, PP, MM, WM and FI/CO, with every hand-off between modules, plus the interactive map built from my Global Bike practice.
+minutes: { gist: 4 }
+status: draft
+keywords: [SAP process map, end to end, integration, module hand-offs, order to cash, procure to pay, plan to produce, record to report, warehouse, Global Bike]
+connected: [order-to-cash, procure-to-pay, plan-to-produce, warehouse-in-sap, record-to-report]
+sources:
+  - text: "Magal, S. R. & Word, J. (2012). Integrated Business Processes with ERP Systems. Wiley."
+  - text: "SAP Help Portal. SAP S/4HANA documentation."
+    url: "https://help.sap.com/"
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={4} teaser="Fourteen stops, five modules, and what each one hands to the next." soon>
+
+Each SAP module makes sense on its own, but interviews love the hand-offs: what one module passes to the next. Here is one customer order followed all the way through:
+
+| # | What happens | Module | Hands over to |
+|---|---|---|---|
+| 1 | Customer places a sales order | SD | PP: a requirement from the order's schedule lines |
+| 2 | MRP plans production and purchasing | PP | MM: purchase requisitions for components to buy |
+| 3 | Purchase order goes to the supplier | MM | The supplier: it becomes their sales order |
+| 4 | Components are received | MM | WM for putaway; FI: Dr Inventory / Cr GR/IR |
+| 5 | Components are put away into a bin | WM | Production: stock ready to stage |
+| 6 | Supplier invoice is matched | MM | FI: a payable, paid later by the payment run |
+| 7 | Production consumes components | PP | FI/CO: costs collected on the production order |
+| 8 | Finished goods are received | PP | SD: stock available to promise |
+| 9 | Outbound delivery is created | SD | WM: a picking requirement |
+| 10 | Goods are picked from the bin | WM | SD: picked quantities on the delivery |
+| 11 | Goods issue posts | SD | FI: Dr Cost of goods sold / Cr Inventory |
+| 12 | Customer is billed | SD | FI: Dr Receivable / Cr Revenue |
+| 13 | Customer pays | SD | FI: the bank statement clears the receivable |
+| 14 | Month is closed | FI | All modules' postings meet in the financial statements |
+
+Read down the last column and you can see why SAP is called integrated: almost every step either creates work for another module or a journal entry in finance, automatically.
+
+I built an interactive version of this map while working through the Global Bike case. Each stop shows the Fiori app and T-codes, the tables behind it, the stock and money impact, how automated it usually is in large companies, what goes wrong in real life, and, where I executed the step myself, my actual document numbers.
+
+<a class="btn btn-primary open-map" href="/sap-process-map/">Open the interactive SAP process map →</a>
+
+<KeyIdea>
+
+SAP's value is in the hand-offs: a sales order creates demand for planning, planning creates purchasing, receipts create warehouse tasks and journal entries, and everything meets in finance at month end.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Integration point', def: 'A step where one module automatically creates work or postings in another.' },
+  { term: 'Document flow', def: 'The chain of linked documents from order to payment that lets you trace any transaction.' },
+  { term: 'Stock vs money impact', def: 'What a step does to quantities, and what it posts in the books; good answers mention both.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+End to end, a sales order in SD creates a requirement that MRP in PP turns into planned orders and purchase requisitions; MM buys and receives the components, which WM puts away and FI records against GR/IR; production consumes them and receives finished goods, making stock available to promise; SD delivers, posts goods issue and bills; and FI records cost of goods sold, receivables, payments and the month-end close. Each hand-off is automatic, which is the point of an integrated ERP.
+
+</SayIt>
+
+<Q q="Walk me through what happens in SAP when a customer orders a product you don't have in stock.">
+
+The sales order's availability check finds a shortage and passes the requirement to MRP. MRP creates a planned order (if we make it) or a purchase requisition (if we buy it). Purchasing converts the requisition to a PO, the goods receipt posts stock and a journal entry, production or the warehouse makes the goods available, and the order is delivered, goods issued and billed.
+
+</Q>
+
+<Q q="Which steps create accounting entries in this flow?">
+
+Goods receipt (inventory against GR/IR), invoice verification (GR/IR against the supplier), payment (supplier against bank), goods issue to production and production receipt (order costs and inventory), post goods issue to the customer (cost of goods sold against inventory), billing (receivable against revenue) and the customer payment (bank against receivable). Planning steps like MRP and documents like orders don't post.
+
+</Q>
+
+</InterviewKit>

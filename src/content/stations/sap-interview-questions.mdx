@@ -1,0 +1,122 @@
+---
+title: SAP interview questions
+line: sap
+summary: The questions SAP functional interviews ask most often across MM, SD, PP and finance integration, with answers you can build on.
+minutes: { gist: 4 }
+status: draft
+keywords: [SAP interview questions, SAP MM interview, SAP SD interview, movement types, three-way match, info record, sales area, condition technique, account determination, price control, S/4HANA]
+connected: [procure-to-pay, order-to-cash, plan-to-produce, record-to-report, sap-basics]
+sources:
+  - text: "Magal, S. R. & Word, J. (2012). Integrated Business Processes with ERP Systems. Wiley."
+  - text: "SAP Help Portal. SAP S/4HANA documentation."
+    url: "https://help.sap.com/"
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+
+<Level n={1} title="The gist" minutes={4} teaser="How SAP functional interviews are built, and how to answer so it sounds like experience." soon>
+
+SAP functional interviews tend to test four things, usually in this order:
+
+1. **Process:** can you explain procure to pay, order to cash or plan to produce in business terms?
+2. **Transactions and documents:** do you know the T-codes, documents and movement types behind each step?
+3. **Integration:** do you know what each step posts in finance and which module it hands work to?
+4. **Troubleshooting:** given a problem (a blocked invoice, a missing material, a wrong account), where would you look?
+
+A strong answer covers all four in a few sentences. "A goods receipt against a PO uses MIGO with movement type 101; it increases stock and posts inventory against GR/IR through account determination; if the material isn't extended to the plant it fails, so check the material master" sounds like experience, not memorization.
+
+Two habits help:
+
+- **Always mention the money:** what the step posts, and to which account type.
+- **Use a real example:** a document you created or an error you fixed. If you practised on Global Bike or a similar training system, say so and describe what happened.
+
+The questions below cover the ones that come up most. Try answering each out loud before opening the model answer, then compare.
+
+<KeyIdea>
+
+Answer SAP questions in four layers: the business step, the transaction and document, the finance posting and hand-off, and what usually goes wrong. A real example from practice makes it convincing.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Movement type', def: 'A three-digit key that controls a goods movement, such as 101, 261, 311 or 601.' },
+  { term: 'Integration', def: 'How one module’s transaction automatically affects another, especially finance.' },
+  { term: 'Master data issue', def: 'The most common root cause of SAP errors: missing or wrong material, partner or pricing data.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+I'd answer SAP questions in layers: the business step, the transaction and document, what it posts in finance and which module it feeds, and what typically goes wrong. For example, a goods receipt is MIGO with movement type 101: it increases stock, posts inventory against GR/IR through OBYC account determination, can trigger WM putaway, and fails if the material isn't extended to the plant.
+
+</SayIt>
+
+<Q q="What is the difference between a purchase requisition and a purchase order?">
+
+A purchase requisition (ME51N) is an internal request, often created by MRP, with no commitment to a supplier. A purchase order (ME21N) is the legally binding document sent to a supplier, with agreed price, quantity and delivery date. Requisitions are converted into orders once a source of supply is assigned.
+
+</Q>
+
+<Q q="Explain movement types 101, 261, 311 and 601.">
+
+101 is a goods receipt, for example against a purchase order or production order. 261 is a goods issue of components to a production order. 311 is a transfer posting between storage locations within a plant. 601 is the goods issue for a customer delivery, posted at post goods issue.
+
+</Q>
+
+<Q q="What is a three-way match, and what happens if it fails?">
+
+At invoice verification (MIRO), SAP compares the invoice with the purchase order (price and quantity agreed) and the goods receipt (quantity received). If differences exceed the tolerance limits, the invoice is posted but blocked for payment, and it must be released (MRBR) once the cause, such as a missing receipt or a price error, is fixed.
+
+</Q>
+
+<Q q="What are a purchasing info record and a source list?">
+
+An info record stores supplier-specific data for a material, such as price, conditions and delivery time, and can be created automatically from POs. A source list defines which suppliers are allowed for a material in a plant and period. Together they let SAP propose sources automatically.
+
+</Q>
+
+<Q q="What is the GR/IR clearing account?">
+
+A bridge account between goods receipt and invoice. The goods receipt credits it and the invoice debits it, so after both, it balances. A remaining balance means goods were received but not invoiced, or invoiced but not received, which is reviewed and cleared at period end.
+
+</Q>
+
+<Q q="What is a sales area?">
+
+The combination of sales organization, distribution channel and division. Every sales document belongs to one, and customers, prices and many settings are maintained per sales area.
+
+</Q>
+
+<Q q="How does SAP determine the price on a sales order?">
+
+Through the condition technique: the pricing procedure, determined by sales area and document and customer settings, lists condition types in sequence. Access sequences search condition tables for valid condition records for each type, and the net price is calculated step by step, including discounts, freight and tax.
+
+</Q>
+
+<Q q="How does SAP know which G/L account to post a goods receipt to?">
+
+Automatic account determination in OBYC: the material's valuation class plus transaction keys such as BSX for inventory and WRX for GR/IR point to the G/L accounts. For sales revenue, VKOA plays the same role.
+
+</Q>
+
+<Q q="What is the difference between standard price and moving average price?">
+
+With standard price (S), stock is valued at a fixed price and differences from actual cost go to price difference accounts; it's common for manufactured goods. With moving average price (V), each receipt updates the stock value at its actual price; it's common for purchased goods.
+
+</Q>
+
+<Q q="What are the main differences between ECC and S/4HANA?">
+
+S/4HANA runs only on the HANA in-memory database, uses a simplified data model (MATDOC for material documents, the Universal Journal ACDOCA for finance and controlling), makes Business Partner mandatory for customers and suppliers, offers Fiori as the main interface, and adds faster processes such as MRP Live and real-time analytics.
+
+</Q>
+
+</InterviewKit>

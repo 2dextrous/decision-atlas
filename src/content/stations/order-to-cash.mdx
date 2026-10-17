@@ -1,0 +1,89 @@
+---
+title: Order to cash (SD)
+line: sap
+summary: "From customer order to payment in SAP SD: VA01 to F-28, the pricing logic in between, and what each step posts in finance."
+minutes: { gist: 3 }
+status: draft
+keywords: [order to cash, SAP SD, sales area, inquiry, quotation, sales order, VA01, pricing, condition technique, availability check, credit check, outbound delivery, VL01N, post goods issue, movement type 601, billing, VF01, incoming payment, F-28, document flow]
+connected: [order-to-delivery, atp-ctp, record-to-report, sap-process-map, warehouse-in-sap]
+sources:
+  - text: "Magal, S. R. & Word, J. (2012). Integrated Business Processes with ERP Systems. Wiley. Chapter on the fulfilment process."
+  - text: "SAP Help Portal. SAP S/4HANA Sales documentation."
+    url: "https://help.sap.com/"
+---
+
+import Level from '../../components/content/Level.astro';
+import KeyIdea from '../../components/content/KeyIdea.astro';
+import Terms from '../../components/content/Terms.astro';
+import SayIt from '../../components/content/SayIt.astro';
+import Q from '../../components/content/Q.astro';
+import InterviewKit from '../../components/content/InterviewKit.astro';
+import FromPractice from '../../components/content/FromPractice.astro';
+
+<Level n={1} title="The gist" minutes={3} teaser="The sell-side mirror of procure to pay, step by step in SAP." soon>
+
+Order to cash in SAP SD mirrors procure to pay from the seller's side. In fact, your customer's purchase order becomes your sales order:
+
+| Step | T-code | What happens | Finance posting |
+|---|---|---|---|
+| Inquiry, quotation (optional) | VA11, VA21 | Customer asks for price and availability; you send a binding offer | None |
+| Sales order | VA01 | Pricing, availability (ATP) and credit checks; requirement passed to MRP | None |
+| Outbound delivery | VL01N or VL10 | Shipping document created from the order | None |
+| Picking and packing | VL02N (or WM/EWM tasks) | Goods staged for the customer | None |
+| Post goods issue | VL02N, movement type 601 | Stock leaves; ownership passes | Dr Cost of goods sold / Cr Inventory |
+| Billing | VF01 or VF04 | Customer invoice | Dr Customer / Cr Revenue (and tax) |
+| Incoming payment | F-28 | Payment clears the open invoice | Dr Bank / Cr Customer |
+
+Every sales document belongs to a **sales area**: sales organization + distribution channel + division. A customer must be set up for the sales area you sell through, which is a common source of "customer not defined for sales area" errors.
+
+**Pricing** uses the **condition technique**: a pricing procedure lists condition types in sequence, such as base price, discounts, freight and tax, and SAP looks up condition records for each one (maintained with VK11). The choice of condition type matters. A percentage discount calculated on the net price instead of the gross price gives a different invoice amount.
+
+The **document flow** (visible from VA03) links inquiry, quotation, order, delivery, goods issue, invoice and payment, so you can trace any order end to end.
+
+<FromPractice>
+
+In Global Bike I sold to the customer **The Bike Zone 077**, reusing the existing record rather than creating a duplicate; the system already held dozens of "The Bike Zone" copies, which is duplicate master data in miniature. Selling helmets meant the customer had to be extended to another division, because helmets and bikes sit in different divisions. And choosing discount condition **RA00** (percentage from net) instead of **RA01** (percentage from gross) changed my invoice by 12.50.
+
+</FromPractice>
+
+<KeyIdea>
+
+Order to cash: sales order (VA01) → delivery (VL01N) → pick → post goods issue (601, COGS) → billing (VF01, revenue) → payment (F-28). Pricing runs on the condition technique, and the sales area decides who can sell what to whom.
+
+</KeyIdea>
+
+<Terms items={[
+  { term: 'Sales area', def: 'Sales organization + distribution channel + division; every SD document belongs to one.' },
+  { term: 'Condition technique', def: 'SAP pricing logic: condition types in a pricing procedure, filled from condition records.' },
+  { term: 'Post goods issue (PGI)', def: 'The step that reduces stock, transfers ownership and posts cost of goods sold.' },
+]} />
+
+</Level>
+
+<InterviewKit>
+
+<SayIt>
+
+Order to cash in SAP SD runs from the sales order (VA01), where pricing, ATP and credit checks happen, to the outbound delivery (VL01N), picking, post goods issue with movement type 601, which posts cost of goods sold against inventory, billing (VF01), which posts the receivable and revenue, and the incoming payment (F-28) that clears it. Pricing uses the condition technique, and every document belongs to a sales area.
+
+</SayIt>
+
+<Q q="What happens in the system at post goods issue?">
+
+Stock is reduced in the plant and storage location, ownership passes to the customer, a material document and an accounting document are created (cost of goods sold debited, inventory credited), the delivery status updates and the delivery becomes due for billing.
+
+</Q>
+
+<Q q="How does pricing work in SAP SD?">
+
+Through the condition technique. A pricing procedure, determined from the sales area and document and customer settings, lists condition types such as base price, discounts, surcharges and tax. For each one, an access sequence searches condition tables for the most specific valid condition record, and the procedure calculates the net value step by step.
+
+</Q>
+
+<Q q="What does 'customer not defined for sales area' mean?">
+
+The customer's sales data hasn't been created for the sales organization, distribution channel and division used in the order. The Business Partner must be extended to that sales area before you can sell through it.
+
+</Q>
+
+</InterviewKit>
